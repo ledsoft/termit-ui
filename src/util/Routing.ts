@@ -37,11 +37,8 @@ class Routing {
      * @param route Route object
      * @param options Transition options, can specify path parameters, query parameters, payload and view handlers.
      */
-    public transitionTo = (route: Route, options = {}) => {
+    public transitionTo = (route: Route, options = {params: {}}) => {
         let path = route.path;
-        if (!options) {
-            options = {};
-        }
         if (options.params) {
             path = Routing._setPathParams(path, options.params);
         }
@@ -50,8 +47,8 @@ class Routing {
         this.mHistory.push(path);
     };
 
-    public transitionToHome = (options: {}) => {
-        this.transitionTo(Constants.HOME_ROUTE, options);
+    public transitionToHome = () => {
+        this.transitionTo(Constants.HOME_ROUTE);
     };
 
     public transitionToOriginalTarget = () => {
