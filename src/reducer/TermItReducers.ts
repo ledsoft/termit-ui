@@ -1,10 +1,10 @@
 import {combineReducers} from "redux";
-import ActionType from '../action/ActionType';
+import ActionType, {Action} from '../action/ActionType';
 
-function user(state = null, action: {type: string}) {
+function user(state = null, action: Action) {
     switch (action.type) {
         case ActionType.FETCH_USER_SUCCESS:
-            return action.user;
+            return null;
         default:
             return state;
     }

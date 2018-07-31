@@ -6,16 +6,19 @@ import './App.css';
 import TermItStore from './store/TermItStore';
 import Routes from "./util/Routes";
 import Routing from './util/Routing';
+import MainView from "./component/MainView";
+import I18nStore from './store/I18nStore';
 
-let intlData = null;
+let intlData: { messages: {}, locale: string };
 
 function selectLocalization() {
-    const lang:string = navigator.language;
+    const lang: string = navigator.language;
     if (lang && lang === 'cs' || lang === 'cs-CZ' || lang === 'sk' || lang === 'sk-SK') {
-        intlData = require('./i18n/cs');
+        intlData = require('./i18n/cs').default;
     } else {
-        intlData = require('./i18n/en');
+        intlData = require('./i18n/en').default;
     }
+    I18nStore.messages = intlData.messages;
 }
 
 selectLocalization();
@@ -23,11 +26,11 @@ selectLocalization();
 const App: React.SFC = (props) => {
     return <IntlProvider {...intlData}>
         <Provider store={TermItStore}>
-        <Router history={Routing.history}>
-            <Switch>
-                <Route path={Routes.login.path} component={Login}/>
-            </Switch>
-        </Router>
+            <Router history={Routing.history}>
+                <Switch>
+                    <Route path={Routes.dashboard.path} compoment={MainView}/>
+                </Switch>
+            </Router>
         </Provider>
     </IntlProvider>;
 };

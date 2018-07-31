@@ -1,5 +1,4 @@
-import {History} from "history";
-import {createBrowserHistory} from "history/createBrowserHistory";
+import {History, createBrowserHistory} from "history";
 import Constants from "./Constants";
 import {Route} from "./Routes";
 
