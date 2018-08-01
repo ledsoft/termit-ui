@@ -11,6 +11,11 @@ class Ajax {
         this.axiosInstance.interceptors.response.use((resp) => {
             return resp;
         }, (error) => {
+            if (!error.response) {
+                return Promise.reject({
+                    message: 'Unable to connect to ' + this.axiosInstance.defaults.baseURL
+                });
+            }
             if (error.response.status === 401) {
                 Routing.transitionToHome();
             }

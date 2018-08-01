@@ -1,11 +1,11 @@
 import * as React from 'react';
-import InjectedIntlProps = ReactIntl.InjectedIntlProps;
+import {InjectedIntlProps} from 'react-intl';
 
 export interface HasI18n extends InjectedIntlProps {
 
-    i18n(id: string): void;
+    i18n(id: string): string;
 
-    formatMessage(msgId: string, values: {}): void;
+    formatMessage(msgId: string, values: {}): string;
 }
 
 const addI18n = <P extends HasI18n>(Component: React.ComponentType<P>) => {

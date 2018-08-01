@@ -7,7 +7,7 @@ class Routing {
         return this.mHistory;
     }
 
-    private static _setPathParams(path: string, params: {}) {
+    private static _setPathParams(path: string, params: object) {
         for (const paramName in params) {
             if (params.hasOwnProperty(paramName)) {
                 path = path.replace(':' + paramName, params[paramName]);

@@ -2,6 +2,7 @@ import * as React from 'react';
 import classNames from "classnames";
 import {ClipLoader} from "react-spinners";
 import I18nStore from '../../store/I18nStore';
+import './Mask.scss';
 
 interface MaskProps {
     text?: string,

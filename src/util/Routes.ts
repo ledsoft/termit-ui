@@ -12,7 +12,7 @@ export class Route {
 }
 
 export default {
-    dashboard: new Route('dashboard', '/dashboard'),
+    dashboard: new Route('dashboard', '/'),
     login: new Route('login', '/login'),
     profile: new Route('profile', '/profile'),
     register: new Route('register','/register')

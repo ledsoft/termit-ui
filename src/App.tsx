@@ -2,12 +2,12 @@ import * as React from 'react';
 import {IntlProvider} from 'react-intl';
 import {Provider} from 'react-redux';
 import {Route, Router, Switch} from 'react-router-dom';
-import './App.css';
 import TermItStore from './store/TermItStore';
-import Routes from "./util/Routes";
+// import Routes from "./util/Routes";
 import Routing from './util/Routing';
 import MainView from "./component/MainView";
 import I18nStore from './store/I18nStore';
+import {loadUser} from "./action/ComplexActions";
 
 let intlData: { messages: {}, locale: string };
 
@@ -23,12 +23,14 @@ function selectLocalization() {
 
 selectLocalization();
 
-const App: React.SFC = (props) => {
+TermItStore.dispatch(loadUser());
+
+const App: React.SFC = () => {
     return <IntlProvider {...intlData}>
         <Provider store={TermItStore}>
             <Router history={Routing.history}>
                 <Switch>
-                    <Route path={Routes.dashboard.path} compoment={MainView}/>
+                    <Route component={MainView}/>
                 </Switch>
             </Router>
         </Provider>
