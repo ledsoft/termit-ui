@@ -12,6 +12,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const server = require('./server');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -148,6 +149,16 @@ module.exports = {
 
                             compact: true,
                         },
+                    },
+                    // Inject TermIt server url into the Constants file
+                    {
+                        test: /Constants\.ts$/,
+                        loader: 'string-replace-loader',
+                        options: {
+                            search: '__SERVER_URL__',
+                            replace: server['url'],
+                            strict: true
+                        }
                     },
 
                     // Compile .tsx?

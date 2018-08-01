@@ -1,10 +1,11 @@
 import axios from 'axios';
 import Routing from './Routing';
+import Constants from './Constants';
 
 class Ajax {
 
     private axiosInstance = axios.create({
-        baseURL: 'http://localhost:8080/termit/rest/'
+        baseURL: Constants.SERVER_URL
     });
 
     constructor() {

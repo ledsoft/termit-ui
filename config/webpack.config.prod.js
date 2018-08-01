@@ -154,6 +154,16 @@ module.exports = {
                             compact: true,
                         },
                     },
+                    // Inject TermIt server url into the Constants file
+                    {
+                        test: /Constants\.ts$/,
+                        loader: 'string-replace-loader',
+                        options: {
+                            search: '__SERVER_URL__',
+                            replace: server['url'],
+                            strict: true
+                        }
+                    },
                     // Compile .tsx?
                     {
                         test: /\.(ts|tsx)$/,
