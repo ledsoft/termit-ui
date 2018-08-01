@@ -8,7 +8,7 @@ export interface HasI18n extends InjectedIntlProps {
     formatMessage(msgId: string, values: {}): string;
 }
 
-const addI18n = <P extends HasI18n>(Component: React.ComponentType<P>) => {
+const withI18n = <P extends HasI18n>(Component: React.ComponentType<P>) => {
     class Wrapper extends React.Component<P & HasI18n> {
         protected i18n = (id: string) => {
             return this.props.intl.messages[id];
@@ -26,4 +26,4 @@ const addI18n = <P extends HasI18n>(Component: React.ComponentType<P>) => {
     return Wrapper;
 };
 
-export default addI18n;
+export default withI18n;

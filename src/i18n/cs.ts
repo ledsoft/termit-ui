@@ -4,6 +4,8 @@ export default {
     locale: Constants.LANG.CS,
 
     messages: {
-        'please-wait': 'Prosím, čekejte...'
+        'please-wait': 'Prosím, čekejte...',
+
+        'login.title': 'Přihlášení'
     }
 }

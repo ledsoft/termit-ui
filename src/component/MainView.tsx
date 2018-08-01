@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import addI18n, {HasI18n} from "./hoc/addI18n";
+import withI18n, {HasI18n} from "./hoc/withI18n";
 import withLoading from "./hoc/withLoading";
 import {connect} from "react-redux";
 import TermItState from "../model/TermItState";
@@ -20,4 +20,4 @@ export default connect((state: TermItState) => {
     return {
         loading: state.loading
     };
-})(injectIntl(addI18n(withLoading(MainView))));
+})(injectIntl(withI18n(withLoading(MainView))));
