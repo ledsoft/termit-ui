@@ -20,6 +20,11 @@
   height: 50px;
   text-align: center;
   vertical-align: middle;
+
+  .spinner-message {
+    color: #337ab7;
+    font-size: 11px;
+  }
 }
 
 .without-text {
@@ -27,9 +32,5 @@
   height: 32px;
 }
 
-.spinner-message {
-  @extend .spinner-container;
-  color: #337ab7;
-  font-size: 11px;
-}
+
 
