@@ -10,7 +10,7 @@ export function loadUser() {
 
 export function login(username: string, password: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
-        dispatch(AsyncActions.login());
+        dispatch(AsyncActions.login(username, password));
     }
 }
 

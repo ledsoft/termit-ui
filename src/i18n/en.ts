@@ -5,6 +5,7 @@ export default {
 
     messages: {
         'please-wait': 'Please wait...',
+        'connection.error': 'Unable to connect to the server.',
 
         'login.title': Constants.APP_NAME + ' - Log in',
         'login.username': 'Username',

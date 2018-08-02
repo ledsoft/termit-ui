@@ -5,6 +5,7 @@ export default {
 
     messages: {
         'please-wait': 'Prosím, čekejte...',
+        'connection.error': 'Nepodařilo se navázat spojení se serverem.',
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
         'login.username': 'Uživatelské jméno',

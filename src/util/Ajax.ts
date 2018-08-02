@@ -1,7 +1,6 @@
 import axios from 'axios';
 import Routing from './Routing';
 import Constants from './Constants';
-import ErrorInfo from "../model/ErrorInfo";
 
 class RequestConfigBuilder {
     private mContent?: any;
@@ -74,9 +73,9 @@ class Ajax {
             return resp;
         }, (error) => {
             if (!error.response) {
-                return Promise.reject(new ErrorInfo(Constants.CONNECTION_ERROR, {
-                    message: 'Unable to connect to ' + this.axiosInstance.defaults.baseURL
-                }));
+                return Promise.reject({
+                    messageId: 'connection.error'
+                });
             }
             if (error.response.status === 401) {
                 Routing.transitionToHome();

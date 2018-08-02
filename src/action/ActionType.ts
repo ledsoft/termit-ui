@@ -13,6 +13,10 @@ export interface FailureAction extends Action {
     error: ErrorInfo
 }
 
+export interface ClearErrorAction extends Action {
+    origin: string
+}
+
 export default {
     LOAD_USER: 'LOAD_USER',
     FETCH_USER_REQUEST: 'FETCH_USER_REQUEST',
@@ -22,5 +26,7 @@ export default {
     LOGIN: 'LOGIN',
     LOGIN_REQUEST: 'LOGIN_REQUEST',
     LOGIN_FAILURE: 'LOGIN_REQUEST_FAILURE',
-    LOGIN_SUCCESS: 'LOGIN_REQUEST_SUCCESS'
+    LOGIN_SUCCESS: 'LOGIN_REQUEST_SUCCESS',
+
+    CLEAR_ERROR: 'CLEAR_ERROR'
 }

@@ -1,8 +1,15 @@
 import reducers from '../TermItReducers';
 import ActionType, {FailureAction, UserLoadingAction} from "../../action/ActionType";
 import TermItState from "../../model/TermItState";
-import {fetchUserFailure, fetchUserRequest, fetchUserSuccess} from "../../action/SyncActions";
-import ErrorInfo from "../../model/ErrorInfo";
+import {
+    clearError,
+    fetchUserFailure,
+    fetchUserRequest,
+    fetchUserSuccess, loginFailure,
+    loginRequest,
+    loginSuccess
+} from "../../action/SyncActions";
+import ErrorInfo, {EMPTY_ERROR} from "../../model/ErrorInfo";
 import User from "../../model/User";
 
 function stateToPlainObject(state: TermItState) {
@@ -73,6 +80,59 @@ describe('Reducers', () => {
                 error,
                 loading: false
             }));
+        });
+    });
+
+    describe('login', () => {
+        it('sets loading status on login request', () => {
+            const action = loginRequest();
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {loading: true}));
+        });
+
+        it('sets loading status to false on login success', () => {
+            const action = loginSuccess();
+            initialState.loading = true;
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {loading: false}));
+        });
+
+        it('sets loading status to false on login failure', () => {
+            const error = new ErrorInfo(ActionType.LOGIN_FAILURE, {
+                message: 'Incorrect password',
+                requestUrl: '/j_spring_security_check'
+            });
+            const action = loginFailure(error);
+            initialState.loading = true;
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {
+                loading: false,
+                error
+            }));
+        });
+
+        it('sets error state on login failure', () => {
+            const error = new ErrorInfo(ActionType.LOGIN_FAILURE, {
+                message: 'Incorrect password',
+                requestUrl: '/j_spring_security_check'
+            });
+            const action = loginFailure(error);
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error}));
+        });
+    });
+
+    describe('clear error', () => {
+        it('clears error when action origin matches', () => {
+            initialState.error = new ErrorInfo(ActionType.LOGIN_FAILURE, {
+                messageId: 'Unable to connect to server'
+            });
+            const action = clearError(ActionType.LOGIN_FAILURE);
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error: EMPTY_ERROR}));
+        });
+
+        it('des not clear error when origin is different', () => {
+            initialState.error = new ErrorInfo(ActionType.LOGIN_FAILURE, {
+                messageId: 'Unable to connect to server'
+            });
+            const action = clearError(ActionType.FETCH_USER_FAILURE);
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(stateToPlainObject(initialState));
         });
     });
 });
