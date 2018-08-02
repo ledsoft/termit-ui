@@ -4,6 +4,11 @@ import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
 import ErrorInfo, {EMPTY_ERROR} from "../model/ErrorInfo";
 
+/**
+ * Handles changes to the currently logged in user.
+ *
+ * The initial state is an empty user, which basically shouldn't be allowed to do anything.
+ */
 function user(state: User = EMPTY_USER, action: UserLoadingAction): User {
     switch (action.type) {
         case ActionType.FETCH_USER_SUCCESS:
@@ -13,6 +18,15 @@ function user(state: User = EMPTY_USER, action: UserLoadingAction): User {
     }
 }
 
+/**
+ * Handling loading state.
+ *
+ * Currently, this state is represented by a single boolean switch. The assumption is that there will always be one
+ * component aware of the loading status and that one should display the loading mask.
+ *
+ * NOTE: This strategy is highly likely to change as we might have multiple components loading data independently of
+ * each other
+ */
 function loading(state = false, action: Action): boolean {
     switch (action.type) {
         case ActionType.FETCH_USER_REQUEST:
@@ -28,6 +42,13 @@ function loading(state = false, action: Action): boolean {
     }
 }
 
+/**
+ * Error status of the application.
+ *
+ * The store currently supports only one error, so if an error action is invoked, the previous error status is replaced
+ * by the new one. The state holds structured information about the error itself and the action where the error
+ * originated (usually an error action).
+ */
 function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
     switch (action.type) {
         case ActionType.FETCH_USER_FAILURE:

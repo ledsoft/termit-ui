@@ -2,6 +2,10 @@ import ActionType, {Action, ClearErrorAction, FailureAction, UserLoadingAction} 
 import ErrorInfo from "../model/ErrorInfo";
 import User from "../model/User";
 
+/*
+ * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
+ */
+
 export function fetchUserRequest(): Action {
     return {
         type: ActionType.FETCH_USER_REQUEST

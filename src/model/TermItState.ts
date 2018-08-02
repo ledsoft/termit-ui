@@ -1,6 +1,9 @@
 import User, {EMPTY_USER} from "./User";
 import ErrorInfo, {EMPTY_ERROR} from "./ErrorInfo";
 
+/**
+ * This is the basic shape of the application's state managed by Redux.
+ */
 export default class TermItState {
     public loading: boolean;
     public user: User;

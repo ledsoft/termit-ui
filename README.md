@@ -21,3 +21,13 @@ To enable easy integration with Jest's file name matching, all test files should
 name of the file (before the first dot) should reflect the purpose of the test file, e.g., for unit tests this is the name of the
 tested file (see for example `TermItReducers.ts` and the corresponding `TermItReducers.test.ts`).
 
+## Developer Notes
+
+- Action are currently split into `SyncAction`, `AsyncActions` and `ComplexActions`, where `SyncActions` are simple synchronous actions represented by objects,
+whereas `AsyncActions` and `ComplexActions` exploit `redux-thunk` and return functions. `ComplexActions` represent actions which involve both synchronous and
+asynchronous actions. This division might change as the number of actions grows.
+- The main purpose of `ComplexActions` is to provide a clear and simple name for the complex action which usually involves asynchronous data-fetching actions and
+synchronous actions demarcating these events.
+- Navigation is handled separately from Redux, although the Redux documentation contains a section on setting up routing with react-router and redux. Currently, I
+believe it is not necessary to interconnect the two.
+

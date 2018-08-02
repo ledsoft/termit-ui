@@ -2,6 +2,11 @@ import * as SyncActions from './SyncActions';
 import Ajax, {params} from '../util/Ajax';
 import {Dispatch} from "redux";
 
+/*
+ * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
+ * of several synchronous sub-actions which inform the application of initiation of the request and its result.
+ */
+
 export function fetchUser() {
     return (dispatch: Dispatch) => {
         dispatch(SyncActions.fetchUserRequest());
