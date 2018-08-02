@@ -1,17 +1,12 @@
 import * as React from 'react';
-import {ControlLabel, FormControl, FormGroup, HelpBlock} from 'react-bootstrap';
+import {FormControl, FormGroup} from 'react-bootstrap';
+import AbstractInput, {AbstractInputProps} from "./AbstractInput";
 
-interface TextAreaProps {
-    type?: string,
-    label?: string,
-    value?: any,
-    onChange: (e: object) => void,
-    help?: string,
-    validation?: 'success' | 'warning' | 'error',
-    validationMessage?: string
+export interface TextAreaProps extends AbstractInputProps {
+    onKeyPress?: (e: object) => void
 }
 
-export default class TextArea extends React.Component<TextAreaProps> {
+export default class TextArea extends AbstractInput<TextAreaProps> {
 
     private input: FormControl;
 
@@ -23,13 +18,5 @@ export default class TextArea extends React.Component<TextAreaProps> {
             {this.props.validation && <FormControl.Feedback/>}
             {this.renderHelp()}
         </FormGroup>;
-    }
-
-    private renderLabel() {
-        return this.props.label ? <ControlLabel>{this.props.label}</ControlLabel> : null;
-    }
-
-    private renderHelp() {
-        return this.props.help ? <HelpBlock>{this.props.help}</HelpBlock> : null;
     }
 }

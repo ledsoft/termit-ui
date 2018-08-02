@@ -1,11 +1,13 @@
 import reducers from '../TermItReducers';
-import {FailureAction, UserLoadingAction} from "../../action/ActionType";
+import ActionType, {FailureAction, UserLoadingAction} from "../../action/ActionType";
 import TermItState from "../../model/TermItState";
 import {fetchUserFailure, fetchUserRequest, fetchUserSuccess} from "../../action/SyncActions";
+import ErrorInfo from "../../model/ErrorInfo";
+import User from "../../model/User";
 
 function stateToPlainObject(state: TermItState) {
     return {
-        loading:state.loading,
+        loading: state.loading,
         user: state.user,
         error: state.error
     };
@@ -21,21 +23,21 @@ describe('Reducers', () => {
 
     describe('loading user', () => {
         it('sets user in state on user load success', () => {
-            const user = {
-                id: 12345,
+            const user = new User({
+                uri: 'http://test',
                 firstName: 'test',
                 lastName: 'test',
                 username: 'test@kbss.felk.cvut.cz'
-            };
+            });
             const action: UserLoadingAction = fetchUserSuccess(user);
             expect(reducers(undefined, action)).toEqual(Object.assign({}, initialState, {user}));
         });
 
         it('sets error in state on user load failure', () => {
-            const error = {
+            const error = new ErrorInfo(ActionType.FETCH_USER_FAILURE, {
                 message: 'Failed to connect to server',
                 requestUrl: '/users/current'
-            };
+            });
             const action: FailureAction = fetchUserFailure(error);
             expect(reducers(undefined, action)).toEqual(Object.assign({}, initialState, {error}));
         });
@@ -46,12 +48,12 @@ describe('Reducers', () => {
         });
 
         it('sets loading status to false on user load success', () => {
-            const user = {
-                id: 12345,
+            const user = new User({
+                uri: 'http://test',
                 firstName: 'test',
                 lastName: 'test',
                 username: 'test@kbss.felk.cvut.cz'
-            };
+            });
             const action: UserLoadingAction = fetchUserSuccess(user);
             initialState.loading = true;
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {
@@ -61,10 +63,10 @@ describe('Reducers', () => {
         });
 
         it('sets loading status to false on user load failure', () => {
-            const error = {
+            const error = new ErrorInfo(ActionType.FETCH_USER_FAILURE, {
                 message: 'Failed to connect to server',
                 requestUrl: '/users/current'
-            };
+            });
             const action: FailureAction = fetchUserFailure(error);
             initialState.loading = true;
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {

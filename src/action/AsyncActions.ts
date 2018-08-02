@@ -5,8 +5,14 @@ import {Dispatch} from "redux";
 export function fetchUser() {
     return (dispatch: Dispatch) => {
         dispatch(SyncActions.fetchUserRequest());
-        Ajax.fetchUser()
+        Ajax.get('/users/current')
             .then(user => dispatch(SyncActions.fetchUserSuccess(user)))
             .catch((error) => dispatch(SyncActions.fetchUserFailure(error)));
+    }
+}
+
+export function login() {
+    return (dispatch: Dispatch) => {
+        return null;
     }
 }

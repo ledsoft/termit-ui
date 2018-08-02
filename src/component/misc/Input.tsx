@@ -1,33 +1,23 @@
 import * as React from 'react';
-import {ControlLabel, FormControl, FormGroup, HelpBlock} from 'react-bootstrap';
+import {FormControl, FormGroup} from 'react-bootstrap';
+import AbstractInput, {AbstractInputProps} from "./AbstractInput";
 
-interface InputProps {
-    label?: string,
-    value?: any,
-    onChange: (e: object) => void,
-    help?: string,
-    validation?: 'success' | 'warning' | 'error',
-    validationMessage?: string
+export interface InputProps extends AbstractInputProps {
+    type?: string,
+    onKeyPress?: (e: React.KeyboardEvent<FormControl>) => void
 }
 
-export default class Input extends React.Component<InputProps> {
+export default class Input extends AbstractInput<InputProps> {
 
     private input: FormControl;
 
     public render() {
         return <FormGroup bsSize='small' validationState={this.props.validation}>
             {this.renderLabel()}
-            <FormControl type='text' ref={(c: FormControl) => this.input = c} componentClass='input' {...this.props}/>
+            <FormControl type={this.props.type ? this.props.type : 'text'} ref={(c: FormControl) => this.input = c}
+                         componentClass='input' {...this.props}/>
             {this.props.validation && <FormControl.Feedback/>}
             {this.renderHelp()}
         </FormGroup>;
-    }
-
-    private renderLabel() {
-        return this.props.label ? <ControlLabel>{this.props.label}</ControlLabel> : null;
-    }
-
-    private renderHelp() {
-        return this.props.help ? <HelpBlock>{this.props.help}</HelpBlock> : null;
     }
 }

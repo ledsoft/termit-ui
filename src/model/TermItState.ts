@@ -1,13 +1,14 @@
-import Constants from "../util/Constants";
+import User, {EMPTY_USER} from "./User";
+import ErrorInfo, {EMPTY_ERROR} from "./ErrorInfo";
 
 export default class TermItState {
     public loading: boolean;
-    public user?: object;
-    public error?: object;
+    public user: User;
+    public error: ErrorInfo;
 
     constructor() {
         this.loading = false;
-        this.user = Constants.NULL;
-        this.error = Constants.NULL;
+        this.user = EMPTY_USER;
+        this.error = EMPTY_ERROR;
     }
 }
