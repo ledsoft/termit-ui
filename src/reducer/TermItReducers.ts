@@ -1,8 +1,15 @@
 import {combineReducers} from "redux";
-import ActionType, {Action, ClearErrorAction, FailureAction, UserLoadingAction} from '../action/ActionType';
+import ActionType, {
+    Action,
+    ClearErrorAction,
+    FailureAction,
+    MessageAction,
+    UserLoadingAction
+} from '../action/ActionType';
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
 import ErrorInfo, {EMPTY_ERROR} from "../model/ErrorInfo";
+import Message from "../model/Message";
 
 /**
  * Handles changes to the currently logged in user.
@@ -62,7 +69,20 @@ function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
     }
 }
 
+function messages(state: Message[] = [], action: MessageAction): Message[] {
+    switch (action.type) {
+        case ActionType.PUBLISH_MESSAGE:
+            return [...state, action.message];
+        case ActionType.DISMISS_MESSAGE:
+            const newArr = state.slice(0);
+            newArr.splice(newArr.indexOf(action.message), 1);
+            return newArr;
+        default:
+            return state;
+    }
+}
 
-const rootReducer = combineReducers<TermItState>({user, loading, error});
+
+const rootReducer = combineReducers<TermItState>({user, loading, error, messages});
 
 export default rootReducer;

@@ -1,6 +1,7 @@
-import ActionType, {Action, ClearErrorAction, FailureAction, UserLoadingAction} from './ActionType';
+import ActionType, {Action, ClearErrorAction, FailureAction, MessageAction, UserLoadingAction} from './ActionType';
 import ErrorInfo from "../model/ErrorInfo";
 import User from "../model/User";
+import Message from "../model/Message";
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
@@ -49,5 +50,19 @@ export function clearError(origin: string): ClearErrorAction {
     return {
         type: ActionType.CLEAR_ERROR,
         origin
+    };
+}
+
+export function publishMessage(message: Message): MessageAction {
+    return {
+        type: ActionType.PUBLISH_MESSAGE,
+        message
+    };
+}
+
+export function dismissMessage(message: Message): MessageAction {
+    return {
+        type: ActionType.DISMISS_MESSAGE,
+        message
     };
 }

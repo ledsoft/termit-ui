@@ -79,7 +79,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                 <Form horizontal={true}>
                     {this.renderAlert()}
                     <Input name='username' label={i18n('login.username')} value={this.state.username}
-                           onKeyPress={this.onKeyPress} onChange={this.onChange}
+                           onKeyPress={this.onKeyPress} onChange={this.onChange} autoFocus={true}
                            labelWidth={3} inputWidth={9}/>
                     <Input type='password' name='password' label={i18n('login.password')} value={this.state.password}
                            onKeyPress={this.onKeyPress} onChange={this.onChange}
