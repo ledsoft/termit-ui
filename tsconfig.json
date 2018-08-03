@@ -26,6 +26,6 @@
     "webpack",
     "jest",
     "**/__tests__",
-    "**/__mock__"
+    "**/__mocks__"
   ]
 }

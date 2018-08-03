@@ -1,21 +1,11 @@
-import {Route} from "../Routes";
-
 class RoutingMock {
-    public saveOriginalTarget = (route: Route) => {
-        // Do nothing
-    };
+    public saveOriginalTarget = jest.fn();
 
-    public transitionTo = (route: Route, options = {params: {}}) => {
-        // Do nothing
-    };
+    public transitionTo = jest.fn();
 
-    public transitionToHome = () => {
-        // Do nothing
-    };
+    public transitionToHome = jest.fn();
 
-    public transitionToOriginalTarget = () => {
-        // Do nothing
-    }
+    public transitionToOriginalTarget = jest.fn();
 }
 
 const INSTANCE = new RoutingMock();

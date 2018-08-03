@@ -9,12 +9,12 @@ class RequestConfigBuilder {
     private mAccept: string;
 
     constructor() {
-        this.mContentType = 'application/json';
-        this.mAccept = 'application/json';
+        this.mContentType = Constants.JSON_LD_MIME_TYPE;
+        this.mAccept = Constants.JSON_LD_MIME_TYPE;
     }
 
     public content(value: any): RequestConfigBuilder {
-        this.content = value;
+        this.mContent = value;
         return this;
     }
 
@@ -62,9 +62,9 @@ export function accept(value: string): RequestConfigBuilder {
     return new RequestConfigBuilder().accept(value);
 }
 
-class Ajax {
+export class Ajax {
 
-    private axiosInstance = axios.create({
+    protected axiosInstance = axios.create({
         baseURL: Constants.SERVER_URL
     });
 
@@ -77,10 +77,17 @@ class Ajax {
                     messageId: 'connection.error'
                 });
             }
-            if (error.response.status === 401) {
+            const response = error.response;
+            if (response.status === 401) {
                 Routing.transitionToHome();
             }
-            return Promise.reject(error);
+            if (typeof response.data === "string") {
+                return Promise.reject({
+                    messageId: 'ajax.unparseable-error'
+                });
+            } else {
+                return Promise.reject(response.data);
+            }
         })
     }
 
@@ -103,7 +110,11 @@ class Ajax {
             // Asserting that config.getParams() are not undefined (as verified by the if condition)
             const p: {} = config.getParams()!;
             Object.keys(p).forEach(n => par.append(n, p[n]));
-            return this.axiosInstance.post(path, par);
+            return this.axiosInstance.post(path, par, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
         } else {
             const conf = {
                 data: config.getContent(),
@@ -118,6 +129,7 @@ class Ajax {
     public put(path: string, config: RequestConfigBuilder) {
         const conf = {
             data: config.getContent(),
+            params: config.getParams(),
             headers: {
                 'Accept': config.getAccept(),
                 'Content-Type': config.getContentType()

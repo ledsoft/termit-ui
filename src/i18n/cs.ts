@@ -6,6 +6,7 @@ export default {
     messages: {
         'please-wait': 'Prosím, čekejte...',
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
+        'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
         'login.username': 'Uživatelské jméno',

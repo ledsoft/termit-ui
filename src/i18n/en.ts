@@ -6,6 +6,7 @@ export default {
     messages: {
         'please-wait': 'Please wait...',
         'connection.error': 'Unable to connect to the server.',
+        'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
 
         'login.title': Constants.APP_NAME + ' - Log in',
         'login.username': 'Username',
