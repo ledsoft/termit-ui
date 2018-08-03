@@ -46,7 +46,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
     };
 
     private onKeyPress = (e: React.KeyboardEvent<FormControl>) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && this.isValid()) {
             this.login();
         }
     };
@@ -86,10 +86,10 @@ export class Login extends React.Component<LoginProps, LoginState> {
                            labelWidth={3} inputWidth={9}/>
 
                     <div className='col-xs-3'>&nbsp;</div>
-                    <div className='col-xs-9' style={{padding: '0 0 0 7px'}}>
+                    <div className='col-xs-9 buttons'>
                         <Button bsStyle='success' bsSize='small' onClick={this.login}
                                 disabled={this.props.loading || !this.isValid()}>{i18n('login.submit')}</Button>
-                        <Button bsStyle='link' bsSize='small' onClick={this.register} style={{padding: '0 0 0 15px'}}
+                        <Button bsStyle='link' bsSize='small' onClick={this.register} className='register-link'
                                 disabled={this.props.loading}>{i18n('login.register')}</Button>
                     </div>
                 </Form>

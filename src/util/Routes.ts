@@ -1,5 +1,3 @@
-'use strict';
-
 export class Route {
 
     public readonly name: string;

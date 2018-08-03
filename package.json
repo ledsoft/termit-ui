@@ -64,17 +64,23 @@
   },
   "devDependencies": {
     "@types/classnames": "^2.2.6",
+    "@types/enzyme": "^3.1.12",
+    "@types/enzyme-adapter-react-16": "^1.0.2",
     "@types/jest": "^23.3.0",
     "@types/js-cookie": "^2.1.0",
     "@types/node": "^10.5.2",
     "@types/react": "^16.4.6",
+    "@types/react-addons-test-utils": "^0.14.21",
     "@types/react-bootstrap": "^0.32.1",
     "@types/react-dom": "^16.0.6",
     "@types/react-intl": "^2.3.8",
     "@types/react-redux": "^6.0.5",
     "@types/react-router-dom": "^4.3.0",
     "@types/redux-logger": "^3.0.6",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "node-sass": "^4.9.2",
+    "react-addons-test-utils": "^15.6.2",
     "sass-loader": "^7.0.3",
     "string-replace-loader": "^2.1.1",
     "typescript": "^2.9.2"
@@ -84,13 +90,13 @@
       "src/**/*.{js,jsx,ts,tsx}"
     ],
     "setupFiles": [
-      "<rootDir>/config/polyfills.js"
+      "<rootDir>/config/polyfills.js",
+      "<rootDir>/config/jest/setupEnzyme.ts"
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
-      "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"
+      "<rootDir>/src/**/__tests__/**/?(*.)(spec|test).(j|t)s?(x)"
     ],
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
