@@ -69,7 +69,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
     public render() {
         const i18n = this.props.i18n;
-        const panelCls = this.errorRelevant() ? 'login-panel expanded' : 'login-panel';
+        const panelCls = this.errorRelevant() ? 'login-panel-expanded' : 'login-panel';
         return <Panel bsStyle='info' className={panelCls}>
             <Panel.Heading>
                 <Panel.Title componentClass='h3'>{i18n('login.title')}</Panel.Title>
