@@ -1,0 +1,19 @@
+.register-panel {
+  width: 800px;
+  height: 275px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.modal-content .register-panel {
+  bottom: auto;
+}
+
+.expanded {
+  @extend .register-panel;
+  height: 345px;
+}
