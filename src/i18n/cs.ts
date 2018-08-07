@@ -7,6 +7,7 @@ export default {
         'please-wait': 'Prosím, čekejte...',
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
+        'footer.copyright': 'KBSS FEL ČVUT v Praze',
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
         'login.username': 'Uživatelské jméno',
@@ -24,10 +25,18 @@ export default {
         'register.username': 'Uživatelské jméno',
         'register.password': 'Heslo',
         'register.password-confirm': 'Potvrzení hesla',
-        'register.passwords-not-matching-tooltip': 'Heslo a jeho potvrzení se neshodují',
+        'register.passwords-not-matching-tooltip': 'Heslo a jeho potvrzení se neshodují.',
         'register.submit': 'Registrovat',
         'register.mask': 'Registruji...',
         'register.error': 'Uživatele se nepodařilo zaregistrovat.',
         'register.login.error': 'Nepodařilo se přihlásit k nově vytvořenému uživateli.',
+
+        'main.dashboard.nav': 'Hlavní strana',
+        'main.statistics.nav': 'Statistiky',
+        'main.admin.nav': 'Administrace',
+        'main.user-profile': 'Profil uživatele',
+        'main.logout': 'Odhlásit se',
+        'main.search.placeholder': 'Hledat',
+        'main.search.tooltip': 'Hledat daný výraz ve všech slovnících a pojmech',
     }
 }

@@ -4,20 +4,86 @@ import withI18n, {HasI18n} from "./hoc/withI18n";
 import withLoading from "./hoc/withLoading";
 import {connect} from "react-redux";
 import TermItState from "../model/TermItState";
+import {Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
+import {LinkContainer} from 'react-router-bootstrap';
+import Constants from '../util/Constants';
+import * as classNames from 'classnames';
+import I18nStore from '../store/I18nStore';
+import User from "../model/User";
+import './MainView.scss';
+import Routes from '../util/Routes';
+import Footer from './Footer';
 
-class MainView extends React.Component<HasI18n> {
+interface MainViewProps extends HasI18n {
+    user: User
+}
 
-    constructor(props: HasI18n) {
+class MainView extends React.Component<MainViewProps> {
+
+    constructor(props: MainViewProps) {
         super(props);
     }
 
+    private onUserProfileClick = () => {
+        alert('Not implemented, yet!');
+    };
+
+    private onSelectLang = () => {
+        // TODO
+        // I18nStore.activeLanguage = lang;
+        // window.location.reload();
+    };
+
     public render() {
-        return <h1>Hello, world!</h1>;
+        const {i18n, user} = this.props;
+        return <div className='wrapper'>
+            <header>
+                <Navbar fluid={true}>
+                    <Navbar.Header>
+                        <Navbar.Brand>{Constants.APP_NAME}</Navbar.Brand>
+                    </Navbar.Header>
+                    <Nav>
+                        <LinkContainer
+                            to={Routes.dashboard.name}><NavItem>{i18n('main.dashboard.nav')}</NavItem></LinkContainer>
+                        <LinkContainer
+                            to={Routes.statistics.name}><NavItem>{i18n('main.statistics.nav')}</NavItem></LinkContainer>
+                    </Nav>
+                    <Nav pullRight={true} className='nav-right'>
+                        <li>
+                            {/*<NavSearch/>*/}
+                        </li>
+                        <li>
+                            {this.renderLanguageSelector()}
+                        </li>
+                        <NavDropdown id='logout' title={user.fullName}>
+                            <MenuItem onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</MenuItem>
+                            <MenuItem divider={true}/>
+                            <MenuItem href='#'>{i18n('main.logout')}</MenuItem>
+                        </NavDropdown>
+                    </Nav>
+                </Navbar>
+            </header>
+            <div className='content'>
+                <h1>TODO: Add router switch</h1>
+            </div>
+            <Footer/>
+        </div>;
+    }
+
+    private renderLanguageSelector() {
+        const csCls = classNames("lang", {"selected": I18nStore.activeLanguage === Constants.LANG.CS});
+        const enCls = classNames("lang", {"selected": I18nStore.activeLanguage === Constants.LANG.EN});
+        return <div className="lang">
+            <a className={csCls} href="#" onClick={this.onSelectLang}>CS</a>
+            &nbsp;/&nbsp;
+            <a className={enCls} href="#" onClick={this.onSelectLang}>EN</a>
+        </div>;
     }
 }
 
 export default connect((state: TermItState) => {
     return {
-        loading: state.loading
+        loading: state.loading,
+        user: state.user
     };
-})(injectIntl(withI18n(withLoading(MainView))));
+})(injectIntl(withI18n(withLoading(MainView, {containerClass: 'app-container'}))));

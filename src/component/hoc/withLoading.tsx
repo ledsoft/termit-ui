@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Mask from '../misc/Mask';
 import getDisplayName from '../../util/getDisplayName';
+import classNames from 'classnames';
 
 export interface WithLoadingProps {
     loading: boolean,
@@ -9,7 +10,8 @@ export interface WithLoadingProps {
 
 export interface WithLoadingStaticOptions {
     tag?: string,
-    maskClass?: string
+    maskClass?: string,
+    containerClass?: string
 }
 
 /**
@@ -22,8 +24,9 @@ export interface WithLoadingStaticOptions {
 const withLoading = <P extends object>(Component: React.ComponentType<P>, options: WithLoadingStaticOptions = {tag: 'div'}): React.SFC<P & WithLoadingProps> => {
     const Wrapped: React.SFC<P & WithLoadingProps> = ({loading, loadingMsg, ...props}: WithLoadingProps) => {
         const tag = options.tag ? options.tag : 'div';
+        const className = classNames(options.containerClass, 'relative');
 
-        return React.createElement(tag, {className: 'relative'},
+        return React.createElement(tag, {className},
             loading && <Mask text={loadingMsg} classes={options.maskClass}/>,
             <Component {...props}/>
         );

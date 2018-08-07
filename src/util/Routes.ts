@@ -13,5 +13,6 @@ export default {
     dashboard: new Route('dashboard', '/'),
     login: new Route('login', '/login'),
     profile: new Route('profile', '/profile'),
-    register: new Route('register','/register')
+    register: new Route('register','/register'),
+    statistics: new Route('statistics', '/statistics')
 }

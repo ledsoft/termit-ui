@@ -41,6 +41,10 @@ export default class User {
     get types(): string[] {
         return this.mTypes;
     }
+
+    get fullName(): string {
+        return this.firstName + ' ' + this.lastName;
+    }
 }
 
 export const EMPTY_USER = new User({

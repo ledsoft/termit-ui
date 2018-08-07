@@ -28,7 +28,8 @@ selectLocalization();
 TermItStore.dispatch(loadUser());
 
 const App: React.SFC = () => {
-    return <IntlProvider {...intlData}>
+    return <div className='app-container container-fluid'>
+        <IntlProvider {...intlData}>
         <Provider store={TermItStore}>
             <Router history={Routing.history}>
                 <Switch>
@@ -38,7 +39,8 @@ const App: React.SFC = () => {
                 </Switch>
             </Router>
         </Provider>
-    </IntlProvider>;
+    </IntlProvider>
+    </div>;
 };
 
 export default App;

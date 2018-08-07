@@ -1,20 +1,22 @@
 import * as React from 'react';
 import {InjectedIntlProps} from 'react-intl';
 
-export interface HasI18n extends InjectedIntlProps {
+export interface HasI18n {
 
     i18n(id: string): string;
 
     formatMessage(msgId: string, values: {}): string;
 }
 
-const withI18n = <P extends HasI18n>(Component: React.ComponentType<P>) => {
-    class Wrapper extends React.Component<P & HasI18n> {
-        protected i18n = (id: string) => {
+// type HOC<PWrapped> = React.ComponentClass<PWrapped> | React.SFC<PWrapped>;
+
+export default function withI18n<P extends HasI18n>(Component: React.ComponentType<P>): React.ComponentClass<Pick<P, Exclude<keyof P, keyof HasI18n>> & InjectedIntlProps> {
+    class Wrapper extends React.Component<P & HasI18n & InjectedIntlProps> {
+        protected i18n = (id: string): string => {
             return this.props.intl.messages[id];
         };
 
-        protected formatMessage = (msgId: string, values: {}) => {
+        protected formatMessage = (msgId: string, values: {}): string => {
             return this.props.intl.formatMessage({id: msgId}, values);
         };
 
@@ -24,6 +26,4 @@ const withI18n = <P extends HasI18n>(Component: React.ComponentType<P>) => {
     }
 
     return Wrapper;
-};
-
-export default withI18n;
+}
