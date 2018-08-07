@@ -7,7 +7,9 @@ export default {
         'please-wait': 'Please wait...',
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
+
         'footer.copyright': 'KBSS at FEE CTU in Prague',
+        'footer.version': 'Version {version}',
 
         'login.title': Constants.APP_NAME + ' - Log in',
         'login.username': 'Username',

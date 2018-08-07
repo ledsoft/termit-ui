@@ -3,6 +3,7 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "./hoc/withI18n";
 import * as classNames from 'classnames';
 import './Footer.scss';
+import Constants from "../util/Constants";
 
 interface FooterProps extends HasI18n {
     className?: string
@@ -18,7 +19,7 @@ const Footer: React.SFC<FooterProps> = (props) => {
                           title={i18n('footer.copyright')}>{i18n('footer.copyright')}</a>, 2018
             </p>
             <p className="text-muted footer-version">
-                Version: Dev
+                {props.formatMessage('footer.version', {version: Constants.VERSION})}
             </p>
         </div>
     </footer>;

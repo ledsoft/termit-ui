@@ -109,7 +109,7 @@ module.exports = {
             // please link the files into your node_modules/ and let module-resolution kick in.
             // Make sure your source files are compiled, as they will not be processed in any way.
             new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
-            new TsconfigPathsPlugin({configFile: paths.appTsConfig}),
+            new TsconfigPathsPlugin({configFile: paths.appTsConfig})
         ],
     },
     module: {
@@ -155,9 +155,15 @@ module.exports = {
                         test: /Constants\.ts$/,
                         loader: 'string-replace-loader',
                         options: {
-                            search: '__SERVER_URL__',
-                            replace: server['url'],
-                            strict: true
+                            multiple: [{
+                                search: '__SERVER_URL__',
+                                replace: server['url'],
+                                strict: true
+                            }, {
+                                search: '__VERSION__',
+                                replace: require('../package.json').version,
+                                strict: true
+                            }]
                         }
                     },
 

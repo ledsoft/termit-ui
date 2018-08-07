@@ -4,6 +4,8 @@ export default {
     // Will be replaced with actual server url during build
     SERVER_URL: '__SERVER_URL__',
     APP_NAME: 'TermIt',
+    // Will be replaced with actual version during build
+    VERSION: '__VERSION__',
     HOME_ROUTE: Routes.dashboard,
     LANGUAGE_COOKIE: 'TermIt-LANG',
     LANG: {

@@ -160,9 +160,15 @@ module.exports = {
                         test: /Constants\.ts$/,
                         loader: 'string-replace-loader',
                         options: {
-                            search: '__SERVER_URL__',
-                            replace: server['url'],
-                            strict: true
+                            multiple: [{
+                                search: '__SERVER_URL__',
+                                replace: server['url'],
+                                strict: true
+                            }, {
+                                search: '__VERSION__',
+                                replace: require('../package.json').version,
+                                strict: true
+                            }]
                         }
                     },
                     // Compile .tsx?

@@ -7,7 +7,9 @@ export default {
         'please-wait': 'Prosím, čekejte...',
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
+
         'footer.copyright': 'KBSS FEL ČVUT v Praze',
+        'footer.version': 'Verze {version}',
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
         'login.username': 'Uživatelské jméno',
