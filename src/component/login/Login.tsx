@@ -15,6 +15,7 @@ import {ThunkDispatch} from "redux-thunk";
 import ErrorInfo from "../../model/ErrorInfo";
 import ActionType from "../../action/ActionType";
 import {clearError} from "../../action/SyncActions";
+import Footer from "../Footer";
 
 interface LoginProps extends HasI18n {
     loading: boolean,
@@ -70,31 +71,35 @@ export class Login extends React.Component<LoginProps, LoginState> {
     public render() {
         const i18n = this.props.i18n;
         const panelCls = this.errorRelevant() ? 'login-panel-expanded' : 'login-panel';
-        return <Panel bsStyle='info' className={panelCls}>
-            <Panel.Heading>
-                <Panel.Title componentClass='h3'>{i18n('login.title')}</Panel.Title>
-            </Panel.Heading>
-            <Panel.Body>
-                {this.renderMask()}
-                <Form horizontal={true}>
-                    {this.renderAlert()}
-                    <Input name='username' label={i18n('login.username')} value={this.state.username}
-                           onKeyPress={this.onKeyPress} onChange={this.onChange} autoFocus={true}
-                           labelWidth={3} inputWidth={9}/>
-                    <Input type='password' name='password' label={i18n('login.password')} value={this.state.password}
-                           onKeyPress={this.onKeyPress} onChange={this.onChange}
-                           labelWidth={3} inputWidth={9}/>
+        return <div className='app-container'>
+            <Panel bsStyle='info' className={panelCls}>
+                <Panel.Heading>
+                    <Panel.Title componentClass='h3'>{i18n('login.title')}</Panel.Title>
+                </Panel.Heading>
+                <Panel.Body>
+                    {this.renderMask()}
+                    <Form horizontal={true}>
+                        {this.renderAlert()}
+                        <Input name='username' label={i18n('login.username')} value={this.state.username}
+                               onKeyPress={this.onKeyPress} onChange={this.onChange} autoFocus={true}
+                               labelWidth={3} inputWidth={9}/>
+                        <Input type='password' name='password' label={i18n('login.password')}
+                               value={this.state.password}
+                               onKeyPress={this.onKeyPress} onChange={this.onChange}
+                               labelWidth={3} inputWidth={9}/>
 
-                    <div className='col-xs-3'>&nbsp;</div>
-                    <div className='col-xs-9 buttons'>
-                        <Button bsStyle='success' bsSize='small' onClick={this.login}
-                                disabled={this.props.loading || !this.isValid()}>{i18n('login.submit')}</Button>
-                        <Button bsStyle='link' bsSize='small' onClick={this.register} className='register-link'
-                                disabled={this.props.loading}>{i18n('login.register')}</Button>
-                    </div>
-                </Form>
-            </Panel.Body>
-        </Panel>;
+                        <div className='col-xs-3'>&nbsp;</div>
+                        <div className='col-xs-9 buttons'>
+                            <Button bsStyle='success' bsSize='small' onClick={this.login}
+                                    disabled={this.props.loading || !this.isValid()}>{i18n('login.submit')}</Button>
+                            <Button bsStyle='link' bsSize='small' onClick={this.register} className='register-link'
+                                    disabled={this.props.loading}>{i18n('login.register')}</Button>
+                        </div>
+                    </Form>
+                </Panel.Body>
+            </Panel>
+            <Footer className='footer-login'/>
+        </div>;
     }
 
     private renderMask() {
