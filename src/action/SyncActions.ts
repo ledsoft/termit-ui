@@ -1,4 +1,11 @@
-import ActionType, {Action, ClearErrorAction, FailureAction, MessageAction, UserLoadingAction} from './ActionType';
+import ActionType, {
+    Action,
+    ClearErrorAction,
+    FailureAction,
+    MessageAction,
+    SwitchLanguageAction,
+    UserLoadingAction
+} from './ActionType';
 import ErrorInfo from "../model/ErrorInfo";
 import User from "../model/User";
 import Message from "../model/Message";
@@ -64,5 +71,12 @@ export function dismissMessage(message: Message): MessageAction {
     return {
         type: ActionType.DISMISS_MESSAGE,
         message
+    };
+}
+
+export function switchLanguage(language: string): SwitchLanguageAction {
+    return {
+        type: ActionType.SWITCH_LANGUAGE,
+        language
     };
 }

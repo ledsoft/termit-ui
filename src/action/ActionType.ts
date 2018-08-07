@@ -22,6 +22,10 @@ export interface MessageAction extends Action {
     message: Message
 }
 
+export interface SwitchLanguageAction extends Action {
+    language: string
+}
+
 export default {
     LOAD_USER: 'LOAD_USER',
     FETCH_USER_REQUEST: 'FETCH_USER_REQUEST',
@@ -36,5 +40,7 @@ export default {
     CLEAR_ERROR: 'CLEAR_ERROR',
 
     PUBLISH_MESSAGE: 'PUBLISH_MESSAGE',
-    DISMISS_MESSAGE: 'DISMISS_MESSAGE'
+    DISMISS_MESSAGE: 'DISMISS_MESSAGE',
+
+    SWITCH_LANGUAGE: 'SWITCH_LANGUAGE'
 }

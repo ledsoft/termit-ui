@@ -3,13 +3,15 @@ import ActionType, {
     Action,
     ClearErrorAction,
     FailureAction,
-    MessageAction,
+    MessageAction, SwitchLanguageAction,
     UserLoadingAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
 import ErrorInfo, {EMPTY_ERROR} from "../model/ErrorInfo";
 import Message from "../model/Message";
+import IntlData from "../model/IntlData";
+import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
 
 /**
  * Handles changes to the currently logged in user.
@@ -82,7 +84,15 @@ function messages(state: Message[] = [], action: MessageAction): Message[] {
     }
 }
 
+function intl(state: IntlData = loadInitialLocalizationData(), action: SwitchLanguageAction): IntlData {
+    switch (action.type) {
+        case ActionType.SWITCH_LANGUAGE:
+            return loadLocalizationData(action.language);
+        default:
+            return state;
+    }
+}
 
-const rootReducer = combineReducers<TermItState>({user, loading, error, messages});
+const rootReducer = combineReducers<TermItState>({user, loading, error, messages, intl});
 
 export default rootReducer;

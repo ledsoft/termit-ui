@@ -2,23 +2,29 @@ import reducers from '../TermItReducers';
 import ActionType, {FailureAction, UserLoadingAction} from "../../action/ActionType";
 import TermItState from "../../model/TermItState";
 import {
-    clearError, dismissMessage,
+    clearError,
+    dismissMessage,
     fetchUserFailure,
     fetchUserRequest,
-    fetchUserSuccess, loginFailure,
+    fetchUserSuccess,
+    loginFailure,
     loginRequest,
-    loginSuccess, publishMessage
+    loginSuccess,
+    publishMessage,
+    switchLanguage
 } from "../../action/SyncActions";
 import ErrorInfo, {EMPTY_ERROR} from "../../model/ErrorInfo";
 import User from "../../model/User";
 import Message from "../../model/Message";
+import Constants from "../../util/Constants";
 
 function stateToPlainObject(state: TermItState) {
     return {
         loading: state.loading,
         user: state.user,
         error: state.error,
-        messages: state.messages
+        messages: state.messages,
+        intl: state.intl
     };
 }
 
@@ -163,6 +169,13 @@ describe('Reducers', () => {
             initialState.messages = [mOne, mTwo];
             const action = dismissMessage(mOne);
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {messages: [mTwo]}));
+        });
+    });
+
+    describe('intl', () => {
+        it('loads localization data on action', () => {
+            const action = switchLanguage(Constants.LANG.CS);
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {intl: require('../../i18n/cs').default}));
         });
     });
 });
