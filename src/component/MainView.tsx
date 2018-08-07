@@ -4,15 +4,14 @@ import withI18n, {HasI18n} from "./hoc/withI18n";
 import withLoading from "./hoc/withLoading";
 import {connect} from "react-redux";
 import TermItState from "../model/TermItState";
-import {Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
+import {MenuItem, Nav, Navbar, NavDropdown, NavItem} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap';
 import Constants from '../util/Constants';
-import * as classNames from 'classnames';
-import I18nStore from '../store/I18nStore';
 import User from "../model/User";
 import './MainView.scss';
 import Routes from '../util/Routes';
 import Footer from './Footer';
+import LanguageSelector from "./main/LanguageSelector";
 
 interface MainViewProps extends HasI18n {
     user: User
@@ -26,12 +25,6 @@ class MainView extends React.Component<MainViewProps> {
 
     private onUserProfileClick = () => {
         alert('Not implemented, yet!');
-    };
-
-    private onSelectLang = () => {
-        // TODO
-        // I18nStore.activeLanguage = lang;
-        // window.location.reload();
     };
 
     public render() {
@@ -49,12 +42,7 @@ class MainView extends React.Component<MainViewProps> {
                             to={Routes.statistics.name}><NavItem>{i18n('main.statistics.nav')}</NavItem></LinkContainer>
                     </Nav>
                     <Nav pullRight={true} className='nav-right'>
-                        <li>
-                            {/*<NavSearch/>*/}
-                        </li>
-                        <li>
-                            {this.renderLanguageSelector()}
-                        </li>
+                        <LanguageSelector/>
                         <NavDropdown id='logout' title={user.fullName}>
                             <MenuItem onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</MenuItem>
                             <MenuItem divider={true}/>
@@ -67,16 +55,6 @@ class MainView extends React.Component<MainViewProps> {
                 <h1>TODO: Add router switch</h1>
             </div>
             <Footer/>
-        </div>;
-    }
-
-    private renderLanguageSelector() {
-        const csCls = classNames("lang", {"selected": I18nStore.activeLanguage === Constants.LANG.CS});
-        const enCls = classNames("lang", {"selected": I18nStore.activeLanguage === Constants.LANG.EN});
-        return <div className="lang">
-            <a className={csCls} href="#" onClick={this.onSelectLang}>CS</a>
-            &nbsp;/&nbsp;
-            <a className={enCls} href="#" onClick={this.onSelectLang}>EN</a>
         </div>;
     }
 }
