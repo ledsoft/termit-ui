@@ -60,7 +60,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "build-prod": "jest & npm run build"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.6",
@@ -81,6 +82,7 @@
     "axios-mock-adapter": "^1.15.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "jest-junit": "^5.1.0",
     "node-sass": "^4.9.2",
     "react-addons-test-utils": "^15.6.2",
     "sass-loader": "^7.0.3",
@@ -129,7 +131,11 @@
       "ts-jest": {
         "tsConfigFile": "tsconfig.test.json"
       }
-    }
+    },
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
   },
   "babel": {
     "presets": [
