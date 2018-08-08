@@ -3,7 +3,8 @@ import ActionType, {
     Action,
     ClearErrorAction,
     FailureAction,
-    MessageAction, SwitchLanguageAction,
+    MessageAction,
+    SwitchLanguageAction,
     UserLoadingAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";

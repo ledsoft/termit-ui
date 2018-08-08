@@ -20,9 +20,7 @@ describe('Login', () => {
 
     it('renders submit button disabled when either field is empty', () => {
         const wrapper = mountWithIntl(<Login loading={false} error={EMPTY_ERROR} login={login}
-                                             clearError={clearError}
-                                             i18n={i18n}
-                                             formatMessage={formatMessage}/>);
+                                             clearError={clearError} i18n={i18n} formatMessage={formatMessage}/>);
         const button = wrapper.find('[bsStyle="success"]');
         expect(button.getElement().props.disabled).toBeTruthy();
         const usernameInput = wrapper.find('input[name="username"]');

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import classNames from "classnames";
 import {ClipLoader} from "react-spinners";
-import I18nStore from '../../store/I18nStore';
+import {injectIntl} from 'react-intl';
 import './Mask.scss';
+import withI18n, {HasI18n} from "../hoc/withI18n";
 
-interface MaskProps {
+interface MaskProps extends HasI18n {
     text?: string,
     withoutText?: boolean,
     classes?: string
@@ -12,7 +13,7 @@ interface MaskProps {
 
 const Mask: React.SFC<MaskProps> = (props) => {
     const containerClasses = classNames('spinner-container', {'without-text': props.withoutText});
-    const text = props.text ? props.text : I18nStore.i18n('please-wait');
+    const text = props.text ? props.text : props.i18n('please-wait');
     return <div className={props.classes ? props.classes : 'mask'}>
         <div className={containerClasses}>
             <div style={{width: 32, height: 32, margin: 'auto'}}>
@@ -28,4 +29,4 @@ Mask.defaultProps = {
     withoutText: false
 };
 
-export default Mask;
+export default injectIntl(withI18n(Mask));

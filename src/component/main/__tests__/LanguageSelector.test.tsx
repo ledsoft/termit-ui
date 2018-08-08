@@ -1,30 +1,49 @@
 import * as React from 'react';
-import I18nStore from '../../../store/I18nStore';
 import {mount} from "enzyme";
-import LanguageSelector from "../LanguageSelector";
+import {LanguageSelector} from "../LanguageSelector";
 import Constants from "../../../util/Constants";
 
 describe('Language selector', () => {
 
+    let switchLanguage: (lang: string) => void;
+
+    beforeEach(() => {
+        switchLanguage = jest.fn();
+    });
+
     it('renders selected language element', () => {
-        I18nStore.activeLanguage = Constants.LANG.EN;
-        const wrapper = mount(<LanguageSelector/>);
+        const selectedLanguage = Constants.LANG.EN;
+        const wrapper = mount(<LanguageSelector language={selectedLanguage} switchLanguage={switchLanguage}/>);
         const element = wrapper.find('.selected');
         expect(element).toBeDefined();
         expect(element.text().toLowerCase()).toEqual(Constants.LANG.EN);
     });
 
     it('changes active language to Czech when Czech language selector is clicked', () => {
-        const wrapper = mount(<LanguageSelector/>);
+        const wrapper = mount(<LanguageSelector language={Constants.LANG.EN} switchLanguage={switchLanguage}/>);
         const element = wrapper.find('a.lang').at(0);
         element.simulate('click');
-        expect(I18nStore.activeLanguage).toEqual(Constants.LANG.CS);
+        expect(switchLanguage).toHaveBeenCalledWith(Constants.LANG.CS);
     });
 
     it('changes active language to English when English language selector is clicked', () => {
-        const wrapper = mount(<LanguageSelector/>);
+        const wrapper = mount(<LanguageSelector language={Constants.LANG.CS} switchLanguage={switchLanguage}/>);
         const element = wrapper.find('a.lang').at(1);
         element.simulate('click');
-        expect(I18nStore.activeLanguage).toEqual(Constants.LANG.EN);
+        expect(switchLanguage).toHaveBeenCalledWith(Constants.LANG.EN);
+    });
+
+    it('does not emit action when already active language selector is clicked - Czech', () => {
+        const wrapper = mount(<LanguageSelector language={Constants.LANG.CS} switchLanguage={switchLanguage}/>);
+        const element = wrapper.find('a.lang').at(0);
+        element.simulate('click');
+        expect(switchLanguage).not.toHaveBeenCalled();
+    });
+
+    it('does not emit action when already active language selector is clicked - English', () => {
+        const wrapper = mount(<LanguageSelector language={Constants.LANG.EN} switchLanguage={switchLanguage}/>);
+        const element = wrapper.find('a.lang').at(1);
+        element.simulate('click');
+        expect(switchLanguage).not.toHaveBeenCalled();
     });
 });
