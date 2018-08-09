@@ -4,6 +4,7 @@ import {AxiosInstance} from "axios";
 import Routing from '../Routing';
 import {EMPTY_USER} from "../../model/User";
 import Constants from "../Constants";
+import Routes from '../Routes';
 
 jest.mock('../Routing');
 
@@ -23,10 +24,10 @@ describe('Ajax', () => {
     });
 
     describe('error handling', () => {
-        it('directly transitions to home route when Unauthorized is received', () => {
+        it('directly transitions to login route when Unauthorized is received', () => {
             mock.onGet('/users/current').reply(401);
             return sut.get('/users/current').catch(() => {
-                return expect(Routing.transitionToHome).toHaveBeenCalled();
+                return expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.login);
             });
         });
 

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Routing from './Routing';
 import Constants from './Constants';
+import Routes from "./Routes";
 
 class RequestConfigBuilder {
     private mContent?: any;
@@ -79,7 +80,7 @@ export class Ajax {
             }
             const response = error.response;
             if (response.status === 401) {
-                Routing.transitionToHome();
+                Routing.transitionTo(Routes.login);
             }
             if (typeof response.data === "string") {
                 return Promise.reject({

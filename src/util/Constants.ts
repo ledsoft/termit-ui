@@ -3,6 +3,8 @@ import Routes from "./Routes";
 export default {
     // Will be replaced with actual server url during build
     SERVER_URL: '__SERVER_URL__',
+    // Prefix of the server REST API
+    API_PREFIX: '/rest',
     APP_NAME: 'TermIt',
     // Will be replaced with actual version during build
     VERSION: '__VERSION__',

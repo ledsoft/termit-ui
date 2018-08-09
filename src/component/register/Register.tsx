@@ -45,7 +45,9 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     }
 
     private onChange = (e: React.FormEvent<FormControlProps>) => {
-        this.props.clearError();
+        if (this.errorRelevant()) {
+            this.props.clearError();
+        }
         const newState = Object.assign({}, this.state);
         newState[e.currentTarget.name!] = e.currentTarget.value;
         this.setState(newState);
