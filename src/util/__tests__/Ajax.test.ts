@@ -1,14 +1,14 @@
 import MockAdapter from 'axios-mock-adapter';
 import {accept, Ajax, content, params} from '../Ajax';
-import {AxiosInstance} from "axios";
 import Routing from '../Routing';
 import {EMPTY_USER} from "../../model/User";
 import Constants from "../Constants";
 import Routes from '../Routes';
+import {AxiosInstance} from "axios";
 
 jest.mock('../Routing');
 
-class MockableAjax extends Ajax {
+export class MockableAjax extends Ajax {
     get axios(): AxiosInstance {
         return this.axiosInstance;
     }
@@ -93,8 +93,9 @@ describe('Ajax', () => {
             const spy = jest.spyOn(sut.axios, 'post');
             spy.mockClear();
             return sut.post('/users', content(data).contentType(mimeType)).then(() => {
-                const reqConfig = spy.mock.calls[0][1];
-                expect(reqConfig.data).toEqual(data);
+                const reqData = spy.mock.calls[0][1];
+                const reqConfig = spy.mock.calls[0][2];
+                expect(reqData).toEqual(data);
                 return expect(reqConfig.headers['Content-Type']).toEqual(mimeType);
             });
         });
@@ -124,8 +125,9 @@ describe('Ajax', () => {
             const spy = jest.spyOn(sut.axios, 'put');
             spy.mockClear();
             return sut.put('/users/current', content(data).contentType(mimeType)).then(() => {
-                const reqConfig = spy.mock.calls[0][1];
-                expect(reqConfig.data).toEqual(data);
+                const reqData = spy.mock.calls[0][1];
+                const reqConfig = spy.mock.calls[0][2];
+                expect(reqData).toEqual(data);
                 return expect(reqConfig.headers['Content-Type']).toEqual(mimeType);
             });
         });
@@ -136,7 +138,7 @@ describe('Ajax', () => {
             const spy = jest.spyOn(sut.axios, 'put');
             spy.mockClear();
             return sut.put('/users/status', accept(mimeType)).then(() => {
-                const reqConfig = spy.mock.calls[0][1];
+                const reqConfig = spy.mock.calls[0][2];
                 return expect(reqConfig.headers.Accept).toEqual(mimeType);
             });
         });
@@ -150,14 +152,15 @@ describe('Ajax', () => {
             const spy = jest.spyOn(sut.axios, 'put');
             spy.mockClear();
             return sut.put('/users/current', content(data).params(qParams)).then(() => {
-                const reqConfig = spy.mock.calls[0][1];
-                expect(reqConfig.data).toEqual(data);
+                const reqData = spy.mock.calls[0][1];
+                const reqConfig = spy.mock.calls[0][2];
+                expect(reqData).toEqual(data);
                 expect(reqConfig.headers['Content-Type']).toEqual(Constants.JSON_LD_MIME_TYPE);
                 return expect(reqConfig.params).toEqual(qParams);
             });
         });
 
-        it ('adds params in DELETE', () => {
+        it('adds params in DELETE', () => {
             const qParams = {
                 key: 'http://kbss.felk.cvut.cz/termit/users/Catherine+Halsey'
             };

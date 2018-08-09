@@ -70,6 +70,10 @@ export class Ajax {
     });
 
     constructor() {
+        this.axiosInstance.interceptors.request.use(reqConfig => {
+            reqConfig.headers[Constants.AUTHENTICATION_HEADER] = localStorage.getItem(Constants.STORAGE_JWT_KEY);
+            return reqConfig;
+        });
         this.axiosInstance.interceptors.response.use((resp) => {
             return resp;
         }, (error) => {
@@ -118,25 +122,23 @@ export class Ajax {
             });
         } else {
             const conf = {
-                data: config.getContent(),
                 headers: {
                     'Content-Type': config.getContentType()
                 }
             };
-            return this.axiosInstance.post(path, conf);
+            return this.axiosInstance.post(path, config.getContent(), conf);
         }
     }
 
     public put(path: string, config: RequestConfigBuilder) {
         const conf = {
-            data: config.getContent(),
             params: config.getParams(),
             headers: {
                 'Accept': config.getAccept(),
                 'Content-Type': config.getContentType()
             }
         };
-        return this.axiosInstance.put(path, conf);
+        return this.axiosInstance.put(path, config.getContent(), conf);
     }
 
     public delete(path: string, config?: RequestConfigBuilder) {

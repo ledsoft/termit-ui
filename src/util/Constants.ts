@@ -1,6 +1,6 @@
 import Routes from "./Routes";
 
-export default {
+const constants =  {
     // Will be replaced with actual server url during build
     SERVER_URL: '__SERVER_URL__',
     // Prefix of the server REST API
@@ -16,5 +16,11 @@ export default {
     },
     // Error origin caused by the inability to connect to the backend server
     CONNECTION_ERROR: 'CONNECTION_ERROR',
-    JSON_LD_MIME_TYPE: 'application/ld+json'
-}
+    JSON_LD_MIME_TYPE: 'application/ld+json',
+    AUTHENTICATION_HEADER: 'Authentication',
+    STORAGE_JWT_KEY: ''
+};
+
+constants.STORAGE_JWT_KEY = constants.APP_NAME + '-' + constants.AUTHENTICATION_HEADER;
+
+export default constants;

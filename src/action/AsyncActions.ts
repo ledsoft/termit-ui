@@ -4,6 +4,7 @@ import {Action, Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
 import Routing from '../util/Routing';
 import Constants from '../util/Constants';
+import Authentication from '../util/Authentication';
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -30,6 +31,7 @@ export function login(username: string, password: string) {
                 } else {
                     Routing.transitionToHome();
                     dispatch(SyncActions.loginSuccess());
+                    Authentication.saveJwt(resp.headers[Constants.AUTHENTICATION_HEADER]);
                     return Promise.resolve();
                 }
             }).catch((error: any) => dispatch(SyncActions.loginFailure(error)));
