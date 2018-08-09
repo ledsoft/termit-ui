@@ -80,3 +80,16 @@ export function switchLanguage(language: string): SwitchLanguageAction {
         language
     };
 }
+
+export function registerFailure(error: {}): FailureAction {
+    return {
+        type: ActionType.REGISTER_FAILURE,
+        error: new ErrorInfo(ActionType.REGISTER_FAILURE, error)
+    };
+}
+
+export function registerSuccess(): Action {
+    return {
+        type: ActionType.REGISTER_SUCCESS
+    };
+}

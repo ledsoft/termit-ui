@@ -19,3 +19,9 @@ export function login(username: string, password: string) {
         dispatch(AsyncActions.login(username, password));
     }
 }
+
+export function register(user: {username: string, password: string}) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(AsyncActions.register(user));
+    }
+}

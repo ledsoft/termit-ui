@@ -46,6 +46,7 @@ function loading(state = false, action: Action): boolean {
         case ActionType.FETCH_USER_SUCCESS:
         case ActionType.LOGIN_FAILURE:
         case ActionType.LOGIN_SUCCESS:
+        case ActionType.REGISTER_FAILURE:
             return false;
         default:
             return state;
@@ -63,6 +64,7 @@ function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
     switch (action.type) {
         case ActionType.FETCH_USER_FAILURE:
         case ActionType.LOGIN_FAILURE:
+        case ActionType.REGISTER_FAILURE:
             return (action as FailureAction).error;
         case ActionType.CLEAR_ERROR:
             const errAction = action as ClearErrorAction;

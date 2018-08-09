@@ -10,7 +10,7 @@ import {
     loginFailure,
     loginRequest,
     loginSuccess,
-    publishMessage,
+    publishMessage, registerFailure,
     switchLanguage
 } from "../../action/SyncActions";
 import ErrorInfo, {EMPTY_ERROR} from "../../model/ErrorInfo";
@@ -176,6 +176,17 @@ describe('Reducers', () => {
         it('loads localization data on action', () => {
             const action = switchLanguage(Constants.LANG.CS);
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {intl: require('../../i18n/cs').default}));
+        });
+    });
+
+    describe('register', () => {
+        it('sets error state on registration failure', () => {
+            const error = new ErrorInfo(ActionType.REGISTER_FAILURE, {
+                message: 'Username exists',
+                requestUrl: '/users'
+            });
+            const action = registerFailure(error);
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error}));
         });
     });
 });

@@ -6,6 +6,7 @@ export interface AbstractInputProps {
     name?: string,
     label?: string,
     placeholder?: string,
+    title?: string,
     value?: string,
     onChange?: (e: FormEvent<FormControl>) => void,
     help?: string,

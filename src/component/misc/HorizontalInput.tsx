@@ -17,7 +17,7 @@ export default class HorizontalInput extends AbstractInput<HorizontalInputProps>
         const {labelWidth, inputWidth, ...rest} = this.props;
         return <FormGroup bsSize='small' validationState={this.props.validation}>
             <Col sm={labelWidth} componentClass={ControlLabel}>
-                {this.renderLabel()}
+                {this.props.label}
             </Col>
             <Col sm={inputWidth}>
                 <FormControl type={this.props.type ? this.props.type : 'text'} ref={(c: FormControl) => this.input = c}
