@@ -1,11 +1,11 @@
 import * as React from 'react';
-import * as classNames from "classnames";
+import * as classNames from 'classnames';
 import Constants from '../../util/Constants';
 import './LanguageSelector.scss';
 import {connect} from 'react-redux';
-import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
+import TermItState from '../../model/TermItState';
+import {ThunkDispatch} from 'redux-thunk';
+import {Action} from 'redux';
 import {switchLanguage} from '../../action/SyncActions';
 
 interface LanguageSelectorProps {
@@ -30,13 +30,13 @@ export class LanguageSelector extends React.Component<LanguageSelectorProps> {
     };
 
     public render() {
-        const csCls = classNames("lang", {"selected": this.props.language === Constants.LANG.CS});
-        const enCls = classNames("lang", {"selected": this.props.language === Constants.LANG.EN});
+        const csCls = classNames('lang', {'selected': this.props.language === Constants.LANG.CS});
+        const enCls = classNames('lang', {'selected': this.props.language === Constants.LANG.EN});
         return <li>
-            <div className="lang">
-                <a className={csCls} href="#" onClick={this.onSelectCzech}>{Constants.LANG.CS.toUpperCase()}</a>
+            <div className='lang'>
+                <a className={csCls} href='#' onClick={this.onSelectCzech}>{Constants.LANG.CS.toUpperCase()}</a>
                 &nbsp;/&nbsp;
-                <a className={enCls} href="#" onClick={this.onSelectEnglish}>{Constants.LANG.EN.toUpperCase()}</a>
+                <a className={enCls} href='#' onClick={this.onSelectEnglish}>{Constants.LANG.EN.toUpperCase()}</a>
             </div>
         </li>;
     }

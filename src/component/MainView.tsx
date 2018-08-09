@@ -12,15 +12,23 @@ import './MainView.scss';
 import Routes from '../util/Routes';
 import Footer from './Footer';
 import LanguageSelector from "./main/LanguageSelector";
+import {ThunkDispatch} from "redux-thunk";
+import {Action} from "redux";
+import {loadUser} from "../action/ComplexActions";
 
 interface MainViewProps extends HasI18n {
-    user: User
+    user: User,
+    loadUser: () => void
 }
 
 class MainView extends React.Component<MainViewProps> {
 
     constructor(props: MainViewProps) {
         super(props);
+    }
+
+    public componentDidMount() {
+        this.props.loadUser();
     }
 
     private onUserProfileClick = () => {
@@ -63,5 +71,9 @@ export default connect((state: TermItState) => {
     return {
         loading: state.loading,
         user: state.user
+    };
+}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return {
+        loadUser: () => dispatch(loadUser())
     };
 })(injectIntl(withI18n(withLoading(MainView, {containerClass: 'app-container'}))));
