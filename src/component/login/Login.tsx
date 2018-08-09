@@ -113,9 +113,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
         }
         const error = this.props.error;
         const messageId = error.messageId ? error.messageId : 'login.error';
-        return this.props.error ? <Alert bsStyle='danger' bsSize='small'>
-            <div>{this.props.i18n(messageId)}</div>
-        </Alert> : null;
+        return this.props.error ? <Alert bsStyle='danger' bsSize='small'>{this.props.i18n(messageId)}</Alert> : null;
     }
 }
 
