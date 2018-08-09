@@ -1,7 +1,8 @@
 import * as SyncActions from './SyncActions';
 import Ajax, {content, params} from '../util/Ajax';
-import {Action, Dispatch} from "redux";
-import {ThunkDispatch} from "redux-thunk";
+import {Action, Dispatch} from 'redux';
+import {ThunkDispatch} from 'redux-thunk';
+import Routing from '../util/Routing';
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -22,6 +23,7 @@ export function login(username: string, password: string) {
         dispatch(SyncActions.loginRequest());
         Ajax.post('/j_spring_security_check', params({username, password}))
             .then(() => dispatch(SyncActions.loginSuccess()))
+            .then(() => Routing.transitionToHome())
             .catch((error) => dispatch(SyncActions.loginFailure(error)));
         return null;
     }
