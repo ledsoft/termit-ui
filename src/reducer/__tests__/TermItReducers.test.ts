@@ -11,10 +11,10 @@ import {
     loginRequest,
     loginSuccess,
     publishMessage, registerFailure,
-    switchLanguage
+    switchLanguage, userLogout
 } from "../../action/SyncActions";
 import ErrorInfo, {EMPTY_ERROR} from "../../model/ErrorInfo";
-import User from "../../model/User";
+import User, {EMPTY_USER} from "../../model/User";
 import Message from "../../model/Message";
 import Constants from "../../util/Constants";
 
@@ -187,6 +187,18 @@ describe('Reducers', () => {
             });
             const action = registerFailure(error);
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error}));
+        });
+    });
+
+    describe('logout', () => {
+        it('resets current user to empty user', () => {
+            initialState.user = new User({
+                uri: 'http://test',
+                firstName: 'test',
+                lastName: 'test',
+                username: 'test@kbss.felk.cvut.cz'
+            });
+            expect(reducers(stateToPlainObject(initialState), userLogout())).toEqual(Object.assign({}, initialState, {user: EMPTY_USER}));
         });
     });
 });

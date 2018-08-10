@@ -23,6 +23,8 @@ function user(state: User = EMPTY_USER, action: UserLoadingAction): User {
     switch (action.type) {
         case ActionType.FETCH_USER_SUCCESS:
             return action.user;
+        case ActionType.LOGOUT:
+            return EMPTY_USER;
         default:
             return state;
     }

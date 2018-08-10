@@ -1,6 +1,10 @@
 import * as AsyncActions from './AsyncActions';
-import {ThunkDispatch} from "redux-thunk";
+import {ThunkDispatch} from 'redux-thunk';
 import {Action} from 'redux';
+import Authentication from '../util/Authentication';
+import {userLogout} from './SyncActions';
+import Routes from '../util/Routes';
+import Routing from '../util/Routing';
 
 /*
  * Complex actions are basically just nice names for actions which involve both synchronous and asynchronous actions.
@@ -20,8 +24,16 @@ export function login(username: string, password: string) {
     }
 }
 
-export function register(user: {username: string, password: string}) {
+export function register(user: { username: string, password: string }) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(AsyncActions.register(user));
     }
+}
+
+export function logout() {
+    Authentication.clearToken();
+    Routing.transitionTo(Routes.login);
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(userLogout());
+    };
 }

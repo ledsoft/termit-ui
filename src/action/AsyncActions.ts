@@ -31,7 +31,7 @@ export function login(username: string, password: string) {
                 } else {
                     Routing.transitionToHome();
                     dispatch(SyncActions.loginSuccess());
-                    Authentication.saveJwt(resp.headers[Constants.AUTHENTICATION_HEADER]);
+                    Authentication.saveToken(resp.headers[Constants.AUTHENTICATION_HEADER]);
                     return Promise.resolve();
                 }
             }).catch((error: any) => dispatch(SyncActions.loginFailure(error)));

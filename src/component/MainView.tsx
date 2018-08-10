@@ -14,11 +14,12 @@ import Footer from './Footer';
 import LanguageSelector from "./main/LanguageSelector";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
-import {loadUser} from "../action/ComplexActions";
+import {loadUser, logout} from "../action/ComplexActions";
 
 interface MainViewProps extends HasI18n {
     user: User,
-    loadUser: () => void
+    loadUser: () => void,
+    logout: () => void
 }
 
 class MainView extends React.Component<MainViewProps> {
@@ -54,7 +55,7 @@ class MainView extends React.Component<MainViewProps> {
                         <NavDropdown id='logout' title={user.fullName}>
                             <MenuItem onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</MenuItem>
                             <MenuItem divider={true}/>
-                            <MenuItem href='#'>{i18n('main.logout')}</MenuItem>
+                            <MenuItem onClick={this.props.logout}>{i18n('main.logout')}</MenuItem>
                         </NavDropdown>
                     </Nav>
                 </Navbar>
@@ -74,6 +75,7 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        loadUser: () => dispatch(loadUser())
+        loadUser: () => dispatch(loadUser()),
+        logout: () => dispatch(logout())
     };
 })(injectIntl(withI18n(withLoading(MainView, {containerClass: 'app-container'}))));

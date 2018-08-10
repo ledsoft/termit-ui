@@ -1,11 +1,11 @@
 import configureMockStore from 'redux-mock-store';
 import {login} from '../AsyncActions';
-import Constants from "../../util/Constants";
-import Ajax from "../../util/Ajax";
-import thunk, {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
+import Constants from '../../util/Constants';
+import Ajax from '../../util/Ajax';
+import thunk, {ThunkDispatch} from 'redux-thunk';
+import {Action} from 'redux';
 import Routing from '../../util/Routing';
-import Authentication from "../../util/Authentication";
+import Authentication from '../../util/Authentication';
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax');
@@ -27,10 +27,10 @@ describe('Async actions', () => {
             const jwt = 'Bearer jwt12345';
             resp.headers[Constants.AUTHENTICATION_HEADER] = jwt;
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve(resp));
-            Authentication.saveJwt = jest.fn();
+            Authentication.saveToken = jest.fn();
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(login('test', 'test'))).then(() => {
-                expect(Authentication.saveJwt).toHaveBeenCalledWith(jwt);
+                expect(Authentication.saveToken).toHaveBeenCalledWith(jwt);
             });
         });
 

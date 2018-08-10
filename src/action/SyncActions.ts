@@ -93,3 +93,9 @@ export function registerSuccess(): Action {
         type: ActionType.REGISTER_SUCCESS
     };
 }
+
+export function userLogout(): Action {
+    return {
+        type: ActionType.LOGOUT
+    };
+}
