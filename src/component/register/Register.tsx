@@ -16,6 +16,8 @@ import {clearError} from '../../action/SyncActions';
 import ActionType from '../../action/ActionType';
 import {register} from '../../action/ComplexActions';
 import Footer from '../Footer';
+import Ajax, {params} from "../../util/Ajax";
+import Constants from '../../util/Constants';
 
 interface RegisterProps extends HasI18n {
     loading: boolean,
@@ -29,7 +31,8 @@ interface RegisterState {
     lastName: string,
     username: string,
     password: string,
-    passwordConfirm: string
+    passwordConfirm: string,
+    usernameExists: boolean
 }
 
 export class Register extends React.Component<RegisterProps, RegisterState> {
@@ -40,7 +43,8 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
             lastName: '',
             username: '',
             password: '',
-            passwordConfirm: ''
+            passwordConfirm: '',
+            usernameExists: false
         };
     }
 
@@ -53,6 +57,14 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         this.setState(newState);
     };
 
+    private onUsernameChange = (e: React.FormEvent<FormControlProps>) => {
+        this.onChange(e);
+        const username = e.currentTarget.value;
+        Ajax.get(Constants.API_PREFIX + '/users/username', params({username})).then(data => {
+            this.setState({usernameExists: data === true});
+        });
+    };
+
     private onKeyPress = (e: React.KeyboardEvent<FormControl>) => {
         if (e.key === 'Enter' && this.isValid()) {
             this.onRegister();
@@ -63,7 +75,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         return this.state.firstName.trim().length > 0 &&
             this.state.lastName.trim().length > 0 &&
             this.state.username.trim().length > 0 &&
-            this.state.password.trim().length > 0 && this.passwordsMatch();
+            this.state.password.trim().length > 0 && this.passwordsMatch() && !this.state.usernameExists;
     }
 
     private passwordsMatch(): boolean {
@@ -75,7 +87,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     }
 
     private onRegister = () => {
-        const {passwordConfirm, ...userData} = this.state;
+        const {passwordConfirm, usernameExists, ...userData} = this.state;
         this.props.register(userData);
     };
 
@@ -108,9 +120,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
                         </div>
                         <div className='row'>
                             <div className='col-xs-6'>
-                                <HorizontalInput type='text' name='username' label={i18n('register.username')}
-                                                 value={this.state.username}
-                                                 labelWidth={4} inputWidth={8} onChange={this.onChange}/>
+                                {this.renderUsername()}
                             </div>
                         </div>
                         <div className='row'>
@@ -138,7 +148,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
 
     private renderMask() {
         return this.props.loading ?
-            <Mask text={this.props.i18n('login.progress-mask')} classes='mask-container'/> : null;
+            <Mask text={this.props.i18n('register.mask')} classes='mask-container'/> : null;
     }
 
     private renderAlert() {
@@ -148,6 +158,19 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         const error = this.props.error;
         const text = error.messageId ? this.props.i18n(error.messageId) : error.message;
         return this.props.error ? <Alert bsStyle='danger' bsSize='small'>{text}</Alert> : null;
+    }
+
+    private renderUsername() {
+        if (!this.state.usernameExists) {
+            return <HorizontalInput type='text' name='username' label={this.props.i18n('register.username')}
+                                    value={this.state.username}
+                                    labelWidth={4} inputWidth={8} onChange={this.onUsernameChange}/>
+        } else {
+            return <HorizontalInput type='text' name='username' label={this.props.i18n('register.username')}
+                                    value={this.state.username} validation='error'
+                                    title={this.props.i18n('register.username-exists.tooltip')}
+                                    labelWidth={4} inputWidth={8} onChange={this.onUsernameChange}/>;
+        }
     }
 
     private renderPasswordConfirm() {

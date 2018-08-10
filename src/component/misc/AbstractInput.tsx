@@ -11,7 +11,6 @@ export interface AbstractInputProps {
     onChange?: (e: FormEvent<FormControl>) => void,
     help?: string,
     validation?: 'success' | 'warning' | 'error',
-    validationMessage?: string,
     autoFocus?: boolean
 }
 

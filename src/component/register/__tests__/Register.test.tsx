@@ -8,8 +8,11 @@ import Routes from "../../../util/Routes";
 import {Alert, Button} from "react-bootstrap";
 import {ReactWrapper} from "enzyme";
 import ActionType from "../../../action/ActionType";
+import Ajax, {params} from "../../../util/Ajax";
+import Constants from '../../../util/Constants';
 
 jest.mock('../../../util/Routing');
+jest.mock('../../../util/Ajax');
 
 describe('Registration', () => {
 
@@ -26,6 +29,9 @@ describe('Registration', () => {
     beforeEach(() => {
         clearError = jest.fn();
         register = jest.fn();
+        Ajax.get = jest.fn().mockImplementation(() => Promise.resolve({
+            data: false
+        }));
     });
 
     it('navigates to login route on cancel', () => {
@@ -105,7 +111,7 @@ describe('Registration', () => {
         const error = new ErrorInfo(ActionType.REGISTER_FAILURE, {
             message: 'Error'
         });
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={true} i18n={i18n} error={error}
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={error}
                                                 formatMessage={formatMessage} register={register}/>);
         expect(wrapper.find(Alert).exists()).toBeTruthy();
     });
@@ -114,11 +120,20 @@ describe('Registration', () => {
         const error = new ErrorInfo(ActionType.REGISTER_FAILURE, {
             message: 'Error'
         });
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={true} i18n={i18n} error={error}
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={error}
                                                 formatMessage={formatMessage} register={register}/>);
         const firstNameInput = wrapper.find('input[name="firstName"]');
         (firstNameInput.getDOMNode() as HTMLInputElement).value = userInfo.firstName;
         firstNameInput.simulate('change', firstNameInput);
         expect(clearError).toHaveBeenCalled();
+    });
+
+    it('checks for username existence on username field edit', () => {
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={EMPTY_ERROR}
+                                                formatMessage={formatMessage} register={register}/>);
+        const usernameInput = wrapper.find('input[name="username"]');
+        (usernameInput.getDOMNode() as HTMLInputElement).value = userInfo.username;
+        usernameInput.simulate('change', usernameInput);
+        expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + '/users/username', params({username: userInfo.username}));
     });
 });

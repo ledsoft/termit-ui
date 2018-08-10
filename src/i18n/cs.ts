@@ -29,11 +29,12 @@ export default {
         'register.username': 'Uživatelské jméno',
         'register.password': 'Heslo',
         'register.password-confirm': 'Potvrzení hesla',
-        'register.passwords-not-matching-tooltip': 'Heslo a jeho potvrzení se neshodují.',
+        'register.passwords-not-matching.tooltip': 'Heslo a jeho potvrzení se neshodují.',
         'register.submit': 'Registrovat',
         'register.mask': 'Registruji...',
         'register.error': 'Uživatele se nepodařilo zaregistrovat.',
         'register.login.error': 'Nepodařilo se přihlásit k nově vytvořenému uživateli.',
+        'register.username-exists.tooltip': 'Uživatelské jméno již existuje',
 
         'main.dashboard.nav': 'Hlavní strana',
         'main.statistics.nav': 'Statistiky',

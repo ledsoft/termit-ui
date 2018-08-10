@@ -12,7 +12,7 @@ export default class Select extends AbstractInput<AbstractInputProps> {
             <FormControl componentClass='select' ref={(c: FormControl) => this.input = c} {...this.props}>
                 {this.props.children}
             </FormControl>
-            {this.props.validation && <FormControl.Feedback title={this.props.validationMessage}/>}
+            {this.props.validation && <FormControl.Feedback/>}
             {this.renderHelp()}
         </FormGroup>;
     }
