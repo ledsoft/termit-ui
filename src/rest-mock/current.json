@@ -1,0 +1,9 @@
+{
+  "uri": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
+  "firstName": "Catherine",
+  "lastName": "Halsey",
+  "username": "halsey@unsc.org",
+  "types": [
+    "http://onto.fel.cvut.cz/ontologies/termit/admin"
+  ]
+}
