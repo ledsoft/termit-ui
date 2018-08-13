@@ -3,6 +3,7 @@ import Routing from './Routing';
 import Constants from './Constants';
 import Routes from "./Routes";
 import MockAdapter from "axios-mock-adapter";
+import Authentication from "./Authentication";
 
 class RequestConfigBuilder {
     private mContent?: any;
@@ -72,7 +73,7 @@ export class Ajax {
 
     constructor() {
         this.axiosInstance.interceptors.request.use(reqConfig => {
-            reqConfig.headers[Constants.AUTHENTICATION_HEADER] = localStorage.getItem(Constants.STORAGE_JWT_KEY);
+            reqConfig.headers[Constants.AUTHENTICATION_HEADER] = Authentication.loadToken();
             return reqConfig;
         });
         this.axiosInstance.interceptors.response.use((resp) => {
