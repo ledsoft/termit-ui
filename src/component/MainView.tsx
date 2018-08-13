@@ -15,6 +15,8 @@ import LanguageSelector from "./main/LanguageSelector";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import {loadUser, logout} from "../action/ComplexActions";
+import {Route, Switch} from "react-router";
+import Dashboard from "./dashboard/Dashboard";
 
 interface MainViewProps extends HasI18n {
     user: User,
@@ -61,7 +63,9 @@ class MainView extends React.Component<MainViewProps> {
                 </Navbar>
             </header>
             <div className='content'>
-                <h1>TODO: Add router switch</h1>
+                <Switch>
+                    <Route component={Dashboard}/>
+                </Switch>
             </div>
             <Footer/>
         </div>;

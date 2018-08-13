@@ -43,5 +43,12 @@ export default {
         'main.logout': 'Log out',
         'main.search.placeholder': 'Search',
         'main.search.tooltip': 'Search in all vocabularies and terms',
+
+        'dashboard.vocabulary.tile': 'Vocabulary Management',
+        'dashboard.document.tile': 'Document Management',
+        'dashboard.statistics.tile': 'Statistics',
+        'dashboard.create-vocabulary.tile' : 'Create Vocabulary',
+        'dashboard.add-document.tile' : 'Add Document'
+
     }
 }
