@@ -52,7 +52,7 @@ class MainView extends React.Component<MainViewProps> {
                     </Nav>
                     <Nav pullRight={true} className='nav-right'>
                         <LanguageSelector/>
-                        <NavDropdown id='logout' title={user.fullName}>
+                        <NavDropdown id='logout' title={user.abbreviatedName}>
                             <MenuItem onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</MenuItem>
                             <MenuItem divider={true}/>
                             <MenuItem onClick={this.props.logout}>{i18n('main.logout')}</MenuItem>
