@@ -17,7 +17,8 @@ const constants =  {
     // Error origin caused by the inability to connect to the backend server
     CONNECTION_ERROR: 'CONNECTION_ERROR',
     JSON_LD_MIME_TYPE: 'application/ld+json',
-    AUTHENTICATION_HEADER: 'Authentication',
+    // Axios uses lower case for header names
+    AUTHENTICATION_HEADER: 'authentication',
     STORAGE_JWT_KEY: ''
 };
 
