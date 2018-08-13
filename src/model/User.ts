@@ -45,6 +45,10 @@ export default class User {
     get fullName(): string {
         return this.firstName + ' ' + this.lastName;
     }
+
+    get abbreviatedName(): string {
+        return this.firstName.charAt(0).toUpperCase() + '. ' + this.lastName;
+    }
 }
 
 export const EMPTY_USER = new User({

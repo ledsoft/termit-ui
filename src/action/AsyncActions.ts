@@ -5,6 +5,7 @@ import {ThunkDispatch} from 'redux-thunk';
 import Routing from '../util/Routing';
 import Constants from '../util/Constants';
 import Authentication from '../util/Authentication';
+import User from '../model/User';
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -15,7 +16,7 @@ export function fetchUser() {
     return (dispatch: Dispatch) => {
         dispatch(SyncActions.fetchUserRequest());
         Ajax.get(Constants.API_PREFIX + '/users/current')
-            .then(user => dispatch(SyncActions.fetchUserSuccess(user)))
+            .then(user => dispatch(SyncActions.fetchUserSuccess(new User(user))))
             .catch((error) => dispatch(SyncActions.fetchUserFailure(error)));
     }
 }
@@ -29,9 +30,9 @@ export function login(username: string, password: string) {
                 if (!data.loggedIn) {
                     return Promise.reject(data);
                 } else {
+                    Authentication.saveToken(resp.headers[Constants.AUTHENTICATION_HEADER]);
                     Routing.transitionToHome();
                     dispatch(SyncActions.loginSuccess());
-                    Authentication.saveToken(resp.headers[Constants.AUTHENTICATION_HEADER]);
                     return Promise.resolve();
                 }
             }).catch((error: any) => dispatch(SyncActions.loginFailure(error)));

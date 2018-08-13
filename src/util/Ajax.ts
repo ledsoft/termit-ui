@@ -1,7 +1,8 @@
-import axios from 'axios';
+import axios, {AxiosInstance} from 'axios';
 import Routing from './Routing';
 import Constants from './Constants';
 import Routes from "./Routes";
+import MockAdapter from "axios-mock-adapter";
 
 class RequestConfigBuilder {
     private mContent?: any;
@@ -93,7 +94,11 @@ export class Ajax {
             } else {
                 return Promise.reject(response.data);
             }
-        })
+        });
+        if (process.env.REACT_APP_MOCK_REST_API) {
+            // Mock backend REST API if the environment is configured to do so
+            mockRestApi(this.axiosInstance);
+        }
     }
 
     public get(path: string, config?: RequestConfigBuilder) {
@@ -150,6 +155,19 @@ export class Ajax {
         }
         return this.axiosInstance.delete(path, conf);
     }
+}
+
+function mockRestApi(axiosInst: AxiosInstance): void {
+    const mock = new MockAdapter(axiosInst);
+    // Mock current user data
+    mock.onGet(Constants.API_PREFIX + '/users/current').reply(200, require('../rest-mock/current'));
+    // Mock login return value
+    mock.onPost('/j_spring_security_check').reply(200, {
+        loggedIn: true,
+        success: true
+    }, {
+        'Authentication': 'jwt12345'
+    });
 }
 
 const instance = new Ajax();
