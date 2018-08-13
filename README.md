@@ -32,10 +32,19 @@ asynchronous actions. This division might change as the number of actions grows.
 synchronous actions demarcating these events.
 - Navigation is handled separately from Redux, although the Redux documentation contains a section on setting up routing with react-router and redux. Currently, I
 believe it is not necessary to interconnect the two.
+- Localization is now handled by Redux state, so that page refreshes are not necessary when switching language.
+- Logout involves no server request, only removal of user token from local storage. This is because JWT is stateless and all user info is stored in the token,
+so server keeps no sessions.
 
 
 ## Debugging
 
 - Tests can be debugged directly in IDEA just like JUnit tests - IDEA is able to run singular tests.
 - The application can be debugged in IDEA as well, see the [JetBrains blog](https://blog.jetbrains.com/webstorm/2017/01/debugging-react-apps/).
+
+## Mocking Server REST API
+It is possible to mock server REST API, so that the application can be developed and run without having to start the backend application.
+To do so, use `npm run start-mock-rest`, which sets environment variables telling the app to mock the REST API. Now, the mock API is set up
+in `src/util/Ajax`, function `mockRestApi`, we are using [Axios Mock Adapter](https://github.com/ctimmerm/axios-mock-adapter). The usage should be
+fairly intuitive. Data should be kept in JSON files in `src/rest-mock` (has to be in `src`, otherwise webpack refuses to import the data).
 
