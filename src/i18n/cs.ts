@@ -53,8 +53,11 @@ export default {
 
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',
+        'vocabulary.vocabularies.create': 'Vytvořit slovník',
+        'vocabulary.vocabularies.create.tooltip': 'Vytvořit nový slovník',
         'vocabulary.create.title': 'Nový slovník',
         'vocabulary.create.submit': 'Vytvořit',
+        'vocabulary.create.iri.help': 'Identifikátor bude vygenerován automaticky na základě názvu slovníku. Můžete ho však též zadat ručně.',
         'vocabulary.name': 'Název',
         'vocabulary.iri': 'Identifikátor'
     }

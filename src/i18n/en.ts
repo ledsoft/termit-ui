@@ -53,8 +53,11 @@ export default {
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
+        'vocabulary.vocabularies.create': 'Create vocabulary',
+        'vocabulary.vocabularies.create.tooltip': 'Create new vocabulary',
         'vocabulary.create.title': 'Create Vocabulary',
         'vocabulary.create.submit': 'Create',
+        'vocabulary.create.iri.help': 'Identifier will be automatically generated based on the specified name. Or you can set it manually.',
         'vocabulary.name': 'Name',
         'vocabulary.iri': 'Identifier'
     }

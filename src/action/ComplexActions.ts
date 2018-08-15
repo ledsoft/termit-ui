@@ -37,3 +37,9 @@ export function logout() {
         dispatch(userLogout());
     };
 }
+
+export function createVocabulary(data: {name: string, iri: string}) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(AsyncActions.login(data.name, data.iri));
+    }
+}

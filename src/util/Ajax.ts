@@ -169,6 +169,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     }, {
         'Authentication': 'jwt12345'
     });
+    // Mock vocabulary IRI generator
+    mock.onGet(Constants.API_PREFIX + '/vocabularies/identifier').reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test');
 }
 
 const instance = new Ajax();
