@@ -5,31 +5,42 @@ import {Col, Grid, Jumbotron, Row} from "react-bootstrap";
 import './Dashboard.scss';
 import DashboardTile from "./DashboardTile";
 import DashboardQuickAccessTile from "./DashboardQuickAccessTile";
+import Routing from '../../util/Routing';
+import Routes from '../../util/Routes';
 
-class Dashboard extends React.Component<HasI18n>{
+export class Dashboard extends React.Component<HasI18n> {
     private onClick = () => {
         //
     };
 
-    public render(){
-        return <div className='row'><div className='dashboard-left'>
-            <Jumbotron>
-                {this.renderMainDashboard()}
-            </Jumbotron>
-            <Jumbotron>
-                {this.renderQuickAccessDashboard()}
-            </Jumbotron>
-            </div>
-            </div>;
+    private static onVocabularyManagementClick(): void {
+        Routing.transitionTo(Routes.vocabularies);
+    };
 
-}
+    private static onCreateVocabularyClick(): void {
+        Routing.transitionTo(Routes.createVocabulary);
+    };
+
+    public render() {
+        return <div className='row'>
+            <div className='dashboard-left'>
+                <Jumbotron>
+                    {this.renderMainDashboard()}
+                </Jumbotron>
+                <Jumbotron>
+                    {this.renderQuickAccessDashboard()}
+                </Jumbotron>
+            </div>
+        </div>;
+    }
 
     private renderMainDashboard() {
         const i18n = this.props.i18n;
         return <Grid fluid={true}>
             <Row>
                 <Col xs={4} className='dashboard-sector'>
-                    <DashboardTile text={i18n('dashboard.vocabulary.tile')} onClick={this.onClick}/>
+                    <DashboardTile text={i18n('dashboard.vocabulary.tile')}
+                                   onClick={Dashboard.onVocabularyManagementClick}/>
                 </Col>
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardTile text={i18n('dashboard.document.tile')} onClick={this.onClick}/>
@@ -46,7 +57,8 @@ class Dashboard extends React.Component<HasI18n>{
         return <Grid fluid={true}>
             <Row>
                 <Col xs={4} className='dashboard-sector'>
-                    <DashboardQuickAccessTile text={i18n('dashboard.create-vocabulary.tile')} onClick={this.onClick}/>
+                    <DashboardQuickAccessTile text={i18n('dashboard.create-vocabulary.tile')}
+                                              onClick={Dashboard.onCreateVocabularyClick}/>
                 </Col>
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardQuickAccessTile text={i18n('dashboard.add-document.tile')} onClick={this.onClick}/>

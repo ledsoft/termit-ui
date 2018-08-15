@@ -7,8 +7,9 @@ interface TileProps {
     title?: string;
     onClick: () => void;
 }
-const DashboardQuickAccessTile : React.SFC<TileProps> = props => {
-    return <Button className='dashboard-quick-access-tile btn-primary btn'>
+
+const DashboardQuickAccessTile: React.SFC<TileProps> = props => {
+    return <Button className='dashboard-quick-access-tile btn-primary btn' title={props.title} onClick={props.onClick}>
         {props.text}
     </Button>
 };
