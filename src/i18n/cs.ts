@@ -36,9 +36,10 @@ export default {
         'register.login.error': 'Nepodařilo se přihlásit k nově vytvořenému uživateli.',
         'register.username-exists.tooltip': 'Uživatelské jméno již existuje',
 
-        'main.dashboard.nav': 'Hlavní strana',
-        'main.statistics.nav': 'Statistiky',
-        'main.admin.nav': 'Administrace',
+        'main.nav.dashboard': 'Hlavní strana',
+        'main.nav.vocabularies': 'Slovníky',
+        'main.nav.statistics': 'Statistiky',
+        'main.nav.admin': 'Administrace',
         'main.user-profile': 'Profil uživatele',
         'main.logout': 'Odhlásit se',
         'main.search.placeholder': 'Hledat',
@@ -47,7 +48,14 @@ export default {
         'dashboard.vocabulary.tile': 'Správa slovníků',
         'dashboard.document.tile': 'Správa dokumentů',
         'dashboard.statistics.tile': 'Statistiky',
-        'dashboard.create-vocabulary.tile' : 'Vytvoření slovníku',
-        'dashboard.add-document.tile' : 'Přidat dokument'
+        'dashboard.create-vocabulary.tile' : 'Vytvořit slovník',
+        'dashboard.add-document.tile' : 'Přidat dokument',
+
+        'vocabulary.management': 'Správa slovníků',
+        'vocabulary.management.vocabularies': 'Slovníky',
+        'vocabulary.create.title': 'Nový slovník',
+        'vocabulary.create.submit': 'Vytvořit',
+        'vocabulary.name': 'Název',
+        'vocabulary.iri': 'Identifikátor'
     }
 }

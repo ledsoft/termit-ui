@@ -1,22 +1,23 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import withI18n, {HasI18n} from "./hoc/withI18n";
-import withLoading from "./hoc/withLoading";
-import {connect} from "react-redux";
-import TermItState from "../model/TermItState";
+import withI18n, {HasI18n} from './hoc/withI18n';
+import withLoading from './hoc/withLoading';
+import {connect} from 'react-redux';
+import TermItState from '../model/TermItState';
 import {MenuItem, Nav, Navbar, NavDropdown, NavItem} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap';
 import Constants from '../util/Constants';
-import User from "../model/User";
+import User from '../model/User';
 import './MainView.scss';
 import Routes from '../util/Routes';
 import Footer from './Footer';
-import LanguageSelector from "./main/LanguageSelector";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
-import {loadUser, logout} from "../action/ComplexActions";
-import {Route, Switch} from "react-router";
-import Dashboard from "./dashboard/Dashboard";
+import LanguageSelector from './main/LanguageSelector';
+import {ThunkDispatch} from 'redux-thunk';
+import {Action} from 'redux';
+import {loadUser, logout} from '../action/ComplexActions';
+import {Route, Switch} from 'react-router';
+import Dashboard from './dashboard/Dashboard';
+import VocabularyManagement from './vocabulary/VocabularyManagement';
 
 interface MainViewProps extends HasI18n {
     user: User,
@@ -47,10 +48,15 @@ class MainView extends React.Component<MainViewProps> {
                         <Navbar.Brand>{Constants.APP_NAME}</Navbar.Brand>
                     </Navbar.Header>
                     <Nav>
-                        <LinkContainer
-                            to={Routes.dashboard.name}><NavItem>{i18n('main.dashboard.nav')}</NavItem></LinkContainer>
-                        <LinkContainer
-                            to={Routes.statistics.name}><NavItem>{i18n('main.statistics.nav')}</NavItem></LinkContainer>
+                        <LinkContainer to={Routes.dashboard.path} exact={true}>
+                            <NavItem>{i18n('main.nav.dashboard')}</NavItem>
+                        </LinkContainer>
+                        <LinkContainer to={Routes.vocabularies.path}>
+                            <NavItem>{i18n('main.nav.vocabularies')}</NavItem>
+                        </LinkContainer>
+                        <LinkContainer to={Routes.statistics.path}>
+                            <NavItem>{i18n('main.nav.statistics')}</NavItem>
+                        </LinkContainer>
                     </Nav>
                     <Nav pullRight={true} className='nav-right'>
                         <LanguageSelector/>
@@ -64,6 +70,7 @@ class MainView extends React.Component<MainViewProps> {
             </header>
             <div className='content'>
                 <Switch>
+                    <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route component={Dashboard}/>
                 </Switch>
             </div>

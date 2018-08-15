@@ -36,9 +36,10 @@ export default {
         'register.login.error': 'Unable to login into the newly created account.',
         'register.username-exists.tooltip': 'Username already exists',
 
-        'main.dashboard.nav': 'Dashboard',
-        'main.statistics.nav': 'Statistics',
-        'main.admin.nav': 'Administration',
+        'main.nav.dashboard': 'Dashboard',
+        'main.nav.vocabularies': 'Vocabularies',
+        'main.nav.statistics': 'Statistics',
+        'main.nav.admin': 'Administration',
         'main.user-profile': 'User profile',
         'main.logout': 'Log out',
         'main.search.placeholder': 'Search',
@@ -48,7 +49,13 @@ export default {
         'dashboard.document.tile': 'Document Management',
         'dashboard.statistics.tile': 'Statistics',
         'dashboard.create-vocabulary.tile' : 'Create Vocabulary',
-        'dashboard.add-document.tile' : 'Add Document'
+        'dashboard.add-document.tile' : 'Add Document',
 
+        'vocabulary.management': 'Vocabulary Management',
+        'vocabulary.management.vocabularies': 'Vocabularies',
+        'vocabulary.create.title': 'Create Vocabulary',
+        'vocabulary.create.submit': 'Create',
+        'vocabulary.name': 'Name',
+        'vocabulary.iri': 'Identifier'
     }
 }
