@@ -81,6 +81,12 @@ export function switchLanguage(language: string): SwitchLanguageAction {
     };
 }
 
+export function registerRequest(): Action {
+    return {
+        type: ActionType.REGISTER_REQUEST
+    };
+}
+
 export function registerFailure(error: {}): FailureAction {
     return {
         type: ActionType.REGISTER_FAILURE,
@@ -97,5 +103,24 @@ export function registerSuccess(): Action {
 export function userLogout(): Action {
     return {
         type: ActionType.LOGOUT
+    };
+}
+
+export function createVocabularyRequest() {
+    return {
+        type: ActionType.CREATE_VOCABULARY_REQUEST
+    };
+}
+
+export function createVocabularyFailure(error: {}): FailureAction {
+    return {
+        type: ActionType.CREATE_VOCABULARY_FAILURE,
+        error: new ErrorInfo(ActionType.CREATE_VOCABULARY_FAILURE, error)
+    };
+}
+
+export function createVocabularySuccess(): Action {
+    return {
+        type: ActionType.CREATE_VOCABULARY_SUCCESS
     };
 }

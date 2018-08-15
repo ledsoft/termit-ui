@@ -13,9 +13,10 @@ import withLoading from "../hoc/withLoading";
 import {createVocabulary} from "../../action/ComplexActions";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
+import Vocabulary from "../../model/Vocabulary";
 
 interface CreateVocabularyProps extends HasI18n {
-    onCreate: ({}: { name: string, iri: string }) => void
+    onCreate: (vocabulary: Vocabulary) => void
 }
 
 interface CreateVocabularyState {
@@ -51,7 +52,7 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
     };
 
     private onCreate = (): void => {
-        this.props.onCreate({name: this.state.name, iri: this.state.iri});
+        this.props.onCreate(new Vocabulary({name: this.state.name, iri: this.state.iri}));
     };
 
     private static onCancel(): void {
@@ -99,6 +100,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        onCreate: (data: { name: string, iri: string }) => dispatch(createVocabulary(data))
+        onCreate: (vocabulary: Vocabulary) => dispatch(createVocabulary(vocabulary))
     };
 })(injectIntl(withI18n(withLoading(CreateVocabulary))));

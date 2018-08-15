@@ -5,6 +5,7 @@ import Authentication from '../util/Authentication';
 import {userLogout} from './SyncActions';
 import Routes from '../util/Routes';
 import Routing from '../util/Routing';
+import Vocabulary from "../model/Vocabulary";
 
 /*
  * Complex actions are basically just nice names for actions which involve both synchronous and asynchronous actions.
@@ -38,8 +39,8 @@ export function logout() {
     };
 }
 
-export function createVocabulary(data: {name: string, iri: string}) {
+export function createVocabulary(vocabulary: Vocabulary) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
-        dispatch(AsyncActions.login(data.name, data.iri));
+        dispatch(AsyncActions.createVocabulary(vocabulary));
     }
 }

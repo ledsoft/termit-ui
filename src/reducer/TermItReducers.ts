@@ -43,12 +43,16 @@ function loading(state = false, action: Action): boolean {
     switch (action.type) {
         case ActionType.FETCH_USER_REQUEST:
         case ActionType.LOGIN_REQUEST:
+        case ActionType.REGISTER_REQUEST:
+        case ActionType.CREATE_VOCABULARY_REQUEST:
             return true;
         case ActionType.FETCH_USER_FAILURE:
         case ActionType.FETCH_USER_SUCCESS:
         case ActionType.LOGIN_FAILURE:
         case ActionType.LOGIN_SUCCESS:
         case ActionType.REGISTER_FAILURE:
+        case ActionType.CREATE_VOCABULARY_SUCCESS:
+        case ActionType.CREATE_VOCABULARY_FAILURE:
             return false;
         default:
             return state;
@@ -67,6 +71,7 @@ function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
         case ActionType.FETCH_USER_FAILURE:
         case ActionType.LOGIN_FAILURE:
         case ActionType.REGISTER_FAILURE:
+        case ActionType.CREATE_VOCABULARY_FAILURE:
             return (action as FailureAction).error;
         case ActionType.CLEAR_ERROR:
             const errAction = action as ClearErrorAction;

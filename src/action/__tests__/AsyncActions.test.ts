@@ -1,14 +1,20 @@
 import configureMockStore from 'redux-mock-store';
-import {login} from '../AsyncActions';
+import {createVocabulary, login} from '../AsyncActions';
 import Constants from '../../util/Constants';
 import Ajax from '../../util/Ajax';
 import thunk, {ThunkDispatch} from 'redux-thunk';
 import {Action} from 'redux';
 import Routing from '../../util/Routing';
 import Authentication from '../../util/Authentication';
+import Vocabulary, {CONTEXT} from "../../model/Vocabulary";
 
 jest.mock('../../util/Routing');
-jest.mock('../../util/Ajax');
+jest.mock('../../util/Ajax', () => ({
+    default: jest.fn(),
+    content: require.requireActual('../../util/Ajax').content,
+    params: require.requireActual('../../util/Ajax').params,
+    accept: require.requireActual('../../util/Ajax').accept,
+}));
 jest.mock('../../util/Authentication');
 
 const mockStore = configureMockStore([thunk]);
@@ -50,4 +56,23 @@ describe('Async actions', () => {
         });
     });
 
+    describe('create vocabulary', () => {
+        it('adds context definition to vocabulary data and sets it over network', () => {
+            const vocabulary = new Vocabulary({
+                name: 'Test',
+                iri: 'http://test'
+            });
+            const mock = jest.fn().mockImplementation(() => Promise.resolve());
+            Ajax.post = mock;
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(createVocabulary(vocabulary))).then(() => {
+                expect(Ajax.post).toHaveBeenCalled();
+                const config = mock.mock.calls[0][1];
+                expect(config.getContentType()).toEqual(Constants.JSON_LD_MIME_TYPE);
+                const data = config.getContent();
+                expect(data['@context']).toBeDefined();
+                expect(data['@context']).toEqual(CONTEXT);
+            });
+        });
+    });
 });

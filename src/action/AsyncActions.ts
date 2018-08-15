@@ -6,6 +6,7 @@ import Routing from '../util/Routing';
 import Constants from '../util/Constants';
 import Authentication from '../util/Authentication';
 import User from '../model/User';
+import Vocabulary from "../model/Vocabulary";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -41,10 +42,19 @@ export function login(username: string, password: string) {
 
 export function register(user: { username: string, password: string }) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
-        dispatch(SyncActions.loginRequest());
+        dispatch(SyncActions.registerRequest());
         Ajax.post(Constants.API_PREFIX + '/users', content(user).contentType('application/json'))
             .then(() => dispatch(SyncActions.registerSuccess()))
             .then(() => dispatch(login(user.username, user.password)))
             .catch((error) => dispatch(SyncActions.registerFailure(error)));
+    }
+}
+
+export function createVocabulary(vocabulary: Vocabulary) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.createVocabularyRequest());
+        Ajax.post(Constants.API_PREFIX + '/vocabularies', content(vocabulary.toJsonLd()))
+            .then((resp) => dispatch(SyncActions.createVocabularySuccess()))
+            .catch((error: any) => dispatch(SyncActions.createVocabularyFailure(error)));
     }
 }
