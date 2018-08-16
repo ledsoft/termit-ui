@@ -1,13 +1,22 @@
 import ErrorInfo from "../model/ErrorInfo";
 import User from "../model/User";
 import Message from "../model/Message";
+import AsyncActionStatus from "./AsyncActionStatus";
 
 export interface Action {
     type: string
 }
 
+export interface AsyncAction extends Action {
+    status: AsyncActionStatus
+}
+
 export interface UserLoadingAction extends Action {
     user: User
+}
+
+export interface AsyncFailureAction extends AsyncAction{
+    error: ErrorInfo
 }
 
 export interface FailureAction extends Action {

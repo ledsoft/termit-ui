@@ -1,5 +1,7 @@
 import ActionType, {
     Action,
+    AsyncAction,
+    AsyncFailureAction,
     ClearErrorAction,
     FailureAction,
     MessageAction,
@@ -9,10 +11,19 @@ import ActionType, {
 import ErrorInfo from "../model/ErrorInfo";
 import User from "../model/User";
 import Message from "../model/Message";
+import AsyncActionStatus from "./AsyncActionStatus";
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
  */
+
+export function asyncActionRequest(a: Action): AsyncAction {
+    return {...a, status: AsyncActionStatus.REQUEST}
+}
+
+export function asyncActionFailure(a: Action, error: {}): AsyncFailureAction {
+    return {...a, status: AsyncActionStatus.FAILURE, error: new ErrorInfo(a.type, error)};
+}
 
 export function fetchUserRequest(): Action {
     return {
