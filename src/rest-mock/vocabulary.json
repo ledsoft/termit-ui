@@ -1,0 +1,24 @@
+{
+  "@id": "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/metropolitan-plan",
+  "@type": "http://onto.fel.cvut.cz/ontologies/termit/vocabulary",
+  "http://www.w3.org/2000/01/rdf-schema#label": "Metropolitan plan",
+  "http://onto.fel.cvut.cz/ontologies/termit/has-glossary": {
+    "@id": "http://onto.fel.cvut.cz/ontologies/termit/glossary/instance12345",
+    "@type": "http://onto.fel.cvut.cz/ontologies/termit/glossary"
+  },
+  "http://onto.fel.cvut.cz/ontologies/termit/has-model": {
+    "@id": "http://onto.fel.cvut.cz/ontologies/termit/model/instance54321",
+    "@type": "http://onto.fel.cvut.cz/ontologies/termit/model"
+  },
+  "http://onto.fel.cvut.cz/ontologies/termit/has-author": {
+    "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
+    "http://xmlns.com/foaf/0.1/givenName": "Catherine",
+    "http://xmlns.com/foaf/0.1/familyName": "Halsey",
+    "http://onto.fel.cvut.cz/ontologies/termit/username": "halsey@unsc.org",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/termit/user",
+      "http://onto.fel.cvut.cz/ontologies/termit/admin"
+    ]
+  },
+  "http://onto.fel.cvut.cz/ontologies/termit/created": 1534429897893
+}

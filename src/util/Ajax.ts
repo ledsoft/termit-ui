@@ -159,7 +159,7 @@ export class Ajax {
 }
 
 function mockRestApi(axiosInst: AxiosInstance): void {
-    const mock = new MockAdapter(axiosInst);
+    const mock = new MockAdapter(axiosInst, {delayResponse: 500});
     // Mock current user data
     mock.onGet(Constants.API_PREFIX + '/users/current').reply(200, require('../rest-mock/current'));
     // Mock login return value
@@ -174,6 +174,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock vocabulary create endpoint
     mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(201, null, {
         'location': 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/metropolitan-plan'
+    });
+    // Mock vocabulary retrieval endpoint
+    mock.onGet(Constants.API_PREFIX + "/vocabularies/metropolitan-plan").reply(200, require('../rest-mock/vocabulary'), {
+        'content-type': Constants.JSON_LD_MIME_TYPE
     });
 }
 

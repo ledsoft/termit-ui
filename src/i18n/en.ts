@@ -61,6 +61,8 @@ export default {
         'vocabulary.name': 'Name',
         'vocabulary.iri': 'Identifier',
         'vocabulary.summary.title': '{name} - Summary',
-        'vocabulary.detail.title': '{name} - Vocabulary Detail'
+        'vocabulary.detail.title': '{name} - Vocabulary Detail',
+
+        'glossary.title': 'Glossary'
     }
 }
