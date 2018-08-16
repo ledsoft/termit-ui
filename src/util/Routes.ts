@@ -15,7 +15,8 @@ export default {
     profile: new Route('profile', '/profile'),
     register: new Route('register','/register'),
     statistics: new Route('statistics', '/statistics'),
-    vocabularies: new Route('vocabularies', '/vocabularies'),
-    createVocabulary: new Route('createVocabulary', '/vocabularies/create'),
-    vocabularyDetail: new Route('vocabularyDetail', '/vocabularies/:name')
+    vocabularies: new Route('vocabulary', '/vocabulary'),
+    createVocabulary: new Route('createVocabulary', '/vocabulary/create'),
+    vocabularySummary: new Route('vocabularySummary', '/vocabulary/:name'),
+    vocabularyDetail: new Route('vocabularyDetail', '/vocabulary/:name/detail')
 }

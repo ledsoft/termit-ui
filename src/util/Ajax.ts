@@ -167,10 +167,14 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         loggedIn: true,
         success: true
     }, {
-        'Authentication': 'jwt12345'
+        'authentication': 'jwt12345'
     });
     // Mock vocabulary IRI generator
     mock.onGet(Constants.API_PREFIX + '/vocabularies/identifier').reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test');
+    // Mock vocabulary create endpoint
+    mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(201, null, {
+        'location': 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/metropolitan-plan'
+    });
 }
 
 const instance = new Ajax();

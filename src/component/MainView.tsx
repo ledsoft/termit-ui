@@ -18,6 +18,7 @@ import {loadUser, logout} from '../action/ComplexActions';
 import {Route, Switch} from 'react-router';
 import Dashboard from './dashboard/Dashboard';
 import VocabularyManagement from './vocabulary/VocabularyManagement';
+import VocabularyDetail from "./vocabulary/VocabularyDetail";
 
 interface MainViewProps extends HasI18n {
     user: User,
@@ -70,6 +71,7 @@ class MainView extends React.Component<MainViewProps> {
             </header>
             <div className='content'>
                 <Switch>
+                    <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route component={Dashboard}/>
                 </Switch>

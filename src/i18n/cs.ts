@@ -59,6 +59,8 @@ export default {
         'vocabulary.create.submit': 'Vytvořit',
         'vocabulary.create.iri.help': 'Identifikátor bude vygenerován automaticky na základě názvu slovníku. Můžete ho však též zadat ručně.',
         'vocabulary.name': 'Název',
-        'vocabulary.iri': 'Identifikátor'
+        'vocabulary.iri': 'Identifikátor',
+        'vocabulary.summary.title': '{name} - přehled',
+        'vocabulary.detail.title': '{name} - Detail slovníků'
     }
 }

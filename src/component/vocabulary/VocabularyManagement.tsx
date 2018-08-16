@@ -6,6 +6,7 @@ import Vocabularies from "./Vocabularies";
 import {Route, Switch} from "react-router";
 import Routes from '../../util/Routes';
 import CreateVocabulary from "./CreateVocabulary";
+import VocabularySummary from "./VocabularySummary";
 
 class VocabularyManagement extends React.Component<HasI18n> {
     constructor(props: HasI18n) {
@@ -23,6 +24,7 @@ class VocabularyManagement extends React.Component<HasI18n> {
                 <Col className='col-md-8'>
                     <Switch>
                         <Route path={Routes.createVocabulary.path} component={CreateVocabulary}/>
+                        <Route path={Routes.vocabularySummary.path} component={VocabularySummary} exact={true}/>
                     </Switch>
                 </Col>
             </div>
