@@ -7,6 +7,7 @@ import {Action} from 'redux';
 import Routing from '../../util/Routing';
 import Authentication from '../../util/Authentication';
 import Vocabulary, {CONTEXT} from "../../model/Vocabulary";
+import Routes from '../../util/Routes';
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -57,7 +58,7 @@ describe('Async actions', () => {
     });
 
     describe('create vocabulary', () => {
-        it('adds context definition to vocabulary data and sets it over network', () => {
+        it('adds context definition to vocabulary data and sends it over network', () => {
             const vocabulary = new Vocabulary({
                 name: 'Test',
                 iri: 'http://test'
@@ -72,6 +73,24 @@ describe('Async actions', () => {
                 const data = config.getContent();
                 expect(data['@context']).toBeDefined();
                 expect(data['@context']).toEqual(CONTEXT);
+            });
+        });
+
+        it('transitions to vocabulary detail on success', () => {
+            const vocabulary = new Vocabulary({
+                name: 'Test',
+                iri: 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/test'
+            });
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({headers: {location: vocabulary.iri}}));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(createVocabulary(vocabulary))).then(() => {
+                expect(Routing.transitionTo).toHaveBeenCalled();
+                const args = (Routing.transitionTo as jest.Mock).mock.calls[0];
+                expect(args[0]).toEqual(Routes.vocabularyDetail);
+                expect(args[1]).toEqual({
+                    params: new Map([['name', 'test']]),
+                    query: new Map()
+                });
             });
         });
     });

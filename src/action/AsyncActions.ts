@@ -7,6 +7,8 @@ import Constants from '../util/Constants';
 import Authentication from '../util/Authentication';
 import User from '../model/User';
 import Vocabulary from "../model/Vocabulary";
+import Routes from "../util/Routes";
+import IdentifierResolver from "../util/IdentifierResolver";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -54,7 +56,11 @@ export function createVocabulary(vocabulary: Vocabulary) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.createVocabularyRequest());
         Ajax.post(Constants.API_PREFIX + '/vocabularies', content(vocabulary.toJsonLd()))
-            .then((resp) => dispatch(SyncActions.createVocabularySuccess()))
+            .then((resp) => {
+                dispatch(SyncActions.createVocabularySuccess());
+                const location = resp.headers[Constants.LOCATION_HEADER];
+                Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
+            })
             .catch((error: any) => dispatch(SyncActions.createVocabularyFailure(error)));
     }
 }

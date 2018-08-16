@@ -7,13 +7,16 @@ class Routing {
         return this.mHistory;
     }
 
-    private static _setPathParams(path: string, params: object) {
-        for (const paramName in params) {
-            if (params.hasOwnProperty(paramName)) {
-                path = path.replace(':' + paramName, params[paramName]);
-            }
+    private static setPathParams(path: string, params: Map<string, string>) {
+        for (const pair of Array.from(params.entries())) {
+            path = path.replace(':' + pair[0], pair[1]);
         }
         return path;
+    }
+
+    private static setQueryParams(path: string, params: Map<string, string>) {
+        const paramValuePairs = Array.from(params.entries()).map((pair) => pair[0] + "=" + pair[1]);
+        return paramValuePairs.length > 0 ? path + '?' + paramValuePairs.join('&') : path;
     }
 
 
@@ -34,15 +37,16 @@ class Routing {
     /**
      * Transitions to the specified route
      * @param route Route object
-     * @param options Transition options, can specify path parameters, query parameters, payload and view handlers.
+     * @param options Transition options, can specify path parameters and query parameters.
      */
-    public transitionTo = (route: Route, options = {params: {}}) => {
+    public transitionTo = (route: Route, options: { params?: Map<string, string>, query?: Map<string, string> } = {}) => {
         let path = route.path;
         if (options.params) {
-            path = Routing._setPathParams(path, options.params);
+            path = Routing.setPathParams(path, options.params);
         }
-        // RouterStore.setTransitionPayload(route.name, options.payload);
-        // RoutingRules.execute(route.name);
+        if (options.query) {
+            path = Routing.setQueryParams(path, options.query);
+        }
         this.mHistory.push(path);
     };
 

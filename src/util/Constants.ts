@@ -19,6 +19,7 @@ const constants =  {
     JSON_LD_MIME_TYPE: 'application/ld+json',
     // Axios uses lower case for header names
     AUTHENTICATION_HEADER: 'authentication',
+    LOCATION_HEADER: 'location',
     STORAGE_JWT_KEY: ''
 };
 

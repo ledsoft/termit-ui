@@ -7,6 +7,7 @@ import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
 import Routes from "../../../util/Routes";
 import Ajax, {params} from "../../../util/Ajax";
 import Constants from "../../../util/Constants";
+import Vocabulary from "../../../model/Vocabulary";
 
 jest.mock('../../../util/Routing');
 jest.mock('../../../util/Ajax');
@@ -15,7 +16,7 @@ describe('Create vocabulary view', () => {
 
     const iri = 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test';
 
-    let onCreate: (data: { name: string, iri: string }) => void;
+    let onCreate: (vocabulary: Vocabulary) => void;
 
     beforeEach(() => {
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(iri));
