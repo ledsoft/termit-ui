@@ -1,3 +1,9 @@
+export interface ErrorData {
+    requestUrl?: string,
+    messageId?: string,
+    message?: string
+}
+
 /**
  * Represents error received from the server API.
  */
@@ -7,11 +13,7 @@ export default class ErrorInfo {
     private readonly mMessageId?: string;
     private readonly mMessage?: string;
 
-    constructor(origin: string, data: {
-        requestUrl?: string,
-        messageId?: string,
-        message?: string
-    }) {
+    constructor(origin: string, data: ErrorData) {
         this.mOrigin = origin;
         this.mRequestUrl = data.requestUrl;
         this.mMessage = data.message;

@@ -11,16 +11,15 @@ export interface AsyncAction extends Action {
     status: AsyncActionStatus
 }
 
-export interface UserLoadingAction extends Action {
+export interface UserLoadingAction extends AsyncAction {
     user: User
-}
-
-export interface AsyncFailureAction extends AsyncAction{
-    error: ErrorInfo
 }
 
 export interface FailureAction extends Action {
     error: ErrorInfo
+}
+
+export interface AsyncFailureAction extends AsyncAction, FailureAction {
 }
 
 export interface ClearErrorAction extends Action {

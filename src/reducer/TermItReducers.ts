@@ -1,6 +1,6 @@
 import {combineReducers} from "redux";
 import ActionType, {
-    Action,
+    Action, AsyncAction,
     ClearErrorAction,
     FailureAction,
     MessageAction,
@@ -13,6 +13,7 @@ import ErrorInfo, {EMPTY_ERROR} from "../model/ErrorInfo";
 import Message from "../model/Message";
 import IntlData from "../model/IntlData";
 import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
+import AsyncActionStatus from "../action/AsyncActionStatus";
 
 /**
  * Handles changes to the currently logged in user.
@@ -39,20 +40,12 @@ function user(state: User = EMPTY_USER, action: UserLoadingAction): User {
  * NOTE: This strategy is highly likely to change as we might have multiple components loading data independently of
  * each other
  */
-function loading(state = false, action: Action): boolean {
-    switch (action.type) {
-        case ActionType.FETCH_USER_REQUEST:
-        case ActionType.LOGIN_REQUEST:
-        case ActionType.REGISTER_REQUEST:
-        case ActionType.CREATE_VOCABULARY_REQUEST:
+function loading(state = false, action: AsyncAction): boolean {
+    switch (action.status) {
+        case AsyncActionStatus.REQUEST:
             return true;
-        case ActionType.FETCH_USER_FAILURE:
-        case ActionType.FETCH_USER_SUCCESS:
-        case ActionType.LOGIN_FAILURE:
-        case ActionType.LOGIN_SUCCESS:
-        case ActionType.REGISTER_FAILURE:
-        case ActionType.CREATE_VOCABULARY_SUCCESS:
-        case ActionType.CREATE_VOCABULARY_FAILURE:
+        case AsyncActionStatus.SUCCESS:
+        case AsyncActionStatus.FAILURE:
             return false;
         default:
             return state;

@@ -1,3 +1,10 @@
+export interface UserData {
+    uri: string,
+    firstName: string,
+    lastName: string,
+    username: string,
+    types?: string[]
+}
 /**
  * System user account.
  */
@@ -8,13 +15,7 @@ export default class User {
     private readonly mUsername: string;
     private readonly mTypes: string[];
 
-    constructor(data: {
-        uri: string,
-        firstName: string,
-        lastName: string,
-        username: string,
-        types?: string[]
-    }) {
+    constructor(data: UserData) {
         this.mUri = data.uri;
         this.mFirstName = data.firstName;
         this.mLastName = data.lastName;

@@ -3,13 +3,12 @@ import ActionType, {
     AsyncAction,
     AsyncFailureAction,
     ClearErrorAction,
-    FailureAction,
     MessageAction,
     SwitchLanguageAction,
     UserLoadingAction
 } from './ActionType';
-import ErrorInfo from "../model/ErrorInfo";
-import User from "../model/User";
+import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
+import User, {UserData} from "../model/User";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 
@@ -18,50 +17,50 @@ import AsyncActionStatus from "./AsyncActionStatus";
  */
 
 export function asyncActionRequest(a: Action): AsyncAction {
-    return {...a, status: AsyncActionStatus.REQUEST}
+    return {...a, status: AsyncActionStatus.REQUEST};
 }
 
-export function asyncActionFailure(a: Action, error: {}): AsyncFailureAction {
+export function asyncActionFailure(a: Action, error: ErrorData): AsyncFailureAction {
     return {...a, status: AsyncActionStatus.FAILURE, error: new ErrorInfo(a.type, error)};
 }
 
-export function fetchUserRequest(): Action {
-    return {
+export function fetchUserRequest(): AsyncAction {
+    return asyncActionRequest({
         type: ActionType.FETCH_USER_REQUEST
-    };
+    });
 }
 
-export function fetchUserSuccess(data: User): UserLoadingAction {
+export function fetchUserSuccess(data: UserData): UserLoadingAction {
     return {
         type: ActionType.FETCH_USER_SUCCESS,
-        user: data
+        status: AsyncActionStatus.SUCCESS,
+        user: new User(data)
     };
 }
 
-export function fetchUserFailure(error: {}): FailureAction {
-    return {
+export function fetchUserFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
         type: ActionType.FETCH_USER_FAILURE,
-        error: new ErrorInfo(ActionType.FETCH_USER_FAILURE, error)
-    };
+    }, error);
 }
 
-export function loginRequest(): Action {
-    return {
+export function loginRequest(): AsyncAction {
+    return asyncActionRequest({
         type: ActionType.LOGIN_REQUEST
+    });
+}
+
+export function loginSuccess(): AsyncAction {
+    return {
+        type: ActionType.LOGIN_SUCCESS,
+        status: AsyncActionStatus.SUCCESS
     };
 }
 
-export function loginSuccess(): Action {
-    return {
-        type: ActionType.LOGIN_SUCCESS
-    };
-}
-
-export function loginFailure(error: {}): FailureAction {
-    return {
-        type: ActionType.LOGIN_FAILURE,
-        error: new ErrorInfo(ActionType.LOGIN_FAILURE, error)
-    };
+export function loginFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
+        type: ActionType.LOGIN_FAILURE
+    }, error);
 }
 
 export function clearError(origin: string): ClearErrorAction {
@@ -92,22 +91,22 @@ export function switchLanguage(language: string): SwitchLanguageAction {
     };
 }
 
-export function registerRequest(): Action {
-    return {
+export function registerRequest(): AsyncAction {
+    return asyncActionRequest({
         type: ActionType.REGISTER_REQUEST
-    };
+    });
 }
 
-export function registerFailure(error: {}): FailureAction {
-    return {
+export function registerFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
         type: ActionType.REGISTER_FAILURE,
-        error: new ErrorInfo(ActionType.REGISTER_FAILURE, error)
-    };
+    }, error);
 }
 
-export function registerSuccess(): Action {
+export function registerSuccess(): AsyncAction {
     return {
-        type: ActionType.REGISTER_SUCCESS
+        type: ActionType.REGISTER_SUCCESS,
+        status: AsyncActionStatus.SUCCESS
     };
 }
 
@@ -117,21 +116,21 @@ export function userLogout(): Action {
     };
 }
 
-export function createVocabularyRequest() {
-    return {
+export function createVocabularyRequest(): AsyncAction {
+    return asyncActionRequest({
         type: ActionType.CREATE_VOCABULARY_REQUEST
-    };
+    });
 }
 
-export function createVocabularyFailure(error: {}): FailureAction {
-    return {
+export function createVocabularyFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
         type: ActionType.CREATE_VOCABULARY_FAILURE,
-        error: new ErrorInfo(ActionType.CREATE_VOCABULARY_FAILURE, error)
-    };
+    }, error);
 }
 
-export function createVocabularySuccess(): Action {
+export function createVocabularySuccess(): AsyncAction {
     return {
-        type: ActionType.CREATE_VOCABULARY_SUCCESS
+        type: ActionType.CREATE_VOCABULARY_SUCCESS,
+        status: AsyncActionStatus.SUCCESS
     };
 }
