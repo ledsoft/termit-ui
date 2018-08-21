@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {Col} from 'react-bootstrap';
+import {Col} from 'reactstrap';
 import {RouteComponentProps} from "react-router";
 import GlossaryTerms from "../term/GlossaryTerms";
 

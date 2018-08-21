@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {Col, Grid, Jumbotron, Row} from "react-bootstrap";
+import {Col, Container, Jumbotron, Row} from "reactstrap";
 import './Dashboard.scss';
 import DashboardTile from "./DashboardTile";
 import DashboardQuickAccessTile from "./DashboardQuickAccessTile";
@@ -36,7 +36,7 @@ export class Dashboard extends React.Component<HasI18n> {
 
     private renderMainDashboard() {
         const i18n = this.props.i18n;
-        return <Grid fluid={true}>
+        return <Container fluid={true}>
             <Row>
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardTile text={i18n('dashboard.vocabulary.tile')}
@@ -49,12 +49,12 @@ export class Dashboard extends React.Component<HasI18n> {
                     <DashboardTile text={i18n('dashboard.statistics.tile')} onClick={this.onClick}/>
                 </Col>
             </Row>
-        </Grid>;
+        </Container>;
     }
 
     private renderQuickAccessDashboard() {
         const i18n = this.props.i18n;
-        return <Grid fluid={true}>
+        return <Container fluid={true}>
             <Row>
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardQuickAccessTile text={i18n('dashboard.create-vocabulary.tile')}
@@ -64,7 +64,7 @@ export class Dashboard extends React.Component<HasI18n> {
                     <DashboardQuickAccessTile text={i18n('dashboard.add-document.tile')} onClick={this.onClick}/>
                 </Col>
             </Row>
-        </Grid>;
+        </Container>;
     }
 
 }

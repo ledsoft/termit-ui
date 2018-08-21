@@ -1,8 +1,8 @@
 import * as React from 'react';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {injectIntl} from 'react-intl';
-import {Alert, Button, Form, FormControl, FormControlProps, Panel} from 'react-bootstrap';
-import Input from '../misc/HorizontalInput';
+import {Alert, Button, Card, CardBody, CardHeader, CardTitle, Form} from 'reactstrap';
+import HorizontalInput from '../misc/HorizontalInput';
 import Routing from '../../util/Routing';
 import './Login.scss';
 import Routes from "../../util/Routes";
@@ -39,7 +39,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
         };
     }
 
-    private onChange = (e: React.FormEvent<FormControlProps>) => {
+    private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (this.errorRelevant()) {
             this.props.clearError();
         }
@@ -48,7 +48,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
         this.setState(newState);
     };
 
-    private onKeyPress = (e: React.KeyboardEvent<FormControl>) => {
+    private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && this.isValid()) {
             this.login();
         }
@@ -74,18 +74,18 @@ export class Login extends React.Component<LoginProps, LoginState> {
         const i18n = this.props.i18n;
         const panelCls = this.errorRelevant() ? 'login-panel-expanded' : 'login-panel';
         return <div className='app-container'>
-            <Panel bsStyle='info' className={panelCls}>
-                <Panel.Heading>
-                    <Panel.Title componentClass='h3'>{i18n('login.title')}</Panel.Title>
-                </Panel.Heading>
-                <Panel.Body>
+            <Card bsStyle='info' className={panelCls}>
+                <CardHeader>
+                    <CardTitle>{i18n('login.title')}</CardTitle>
+                </CardHeader>
+                <CardBody>
                     {this.renderMask()}
                     <Form horizontal={true}>
                         {this.renderAlert()}
-                        <Input name='username' label={i18n('login.username')} value={this.state.username}
+                        <HorizontalInput name='username' label={i18n('login.username')} value={this.state.username}
                                onKeyPress={this.onKeyPress} onChange={this.onChange} autoFocus={true}
                                labelWidth={3} inputWidth={9}/>
-                        <Input type='password' name='password' label={i18n('login.password')}
+                        <HorizontalInput type='password' name='password' label={i18n('login.password')}
                                value={this.state.password}
                                onKeyPress={this.onKeyPress} onChange={this.onChange}
                                labelWidth={3} inputWidth={9}/>
@@ -98,8 +98,8 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                     disabled={this.props.loading}>{i18n('login.register')}</Button>
                         </div>
                     </Form>
-                </Panel.Body>
-            </Panel>
+                </CardBody>
+            </Card>
             <Footer className='footer-login'/>
         </div>;
     }

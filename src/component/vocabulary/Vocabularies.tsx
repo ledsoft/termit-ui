@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Button, Panel} from 'react-bootstrap';
+import {Button, Card, CardHeader, CardBody, CardTitle} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import Routes from "../../util/Routes";
 import Routing from '../../util/Routing';
@@ -13,11 +13,11 @@ class Vocabularies extends React.Component<HasI18n> {
 
     public render() {
         const i18n = this.props.i18n;
-        return <Panel bsStyle='info'>
-            <Panel.Heading>
-                <Panel.Title componentClass='h3'>{i18n('vocabulary.management.vocabularies')}</Panel.Title>
-            </Panel.Heading>
-            <Panel.Body>
+        return <Card bsStyle='info'>
+            <CardHeader>
+                <CardTitle>{i18n('vocabulary.management.vocabularies')}</CardTitle>
+            </CardHeader>
+            <CardBody>
                 <div className='row'>
                     <div className='col-xs-12'>
                         <Button bsStyle='primary' title={i18n('vocabulary.vocabularies.create.tooltip')} bsSize='small'
@@ -25,8 +25,8 @@ class Vocabularies extends React.Component<HasI18n> {
                     </div>
                 </div>
                 TODO
-            </Panel.Body>
-        </Panel>
+            </CardBody>
+        </Card>
     }
 }
 

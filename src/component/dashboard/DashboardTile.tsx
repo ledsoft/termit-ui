@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button} from "react-bootstrap";
+import {Button} from "reactstrap";
 import './Dashboard.scss';
 
 interface TileProps {
@@ -9,7 +9,7 @@ interface TileProps {
 }
 
 const DashboardTile: React.SFC<TileProps> = props => {
-    return <Button className='dashboard-tile btn-primary btn' title={props.title} onClick={props.onClick}>
+    return <Button color="primary" className='dashboard-tile' title={props.title} onClick={props.onClick}>
         {props.text}
     </Button>
 };

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Col} from 'react-bootstrap';
+import {Col} from 'reactstrap';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabularies from "./Vocabularies";
 import {Route, Switch} from "react-router";

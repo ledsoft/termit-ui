@@ -4,8 +4,16 @@ import withI18n, {HasI18n} from './hoc/withI18n';
 import withLoading from './hoc/withLoading';
 import {connect} from 'react-redux';
 import TermItState from '../model/TermItState';
-import {MenuItem, Nav, Navbar, NavDropdown, NavItem} from 'react-bootstrap';
-import {LinkContainer} from 'react-router-bootstrap';
+import {
+    Container,
+    DropdownItem, DropdownMenu,
+    DropdownToggle,
+    Nav,
+    Navbar,
+    NavbarBrand,
+    NavItem, NavLink,
+    UncontrolledDropdown
+} from 'reactstrap';
 import Constants from '../util/Constants';
 import User from '../model/User';
 import './MainView.scss';
@@ -26,14 +34,29 @@ interface MainViewProps extends HasI18n {
     logout: () => void
 }
 
-class MainView extends React.Component<MainViewProps> {
+interface State {
+    dropDownOpen: boolean;
+}
+
+class MainView extends React.Component<MainViewProps, State> {
 
     constructor(props: MainViewProps) {
         super(props);
+
+        this.toggleDropdown = this.toggleDropdown.bind(this);
+        this.state={
+            dropDownOpen: false,
+        };
     }
 
     public componentDidMount() {
         this.props.loadUser();
+    }
+
+    private toggleDropdown(){
+        this.setState({
+            dropDownOpen: !this.state.dropDownOpen
+        });
     }
 
     private onUserProfileClick = () => {
@@ -44,38 +67,43 @@ class MainView extends React.Component<MainViewProps> {
         const {i18n, user} = this.props;
         return <div className='wrapper'>
             <header>
-                <Navbar fluid={true}>
-                    <Navbar.Header>
-                        <Navbar.Brand>{Constants.APP_NAME}</Navbar.Brand>
-                    </Navbar.Header>
-                    <Nav>
-                        <LinkContainer to={Routes.dashboard.path} exact={true}>
-                            <NavItem>{i18n('main.nav.dashboard')}</NavItem>
-                        </LinkContainer>
-                        <LinkContainer to={Routes.vocabularies.path}>
-                            <NavItem>{i18n('main.nav.vocabularies')}</NavItem>
-                        </LinkContainer>
-                        <LinkContainer to={Routes.statistics.path}>
-                            <NavItem>{i18n('main.nav.statistics')}</NavItem>
-                        </LinkContainer>
+                <Navbar color="light" expand={"md"} className={"d-flex"}>
+
+                    <NavbarBrand>{Constants.APP_NAME}</NavbarBrand>
+
+                    <Nav className={"flex-grow-1"}>
+                        <NavItem>
+                            <NavLink href={Routes.dashboard.path}>{i18n('main.nav.dashboard')}</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href={Routes.vocabularies.path}>{i18n('main.nav.vocabularies')}</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink href={Routes.statistics.path}>{i18n('main.nav.statistics')}</NavLink>
+                        </NavItem>
                     </Nav>
-                    <Nav pullRight={true} className='nav-right'>
+                    <Nav>
                         <LanguageSelector/>
-                        <NavDropdown id='logout' title={user.abbreviatedName}>
-                            <MenuItem onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</MenuItem>
-                            <MenuItem divider={true}/>
-                            <MenuItem onClick={this.props.logout}>{i18n('main.logout')}</MenuItem>
-                        </NavDropdown>
+                        <UncontrolledDropdown id='logout' nav={true} inNavbar={true}>
+                            <DropdownToggle nav={true} caret={true}>
+                                {user.abbreviatedName}
+                            </DropdownToggle>
+                            <DropdownMenu right={true}>
+                                <DropdownItem  onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem >
+                                <DropdownItem  divider={true}/>
+                                <DropdownItem  onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem >
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
                     </Nav>
                 </Navbar>
             </header>
-            <div className='content'>
+            <Container fluid={true} className={"mt-5"}>
                 <Switch>
                     <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route component={Dashboard}/>
                 </Switch>
-            </div>
+            </Container>
             <Footer/>
         </div>;
     }

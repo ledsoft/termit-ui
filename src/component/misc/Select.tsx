@@ -1,18 +1,18 @@
 import * as React from 'react';
-import {FormControl, FormGroup} from 'react-bootstrap';
+import {FormFeedback, FormGroup, Input} from 'reactstrap';
 import AbstractInput, {AbstractInputProps} from "./AbstractInput";
 
 export default class Select extends AbstractInput<AbstractInputProps> {
 
-    private input: FormControl;
+    private input: any;
 
     public render() {
         return <FormGroup bsSize='small' validationState={this.props.validation}>
             {this.renderLabel()}
-            <FormControl componentClass='select' ref={(c: FormControl) => this.input = c} {...this.props}>
+            <Input type='select' ref={(c: any) => this.input = c} {...this.props}>
                 {this.props.children}
-            </FormControl>
-            {this.props.validation && <FormControl.Feedback/>}
+            </Input>
+            {this.props.validation && <FormFeedback/>}
             {this.renderHelp()}
         </FormGroup>;
     }

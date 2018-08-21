@@ -1,28 +1,27 @@
 import * as React from 'react';
-import {Col, ControlLabel, FormControl, FormGroup} from 'react-bootstrap';
+import {Col, FormFeedback, FormGroup, Input, Label} from 'reactstrap';
 import AbstractInput, {AbstractInputProps} from "./AbstractInput";
 
 export interface HorizontalInputProps extends AbstractInputProps {
-    type?: string,
     labelWidth: number
     inputWidth: number
-    onKeyPress?: (e: React.KeyboardEvent<FormControl>) => void
+    onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 export default class HorizontalInput extends AbstractInput<HorizontalInputProps> {
 
-    private input: FormControl;
+    private input: any;
 
     public render() {
         const {labelWidth, inputWidth, ...rest} = this.props;
         return <FormGroup bsSize='small' validationState={this.props.validation}>
-            <Col sm={labelWidth} componentClass={ControlLabel}>
+            <Label sm={labelWidth}>
                 {this.props.label}
-            </Col>
+            </Label>
             <Col sm={inputWidth}>
-                <FormControl type={this.props.type ? this.props.type : 'text'} ref={(c: FormControl) => this.input = c}
-                             componentClass='input' {...rest}/>
-                {this.props.validation && <FormControl.Feedback/>}
+                <Input type={this.props.type ? this.props.type : 'text'} ref={(c: any) => this.input = c}
+                             {...rest}/>
+                {this.props.validation && <FormFeedback/>}
                 {this.renderHelp()}
             </Col>
         </FormGroup>;

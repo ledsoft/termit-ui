@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Alert, Button, ButtonToolbar, Form, FormControl, FormControlProps, Panel} from 'react-bootstrap';
+import {Alert, Button, ButtonToolbar, Form, Card, CardHeader, CardTitle, CardBody} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import ErrorInfo from '../../model/ErrorInfo';
 import HorizontalInput from '../misc/HorizontalInput';
@@ -48,7 +48,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         };
     }
 
-    private onChange = (e: React.FormEvent<FormControlProps>) => {
+    private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (this.errorRelevant()) {
             this.props.clearError();
         }
@@ -57,7 +57,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         this.setState(newState);
     };
 
-    private onUsernameChange = (e: React.FormEvent<FormControlProps>) => {
+    private onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.onChange(e);
         const username = e.currentTarget.value;
         Ajax.get(Constants.API_PREFIX + '/users/username', params({username})).then(data => {
@@ -65,7 +65,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         });
     };
 
-    private onKeyPress = (e: React.KeyboardEvent<FormControl>) => {
+    private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && this.isValid()) {
             this.onRegister();
         }
@@ -98,11 +98,11 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     public render() {
         const i18n = this.props.i18n;
         return <div className='app-container'>
-            <Panel bsStyle='info' className={this.errorRelevant() ? 'register-panel-expanded' : 'register-panel'}>
-                <Panel.Heading>
-                    <Panel.Title componentClass='h3'>{i18n('register.title')}</Panel.Title>
-                </Panel.Heading>
-                <Panel.Body>
+            <Card bsStyle='info' className={this.errorRelevant() ? 'register-panel-expanded' : 'register-panel'}>
+                <CardHeader>
+                    <CardTitle>{i18n('register.title')}</CardTitle>
+                </CardHeader>
+                <CardBody>
                     {this.renderMask()}
                     <Form horizontal={true} className='register-form'>
                         {this.renderAlert()}
@@ -140,8 +140,8 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
                                     onClick={this.onCancel}>{i18n('cancel')}</Button>
                         </ButtonToolbar>
                     </Form>
-                </Panel.Body>
-            </Panel>
+                </CardBody>
+            </Card>
             <Footer className='footer-login'/>
         </div>;
     }

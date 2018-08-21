@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button} from "react-bootstrap";
+import {Button} from "reactstrap";
 import Routing from '../../../util/Routing';
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {CreateVocabulary} from "../CreateVocabulary";

@@ -3,7 +3,7 @@ import {Login} from '../Login';
 import ErrorInfo, {EMPTY_ERROR} from "../../../model/ErrorInfo";
 import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
 import ActionType from "../../../action/ActionType";
-import {Alert} from "react-bootstrap";
+import {Alert} from "reactstrap";
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
 
 jest.mock('../../../util/Routing');

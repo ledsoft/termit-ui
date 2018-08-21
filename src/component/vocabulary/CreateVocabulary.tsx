@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Button, ButtonToolbar, Col, Form, FormControlProps, Panel} from 'react-bootstrap';
+import {Button, ButtonToolbar, Col, Form, Card, CardTitle, CardHeader, CardBody} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import {connect} from 'react-redux';
 import TermItState from '../../model/TermItState';
-import Input from '../misc/Input';
+import CustomInput from '../misc/CustomInput';
 import Routes from '../../util/Routes';
 import Routing from '../../util/Routing';
 import Ajax, {params} from "../../util/Ajax";
@@ -35,7 +35,7 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
         };
     }
 
-    private onNameChange = (e: React.FormEvent<FormControlProps>): void => {
+    private onNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({name: (e.currentTarget.value as string)});
         this.generateIri();
     };
@@ -47,7 +47,7 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
         Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier', params({name: this.state.name})).then(iri => this.setState({iri}));
     }
 
-    private onIriChange = (e: React.FormEvent<FormControlProps>): void => {
+    private onIriChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({iri: (e.currentTarget.value as string), generateIri: false});
     };
 
@@ -61,22 +61,22 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
 
     public render() {
         const i18n = this.props.i18n;
-        return <Panel bsStyle='info'>
-            <Panel.Heading>
-                <Panel.Title componentClass='h3'>{i18n('vocabulary.create.title')}</Panel.Title>
-            </Panel.Heading>
-            <Panel.Body>
+        return <Card bsStyle='info'>
+            <CardHeader>
+                <CardTitle>{i18n('vocabulary.create.title')}</CardTitle>
+            </CardHeader>
+            <CardBody>
                 <Form>
                     <div className='row'>
                         <Col className='col-md-6'>
-                            <Input name='create-vocabulary.name' label={i18n('vocabulary.name')} value={this.state.name}
-                                   onChange={this.onNameChange}/>
+                            <CustomInput name='create-vocabulary.name' label={i18n('vocabulary.name')} value={this.state.name}
+                                         onChange={this.onNameChange}/>
                         </Col>
                     </div>
                     <div className='row'>
                         <Col className='col-md-6'>
-                            <Input name='create-vocabulary.iri' label={i18n('vocabulary.iri')} value={this.state.iri}
-                                   onChange={this.onIriChange} help={i18n('vocabulary.create.iri.help')}/>
+                            <CustomInput name='create-vocabulary.iri' label={i18n('vocabulary.iri')} value={this.state.iri}
+                                         onChange={this.onIriChange} help={i18n('vocabulary.create.iri.help')}/>
                         </Col>
                     </div>
                     <div className='row'>
@@ -89,8 +89,8 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
                         </Col>
                     </div>
                 </Form>
-            </Panel.Body>
-        </Panel>;
+            </CardBody>
+        </Card>;
     }
 }
 

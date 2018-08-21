@@ -5,7 +5,7 @@ import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
 import ErrorInfo, {EMPTY_ERROR} from "../../../model/ErrorInfo";
 import Routing from '../../../util/Routing';
 import Routes from "../../../util/Routes";
-import {Alert, Button} from "react-bootstrap";
+import {Alert, Button} from "reactstrap";
 import {ReactWrapper} from "enzyme";
 import ActionType from "../../../action/ActionType";
 import Ajax, {params} from "../../../util/Ajax";
