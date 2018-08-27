@@ -18,19 +18,30 @@ interface GlossaryTermsProps extends HasI18n {
 
 export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
 
+
+    constructor(props: GlossaryTermsProps) {
+        super(props);
+        this._fetchOptions = this._fetchOptions.bind(this);
+        this._onOptionCreate = this._onOptionCreate.bind(this);
+        this._formComponent = this._formComponent.bind(this);
+    }
+
+    _fetchOptions({searchString, optionID, limit, offset}: any) {
+        return new Promise((resolve) => {
+            // TODO fetch options from the server
+            setTimeout(resolve, 1000, data)
+        });
+    }
+
+    _formComponent({onOptionCreate, toggleModal, options, labelKey, valueKey, childrenKey}){
+        return null //TODO
+    }
+
+    _onOptionCreate({option}: any) {
+        // TODO response callback
+    }
+
     public render() {
-
-        function _fetchOptions({searchString, optionID, limit, offset}: any) {
-            return new Promise((resolve) => {
-                 // TODO fetch options from the server
-                setTimeout(resolve, 1000, data)
-            });
-        }
-
-        function _onOptionCreate({option}: any) {
-            // TODO response callback
-        }
-
         const i18n = this.props.i18n;
         return <Card>
             <CardHeader color="info">
@@ -41,14 +52,16 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
                         Glossary term tree
                         <IntelligentTreeSelect
                             // name={"main_search"}
-                            fetchOptions={_fetchOptions}
+                            fetchOptions={this._fetchOptions}
                             valueKey={"value"}
                             labelKey={"label"}
                             childrenKey={"children"}
                             simpleTreeData={true}
                             isMenuOpen={true}
                             options={data}
-                            onOptionCreate={_onOptionCreate}
+                            filterComponent={null}
+                            formComponent={this._formComponent}
+                            onOptionCreate={this._onOptionCreate}
                         />
                 </Row>
             </CardBody>
