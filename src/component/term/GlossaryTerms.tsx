@@ -3,6 +3,7 @@ import {injectIntl} from 'react-intl';
 import {Card, CardBody, CardHeader, CardTitle, Row} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import Vocabulary from "../../model/Vocabulary";
+import NewOptionForm from './forms/newOptionForm'
 
 // @ts-ignore
 import { IntelligentTreeSelect } from 'intelligent-tree-select';
@@ -26,18 +27,18 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         this._formComponent = this._formComponent.bind(this);
     }
 
-    _fetchOptions({searchString, optionID, limit, offset}: any) {
+    private _fetchOptions({searchString, optionID, limit, offset}: any) {
         return new Promise((resolve) => {
             // TODO fetch options from the server
             setTimeout(resolve, 1000, data)
         });
     }
 
-    _formComponent({onOptionCreate, toggleModal, options, labelKey, valueKey, childrenKey}){
-        return null //TODO
+    private _formComponent(props: any){
+        return <NewOptionForm {...props}/>
     }
 
-    _onOptionCreate({option}: any) {
+    private _onOptionCreate({option}: any) {
         // TODO response callback
     }
 
