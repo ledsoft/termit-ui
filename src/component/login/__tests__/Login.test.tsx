@@ -21,7 +21,7 @@ describe('Login', () => {
     it('renders submit button disabled when either field is empty', () => {
         const wrapper = mountWithIntl(<Login loading={false} error={EMPTY_ERROR} login={login}
                                              clearError={clearError} i18n={i18n} formatMessage={formatMessage}/>);
-        const button = wrapper.find('[bsStyle="success"]');
+        const button = wrapper.find('[color="success"]');
         expect(button.getElement().props.disabled).toBeTruthy();
         const usernameInput = wrapper.find('input[name="username"]');
         const passwordInput = wrapper.find('input[name="password"]');
@@ -38,7 +38,7 @@ describe('Login', () => {
     it('enables submit button when both fields are non-empty', () => {
         const wrapper = mountWithIntl(<Login loading={false} error={EMPTY_ERROR} login={login} clearError={clearError}
                                              i18n={i18n} formatMessage={formatMessage}/>);
-        const button = wrapper.find('[bsStyle="success"]');
+        const button = wrapper.find('[color="success"]');
         expect(button.getElement().props.disabled).toBeTruthy();
         const usernameInput = wrapper.find('input[name="username"]');
         const passwordInput = wrapper.find('input[name="password"]');
@@ -46,7 +46,7 @@ describe('Login', () => {
         usernameInput.simulate('change', usernameInput);
         (passwordInput.getDOMNode() as HTMLInputElement).value = 'aaaa';
         passwordInput.simulate('change', passwordInput);
-        expect(wrapper.find('[bsStyle="success"]').getElement().props.disabled).toBeFalsy();
+        expect(wrapper.find('[color="success"]').getElement().props.disabled).toBeFalsy();
     });
 
     it('invokes login when enter is pressed', () => {
