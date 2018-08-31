@@ -1,14 +1,12 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Card, CardBody, CardHeader, CardTitle, Row} from 'reactstrap';
+import {Card, CardBody, CardHeader, Row} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import Vocabulary from "../../model/Vocabulary";
 import NewOptionForm from './forms/newOptionForm'
-
 // @ts-ignore
-import { IntelligentTreeSelect } from 'intelligent-tree-select';
+import {IntelligentTreeSelect} from 'intelligent-tree-select';
 import "intelligent-tree-select/lib/styles.css";
-
 // @ts-ignore
 import data from './../../util/__mocks__/generated-data.json' // TODO remove
 
@@ -34,11 +32,11 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         });
     }
 
-    private _formComponent(props: any){
+    private _formComponent(props: any) {
         return <NewOptionForm {...props}/>
     }
 
-    private _filterComponent(props: any){
+    private _filterComponent(props: any) {
         return null
     }
 
@@ -50,25 +48,25 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         const i18n = this.props.i18n;
         return <Card>
             <CardHeader color="info">
-                <CardTitle>{i18n('glossary.title')}</CardTitle>
+                <h5>{i18n('glossary.title')}</h5>
             </CardHeader>
             <CardBody>
                 <Row>
-                        <IntelligentTreeSelect
-                            // name={"main_search"}
-                            fetchOptions={this._fetchOptions}
-                            valueKey={"value"}
-                            labelKey={"label"}
-                            childrenKey={"children"}
-                            openButtonLabel={i18n('glossary.form.header')}
-                            openButtonTooltipLabel={i18n('glossary.form.tooltipLabel')}
-                            simpleTreeData={true}
-                            isMenuOpen={true}
-                            options={data}
-                            filterComponent={this._filterComponent}
-                            formComponent={this._formComponent}
-                            onOptionCreate={this._onOptionCreate}
-                        />
+                    <IntelligentTreeSelect
+                        // name={"main_search"}
+                        fetchOptions={this._fetchOptions}
+                        valueKey={"value"}
+                        labelKey={"label"}
+                        childrenKey={"children"}
+                        openButtonLabel={i18n('glossary.form.header')}
+                        openButtonTooltipLabel={i18n('glossary.form.tooltipLabel')}
+                        simpleTreeData={true}
+                        isMenuOpen={true}
+                        options={data}
+                        filterComponent={this._filterComponent}
+                        formComponent={this._formComponent}
+                        onOptionCreate={this._onOptionCreate}
+                    />
                 </Row>
             </CardBody>
         </Card>;

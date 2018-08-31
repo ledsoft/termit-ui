@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Button, ButtonToolbar, Col, Form, Card, CardTitle, CardHeader, CardBody} from 'reactstrap';
+import {Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import {connect} from 'react-redux';
 import TermItState from '../../model/TermItState';
@@ -63,31 +63,33 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
         const i18n = this.props.i18n;
         return <Card>
             <CardHeader color='info'>
-                <CardTitle>{i18n('vocabulary.create.title')}</CardTitle>
+                <h5>{i18n('vocabulary.create.title')}</h5>
             </CardHeader>
             <CardBody>
                 <Form>
-                    <div className='row'>
-                        <Col className='col-md-6'>
-                            <CustomInput name='create-vocabulary.name' label={i18n('vocabulary.name')} value={this.state.name}
+                    <Row>
+                        <Col md={6}>
+                            <CustomInput name='create-vocabulary.name' label={i18n('vocabulary.name')}
+                                         value={this.state.name}
                                          onChange={this.onNameChange}/>
                         </Col>
-                    </div>
-                    <div className='row'>
-                        <Col className='col-md-6'>
-                            <CustomInput name='create-vocabulary.iri' label={i18n('vocabulary.iri')} value={this.state.iri}
+                    </Row>
+                    <Row>
+                        <Col md={6}>
+                            <CustomInput name='create-vocabulary.iri' label={i18n('vocabulary.iri')}
+                                         value={this.state.iri}
                                          onChange={this.onIriChange} help={i18n('vocabulary.create.iri.help')}/>
                         </Col>
-                    </div>
-                    <div className='row'>
-                        <Col className='col-md-6'>
+                    </Row>
+                    <Row>
+                        <Col md={6}>
                             <ButtonToolbar className='pull-right'>
                                 <Button onClick={this.onCreate} color='success' size='sm'
                                         disabled={this.state.name.trim().length === 0}>{i18n('vocabulary.create.submit')}</Button>
                                 <Button onClick={CreateVocabulary.onCancel} size='sm'>{i18n('cancel')}</Button>
                             </ButtonToolbar>
                         </Col>
-                    </div>
+                    </Row>
                 </Form>
             </CardBody>
         </Card>;

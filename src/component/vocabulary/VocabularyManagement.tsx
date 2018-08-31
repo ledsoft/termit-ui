@@ -18,10 +18,10 @@ class VocabularyManagement extends React.Component<HasI18n> {
         return <div>
             <h2 className='page-header'>{i18n('vocabulary.management')}</h2>
             <div className='row'>
-                <Col className='col-md-4'>
+                <Col md={4}>
                     <Vocabularies/>
                 </Col>
-                <Col className='col-md-8'>
+                <Col md={8}>
                     <Switch>
                         <Route path={Routes.createVocabulary.path} component={CreateVocabulary}/>
                         <Route path={Routes.vocabularySummary.path} component={VocabularySummary} exact={true}/>
