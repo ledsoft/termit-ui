@@ -1,6 +1,6 @@
 .login-panel {
   width: 400px;
-  height: 200px;
+  height: 226px;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -11,13 +11,5 @@
 
 .login-panel-expanded {
   @extend .login-panel;
-  height: 280px;
-}
-
-.buttons {
-  padding: 0 0 0 7px;
-}
-
-.register-link {
-  padding: 0 0 0 15px;
+  height: 292px;
 }

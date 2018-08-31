@@ -41,3 +41,9 @@ body {
     }
   }
 }
+
+.card-header {
+  & h5 {
+    margin-bottom: 0;
+  }
+}

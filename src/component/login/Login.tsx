@@ -1,7 +1,7 @@
 import * as React from 'react';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {injectIntl} from 'react-intl';
-import {Alert, Button, Card, CardBody, CardHeader, CardTitle, Form} from 'reactstrap';
+import {Alert, Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from 'reactstrap';
 import HorizontalInput from '../misc/HorizontalInput';
 import Routing from '../../util/Routing';
 import './Login.scss';
@@ -74,29 +74,33 @@ export class Login extends React.Component<LoginProps, LoginState> {
         const i18n = this.props.i18n;
         const panelCls = this.errorRelevant() ? 'login-panel-expanded' : 'login-panel';
         return <div className='app-container'>
-            <Card bsStyle='info' className={panelCls}>
-                <CardHeader>
-                    <CardTitle>{i18n('login.title')}</CardTitle>
+            <Card className={panelCls}>
+                <CardHeader color='info'>
+                    <h5>{i18n('login.title')}</h5>
                 </CardHeader>
                 <CardBody>
                     {this.renderMask()}
-                    <Form horizontal={true}>
+                    <Form>
                         {this.renderAlert()}
                         <HorizontalInput name='username' label={i18n('login.username')} value={this.state.username}
-                               onKeyPress={this.onKeyPress} onChange={this.onChange} autoFocus={true}
-                               labelWidth={3} inputWidth={9}/>
+                                         onKeyPress={this.onKeyPress} onChange={this.onChange} autoFocus={true}
+                                         labelWidth={3} inputWidth={9}/>
                         <HorizontalInput type='password' name='password' label={i18n('login.password')}
-                               value={this.state.password}
-                               onKeyPress={this.onKeyPress} onChange={this.onChange}
-                               labelWidth={3} inputWidth={9}/>
+                                         value={this.state.password}
+                                         onKeyPress={this.onKeyPress} onChange={this.onChange}
+                                         labelWidth={3} inputWidth={9}/>
 
-                        <div className='col-xs-3'>&nbsp;</div>
-                        <div className='col-xs-9 buttons'>
-                            <Button bsStyle='success' bsSize='small' onClick={this.login}
-                                    disabled={this.props.loading || !this.isValid()}>{i18n('login.submit')}</Button>
-                            <Button bsStyle='link' bsSize='small' onClick={this.register} className='register-link'
-                                    disabled={this.props.loading}>{i18n('login.register')}</Button>
-                        </div>
+                        <Row>
+                            <Col xs={3}>&nbsp;</Col>
+                            <Col xs={9}>
+                                <ButtonToolbar>
+                                    <Button color='success' size='sm' onClick={this.login}
+                                            disabled={this.props.loading || !this.isValid()}>{i18n('login.submit')}</Button>
+                                    <Button color='link' size='sm' onClick={this.register} className='register-link'
+                                            disabled={this.props.loading}>{i18n('login.register')}</Button>
+                                </ButtonToolbar>
+                            </Col>
+                        </Row>
                     </Form>
                 </CardBody>
             </Card>
@@ -115,7 +119,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
         }
         const error = this.props.error;
         const messageId = error.messageId ? error.messageId : 'login.error';
-        return this.props.error ? <Alert bsStyle='danger' bsSize='small'>{this.props.i18n(messageId)}</Alert> : null;
+        return this.props.error ? <Alert color='danger'>{this.props.i18n(messageId)}</Alert> : null;
     }
 }
 

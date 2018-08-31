@@ -1,6 +1,6 @@
 .register-panel {
-  width: 840px;
-  height: 250px;
+  width: 900px;
+  height: 261px;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -15,19 +15,10 @@
 
 .register-panel-expanded {
   @extend .register-panel;
-  height: 320px;
-}
-
-.register-form {
-  margin-top: 0.5em;
+  height: 327px;
 }
 
 .register-buttons {
   display: flex;
   justify-content: center;
-  margin-top: 0.5em;
-}
-
-.register-cancel {
-  margin-left: 3.2em !important;
 }

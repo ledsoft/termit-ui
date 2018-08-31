@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Alert, Button, ButtonToolbar, Form, Card, CardHeader, CardTitle, CardBody} from 'reactstrap';
+import {Alert, Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import ErrorInfo from '../../model/ErrorInfo';
 import HorizontalInput from '../misc/HorizontalInput';
@@ -92,51 +92,54 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     };
 
     private onCancel = () => {
+        if (this.errorRelevant()) {
+            this.props.clearError();
+        }
         Routing.transitionTo(Routes.login);
     };
 
     public render() {
         const i18n = this.props.i18n;
         return <div className='app-container'>
-            <Card bsStyle='info' className={this.errorRelevant() ? 'register-panel-expanded' : 'register-panel'}>
-                <CardHeader>
-                    <CardTitle>{i18n('register.title')}</CardTitle>
+            <Card className={this.errorRelevant() ? 'register-panel-expanded' : 'register-panel'}>
+                <CardHeader color='info'>
+                    <h5>{i18n('register.title')}</h5>
                 </CardHeader>
                 <CardBody>
                     {this.renderMask()}
-                    <Form horizontal={true} className='register-form'>
+                    <Form className='register-form'>
                         {this.renderAlert()}
-                        <div className='row'>
-                            <div className='col-xs-6'>
+                        <Row>
+                            <Col md={6}>
                                 <HorizontalInput type='text' name='firstName' label={i18n('register.first-name')}
                                                  value={this.state.firstName}
                                                  labelWidth={4} inputWidth={8} onChange={this.onChange}/>
-                            </div>
-                            <div className='col-xs-6'>
+                            </Col>
+                            <Col md={6}>
                                 <HorizontalInput type='text' name='lastName' label={i18n('register.last-name')}
                                                  value={this.state.lastName}
                                                  labelWidth={4} inputWidth={8} onChange={this.onChange}/>
-                            </div>
-                        </div>
-                        <div className='row'>
-                            <div className='col-xs-6'>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
                                 {this.renderUsername()}
-                            </div>
-                        </div>
-                        <div className='row'>
-                            <div className='col-xs-6'>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
                                 <HorizontalInput type='password' name='password' label={i18n('register.password')}
                                                  labelWidth={4} inputWidth={8} onChange={this.onChange}
                                                  value={this.state.password}/>
-                            </div>
-                            <div className='col-xs-6'>
+                            </Col>
+                            <Col md={6}>
                                 {this.renderPasswordConfirm()}
-                            </div>
-                        </div>
+                            </Col>
+                        </Row>
                         <ButtonToolbar className='register-buttons'>
-                            <Button bsStyle='success' bsSize='small' disabled={!this.isValid() || this.props.loading}
+                            <Button color='success' size='sm' disabled={!this.isValid() || this.props.loading}
                                     onClick={this.onRegister}>{i18n('register.submit')}</Button>
-                            <Button bsSize='small' className='register-cancel'
+                            <Button size='sm' className='register-cancel'
                                     onClick={this.onCancel}>{i18n('cancel')}</Button>
                         </ButtonToolbar>
                     </Form>
@@ -157,7 +160,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         }
         const error = this.props.error;
         const text = error.messageId ? this.props.i18n(error.messageId) : error.message;
-        return this.props.error ? <Alert bsStyle='danger' bsSize='small'>{text}</Alert> : null;
+        return this.props.error ? <Alert color='danger'>{text}</Alert> : null;
     }
 
     private renderUsername() {

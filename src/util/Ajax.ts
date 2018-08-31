@@ -169,6 +169,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     }, {
         'authentication': 'jwt12345'
     });
+    // Mock registration request
+    mock.onPost(Constants.API_PREFIX + '/users').reply(409, {
+        message: 'Username exists'
+    });
     // Mock vocabulary IRI generator
     mock.onGet(Constants.API_PREFIX + '/vocabularies/identifier').reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test');
     // Mock vocabulary create endpoint
