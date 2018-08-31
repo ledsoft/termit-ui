@@ -63,6 +63,25 @@ export default {
         'vocabulary.summary.title': '{name} - přehled',
         'vocabulary.detail.title': '{name} - Detail slovníků',
 
-        'glossary.title': 'Glosář'
+        'glossary.title': 'Glosář',
+        'glossary.form.header': 'Vytvořit nový pojem',
+        'glossary.form.tooltipLabel': 'Nanašli jste pojem, který jste hledali? Vytvořte nový.',
+        'glossary.form.field.label': 'Štítek (požadováno)',
+        'glossary.form.field.uri': 'Identifikátor (požadováno)',
+        'glossary.form.field.description': 'Popisek',
+        'glossary.form.field.selectParent': 'Vybrat předchůdce ...',
+        'glossary.form.field.selectChildren': 'Vybrat potomky ...',
+        'glossary.form.field.propertyKey': 'Klíč',
+        'glossary.form.field.propertyValue': 'Hodnota',
+        'glossary.form.button.addProperty': 'Přidat záznam',
+        'glossary.form.button.removeProperty': 'Odstranit záznam',
+        'glossary.form.button.showAdvancedSection': 'Zobrazit pokročilé možnosti',
+        'glossary.form.button.hideAdvancedSection': 'Skrýt pokročilé možnosti',
+        'glossary.form.button.submit': 'Dokončit',
+        'glossary.form.button.cancel': 'Zrušit',
+
+        'glossary.form.validation.validateLengthMin5': 'Pole musí mít alespoň 5 znaků',
+        'glossary.form.validation.validateLengthMin3': 'Pole musí mít alespoň 3 znaky',
+        'glossary.form.validation.validateNotSameAsParent': 'Potomek nemůže být stejný jako předchůdce',
     }
 }

@@ -63,6 +63,25 @@ export default {
         'vocabulary.summary.title': '{name} - Summary',
         'vocabulary.detail.title': '{name} - Vocabulary Detail',
 
-        'glossary.title': 'Glossary'
+        'glossary.title': 'Glossary',
+        'glossary.form.header': 'Create new term',
+        'glossary.form.tooltipLabel': 'Didn´t find your term? Create new one.',
+        'glossary.form.field.label': 'Label (required)',
+        'glossary.form.field.uri': 'URI (required)',
+        'glossary.form.field.description': 'Description',
+        'glossary.form.field.selectParent': 'Select parent ...',
+        'glossary.form.field.selectChildren': 'Select children ...',
+        'glossary.form.field.propertyKey': 'Property key',
+        'glossary.form.field.propertyValue': 'Property value',
+        'glossary.form.button.addProperty': 'Add term property',
+        'glossary.form.button.removeProperty': 'Remove term property',
+        'glossary.form.button.showAdvancedSection': 'Show advanced options',
+        'glossary.form.button.hideAdvancedSection': 'Hide advanced options',
+        'glossary.form.button.submit': 'Submit',
+        'glossary.form.button.cancel': 'Cancel',
+
+        'glossary.form.validation.validateLengthMin5': 'Field must be at least 5 characters',
+        'glossary.form.validation.validateLengthMin3': 'Field must be at least 3 characters',
+        'glossary.form.validation.validateNotSameAsParent': 'Child option cannot be same as parent option',
     }
 }

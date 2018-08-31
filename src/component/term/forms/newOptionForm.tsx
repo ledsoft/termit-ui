@@ -7,6 +7,8 @@ import * as React from "react";
 import {ChangeEvent, CSSProperties} from "react";
 import {Button, Collapse, FormFeedback, FormGroup, Input, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {validateLengthMin3, validateLengthMin5, validateNotSameAsParent} from "./newOptionValidate";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "../../hoc/withI18n";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -104,7 +106,7 @@ const Select = asField(({fieldState, ...props}: any) => {
     );
 });
 
-interface NewOptionFormProps {
+interface NewOptionFormProps extends HasI18n {
     labelKey: string,
     valueKey: string,
     childrenKey: string,
@@ -128,6 +130,7 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
         this.filterParentOptions = this.filterParentOptions.bind(this);
         this.filterChildrenOptions = this.filterChildrenOptions.bind(this);
         this.addSibling = this.addSibling.bind(this);
+        this.removeSibling = this.removeSibling.bind(this);
         this.toggleAdvancedSection= this.toggleAdvancedSection.bind(this);
         this.getOptionUri = this.getOptionUri.bind(this);
         this.setOptionUri = this.setOptionUri.bind(this);
@@ -139,16 +142,14 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
         }
     }
 
-    private filterParentOptions(parameters: { options: any[], filter: string }) {
-        const {options, filter} = parameters;
+    private filterParentOptions(options: any[], filter: string, currentValues: any[]) {
         return options.filter(option => {
             const label = option[this.props.labelKey];
             return label.toLowerCase().indexOf(filter.toLowerCase()) !== -1
         })
     }
 
-    private filterChildrenOptions(parameters: { options: any[], filter: string }) {
-        const {options, filter} = parameters;
+    private filterChildrenOptions(options: any[], filter: string, currentValues: any[]) {
         return options.filter(option => {
             const label = option[this.props.labelKey];
             return (label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) && !option.parent
@@ -216,7 +217,9 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
         return this.setState({modalAdvancedSectionVisible: !this.state.modalAdvancedSectionVisible});
     }
 
-    private removeSibling(index: number) {
+    private removeSibling(event: React.MouseEvent<HTMLSpanElement>) {
+        // @ts-ignore
+        const index = parseInt(event.target.dataset.index, 10);
         this.setState(prevState => {
             // @ts-ignore
             const siblings = [...prevState.siblings];
@@ -236,36 +239,37 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
 
     public render() {
 
+        const i18n = this.props.i18n;
+
         // @ts-ignore
         const styles: CSSProperties = {pointer: 'cursor'};
 
-        // noinspection TsLint
         return (
             <Form id="new-option-form" onSubmit={this._createNewOption}>
                 <ModalHeader toggle={this.props.toggleModal}>
-                    Create new term
+                    {i18n('glossary.form.header')}
                 </ModalHeader>
 
                 <ModalBody>
-                    <ErrorText field="optionLabel" id="optionLabel" label="Label (required)"
+                    <ErrorText field="optionLabel" id="optionLabel" label={i18n('glossary.form.field.label')}
                                validate={validateLengthMin5}
                                validateOnChange={true}
                                validateOnBlur={true}
                                onChange={this.getOptionUri}
                     />
-                    <ErrorText field="optionURI" if="optionURI" label="Option URI (required)"
+                    <ErrorText field="optionURI" id="optionURI" label={i18n('glossary.form.field.uri')}
                                validate={validateLengthMin5}
                                validateOnChange={true}
                                validateOnBlur={true}
                                onChange={this.setOptionUri}
                                value={this.state.optionUriValue}
                     />
-                    <TextInput field="optionDescription" id="optionDescription" label="Description"/>
+                    <TextInput field="optionDescription" id="optionDescription" label={i18n('glossary.form.field.description')}/>
 
 
                     <Button color="link"
                             onClick={this.toggleAdvancedSection}>
-                        {(this.state.modalAdvancedSectionVisible ? "Hide advanced options" : "Show advanced options")}
+                        {(this.state.modalAdvancedSectionVisible ? i18n('glossary.form.button.hideAdvancedSection') : i18n('glossary.form.button.showAdvancedSection'))}
                     </Button>
 
 
@@ -274,7 +278,7 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
                         <Select field={"parentOption"}
                                 options={this.props.options}
                                 multi={false}
-                                placeholder={"Select parent ..."}
+                                placeholder={i18n('glossary.form.field.selectParent')}
                                 labelKey={this.props.labelKey}
                                 valueKey={this.props.valueKey}
                                 childrenKey={this.props.childrenKey}
@@ -285,7 +289,7 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
 
                         <Select field={"childOptions"}
                                 options={this.props.options}
-                                placeholder={"Select children ..."}
+                                placeholder={i18n('glossary.form.field.selectChildren')}
                                 multi={true}
                                 labelKey={this.props.labelKey}
                                 valueKey={this.props.valueKey}
@@ -302,7 +306,7 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
                             <Button type="button"
                                     onClick={this.addSibling}
                                     color={'primary'} size="sm">
-                                Add option property
+                                {i18n('glossary.form.button.addProperty')}
                             </Button>
                             {this.state.siblings.map((member, index) => (
                                 <FormGroup key={index}
@@ -312,7 +316,7 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
                                         <ErrorGroupText
                                             key={`label-${index}`}
                                             field="key"
-                                            label="Property Key"
+                                            label={i18n('glossary.form.field.propertyKey')}
                                             validate={validateLengthMin3}
                                             validateOnChange={true}
                                             validateOnBlur={true}
@@ -320,15 +324,16 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
                                         <ErrorGroupText
                                             key={`value-${index}`}
                                             field="value"
-                                            label="Property value"
+                                            label={i18n('glossary.form.field.propertyValue')}
                                             validate={validateLengthMin3}
                                             validateOnChange={true}
                                             validateOnBlur={true}
                                         />
                                     </Scope>
-                                    <span onClick={() => this.removeSibling(index)} style={styles}
+                                    <span onClick={this.removeSibling} style={styles}
+                                          data-index={index}
                                           className="Select-clear-zone"
-                                          title="Remove term property" aria-label="Remove term property">
+                                          title={i18n('glossary.form.button.removeProperty')} aria-label={i18n('glossary.form.button.removeProperty')}>
                     <span className="Select-clear" style={{fontSize: 24 + 'px'}}>×</span>
                   </span>
                                 </FormGroup>
@@ -340,8 +345,8 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button color="primary" type="submit">Submit</Button>{' '}
-                    <Button color="secondary" type="button" onClick={this.props.toggleModal}>Cancel</Button>
+                    <Button color="primary" type="submit">{i18n('glossary.form.button.submit')}</Button>{' '}
+                    <Button color="secondary" type="button" onClick={this.props.toggleModal}>{i18n('glossary.form.button.cancel')}</Button>
                 </ModalFooter>
 
             </Form>
@@ -351,4 +356,4 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
 }
 
 
-export default NewOptionForm;
+export default injectIntl(withI18n(NewOptionForm));

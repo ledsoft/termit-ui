@@ -38,6 +38,10 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         return <NewOptionForm {...props}/>
     }
 
+    private _filterComponent(props: any){
+        return null
+    }
+
     private _onOptionCreate({option}: any) {
         // TODO response callback
     }
@@ -50,17 +54,18 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
             </CardHeader>
             <CardBody>
                 <Row>
-                        Glossary term tree
                         <IntelligentTreeSelect
                             // name={"main_search"}
                             fetchOptions={this._fetchOptions}
                             valueKey={"value"}
                             labelKey={"label"}
                             childrenKey={"children"}
+                            openButtonLabel={i18n('glossary.form.header')}
+                            openButtonTooltipLabel={i18n('glossary.form.tooltipLabel')}
                             simpleTreeData={true}
                             isMenuOpen={true}
                             options={data}
-                            filterComponent={null}
+                            filterComponent={this._filterComponent}
                             formComponent={this._formComponent}
                             onOptionCreate={this._onOptionCreate}
                         />
