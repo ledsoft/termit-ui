@@ -24,13 +24,13 @@ import Footer from './Footer';
 import {ThunkDispatch} from 'redux-thunk';
 import {Action} from 'redux';
 import {loadUser, logout} from '../action/ComplexActions';
-import {Route, Switch} from 'react-router';
+import {Route, RouteComponentProps, Switch, withRouter} from 'react-router';
 import Dashboard from './dashboard/Dashboard';
 import VocabularyManagement from './vocabulary/VocabularyManagement';
 import VocabularyDetail from "./vocabulary/VocabularyDetail";
 import LanguageSelector from "./main/LanguageSelector";
 
-interface MainViewProps extends HasI18n {
+interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
     loadUser: () => void,
     logout: () => void
@@ -67,6 +67,7 @@ class MainView extends React.Component<MainViewProps, State> {
 
     public render() {
         const {i18n, user} = this.props;
+        const path = this.props.location.pathname;
         return <div className='wrapper'>
             <header>
                 <Navbar color="light" light={true} expand={"md"} className={"d-flex"}>
@@ -74,13 +75,13 @@ class MainView extends React.Component<MainViewProps, State> {
                     <NavbarBrand>{Constants.APP_NAME}</NavbarBrand>
 
                     <Nav navbar={true} className={"flex-grow-1"}>
-                        <NavItem>
+                        <NavItem active={path === Routes.dashboard.path}>
                             <NavLink href={Routes.dashboard.path}>{i18n('main.nav.dashboard')}</NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem active={path.startsWith(Routes.vocabularies.path)}>
                             <NavLink href={Routes.vocabularies.path}>{i18n('main.nav.vocabularies')}</NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem active={path === Routes.statistics.path}>
                             <NavLink href={Routes.statistics.path}>{i18n('main.nav.statistics')}</NavLink>
                         </NavItem>
                     </Nav>
@@ -124,4 +125,4 @@ export default connect((state: TermItState) => {
         loadUser: () => dispatch(loadUser()),
         logout: () => dispatch(logout())
     };
-})(injectIntl(withI18n(withLoading(MainView, {containerClass: 'app-container'}))));
+})(injectIntl(withI18n(withLoading(withRouter(MainView), {containerClass: 'app-container'}))));
