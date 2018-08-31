@@ -134,6 +134,9 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
         this.toggleAdvancedSection= this.toggleAdvancedSection.bind(this);
         this.getOptionUri = this.getOptionUri.bind(this);
         this.setOptionUri = this.setOptionUri.bind(this);
+        this.validateLengthMin5 = this.validateLengthMin5.bind(this);
+        this.validateLengthMin3 = this.validateLengthMin3.bind(this);
+        this.validateNotSameAsParent = this.validateNotSameAsParent.bind(this);
 
         this.state = {
             siblings: [],
@@ -237,6 +240,18 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
         });
     }
 
+    public validateLengthMin5(value: any, values: any) {
+        return validateLengthMin5(value, values, this.props.i18n);
+    }
+
+    public validateLengthMin3(value: any, values: any) {
+        return validateLengthMin3(value, values, this.props.i18n);
+    }
+
+    public validateNotSameAsParent(value: any, values: any) {
+        return validateNotSameAsParent(value, values, this.props.i18n);
+    }
+
     public render() {
 
         const i18n = this.props.i18n;
@@ -252,13 +267,13 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
 
                 <ModalBody>
                     <ErrorText field="optionLabel" id="optionLabel" label={i18n('glossary.form.field.label')}
-                               validate={validateLengthMin5}
+                               validate={this.validateLengthMin5}
                                validateOnChange={true}
                                validateOnBlur={true}
                                onChange={this.getOptionUri}
                     />
                     <ErrorText field="optionURI" id="optionURI" label={i18n('glossary.form.field.uri')}
-                               validate={validateLengthMin5}
+                               validate={this.validateLengthMin5}
                                validateOnChange={true}
                                validateOnBlur={true}
                                onChange={this.setOptionUri}
@@ -297,7 +312,7 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
                                 filterOptions={this.filterChildrenOptions}
                                 expanded={true}
                                 renderAsTree={false}
-                                validate={validateNotSameAsParent}
+                                validate={this.validateNotSameAsParent}
                                 validateOnChange={true}
                                 validateOnBlur={true}
                         />
