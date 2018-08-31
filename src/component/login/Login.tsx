@@ -72,7 +72,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
     public render() {
         const i18n = this.props.i18n;
-        const panelCls = this.errorRelevant() ? 'login-panel-expanded' : 'login-panel';
+        const panelCls = 'login-panel';
         return <div className='app-container'>
             <Card className={panelCls}>
                 <CardHeader color='info'>

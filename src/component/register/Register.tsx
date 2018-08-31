@@ -101,7 +101,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     public render() {
         const i18n = this.props.i18n;
         return <div className='app-container'>
-            <Card className={this.errorRelevant() ? 'register-panel-expanded' : 'register-panel'}>
+            <Card className='register-panel'>
                 <CardHeader color='info'>
                     <h5>{i18n('register.title')}</h5>
                 </CardHeader>
@@ -170,7 +170,8 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
                                     labelWidth={4} inputWidth={8} onChange={this.onUsernameChange}/>
         } else {
             return <HorizontalInput type='text' name='username' label={this.props.i18n('register.username')}
-                                    value={this.state.username} validation='error'
+                                    value={this.state.username} invalid={true}
+                                    invalidMessage={this.props.i18n('register.username-exists.tooltip')}
                                     title={this.props.i18n('register.username-exists.tooltip')}
                                     labelWidth={4} inputWidth={8} onChange={this.onUsernameChange}/>;
         }
@@ -186,7 +187,8 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
             return <HorizontalInput type='password' name='passwordConfirm'
                                     label={this.props.i18n('register.password-confirm')}
                                     labelWidth={4} inputWidth={8} onChange={this.onChange}
-                                    onKeyPress={this.onKeyPress} value={this.state.passwordConfirm} validation='error'
+                                    onKeyPress={this.onKeyPress} value={this.state.passwordConfirm} invalid={true}
+                                    invalidMessage={this.props.i18n('register.passwords-not-matching.tooltip')}
                                     title={this.props.i18n('register.passwords-not-matching.tooltip')}/>;
         }
     }

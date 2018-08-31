@@ -1,4 +1,4 @@
-import axios, {AxiosInstance} from 'axios';
+import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 import Routing from './Routing';
 import Constants from './Constants';
 import Routes from "./Routes";
@@ -170,8 +170,14 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         'authentication': 'jwt12345'
     });
     // Mock registration request
-    mock.onPost(Constants.API_PREFIX + '/users').reply(409, {
-        message: 'Username exists'
+    mock.onPost(Constants.API_PREFIX + '/users').reply(201);
+    // Mock username existence check
+    mock.onGet(Constants.API_PREFIX + '/users/username').reply((config: AxiosRequestConfig) => {
+        if (config.params.username.charAt(0) === 'a') {
+            return [200, true];
+        } else {
+            return [200, false]
+        }
     });
     // Mock vocabulary IRI generator
     mock.onGet(Constants.API_PREFIX + '/vocabularies/identifier').reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test');

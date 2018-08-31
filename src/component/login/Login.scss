@@ -1,15 +1,8 @@
 .login-panel {
-  width: 400px;
-  height: 226px;
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-
-.login-panel-expanded {
-  @extend .login-panel;
-  height: 292px;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
 }

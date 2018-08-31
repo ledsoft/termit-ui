@@ -15,8 +15,7 @@ export default class TextArea extends AbstractInput<TextAreaProps> {
             {this.renderLabel()}
             <Input type='textarea' style={{height: 'auto'}}
                    ref={(c: Input) => this.input = c} {...this.inputProps()}/>
-            {this.props.invalid && this.props.invalidMessage &&
-            <FormFeedback>{this.props.invalidMessage}</FormFeedback>}
+            <FormFeedback>{this.props.invalidMessage}</FormFeedback>
             {this.renderHelp()}
         </FormGroup>;
     }

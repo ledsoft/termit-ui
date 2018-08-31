@@ -21,8 +21,7 @@ export default class HorizontalInput extends AbstractInput<HorizontalInputProps>
             <Col sm={inputWidth}>
                 <Input type={this.props.type ? this.props.type : 'text'} ref={(c: any) => this.input = c} bsSize='sm'
                        {...rest}/>
-                {this.props.invalid && this.props.invalidMessage &&
-                <FormFeedback>{this.props.invalidMessage}</FormFeedback>}
+                <FormFeedback>{invalidMessage}</FormFeedback>
                 {this.renderHelp()}
             </Col>
         </FormGroup>;
