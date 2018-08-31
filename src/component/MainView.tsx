@@ -6,12 +6,14 @@ import {connect} from 'react-redux';
 import TermItState from '../model/TermItState';
 import {
     Container,
-    DropdownItem, DropdownMenu,
+    DropdownItem,
+    DropdownMenu,
     DropdownToggle,
     Nav,
     Navbar,
     NavbarBrand,
-    NavItem, NavLink,
+    NavItem,
+    NavLink,
     UncontrolledDropdown
 } from 'reactstrap';
 import Constants from '../util/Constants';
@@ -19,7 +21,6 @@ import User from '../model/User';
 import './MainView.scss';
 import Routes from '../util/Routes';
 import Footer from './Footer';
-import LanguageSelector from './main/LanguageSelector';
 import {ThunkDispatch} from 'redux-thunk';
 import {Action} from 'redux';
 import {loadUser, logout} from '../action/ComplexActions';
@@ -27,6 +28,7 @@ import {Route, Switch} from 'react-router';
 import Dashboard from './dashboard/Dashboard';
 import VocabularyManagement from './vocabulary/VocabularyManagement';
 import VocabularyDetail from "./vocabulary/VocabularyDetail";
+import LanguageSelector from "./main/LanguageSelector";
 
 interface MainViewProps extends HasI18n {
     user: User,
@@ -44,7 +46,7 @@ class MainView extends React.Component<MainViewProps, State> {
         super(props);
 
         this.toggleDropdown = this.toggleDropdown.bind(this);
-        this.state={
+        this.state = {
             dropDownOpen: false,
         };
     }
@@ -53,7 +55,7 @@ class MainView extends React.Component<MainViewProps, State> {
         this.props.loadUser();
     }
 
-    private toggleDropdown(){
+    private toggleDropdown() {
         this.setState({
             dropDownOpen: !this.state.dropDownOpen
         });
@@ -67,11 +69,11 @@ class MainView extends React.Component<MainViewProps, State> {
         const {i18n, user} = this.props;
         return <div className='wrapper'>
             <header>
-                <Navbar color="light" expand={"md"} className={"d-flex"}>
+                <Navbar color="light" light={true} expand={"md"} className={"d-flex"}>
 
                     <NavbarBrand>{Constants.APP_NAME}</NavbarBrand>
 
-                    <Nav className={"flex-grow-1"}>
+                    <Nav navbar={true} className={"flex-grow-1"}>
                         <NavItem>
                             <NavLink href={Routes.dashboard.path}>{i18n('main.nav.dashboard')}</NavLink>
                         </NavItem>
@@ -82,16 +84,19 @@ class MainView extends React.Component<MainViewProps, State> {
                             <NavLink href={Routes.statistics.path}>{i18n('main.nav.statistics')}</NavLink>
                         </NavItem>
                     </Nav>
-                    <Nav>
+                    <Nav navbar={true}>
                         <LanguageSelector/>
+                    </Nav>
+                    <Nav navbar={true}>
                         <UncontrolledDropdown id='logout' nav={true} inNavbar={true}>
                             <DropdownToggle nav={true} caret={true}>
                                 {user.abbreviatedName}
                             </DropdownToggle>
                             <DropdownMenu right={true}>
-                                <DropdownItem  onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem >
-                                <DropdownItem  divider={true}/>
-                                <DropdownItem  onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem >
+                                <DropdownItem
+                                    onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
+                                <DropdownItem divider={true}/>
+                                <DropdownItem onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                     </Nav>
