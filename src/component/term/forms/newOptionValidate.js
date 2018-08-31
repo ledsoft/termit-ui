@@ -1,20 +1,20 @@
-const validateLengthMin5 = (value) => {
+const validateLengthMin5 = (value, values, i18n) => {
   return !value || value.length < 5
-    ? 'Field must be at least five characters'
+    ? i18n('glossary.form.validation.validateLengthMin5')
     : null;
 };
 
-const validateLengthMin3 = (value) => {
+const validateLengthMin3 = (value, values, i18n) => {
   return !value || value.length < 3
-    ? 'Field must be at least three characters'
+    ? i18n('glossary.form.validation.validateLengthMin3')
     : null;
 };
 
-const validateNotSameAsParent = (value, values) => {
+const validateNotSameAsParent = (value, values, i18n) => {
   if (values.parentOption && value) {
     for (let i = 0; i < value.length; i++) {
       if (isEquivalent(value[i], values.parentOption)) {
-        return 'Child option cannot be same as parent option'
+        return i18n('glossary.form.validation.validateNotSameAsParent')
       }
     }
   }
