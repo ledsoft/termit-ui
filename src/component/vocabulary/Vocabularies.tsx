@@ -13,14 +13,14 @@ class Vocabularies extends React.Component<HasI18n> {
 
     public render() {
         const i18n = this.props.i18n;
-        return <Card bsStyle='info'>
-            <CardHeader>
+        return <Card>
+            <CardHeader color='info'>
                 <CardTitle>{i18n('vocabulary.management.vocabularies')}</CardTitle>
             </CardHeader>
             <CardBody>
                 <div className='row'>
                     <div className='col-xs-12'>
-                        <Button bsStyle='primary' title={i18n('vocabulary.vocabularies.create.tooltip')} bsSize='small'
+                        <Button color='primary' title={i18n('vocabulary.vocabularies.create.tooltip')} size='sm'
                                 onClick={Vocabularies.onCreateVocabularyClick}>{i18n('vocabulary.vocabularies.create')}</Button>
                     </div>
                 </div>

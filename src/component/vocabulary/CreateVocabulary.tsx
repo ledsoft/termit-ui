@@ -61,8 +61,8 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
 
     public render() {
         const i18n = this.props.i18n;
-        return <Card bsStyle='info'>
-            <CardHeader>
+        return <Card>
+            <CardHeader color='info'>
                 <CardTitle>{i18n('vocabulary.create.title')}</CardTitle>
             </CardHeader>
             <CardBody>
@@ -82,9 +82,9 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
                     <div className='row'>
                         <Col className='col-md-6'>
                             <ButtonToolbar className='pull-right'>
-                                <Button onClick={this.onCreate} bsStyle='success' bsSize='small'
+                                <Button onClick={this.onCreate} color='success' size='sm'
                                         disabled={this.state.name.trim().length === 0}>{i18n('vocabulary.create.submit')}</Button>
-                                <Button onClick={CreateVocabulary.onCancel} bsSize='small'>{i18n('cancel')}</Button>
+                                <Button onClick={CreateVocabulary.onCancel} size='sm'>{i18n('cancel')}</Button>
                             </ButtonToolbar>
                         </Col>
                     </div>

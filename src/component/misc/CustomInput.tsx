@@ -12,9 +12,9 @@ export default class CustomInput extends AbstractInput<InputProps> {
     private input: any ;
 
     public render() {
-        return <FormGroup bsSize='small' validationState={this.props.validation}>
+        return <FormGroup validationState={this.props.validation}>
             {this.renderLabel()}
-            <Input type={this.props.type ? this.props.type : 'text'} ref={(c: any ) => this.input = c}
+            <Input type={this.props.type ? this.props.type : 'text'} ref={(c: any ) => this.input = c} bsSize='sm'
                    {...this.props}/>
             {this.props.validation && <FormFeedback/>}
             {this.renderHelp()}
