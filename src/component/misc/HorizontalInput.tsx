@@ -13,7 +13,7 @@ export default class HorizontalInput extends AbstractInput<HorizontalInputProps>
     private input: any;
 
     public render() {
-        const {labelWidth, inputWidth, ...rest} = this.props;
+        const {labelWidth, inputWidth, invalidMessage, help, ...rest} = this.props;
         return <FormGroup row={true}>
             <Label sm={labelWidth} size='sm'>
                 {this.props.label}

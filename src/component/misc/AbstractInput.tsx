@@ -25,4 +25,9 @@ export default class AbstractInput<T extends AbstractInputProps> extends React.C
     protected renderHelp() {
         return this.props.help ? <FormText>{this.props.help}</FormText> : null;
     }
+
+    protected inputProps() {
+        const {invalidMessage, help, ...p} = this.props as AbstractInputProps;
+        return p;
+    }
 }
