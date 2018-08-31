@@ -10,7 +10,8 @@ export interface AbstractInputProps {
     value?: string,
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
     help?: string,
-    validation?: 'success' | 'warning' | 'error',
+    invalid?: boolean,
+    invalidMessage?: string,
     autoFocus?: boolean
     type?: InputType,
 }

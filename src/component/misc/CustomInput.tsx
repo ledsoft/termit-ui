@@ -9,14 +9,15 @@ export interface InputProps extends AbstractInputProps {
 
 export default class CustomInput extends AbstractInput<InputProps> {
 
-    private input: any ;
+    private input: any;
 
     public render() {
-        return <FormGroup validationState={this.props.validation}>
+        return <FormGroup>
             {this.renderLabel()}
-            <Input type={this.props.type ? this.props.type : 'text'} ref={(c: any ) => this.input = c} bsSize='sm'
-                   {...this.props}/>
-            {this.props.validation && <FormFeedback/>}
+            <Input type={this.props.type ? this.props.type : 'text'} ref={(c: any) => this.input = c}
+                   bsSize='sm' {...this.props}/>
+            {this.props.invalid && this.props.invalidMessage &&
+            <FormFeedback>{this.props.invalidMessage}</FormFeedback>}
             {this.renderHelp()}
         </FormGroup>;
     }
