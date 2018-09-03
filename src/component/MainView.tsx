@@ -17,7 +17,7 @@ import {
     UncontrolledDropdown
 } from 'reactstrap';
 import Constants from '../util/Constants';
-import User from '../model/User';
+import User, {EMPTY_USER} from '../model/User';
 import './MainView.scss';
 import Routes from '../util/Routes';
 import Footer from './Footer';
@@ -36,29 +36,16 @@ interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     logout: () => void
 }
 
-interface State {
-    dropDownOpen: boolean;
-}
-
-class MainView extends React.Component<MainViewProps, State> {
+export class MainView extends React.Component<MainViewProps> {
 
     constructor(props: MainViewProps) {
         super(props);
-
-        this.toggleDropdown = this.toggleDropdown.bind(this);
-        this.state = {
-            dropDownOpen: false,
-        };
     }
 
     public componentDidMount() {
-        this.props.loadUser();
-    }
-
-    private toggleDropdown() {
-        this.setState({
-            dropDownOpen: !this.state.dropDownOpen
-        });
+        if (this.props.user === EMPTY_USER) {
+            this.props.loadUser();
+        }
     }
 
     private onUserProfileClick = () => {

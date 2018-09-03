@@ -61,7 +61,7 @@ export default {
         'vocabulary.name': 'Název',
         'vocabulary.iri': 'Identifikátor',
         'vocabulary.summary.title': '{name} - přehled',
-        'vocabulary.detail.title': '{name} - Detail slovníků',
+        'vocabulary.detail.title': '{name} - Detail slovníku',
 
         'glossary.title': 'Glosář',
         'glossary.form.header': 'Vytvořit nový pojem',
