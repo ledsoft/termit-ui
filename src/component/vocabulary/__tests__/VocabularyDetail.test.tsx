@@ -4,6 +4,7 @@ import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
 import createHashHistory from "history/createHashHistory";
 import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {shallow} from "enzyme";
+import {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
 
 
 describe('VocabularyDetail', () => {
@@ -31,7 +32,7 @@ describe('VocabularyDetail', () => {
     });
 
     it('loads vocabulary on mount', () => {
-        shallow(<VocabularyDetail loadVocabulary={loadVocabulary} i18n={i18n} formatMessage={formatMessage}
+        shallow(<VocabularyDetail vocabulary={EMPTY_VOCABULARY} loadVocabulary={loadVocabulary} i18n={i18n} formatMessage={formatMessage}
                                           history={history} location={location} match={match} {...intlDataForShallow()}/>);
         expect(loadVocabulary).toHaveBeenCalledWith('metropolitan-plan');
     });

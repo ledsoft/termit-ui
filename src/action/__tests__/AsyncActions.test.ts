@@ -1,5 +1,5 @@
 import configureMockStore from 'redux-mock-store';
-import {createVocabulary, login} from '../AsyncActions';
+import {createVocabulary, loadVocabulary, login} from '../AsyncActions';
 import Constants from '../../util/Constants';
 import Ajax from '../../util/Ajax';
 import thunk, {ThunkDispatch} from 'redux-thunk';
@@ -8,6 +8,7 @@ import Routing from '../../util/Routing';
 import Authentication from '../../util/Authentication';
 import Vocabulary, {CONTEXT} from "../../model/Vocabulary";
 import Routes from '../../util/Routes';
+import {VocabularyLoadingAction} from "../ActionType";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -91,6 +92,17 @@ describe('Async actions', () => {
                     params: new Map([['name', 'test']]),
                     query: new Map()
                 });
+            });
+        });
+    });
+
+    describe('load vocabulary', () => {
+        it('extracts vocabulary data from incoming JSON-LD', () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(require('../../rest-mock/vocabulary')));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabulary('metropolitan-plan'))).then(() => {
+                const loadSuccessAction: VocabularyLoadingAction = store.getActions()[1];
+                expect(loadSuccessAction.vocabulary.name).toEqual('Metropolitan plan');
             });
         });
     });
