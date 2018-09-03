@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {VocabularyDetail} from '../VocabularyDetail';
 import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
-import createHashHistory from "history/createHashHistory";
 import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {shallow} from "enzyme";
 import {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
+import createMemoryHistory from "history/createMemoryHistory";
 
 
 describe('VocabularyDetail', () => {
@@ -15,7 +15,7 @@ describe('VocabularyDetail', () => {
         hash: '',
         state: {}
     };
-    const history = createHashHistory();
+    const history = createMemoryHistory();
     const match = {
         params: {
             name: 'metropolitan-plan'
@@ -32,8 +32,9 @@ describe('VocabularyDetail', () => {
     });
 
     it('loads vocabulary on mount', () => {
-        shallow(<VocabularyDetail vocabulary={EMPTY_VOCABULARY} loadVocabulary={loadVocabulary} i18n={i18n} formatMessage={formatMessage}
-                                          history={history} location={location} match={match} {...intlDataForShallow()}/>);
+        shallow(<VocabularyDetail vocabulary={EMPTY_VOCABULARY} loadVocabulary={loadVocabulary} i18n={i18n}
+                                  formatMessage={formatMessage}
+                                  history={history} location={location} match={match} {...intlDataForShallow()}/>);
         expect(loadVocabulary).toHaveBeenCalledWith('metropolitan-plan');
     });
 });

@@ -2,8 +2,8 @@ import * as React from 'react';
 import {MainView} from '../MainView';
 import User, {EMPTY_USER} from "../../model/User";
 import {formatMessage, i18n} from "../../__tests__/environment/IntlUtil";
-import createHashHistory from "history/createHashHistory";
 import {shallow} from "enzyme";
+import createMemoryHistory from "history/createMemoryHistory";
 
 describe('MainView', () => {
 
@@ -13,7 +13,7 @@ describe('MainView', () => {
         hash: '',
         state: {}
     };
-    const history = createHashHistory();
+    const history = createMemoryHistory();
     const match = {
         params: {},
         path: '/',

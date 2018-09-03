@@ -1,3 +1,11 @@
+export const CONTEXT = {
+    "uri": "@id",
+    "firstName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno",
+    "lastName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni",
+    "username": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno",
+    "types": "@type"
+};
+
 export interface UserData {
     uri: string,
     firstName: string,

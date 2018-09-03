@@ -75,6 +75,16 @@ describe('Ajax', () => {
             });
         });
 
+        it('it adds JSON-LD Accept header by default', () => {
+            mock.onAny().reply(200, {});
+            const spy = jest.spyOn(sut.axios, 'get');
+            spy.mockClear();
+            return sut.get('/terms/count').then(() => {
+                const reqConfig = spy.mock.calls[0][1];
+                return expect(reqConfig.headers.Accept).toEqual(Constants.JSON_LD_MIME_TYPE);
+            });
+        });
+
         it('adds accept header into GET request', () => {
             const acceptType = 'text/plain';
             mock.onAny().reply(200, {});

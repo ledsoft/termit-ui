@@ -5,7 +5,7 @@ import {ThunkDispatch} from 'redux-thunk';
 import Routing from '../util/Routing';
 import Constants from '../util/Constants';
 import Authentication from '../util/Authentication';
-import {UserData} from '../model/User';
+import {CONTEXT as USER_CONTEXT, UserData} from '../model/User';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT, VocabularyData} from "../model/Vocabulary";
 import Routes from "../util/Routes";
 import IdentifierResolver from "../util/IdentifierResolver";
@@ -22,6 +22,7 @@ export function fetchUser() {
     return (dispatch: Dispatch) => {
         dispatch(SyncActions.fetchUserRequest());
         return Ajax.get(Constants.API_PREFIX + '/users/current')
+            .then((data: object) => jsonld.compact(data, USER_CONTEXT))
             .then((data: UserData) => dispatch(SyncActions.fetchUserSuccess(data)))
             .catch((error: ErrorData) => dispatch(SyncActions.fetchUserFailure(error)));
     };

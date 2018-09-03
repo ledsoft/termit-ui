@@ -1,10 +1,11 @@
 import User from "./User";
+import OntologicalVocabulary from '../util/Vocabulary';
 
 export const CONTEXT = {
     "name": "http://www.w3.org/2000/01/rdf-schema#label",
     "iri": "@id",
     "created": "http://onto.fel.cvut.cz/ontologies/termit/created",
-    "author": "http://onto.fel.cvut.cz/ontologies/termit/has-author"
+    "author": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora"
 };
 
 export interface VocabularyData {
@@ -25,7 +26,7 @@ export default class Vocabulary implements VocabularyData {
     }
 
     public toJsonLd(): {} {
-        return Object.assign({}, this, {"@context": CONTEXT});
+        return Object.assign({}, this, {"@context": CONTEXT, "@type": [OntologicalVocabulary.VOCABULARY]});
     }
 }
 

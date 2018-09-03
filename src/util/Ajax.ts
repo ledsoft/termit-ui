@@ -102,16 +102,13 @@ export class Ajax {
         }
     }
 
-    public get(path: string, config?: RequestConfigBuilder) {
-        let conf;
-        if (config) {
-            conf = {
-                params: config.getParams(),
-                headers: {
-                    'Accept': config.getAccept()
-                }
-            };
-        }
+    public get(path: string, config: RequestConfigBuilder = new RequestConfigBuilder()) {
+        const conf = {
+            params: config.getParams(),
+            headers: {
+                'Accept': config.getAccept()
+            }
+        };
         return this.axiosInstance.get(path, conf).then(resp => resp.data);
     }
 
