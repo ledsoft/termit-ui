@@ -6,7 +6,7 @@ import Routing from '../util/Routing';
 import Constants from '../util/Constants';
 import Authentication from '../util/Authentication';
 import {UserData} from '../model/User';
-import Vocabulary from "../model/Vocabulary";
+import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import Routes from "../util/Routes";
 import IdentifierResolver from "../util/IdentifierResolver";
 import {ErrorData} from "../model/ErrorInfo";
@@ -23,7 +23,7 @@ export function fetchUser() {
         Ajax.get(Constants.API_PREFIX + '/users/current')
             .then((data: UserData) => dispatch(SyncActions.fetchUserSuccess(data)))
             .catch((error: ErrorData) => dispatch(SyncActions.fetchUserFailure(error)));
-    }
+    };
 }
 
 export function login(username: string, password: string) {
@@ -41,7 +41,7 @@ export function login(username: string, password: string) {
                     return Promise.resolve();
                 }
             }).catch((error: ErrorData) => dispatch(SyncActions.loginFailure(error)));
-    }
+    };
 }
 
 export function register(user: { username: string, password: string }) {
@@ -51,7 +51,7 @@ export function register(user: { username: string, password: string }) {
             .then(() => dispatch(SyncActions.registerSuccess()))
             .then(() => dispatch(login(user.username, user.password)))
             .catch((error: ErrorData) => dispatch(SyncActions.registerFailure(error)));
-    }
+    };
 }
 
 export function createVocabulary(vocabulary: Vocabulary) {
@@ -64,5 +64,14 @@ export function createVocabulary(vocabulary: Vocabulary) {
                 Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
             })
             .catch((error: ErrorData) => dispatch(SyncActions.createVocabularyFailure(error)));
-    }
+    };
+}
+
+export function loadVocabulary(normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.loadVocabularyRequest());
+        Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName)
+            .then((data: VocabularyData) => dispatch(SyncActions.loadVocabularySuccess(data)))
+            .catch((error: ErrorData) => dispatch(SyncActions.loadVocabularyFailure(error)));
+    };
 }

@@ -6,7 +6,7 @@ import {
     dismissMessage,
     fetchUserFailure,
     fetchUserRequest,
-    fetchUserSuccess,
+    fetchUserSuccess, loadVocabularyFailure, loadVocabularySuccess,
     loginFailure,
     loginRequest,
     loginSuccess,
@@ -17,11 +17,13 @@ import ErrorInfo, {EMPTY_ERROR} from "../../model/ErrorInfo";
 import User, {EMPTY_USER} from "../../model/User";
 import Message from "../../model/Message";
 import Constants from "../../util/Constants";
+import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
 
 function stateToPlainObject(state: TermItState) {
     return {
         loading: state.loading,
         user: state.user,
+        vocabulary: state.vocabulary,
         error: state.error,
         messages: state.messages,
         intl: state.intl
@@ -199,6 +201,26 @@ describe('Reducers', () => {
                 username: 'test@kbss.felk.cvut.cz'
             });
             expect(reducers(stateToPlainObject(initialState), userLogout())).toEqual(Object.assign({}, initialState, {user: EMPTY_USER}));
+        });
+    });
+
+    describe('loading vocabulary', () => {
+        it('sets vocabulary when it was successfully loaded', () => {
+            const vocabularyData: VocabularyData = {
+                name: 'Test vocabulary',
+                iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary'
+            };
+            expect(reducers(stateToPlainObject(initialState), loadVocabularySuccess(vocabularyData)))
+                .toEqual(Object.assign({}, initialState, {vocabulary: new Vocabulary(vocabularyData)}));
+        });
+
+        it('sets error when vocabulary loading fails', () => {
+            const errorData = {
+                message: 'Vocabulary does not exist',
+                requestUri: '/vocabularies/unknown-vocabulary'
+            };
+            expect(reducers(stateToPlainObject(initialState), loadVocabularyFailure(errorData)))
+                .toEqual(Object.assign({}, initialState, {error: new ErrorInfo(ActionType.LOAD_VOCABULARY_FAILURE, errorData)}));
         });
     });
 });

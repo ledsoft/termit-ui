@@ -2,6 +2,7 @@ import ErrorInfo from "../model/ErrorInfo";
 import User from "../model/User";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
+import Vocabulary from "../model/Vocabulary";
 
 export interface Action {
     type: string
@@ -32,6 +33,10 @@ export interface MessageAction extends Action {
 
 export interface SwitchLanguageAction extends Action {
     language: string
+}
+
+export interface VocabularyLoadingAction extends AsyncAction {
+    vocabulary: Vocabulary
 }
 
 export default {

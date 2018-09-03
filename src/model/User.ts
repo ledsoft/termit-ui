@@ -8,7 +8,7 @@ export interface UserData {
 /**
  * System user account.
  */
-export default class User {
+export default class User implements UserData {
     private readonly mUri: string;
     private readonly mFirstName: string;
     private readonly mLastName: string;

@@ -5,12 +5,13 @@ import ActionType, {
     ClearErrorAction,
     MessageAction,
     SwitchLanguageAction,
-    UserLoadingAction
+    UserLoadingAction, VocabularyLoadingAction
 } from './ActionType';
 import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
 import User, {UserData} from "../model/User";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
+import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
@@ -133,4 +134,24 @@ export function createVocabularySuccess(): AsyncAction {
         type: ActionType.CREATE_VOCABULARY_SUCCESS,
         status: AsyncActionStatus.SUCCESS
     };
+}
+
+export function loadVocabularyRequest(): AsyncAction {
+    return asyncActionRequest({
+        type: ActionType.LOAD_VOCABULARY_REQUEST
+    });
+}
+
+export function loadVocabularySuccess(data: VocabularyData): VocabularyLoadingAction {
+    return {
+        type: ActionType.LOAD_VOCABULARY_SUCCESS,
+        status: AsyncActionStatus.SUCCESS,
+        vocabulary: new Vocabulary(data)
+    }
+}
+
+export function loadVocabularyFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
+        type: ActionType.LOAD_VOCABULARY_FAILURE
+    }, error);
 }

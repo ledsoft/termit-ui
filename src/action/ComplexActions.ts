@@ -16,19 +16,19 @@ import Vocabulary from "../model/Vocabulary";
 export function loadUser() {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(AsyncActions.fetchUser());
-    }
+    };
 }
 
 export function login(username: string, password: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(AsyncActions.login(username, password));
-    }
+    };
 }
 
 export function register(user: { username: string, password: string }) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(AsyncActions.register(user));
-    }
+    };
 }
 
 export function logout() {
@@ -42,5 +42,11 @@ export function logout() {
 export function createVocabulary(vocabulary: Vocabulary) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(AsyncActions.createVocabulary(vocabulary));
-    }
+    };
+}
+
+export function loadVocabulary(normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(AsyncActions.loadVocabulary(normalizedName));
+    };
 }

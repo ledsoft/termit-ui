@@ -12,3 +12,8 @@ import {IntlProvider} from "react-intl";
 export function mountWithIntl(node: ReactElement<any>) {
     return mount(<IntlProvider {...intlData}>{node}</IntlProvider>);
 }
+
+export function intlDataForShallow(): {} {
+    const intlProvider = new IntlProvider(intlData);
+    return intlProvider.getChildContext();
+}

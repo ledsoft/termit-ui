@@ -5,7 +5,7 @@ import ActionType, {
     FailureAction,
     MessageAction,
     SwitchLanguageAction,
-    UserLoadingAction
+    UserLoadingAction, VocabularyLoadingAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
@@ -14,6 +14,7 @@ import Message from "../model/Message";
 import IntlData from "../model/IntlData";
 import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
 import AsyncActionStatus from "../action/AsyncActionStatus";
+import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
 
 /**
  * Handles changes to the currently logged in user.
@@ -65,6 +66,7 @@ function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
         case ActionType.LOGIN_FAILURE:
         case ActionType.REGISTER_FAILURE:
         case ActionType.CREATE_VOCABULARY_FAILURE:
+        case ActionType.LOAD_VOCABULARY_FAILURE:
             return (action as FailureAction).error;
         case ActionType.CLEAR_ERROR:
             const errAction = action as ClearErrorAction;
@@ -96,6 +98,15 @@ function intl(state: IntlData = loadInitialLocalizationData(), action: SwitchLan
     }
 }
 
-const rootReducer = combineReducers<TermItState>({user, loading, error, messages, intl});
+function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: VocabularyLoadingAction): Vocabulary {
+    switch (action.type) {
+        case ActionType.LOAD_VOCABULARY_SUCCESS:
+            return action.vocabulary;
+        default:
+            return state;
+    }
+}
+
+const rootReducer = combineReducers<TermItState>({user, loading, error, messages, intl, vocabulary});
 
 export default rootReducer;
