@@ -1,4 +1,11 @@
 {
+  "@context": {
+    "uri": "@id",
+    "firstName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno",
+    "lastName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni",
+    "username": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno",
+    "types": "@type"
+  },
   "uri": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
   "firstName": "Catherine",
   "lastName": "Halsey",

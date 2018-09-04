@@ -63,6 +63,10 @@ export default {
         'vocabulary.summary.title': '{name} - přehled',
         'vocabulary.detail.title': '{name} - Detail slovníku',
 
+        'vocabulary.metadata.identifier': 'Identifikátor',
+        'vocabulary.metadata.author': 'Autor',
+        'vocabulary.metadata.created': 'Datum vytvoření',
+
         'glossary.title': 'Glosář',
         'glossary.form.header': 'Vytvořit nový pojem',
         'glossary.form.tooltipLabel': 'Nanašli jste pojem, který jste hledali? Vytvořte nový.',

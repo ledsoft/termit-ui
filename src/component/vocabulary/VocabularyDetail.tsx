@@ -10,6 +10,8 @@ import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import {loadVocabulary} from "../../action/ComplexActions";
 import Vocabulary from "../../model/Vocabulary";
+import VocabularyMetadata from "./VocabularyMetadata";
+import './VocabularyDetail.scss';
 
 interface VocabularyDetailProps extends HasI18n {
     vocabulary: Vocabulary,
@@ -27,7 +29,12 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps & Ro
         const name = this.props.vocabulary.name;
         return <div>
             <h2 className='page-header'>{this.props.formatMessage('vocabulary.detail.title', {name})}</h2>
-            <Row>
+            <Row className='detail-row'>
+                <Col md={6}>
+                    <VocabularyMetadata vocabulary={this.props.vocabulary}/>
+                </Col>
+            </Row>
+            <Row className='detail-row'>
                 <Col md={4}>
                     <GlossaryTerms/>
                 </Col>

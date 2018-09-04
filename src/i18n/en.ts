@@ -63,6 +63,10 @@ export default {
         'vocabulary.summary.title': '{name} - Summary',
         'vocabulary.detail.title': '{name} - Vocabulary Detail',
 
+        'vocabulary.metadata.identifier': 'Identifier',
+        'vocabulary.metadata.author': 'Author',
+        'vocabulary.metadata.created': 'Created',
+
         'glossary.title': 'Glossary',
         'glossary.form.header': 'Create new term',
         'glossary.form.tooltipLabel': 'Didn´t find your term? Create new one.',
