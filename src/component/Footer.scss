@@ -21,9 +21,9 @@ footer {
 }
 
 .footer-login {
-  position: absolute;
-  bottom: 0;
+  @extend footer;
   left: 0;
   right: 0;
   margin: 0 15px 0 15px;
+  width: auto;
 }
