@@ -36,15 +36,16 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
     }
 
     private onNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({name: (e.currentTarget.value as string)});
-        this.generateIri();
+        const name = (e.currentTarget.value as string);
+        this.setState({name});
+        this.generateIri(name);
     };
 
-    private generateIri(): void {
+    private generateIri(name: string): void {
         if (!this.state.generateIri) {
             return;
         }
-        Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier', params({name: this.state.name})).then(iri => this.setState({iri}));
+        Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier', params({name})).then(iri => this.setState({iri}));
     }
 
     private onIriChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
