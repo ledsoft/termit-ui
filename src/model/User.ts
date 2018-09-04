@@ -7,7 +7,7 @@ export const CONTEXT = {
 };
 
 export interface UserData {
-    uri: string,
+    iri: string,
     firstName: string,
     lastName: string,
     username: string,
@@ -17,22 +17,22 @@ export interface UserData {
  * System user account.
  */
 export default class User implements UserData {
-    private readonly mUri: string;
+    private readonly mIri: string;
     private readonly mFirstName: string;
     private readonly mLastName: string;
     private readonly mUsername: string;
     private readonly mTypes: string[];
 
     constructor(data: UserData) {
-        this.mUri = data.uri;
+        this.mIri = data.iri;
         this.mFirstName = data.firstName;
         this.mLastName = data.lastName;
         this.mUsername = data.username;
         this.mTypes = data.types ? data.types : []
     }
 
-    get uri(): string {
-        return this.mUri;
+    get iri(): string {
+        return this.mIri;
     }
 
     get firstName(): string {
@@ -61,7 +61,7 @@ export default class User implements UserData {
 }
 
 export const EMPTY_USER = new User({
-    uri: 'http://empty',
+    iri: 'http://empty',
     firstName: '',
     lastName: '',
     username: ''
