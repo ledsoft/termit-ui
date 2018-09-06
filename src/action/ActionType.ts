@@ -39,6 +39,11 @@ export interface VocabularyLoadingAction extends AsyncAction {
     vocabulary: Vocabulary
 }
 
+export interface SelectingTermsAction extends Action{
+    // TODO object describing term structure or let be at it is?
+    selectedTerms: any
+}
+
 export default {
     FETCH_USER_REQUEST: 'FETCH_USER_REQUEST',
     FETCH_USER_FAILURE: 'FETCH_USER_FAILURE',
@@ -66,6 +71,8 @@ export default {
     LOAD_VOCABULARY_REQUEST: 'LOAD_VOCABULARY_REQUEST',
     LOAD_VOCABULARY_SUCCESS: 'LOAD_VOCABULARY_SUCCESS',
     LOAD_VOCABULARY_FAILURE: 'LOAD_VOCABULARY_FAILURE',
+
+    SELECT_VOCABULARY_TERM: 'SELECT_VOCABULARY_TERM',
 
     LOGOUT: 'LOGOUT'
 }

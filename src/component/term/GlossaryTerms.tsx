@@ -3,16 +3,23 @@ import {injectIntl} from 'react-intl';
 import {Card, CardBody, CardHeader, Row} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import Vocabulary from "../../model/Vocabulary";
-import NewOptionForm from './forms/newOptionForm'
+import NewOptionForm from './forms/CreateVocabularyTerm'
 // @ts-ignore
 import {IntelligentTreeSelect} from 'intelligent-tree-select';
 import "intelligent-tree-select/lib/styles.css";
 // @ts-ignore
-import data from './../../util/__mocks__/generated-data.json' // TODO remove
+import data from './../../util/__mocks__/generated-data.json'
+import {connect} from "react-redux";
+import TermItState from "../../model/TermItState";
+import {ThunkDispatch} from "redux-thunk";
+import {Action} from "redux";
+import {selectVocabularyTerm} from "../../action/SyncActions"; // TODO remove
 
 // TODO The vocabulary will be required (or replaced by a tree of terms directly)
 interface GlossaryTermsProps extends HasI18n {
     vocabulary?: Vocabulary
+    selectedTerms: any
+    selectVocabularyTerm: (selectedTerms: any) => void
 }
 
 export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
@@ -23,6 +30,9 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         this._fetchOptions = this._fetchOptions.bind(this);
         this._onOptionCreate = this._onOptionCreate.bind(this);
         this._formComponent = this._formComponent.bind(this);
+        this._onSelect = this._onSelect.bind(this);
+        this._filterComponent = this._filterComponent.bind(this);
+        this._valueRenderer = this._valueRenderer.bind(this);
     }
 
     private _fetchOptions({searchString, optionID, limit, offset}: any) {
@@ -33,7 +43,8 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
     }
 
     private _formComponent(props: any) {
-        return <NewOptionForm {...props}/>
+        // TODO non modal version
+         return <NewOptionForm {...props}/>
     }
 
     private _filterComponent(props: any) {
@@ -42,6 +53,15 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
 
     private _onOptionCreate({option}: any) {
         // TODO response callback
+    }
+
+    private _onSelect(options: any) {
+        this.props.selectVocabularyTerm(options)
+        // TODO display selected option
+    }
+
+    private _valueRenderer(option: any) {
+        return option.label
     }
 
     public render() {
@@ -53,7 +73,9 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
             <CardBody>
                 <Row>
                     <IntelligentTreeSelect
-                        // name={"main_search"}
+                        name={"glossary-terms-search"}
+                        onChange={this._onSelect}
+                        value={this.props.selectedTerms}
                         fetchOptions={this._fetchOptions}
                         valueKey={"value"}
                         labelKey={"label"}
@@ -62,10 +84,12 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
                         openButtonTooltipLabel={i18n('glossary.form.tooltipLabel')}
                         simpleTreeData={true}
                         isMenuOpen={true}
+                        multi={false}
                         options={data}
                         filterComponent={this._filterComponent}
                         formComponent={this._formComponent}
                         onOptionCreate={this._onOptionCreate}
+                        valueRenderer={this._valueRenderer}
                     />
                 </Row>
             </CardBody>
@@ -74,4 +98,12 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
     }
 }
 
-export default injectIntl(withI18n(GlossaryTerms));
+export default connect((state: TermItState) => {
+    return {
+        selectedTerms: state.terms
+    };
+}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return {
+        selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm))
+    };
+})(injectIntl(withI18n(GlossaryTerms)));

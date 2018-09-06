@@ -155,3 +155,10 @@ export function loadVocabularyFailure(error: ErrorData): AsyncFailureAction {
         type: ActionType.LOAD_VOCABULARY_FAILURE
     }, error);
 }
+
+export function selectVocabularyTerm(data: any) {
+    return{
+        type: ActionType.SELECT_VOCABULARY_TERM,
+        selectedTerms: data,
+    }
+}

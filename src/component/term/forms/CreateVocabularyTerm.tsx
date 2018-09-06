@@ -106,7 +106,7 @@ const Select = asField(({fieldState, ...props}: any) => {
     );
 });
 
-interface NewOptionFormProps extends HasI18n {
+interface CreateVocabularyTermProps extends HasI18n {
     labelKey: string,
     valueKey: string,
     childrenKey: string,
@@ -115,15 +115,15 @@ interface NewOptionFormProps extends HasI18n {
     options: any[],
 }
 
-interface NewOptionFormState {
+interface CreateVocabularyTermState {
     siblings: any[],
     modalAdvancedSectionVisible: boolean,
     optionUriValue: string,
 }
 
-class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormState> {
+class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, CreateVocabularyTermState> {
 
-    constructor(props: NewOptionFormProps) {
+    constructor(props: CreateVocabularyTermProps) {
         super(props);
 
         this._createNewOption = this._createNewOption.bind(this);
@@ -371,4 +371,4 @@ class NewOptionForm extends React.Component<NewOptionFormProps, NewOptionFormSta
 }
 
 
-export default injectIntl(withI18n(NewOptionForm));
+export default injectIntl(withI18n(CreateVocabularyTerm));
