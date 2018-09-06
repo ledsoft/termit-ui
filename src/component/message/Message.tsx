@@ -46,7 +46,7 @@ export class Message extends React.Component<MessageProps, MessageState> {
 
     public render() {
         const message = this.props.message;
-        return <Alert color='info' isOpen={this.state.open}
+        return <Alert color={message.type} isOpen={this.state.open}
                       toggle={this.toggleAlert}>{message.messageId ? this.props.formatMessage(message.messageId, message.values) : message.message}</Alert>;
     }
 }

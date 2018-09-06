@@ -62,6 +62,7 @@ export default {
         'vocabulary.iri': 'Identifier',
         'vocabulary.summary.title': '{name} - Summary',
         'vocabulary.detail.title': '{name} - Vocabulary Detail',
+        'vocabulary.created.message': 'Vocabulary successfully created.',
 
         'vocabulary.metadata.identifier': 'Identifier',
         'vocabulary.metadata.author': 'Author',

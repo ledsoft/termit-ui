@@ -182,6 +182,9 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(201, null, {
         'location': 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/metropolitan-plan'
     });
+    // mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(500, {
+    //     message: 'Unable to create vocabulary!'
+    // });
     // Mock vocabulary retrieval endpoint
     mock.onGet(Constants.API_PREFIX + "/vocabularies/metropolitan-plan").reply(200, require('../rest-mock/vocabulary'), {
         'content-type': Constants.JSON_LD_MIME_TYPE

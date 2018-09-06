@@ -1,3 +1,13 @@
+import MType from "./MessageType";
+
+export type MessageType = 'success' | 'danger' | 'warning' | 'info';
+
+export interface MessageData {
+    message?: string;
+    messageId?: string;
+    values?: {};
+}
+
 /**
  * Represents a message published by TermIt UI's internal notification system.
  *
@@ -9,15 +19,13 @@ export default class Message {
     private readonly mMessage?: string;
     private readonly mMessageId?: string;
     private readonly mValues?: {};    // Values for message formatting, relevant only for messageId
+    private readonly mType: MessageType;
 
-    constructor(data: {
-        message?: string;
-        messageId?: string;
-        values?: {};
-    }) {
+    constructor(data: MessageData, type?: MessageType) {
         this.mMessage = data.message;
         this.mMessageId = data.messageId;
         this.mValues = data.values;
+        this.mType = type ? type : MType.INFO;
     }
 
     get message(): string | undefined {
@@ -30,6 +38,10 @@ export default class Message {
 
     get values(): {} | undefined {
         return this.mValues;
+    }
+
+    get type(): MessageType {
+        return this.mType;
     }
 }
 

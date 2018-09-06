@@ -13,6 +13,7 @@ import {ErrorData} from "../model/ErrorInfo";
 import {AxiosResponse} from "axios";
 import * as jsonld from "jsonld";
 import Message, {createFormattedMessage} from "../model/Message";
+import MessageType from "../model/MessageType";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -27,7 +28,7 @@ export function fetchUser() {
             .then((data: UserData) => dispatch(SyncActions.fetchUserSuccess(data)))
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.fetchUserFailure(error));
-                return dispatch(SyncActions.publishMessage(new Message(error)));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
 }
@@ -70,10 +71,11 @@ export function createVocabulary(vocabulary: Vocabulary) {
                 dispatch(SyncActions.createVocabularySuccess());
                 const location = resp.headers[Constants.LOCATION_HEADER];
                 Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
+                return dispatch(SyncActions.publishMessage(new Message({messageId: 'vocabulary.created.message'}, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.createVocabularyFailure(error));
-                return dispatch(SyncActions.publishMessage(new Message(error)));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
 }
@@ -86,7 +88,7 @@ export function loadVocabulary(normalizedName: string) {
             .then((data: VocabularyData) => dispatch(SyncActions.loadVocabularySuccess(data)))
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.loadVocabularyFailure(error));
-                return dispatch(SyncActions.publishMessage(new Message(error)));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
 }

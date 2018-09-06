@@ -41,7 +41,7 @@ describe('Reducers', () => {
     describe('loading user', () => {
         it('sets user in state on user load success', () => {
             const user = new User({
-                uri: 'http://test',
+                iri: 'http://test',
                 firstName: 'test',
                 lastName: 'test',
                 username: 'test@kbss.felk.cvut.cz'
@@ -66,7 +66,7 @@ describe('Reducers', () => {
 
         it('sets loading status to false on user load success', () => {
             const user = new User({
-                uri: 'http://test',
+                iri: 'http://test',
                 firstName: 'test',
                 lastName: 'test',
                 username: 'test@kbss.felk.cvut.cz'
@@ -195,7 +195,7 @@ describe('Reducers', () => {
     describe('logout', () => {
         it('resets current user to empty user', () => {
             initialState.user = new User({
-                uri: 'http://test',
+                iri: 'http://test',
                 firstName: 'test',
                 lastName: 'test',
                 username: 'test@kbss.felk.cvut.cz'

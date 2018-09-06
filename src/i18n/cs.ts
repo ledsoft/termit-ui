@@ -62,6 +62,7 @@ export default {
         'vocabulary.iri': 'Identifikátor',
         'vocabulary.summary.title': '{name} - přehled',
         'vocabulary.detail.title': '{name} - Detail slovníku',
+        'vocabulary.created.message': 'Slovník úspěšně vytvořen.',
 
         'vocabulary.metadata.identifier': 'Identifikátor',
         'vocabulary.metadata.author': 'Autor',
