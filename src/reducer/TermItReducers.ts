@@ -3,7 +3,7 @@ import ActionType, {
     Action, AsyncAction,
     ClearErrorAction,
     FailureAction,
-    MessageAction,
+    MessageAction, SelectingTermsAction,
     SwitchLanguageAction,
     UserLoadingAction, VocabularyLoadingAction
 } from '../action/ActionType';
@@ -107,6 +107,15 @@ function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: VocabularyLoad
     }
 }
 
-const rootReducer = combineReducers<TermItState>({user, loading, error, messages, intl, vocabulary});
+function terms(state: any = '', action: SelectingTermsAction){
+    switch (action.type) {
+        case ActionType.SELECT_VOCABULARY_TERM:
+            return action.selectedTerms;
+        default:
+            return state;
+    }
+}
+
+const rootReducer = combineReducers<TermItState>({user, loading, error, messages, intl, vocabulary, terms});
 
 export default rootReducer;

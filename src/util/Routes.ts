@@ -18,5 +18,6 @@ export default {
     vocabularies: new Route('vocabulary', '/vocabulary'),
     createVocabulary: new Route('createVocabulary', '/vocabulary/create'),
     vocabularySummary: new Route('vocabularySummary', '/vocabulary/:name'),
-    vocabularyDetail: new Route('vocabularyDetail', '/vocabulary/:name/detail')
+    vocabularyDetail: new Route('vocabularyDetail', '/vocabulary/:name/detail'),
+    createVocabularyTerm: new Route('createVocabularyTerm', '/vocabulary/:name/detail/newTerm')
 }

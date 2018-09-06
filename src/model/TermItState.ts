@@ -15,6 +15,7 @@ export default class TermItState {
     public error: ErrorInfo;
     public messages: Message[];
     public intl: IntlData;
+    public terms: any;
 
     constructor() {
         this.loading = false;
@@ -23,5 +24,6 @@ export default class TermItState {
         this.error = EMPTY_ERROR;
         this.messages = [];
         this.intl = en;
+        this.terms = null;
     }
 }
