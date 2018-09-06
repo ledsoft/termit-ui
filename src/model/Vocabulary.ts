@@ -4,7 +4,7 @@ import OntologicalVocabulary from '../util/Vocabulary';
 const ctx = {
     "name": "http://www.w3.org/2000/01/rdf-schema#label",
     "iri": "@id",
-    "created": "http://onto.fel.cvut.cz/ontologies/termit/created",
+    "created": "http://purl.org/dc/terms/created",
     "author": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora"
 };
 
