@@ -9,12 +9,6 @@ export default class Message {
     private readonly mMessage?: string;
     private readonly mMessageId?: string;
     private readonly mValues?: {};    // Values for message formatting, relevant only for messageId
-    /*
-     * Indicates when the message was first displayed.
-     *
-     * Necessary for message timeout support.
-     */
-    private mFirstDisplayed: number;
 
     constructor(data: {
         message?: string;
@@ -24,7 +18,6 @@ export default class Message {
         this.mMessage = data.message;
         this.mMessageId = data.messageId;
         this.mValues = data.values;
-        this.firstDisplayed = 0;
     }
 
     get message(): string | undefined {
@@ -37,15 +30,6 @@ export default class Message {
 
     get values(): {} | undefined {
         return this.mValues;
-    }
-
-    get firstDisplayed(): number {
-        return this.mFirstDisplayed;
-    }
-
-
-    set firstDisplayed(value: number) {
-        this.mFirstDisplayed = value;
     }
 }
 

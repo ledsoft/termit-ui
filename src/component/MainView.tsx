@@ -29,6 +29,7 @@ import Dashboard from './dashboard/Dashboard';
 import VocabularyManagement from './vocabulary/VocabularyManagement';
 import VocabularyDetail from "./vocabulary/VocabularyDetail";
 import LanguageSelector from "./main/LanguageSelector";
+import Messages from "./message/Messages";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -90,6 +91,7 @@ export class MainView extends React.Component<MainViewProps> {
                     </Nav>
                 </Navbar>
             </header>
+            <Messages/>
             <Container fluid={true} className={"mt-5"}>
                 <Switch>
                     <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail}/>

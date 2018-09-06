@@ -87,5 +87,7 @@ export default {
         'glossary.form.validation.validateLengthMin5': 'Pole musí mít alespoň 5 znaků',
         'glossary.form.validation.validateLengthMin3': 'Pole musí mít alespoň 3 znaky',
         'glossary.form.validation.validateNotSameAsParent': 'Potomek nemůže být stejný jako předchůdce',
+
+        'message.welcome': 'Vítejte v aplikaci TermIt!',
     }
 }

@@ -5,7 +5,7 @@ export interface HasI18n {
 
     i18n(id: string): string;
 
-    formatMessage(msgId: string, values: {}): string;
+    formatMessage(msgId: string, values: {} | undefined): string;
 }
 
 // type HOC<PWrapped> = React.ComponentClass<PWrapped> | React.SFC<PWrapped>;
@@ -16,7 +16,7 @@ export default function withI18n<P extends HasI18n>(Component: React.ComponentTy
             return this.props.intl.messages[id];
         };
 
-        protected formatMessage = (msgId: string, values: {}): string => {
+        protected formatMessage = (msgId: string, values: {} | undefined = {}): string => {
             return this.props.intl.formatMessage({id: msgId}, values);
         };
 

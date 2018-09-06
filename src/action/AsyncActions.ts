@@ -12,6 +12,7 @@ import IdentifierResolver from "../util/IdentifierResolver";
 import {ErrorData} from "../model/ErrorInfo";
 import {AxiosResponse} from "axios";
 import * as jsonld from "jsonld";
+import {createFormattedMessage} from "../model/Message";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -42,7 +43,9 @@ export function login(username: string, password: string) {
                     dispatch(SyncActions.loginSuccess());
                     return Promise.resolve();
                 }
-            }).catch((error: ErrorData) => dispatch(SyncActions.loginFailure(error)));
+            })
+            .then(() => dispatch(SyncActions.publishMessage(createFormattedMessage('message.welcome'))))
+            .catch((error: ErrorData) => dispatch(SyncActions.loginFailure(error)));
     };
 }
 

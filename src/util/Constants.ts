@@ -1,6 +1,6 @@
 import Routes from "./Routes";
 
-const constants =  {
+const constants = {
     // Will be replaced with actual server url during build
     SERVER_URL: '__SERVER_URL__',
     // Prefix of the server REST API
@@ -20,7 +20,11 @@ const constants =  {
     // Axios uses lower case for header names
     AUTHENTICATION_HEADER: 'authentication',
     LOCATION_HEADER: 'location',
-    STORAGE_JWT_KEY: ''
+    STORAGE_JWT_KEY: '',
+    // How many messages should be displayed at one moment
+    MESSAGE_DISPLAY_COUNT: 5,
+    // For how long should a message be displayed
+    MESSAGE_DISPLAY_TIMEOUT: 3000
 };
 
 constants.STORAGE_JWT_KEY = constants.APP_NAME + '-' + constants.AUTHENTICATION_HEADER;
