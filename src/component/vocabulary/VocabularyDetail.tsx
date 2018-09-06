@@ -10,8 +10,9 @@ import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import {loadVocabulary} from "../../action/ComplexActions";
 import Vocabulary from "../../model/Vocabulary";
-import VocabularyMetadata from "./VocabularyMetadata";
 import './VocabularyDetail.scss';
+import OutgoingLink from "../misc/OutgoingLink";
+import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 
 interface VocabularyDetailProps extends HasI18n {
     vocabulary: Vocabulary,
@@ -27,19 +28,24 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps & Ro
 
     public render() {
         const name = this.props.vocabulary.name;
+        const author = this.props.vocabulary.author && this.props.vocabulary.author.fullName;
+        const created = new Date(this.props.vocabulary.created as number).toLocaleString();
         return <div>
-            <h2 className='page-header'>{this.props.formatMessage('vocabulary.detail.title', {name})}</h2>
-            <Row className='detail-row'>
-                <Col md={6}>
-                    <VocabularyMetadata vocabulary={this.props.vocabulary}/>
-                </Col>
-            </Row>
+            <h2 className='page-header'>
+                <OutgoingLink
+                    label={this.props.formatMessage('vocabulary.detail.title', {name})}
+                    iri={this.props.vocabulary.iri as string}
+                />
+            </h2>
+            <h6>{this.props.formatMessage('vocabulary.detail.subtitle', { author, created })}</h6>
             <Row className='detail-row'>
                 <Col md={4}>
                     <GlossaryTerms/>
                 </Col>
                 <Col md={8}>
-                    TODO - vocabulary detail / term detail
+                    <VocabularyDetailTabPanel
+                        vocabulary={this.props.vocabulary}
+                    />
                 </Col>
             </Row>
         </div>;

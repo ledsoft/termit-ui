@@ -1,4 +1,4 @@
-import {History, createBrowserHistory} from "history";
+import {createHashHistory, History} from "history";
 import Constants from "./Constants";
 import {Route} from "./Routes";
 
@@ -20,11 +20,11 @@ class Routing {
     }
 
 
-    private mHistory: History;
+    private readonly mHistory: History;
     private originalTarget: Route;
 
     constructor() {
-        this.mHistory = createBrowserHistory();
+        this.mHistory = createHashHistory();
     }
 
     public saveOriginalTarget = (route: Route) => {

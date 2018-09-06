@@ -9,7 +9,6 @@ const constants = {
     // Will be replaced with actual version during build
     VERSION: '__VERSION__',
     HOME_ROUTE: Routes.dashboard,
-    LANGUAGE_COOKIE: 'TermIt-LANG',
     LANG: {
         CS: 'cs',
         EN: 'en'
@@ -21,6 +20,7 @@ const constants = {
     AUTHENTICATION_HEADER: 'authentication',
     LOCATION_HEADER: 'location',
     STORAGE_JWT_KEY: '',
+    STORAGE_LANG_KEY: '',
     // How many messages should be displayed at one moment
     MESSAGE_DISPLAY_COUNT: 5,
     // For how long should a message be displayed
@@ -28,5 +28,6 @@ const constants = {
 };
 
 constants.STORAGE_JWT_KEY = constants.APP_NAME + '-' + constants.AUTHENTICATION_HEADER;
+constants.STORAGE_LANG_KEY = constants.APP_NAME + '-LANG';
 
 export default constants;

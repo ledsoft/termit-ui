@@ -12,6 +12,7 @@ import User, {UserData} from "../model/User";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary, {VocabularyData} from "../model/Vocabulary";
+import {saveLanguagePreference} from "../util/IntlUtil";
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
@@ -86,6 +87,7 @@ export function dismissMessage(message: Message): MessageAction {
 }
 
 export function switchLanguage(language: string): SwitchLanguageAction {
+    saveLanguagePreference(language);
     return {
         type: ActionType.SWITCH_LANGUAGE,
         language

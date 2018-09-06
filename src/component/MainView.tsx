@@ -64,13 +64,16 @@ export class MainView extends React.Component<MainViewProps> {
 
                     <Nav navbar={true} className={"flex-grow-1"}>
                         <NavItem active={path === Routes.dashboard.path}>
-                            <NavLink href={Routes.dashboard.path}>{i18n('main.nav.dashboard')}</NavLink>
+                            <NavLink
+                                href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>
                         </NavItem>
                         <NavItem active={path.startsWith(Routes.vocabularies.path)}>
-                            <NavLink href={Routes.vocabularies.path}>{i18n('main.nav.vocabularies')}</NavLink>
+                            <NavLink
+                                href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
                         </NavItem>
                         <NavItem active={path === Routes.statistics.path}>
-                            <NavLink href={Routes.statistics.path}>{i18n('main.nav.statistics')}</NavLink>
+                            <NavLink
+                                href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
                         </NavItem>
                     </Nav>
                     <Nav navbar={true}>
@@ -101,6 +104,13 @@ export class MainView extends React.Component<MainViewProps> {
             </Container>
             <Footer/>
         </div>;
+    }
+
+    /**
+     * Have to explicitly add the hash to NavLink paths, otherwise NavLinks act as if using browser history.
+     */
+    private static hashPath(path: string): string {
+        return '#' + path;
     }
 }
 

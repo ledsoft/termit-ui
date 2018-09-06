@@ -1,16 +1,16 @@
 import Routing from '../Routing';
 import Routes from '../Routes';
-import {createBrowserHistory} from 'history';
+import {createHashHistory} from 'history';
 
 jest.mock('history', () => ({
-    createBrowserHistory: jest.fn().mockReturnValue({
+    createHashHistory: jest.fn().mockReturnValue({
         push: jest.fn()
     })
 }));
 
 describe('Routing', () => {
 
-    const historyMock = createBrowserHistory();
+    const historyMock = createHashHistory();
 
     beforeEach(() => {
         jest.resetAllMocks()
