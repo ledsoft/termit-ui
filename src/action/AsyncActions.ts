@@ -12,7 +12,7 @@ import IdentifierResolver from "../util/IdentifierResolver";
 import {ErrorData} from "../model/ErrorInfo";
 import {AxiosResponse} from "axios";
 import * as jsonld from "jsonld";
-import {createFormattedMessage} from "../model/Message";
+import Message, {createFormattedMessage} from "../model/Message";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -25,7 +25,10 @@ export function fetchUser() {
         return Ajax.get(Constants.API_PREFIX + '/users/current')
             .then((data: object) => jsonld.compact(data, USER_CONTEXT))
             .then((data: UserData) => dispatch(SyncActions.fetchUserSuccess(data)))
-            .catch((error: ErrorData) => dispatch(SyncActions.fetchUserFailure(error)));
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.fetchUserFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error)));
+            });
     };
 }
 
@@ -68,7 +71,10 @@ export function createVocabulary(vocabulary: Vocabulary) {
                 const location = resp.headers[Constants.LOCATION_HEADER];
                 Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
             })
-            .catch((error: ErrorData) => dispatch(SyncActions.createVocabularyFailure(error)));
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.createVocabularyFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error)));
+            });
     };
 }
 
@@ -78,6 +84,9 @@ export function loadVocabulary(normalizedName: string) {
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName)
             .then((data: object) => jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((data: VocabularyData) => dispatch(SyncActions.loadVocabularySuccess(data)))
-            .catch((error: ErrorData) => dispatch(SyncActions.loadVocabularyFailure(error)));
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.loadVocabularyFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error)));
+            });
     };
 }
