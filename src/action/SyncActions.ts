@@ -5,7 +5,7 @@ import ActionType, {
     ClearErrorAction,
     MessageAction,
     SwitchLanguageAction,
-    UserLoadingAction, VocabularyLoadingAction
+    UserLoadingAction, VocabulariesLoadingAction, VocabularyLoadingAction
 } from './ActionType';
 import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
 import User, {UserData} from "../model/User";
@@ -155,6 +155,26 @@ export function loadVocabularySuccess(data: VocabularyData): VocabularyLoadingAc
 export function loadVocabularyFailure(error: ErrorData): AsyncFailureAction {
     return asyncActionFailure({
         type: ActionType.LOAD_VOCABULARY_FAILURE
+    }, error);
+}
+
+export function loadVocabulariesRequest(): AsyncAction {
+    return asyncActionRequest({
+        type: ActionType.LOAD_VOCABULARIES_REQUEST
+    });
+}
+
+export function loadVocabulariesSuccess(data: VocabularyData[]): VocabulariesLoadingAction {
+    return {
+        type: ActionType.LOAD_VOCABULARIES_SUCCESS,
+        status: AsyncActionStatus.SUCCESS,
+        vocabularies: data ? data.map(v => new Vocabulary(v)) : []
+    }
+}
+
+export function loadVocabulariesFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
+        type: ActionType.LOAD_VOCABULARIES_FAILURE
     }, error);
 }
 

@@ -44,6 +44,10 @@ export interface SelectingTermsAction extends Action{
     selectedTerms: any
 }
 
+export interface VocabulariesLoadingAction extends AsyncAction {
+    vocabularies: Vocabulary[]
+}
+
 export default {
     FETCH_USER_REQUEST: 'FETCH_USER_REQUEST',
     FETCH_USER_FAILURE: 'FETCH_USER_FAILURE',
@@ -73,6 +77,10 @@ export default {
     LOAD_VOCABULARY_FAILURE: 'LOAD_VOCABULARY_FAILURE',
 
     SELECT_VOCABULARY_TERM: 'SELECT_VOCABULARY_TERM',
+
+    LOAD_VOCABULARIES_REQUEST: 'LOAD_VOCABULARIES_REQUEST',
+    LOAD_VOCABULARIES_SUCCESS: 'LOAD_VOCABULARIES_SUCCESS',
+    LOAD_VOCABULARIES_FAILURE: 'LOAD_VOCABULARIES_FAILURE',
 
     LOGOUT: 'LOGOUT'
 }

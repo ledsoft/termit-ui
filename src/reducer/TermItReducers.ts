@@ -5,7 +5,7 @@ import ActionType, {
     FailureAction,
     MessageAction, SelectingTermsAction,
     SwitchLanguageAction,
-    UserLoadingAction, VocabularyLoadingAction
+    UserLoadingAction, VocabulariesLoadingAction,  VocabularyLoadingAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
@@ -107,6 +107,19 @@ function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: VocabularyLoad
     }
 }
 
+function vocabularies(state: {[key:string]:Vocabulary}|any = {}, action: VocabulariesLoadingAction): {[key:string]:Vocabulary} {
+    switch (action.type) {
+        case ActionType.LOAD_VOCABULARIES_SUCCESS:
+            const map = {};
+            action.vocabularies.forEach(v =>
+                map[v.iri] = v
+            );
+            return map;
+        default:
+            return state;
+    }
+}
+
 function terms(state: any = null, action: SelectingTermsAction) {
     switch (action.type) {
         case ActionType.SELECT_VOCABULARY_TERM:
@@ -116,6 +129,6 @@ function terms(state: any = null, action: SelectingTermsAction) {
     }
 }
 
-const rootReducer = combineReducers<TermItState>({user, loading, error, messages, intl, vocabulary, terms});
+const rootReducer = combineReducers<TermItState>({user, loading,  vocabulary, vocabularies, error, messages, intl, terms});
 
 export default rootReducer;

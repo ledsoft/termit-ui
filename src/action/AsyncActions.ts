@@ -92,3 +92,20 @@ export function loadVocabulary(normalizedName: string) {
             });
     };
 }
+
+export function loadVocabularies() {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.loadVocabulariesRequest());
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies')
+            .then((data: object) =>
+                jsonld.compact(data, VOCABULARY_CONTEXT))
+            .then((compacted: object) =>
+                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]))
+            .then((data: VocabularyData[]) =>
+                dispatch(SyncActions.loadVocabulariesSuccess(data)))
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.loadVocabulariesFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}

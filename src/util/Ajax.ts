@@ -178,6 +178,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     });
     // Mock vocabulary IRI generator
     mock.onGet(Constants.API_PREFIX + '/vocabularies/identifier').reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test');
+    // Mock get vocabularies
+    mock.onGet(Constants.API_PREFIX + '/vocabularies').reply(200, require('../rest-mock/vocabularies'));
     // Mock vocabulary create endpoint
     mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(201, null, {
         'location': 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/metropolitan-plan'

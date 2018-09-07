@@ -24,6 +24,7 @@ function stateToPlainObject(state: TermItState) {
         loading: state.loading,
         user: state.user,
         vocabulary: state.vocabulary,
+        vocabularies: state.vocabularies,
         error: state.error,
         messages: state.messages,
         intl: state.intl,

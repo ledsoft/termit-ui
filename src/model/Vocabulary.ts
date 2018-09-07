@@ -19,7 +19,7 @@ export interface VocabularyData {
 
 export default class Vocabulary implements VocabularyData {
     public name: string;
-    public iri?: string;
+    public iri: string;
     public author?: User;
     public created?: number;
 

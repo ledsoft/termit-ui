@@ -12,6 +12,7 @@ export default class TermItState {
     public loading: boolean;
     public user: User;
     public vocabulary: Vocabulary;
+    public vocabularies: {[key:string]: Vocabulary};
     public error: ErrorInfo;
     public messages: Message[];
     public intl: IntlData;
@@ -21,6 +22,7 @@ export default class TermItState {
         this.loading = false;
         this.user = EMPTY_USER;
         this.vocabulary = EMPTY_VOCABULARY;
+        this.vocabularies = {};
         this.error = EMPTY_ERROR;
         this.messages = [];
         this.intl = en;

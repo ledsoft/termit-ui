@@ -50,3 +50,9 @@ export function loadVocabulary(normalizedName: string) {
         return dispatch(AsyncActions.loadVocabulary(normalizedName));
     };
 }
+
+export function loadVocabularies() {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.loadVocabularies());
+    };
+}
