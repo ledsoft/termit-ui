@@ -107,7 +107,7 @@ function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: VocabularyLoad
     }
 }
 
-function terms(state: any = '', action: SelectingTermsAction){
+function terms(state: any = null, action: SelectingTermsAction) {
     switch (action.type) {
         case ActionType.SELECT_VOCABULARY_TERM:
             return action.selectedTerms;

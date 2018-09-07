@@ -26,7 +26,8 @@ function stateToPlainObject(state: TermItState) {
         vocabulary: state.vocabulary,
         error: state.error,
         messages: state.messages,
-        intl: state.intl
+        intl: state.intl,
+        terms: state.terms
     };
 }
 
@@ -137,7 +138,7 @@ describe('Reducers', () => {
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error: EMPTY_ERROR}));
         });
 
-        it('des not clear error when origin is different', () => {
+        it('does not clear error when origin is different', () => {
             initialState.error = new ErrorInfo(ActionType.LOGIN_FAILURE, {
                 messageId: 'Unable to connect to server'
             });
