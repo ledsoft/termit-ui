@@ -1,7 +1,13 @@
-a.lang {
+.lang {
   color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
-a.lang.selected {
+.lang:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.lang.selected {
   font-weight: bold;
 }
