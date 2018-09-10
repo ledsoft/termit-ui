@@ -96,7 +96,7 @@ export class MainView extends React.Component<MainViewProps> {
                 </Navbar>
             </header>
             <Messages/>
-            <Container fluid={true} className={"mt-5"}>
+            <Container fluid={true} className="mt-5 mb-5">
                 <Switch>
                     <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
@@ -119,7 +119,8 @@ export class MainView extends React.Component<MainViewProps> {
 export default connect((state: TermItState) => {
     return {
         loading: state.loading,
-        user: state.user
+        user: state.user,
+        intl: state.intl    // Pass intl in props to force UI re-render on language switch
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
