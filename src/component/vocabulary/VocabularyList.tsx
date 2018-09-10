@@ -32,7 +32,9 @@ class VocabularyList extends React.Component<VocabularyListProps> {
             );
         return <div>
             <Table borderless={true}>
+                <tbody>
                 {rows}
+                </tbody>
             </Table>
         </div>
     }

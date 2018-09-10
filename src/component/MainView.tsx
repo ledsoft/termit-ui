@@ -30,6 +30,7 @@ import VocabularyManagement from './vocabulary/VocabularyManagement';
 import VocabularyDetail from "./vocabulary/VocabularyDetail";
 import LanguageSelector from "./main/LanguageSelector";
 import Messages from "./message/Messages";
+import Statistics from "./statistics/Statistics";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -100,6 +101,7 @@ export class MainView extends React.Component<MainViewProps> {
                     <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
+                    <Route path={Routes.statistics.path} component={Statistics}/>
                     <Route component={Dashboard}/>
                 </Switch>
             </Container>
