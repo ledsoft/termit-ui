@@ -1,14 +1,27 @@
 // @ts-ignore
-import {VirtualizedTreeSelect} from "intelligent-tree-select";
+import {IntelligentTreeSelect} from "intelligent-tree-select";
 // @ts-ignore
 import {asField, BasicText, Form, Scope} from 'informed';
 
 import * as React from "react";
 import {ChangeEvent, CSSProperties} from "react";
-import {Button, Collapse, FormFeedback, FormGroup, Input, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {
+    Button, ButtonToolbar,
+    Card, CardBody, CardHeader, CardTitle,
+    Collapse,
+    FormFeedback,
+    FormGroup,
+    Input,
+} from "reactstrap";
 import {validateLengthMin3, validateLengthMin5, validateNotSameAsParent} from "./newOptionValidate";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../../hoc/withI18n";
+import Routing from "../../../util/Routing";
+import Routes from "../../../util/Routes";
+import {RouteComponentProps, withRouter} from "react-router";
+import FetchOptionsFunction from "../../../model/Functions";
+import Ajax, {params} from "../../../util/Ajax";
+import Constants from "../../../util/Constants";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -25,14 +38,19 @@ const ErrorText = asField(({fieldState, ...props}: any) => {
 
         function _onChange(e: ChangeEvent<HTMLInputElement>) {
             if (props.onChange) {
-                return props.onChange(e, props.fieldApi)
+                return props.onChange(e.target.value, props.fieldApi)
             }
             return props.fieldApi.setValue(e.target.value);
         }
 
+        if (props.value) {
+            props.fieldApi.setValue(props.value);
+        }
+
         return (
             <FormGroup>
-                <Input type={"text"} autoComplete={"off"} placeholder={props.label} {...attributes} onChange={_onChange}/>
+                <Input type={"text"} autoComplete={"off"} placeholder={props.label} {...attributes} onChange={_onChange}
+                       value={props.value}/>
                 {fieldState.error ? (<FormFeedback style={{color: 'red'}}>{fieldState.error}</FormFeedback>) : null}
             </FormGroup>
         )
@@ -92,11 +110,20 @@ const Select = asField(({fieldState, ...props}: any) => {
         return props.fieldApi.setValue(value);
     }
 
+    const valueRenderer = (option: any) => {
+        return option.label
+    };
+
     return (
         <FormGroup>
-            <VirtualizedTreeSelect
+            <IntelligentTreeSelect
                 onChange={_onChange}
                 value={props.fieldApi.getValue()}
+                showSettings={false}
+                maxHeight={150}
+                name={"glossary-terms-search"}
+                fetchOptions={props.fetchOptions}
+                valueRenderer={valueRenderer}
                 {...props}
                 style={fieldState.error ? {border: 'solid 1px red'} : null}
             />
@@ -106,19 +133,19 @@ const Select = asField(({fieldState, ...props}: any) => {
     );
 });
 
-interface CreateVocabularyTermProps extends HasI18n {
+interface CreateVocabularyTermProps extends HasI18n, RouteComponentProps<any> {
     labelKey: string,
     valueKey: string,
     childrenKey: string,
-    onOptionCreate: any,
-    toggleModal: any,
     options: any[],
+    fetchOptions: ({searchString, optionID, limit, offset}: FetchOptionsFunction) => Promise<any[]> // TODO term object instead of any[]
 }
 
 interface CreateVocabularyTermState {
     siblings: any[],
     modalAdvancedSectionVisible: boolean,
     optionUriValue: string,
+    generateUri: boolean
 }
 
 class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, CreateVocabularyTermState> {
@@ -131,18 +158,26 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
         this.filterChildrenOptions = this.filterChildrenOptions.bind(this);
         this.addSibling = this.addSibling.bind(this);
         this.removeSibling = this.removeSibling.bind(this);
-        this.toggleAdvancedSection= this.toggleAdvancedSection.bind(this);
+        this.toggleAdvancedSection = this.toggleAdvancedSection.bind(this);
         this.getOptionUri = this.getOptionUri.bind(this);
         this.setOptionUri = this.setOptionUri.bind(this);
+        this.handleOnChange = this.handleOnChange.bind(this);
         this.validateLengthMin5 = this.validateLengthMin5.bind(this);
         this.validateLengthMin3 = this.validateLengthMin3.bind(this);
         this.validateNotSameAsParent = this.validateNotSameAsParent.bind(this);
+        this._cancelCreation = this._cancelCreation.bind(this);
 
         this.state = {
             siblings: [],
             modalAdvancedSectionVisible: false,
             optionUriValue: '',
+            generateUri: true,
         }
+    }
+
+    private _cancelCreation() {
+        const normalizedName = this.props.match.params.name;
+        Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', normalizedName]])});
     }
 
     private filterParentOptions(options: any[], filter: string, currentValues: any[]) {
@@ -197,27 +232,29 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
 
         Object.assign(option, properties);
 
-        this.props.toggleModal();
-        this.props.onOptionCreate(option);
+        // TODO create option
+
+        this._cancelCreation()
     }
 
-    private getOptionUri(e: ChangeEvent<HTMLInputElement>, fieldApi: any){
-        fieldApi.setValue(e.target.value);
-
-        const promise = null; // TODO fetch data
-
-        // @ts-ignore
-        promise.then((data: string) => {
-            this.setOptionUri(data)
-        })
+    private handleOnChange(name: string) {
+        this.setOptionUri(name, ()=>this.setState({generateUri: false}));
     }
 
-    private setOptionUri(newUri: string){
-        this.setState({optionUriValue: newUri})
+    private getOptionUri(name: string, fieldApi: any) {
+        fieldApi.setValue(name);
+        if (this.state.generateUri && name.length > 4){
+            // TODO different call something like .../vocabulary/:name/identifier
+            Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier', params({name})).then(uri => this.setOptionUri(uri)); // TODO generate uri
+        }
+    }
+
+    private setOptionUri(newUri: string, callback: ()=>void = ()=>null){
+        this.setState({optionUriValue: newUri}, callback)
     }
 
     private toggleAdvancedSection() {
-        return this.setState({modalAdvancedSectionVisible: !this.state.modalAdvancedSectionVisible});
+        this.setState({modalAdvancedSectionVisible: !this.state.modalAdvancedSectionVisible});
     }
 
     private removeSibling(event: React.MouseEvent<HTMLSpanElement>) {
@@ -249,23 +286,19 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
     }
 
     public validateNotSameAsParent(value: any, values: any) {
-        return validateNotSameAsParent(value, values, this.props.i18n);
+        return validateNotSameAsParent(value, values, this.props.i18n, this.props.valueKey);
     }
 
     public render() {
-
         const i18n = this.props.i18n;
-
         // @ts-ignore
         const styles: CSSProperties = {pointer: 'cursor'};
-
-        return (
-            <Form id="new-option-form" onSubmit={this._createNewOption}>
-                <ModalHeader toggle={this.props.toggleModal}>
-                    {i18n('glossary.form.header')}
-                </ModalHeader>
-
-                <ModalBody>
+        return (<Card>
+            <CardHeader color='info'>
+                <CardTitle>{i18n('glossary.form.header')}</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Form onSubmit={this._createNewOption}>
                     <ErrorText field="optionLabel" id="optionLabel" label={i18n('glossary.form.field.label')}
                                validate={this.validateLengthMin5}
                                validateOnChange={true}
@@ -276,10 +309,11 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                validate={this.validateLengthMin5}
                                validateOnChange={true}
                                validateOnBlur={true}
-                               onChange={this.setOptionUri}
+                               onChange={this.handleOnChange}
                                value={this.state.optionUriValue}
                     />
-                    <TextInput field="optionDescription" id="optionDescription" label={i18n('glossary.form.field.description')}/>
+                    <TextInput field="optionDescription" id="optionDescription"
+                               label={i18n('glossary.form.field.description')}/>
 
 
                     <Button color="link"
@@ -298,6 +332,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                 valueKey={this.props.valueKey}
                                 childrenKey={this.props.childrenKey}
                                 filterOptions={this.filterParentOptions}
+                                fetchOptions={this.props.fetchOptions}
                                 expanded={true}
                                 renderAsTree={false}
                         />
@@ -311,6 +346,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                 childrenKey={this.props.childrenKey}
                                 filterOptions={this.filterChildrenOptions}
                                 expanded={true}
+                                fetchOptions={this.props.fetchOptions}
                                 renderAsTree={false}
                                 validate={this.validateNotSameAsParent}
                                 validateOnChange={true}
@@ -348,27 +384,28 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                     <span onClick={this.removeSibling} style={styles}
                                           data-index={index}
                                           className="Select-clear-zone"
-                                          title={i18n('glossary.form.button.removeProperty')} aria-label={i18n('glossary.form.button.removeProperty')}>
-                    <span className="Select-clear" style={{fontSize: 24 + 'px'}}>×</span>
-                  </span>
+                                          title={i18n('glossary.form.button.removeProperty')}
+                                          aria-label={i18n('glossary.form.button.removeProperty')}>
+                                        <span className="Select-clear" style={{fontSize: 24 + 'px'}}>×</span>
+                                    </span>
                                 </FormGroup>
                             ))}
 
                         </FormGroup>
 
                     </Collapse>
-                </ModalBody>
-
-                <ModalFooter>
-                    <Button color="primary" type="submit">{i18n('glossary.form.button.submit')}</Button>{' '}
-                    <Button color="secondary" type="button" onClick={this.props.toggleModal}>{i18n('glossary.form.button.cancel')}</Button>
-                </ModalFooter>
-
-            </Form>
-        )
-
+                    <ButtonToolbar className={'d-flex justify-content-end'}>
+                        <Button color="primary" type="submit"
+                                size="sm">{i18n('glossary.form.button.submit')}</Button>{' '}
+                        <Button color="secondary" type="button" size="sm"
+                                onClick={this._cancelCreation}>{i18n('glossary.form.button.cancel')}</Button>
+                    </ButtonToolbar>
+                </Form>
+            </CardBody>
+        </Card>);
     }
+
 }
 
 
-export default injectIntl(withI18n(CreateVocabularyTerm));
+export default withRouter(injectIntl(withI18n(CreateVocabularyTerm)));

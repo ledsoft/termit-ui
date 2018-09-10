@@ -72,6 +72,8 @@ export default {
         'vocabulary.metadata.created': 'Datum vytvoření',
 
         'glossary.title': 'Pojmy',
+        'glossary.createTerm': 'Vytvořit nový pojem',
+        'glossary.createTerm.tooltip': 'Vytvořit nový pojem ve slovníku',
         'glossary.form.header': 'Vytvořit nový pojem',
         'glossary.form.tooltipLabel': 'Nanašli jste pojem, který jste hledali? Vytvořte nový.',
         'glossary.form.field.label': 'Štítek (požadováno)',

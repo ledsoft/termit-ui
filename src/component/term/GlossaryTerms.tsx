@@ -1,109 +1,97 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Card, CardBody, CardHeader, Row} from 'reactstrap';
+import {Button} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import Vocabulary from "../../model/Vocabulary";
-import NewOptionForm from './forms/CreateVocabularyTerm'
 // @ts-ignore
 import {IntelligentTreeSelect} from 'intelligent-tree-select';
 import "intelligent-tree-select/lib/styles.css";
-// @ts-ignore
-import data from './../../util/__mocks__/generated-data.json'
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
-import {selectVocabularyTerm} from "../../action/SyncActions"; // TODO remove
+import {selectVocabularyTerm} from "../../action/SyncActions";
+import Routing from "../../util/Routing";
+import Routes from "../../util/Routes";
+import {RouteComponentProps, withRouter} from "react-router";
+import PanelWithActions from "../misc/PanelWithActions";
+import FetchOptionsFunction from "../../model/Functions";
 
 // TODO The vocabulary will be required (or replaced by a tree of terms directly)
-interface GlossaryTermsProps extends HasI18n {
+interface GlossaryTermsProps extends HasI18n{
     vocabulary?: Vocabulary
     selectedTerms: any
     selectVocabularyTerm: (selectedTerms: any) => void
+    labelKey: string,
+    valueKey: string,
+    childrenKey: string,
+    options: any[],
+    fetchOptions: ({searchString, optionID, limit, offset}: FetchOptionsFunction) => Promise<any[]> // TODO term object instead of any[]
 }
 
-export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
+export class GlossaryTerms extends React.Component<GlossaryTermsProps & RouteComponentProps<any> > {
 
 
-    constructor(props: GlossaryTermsProps) {
+    constructor(props: GlossaryTermsProps & RouteComponentProps<any> ) {
         super(props);
-        this._fetchOptions = this._fetchOptions.bind(this);
-        this._onOptionCreate = this._onOptionCreate.bind(this);
-        this._formComponent = this._formComponent.bind(this);
         this._onSelect = this._onSelect.bind(this);
-        this._filterComponent = this._filterComponent.bind(this);
         this._valueRenderer = this._valueRenderer.bind(this);
-    }
-
-    private _fetchOptions({searchString, optionID, limit, offset}: any) {
-        return new Promise((resolve) => {
-            // TODO fetch options from the server
-            setTimeout(resolve, 1000, data)
-        });
-    }
-
-    private _formComponent(props: any) {
-        // TODO non modal version
-         return <NewOptionForm {...props}/>
-    }
-
-    private _filterComponent(props: any) {
-        return null
-    }
-
-    private _onOptionCreate({option}: any) {
-        // TODO response callback
+        this._onCreateClick = this._onCreateClick.bind(this);
     }
 
     private _onSelect(options: any) {
         this.props.selectVocabularyTerm(options)
-        // TODO display selected option
     }
 
     private _valueRenderer(option: any) {
         return option.label
     }
 
+    private _onCreateClick() {
+        const normalizedName = this.props.match.params.name;
+        Routing.transitionTo(Routes.createVocabularyTerm, {params: new Map([['name', normalizedName]])});
+    }
+
     public render() {
         const i18n = this.props.i18n;
-        return <Card>
-            <CardHeader color="info">
-                <h5>{i18n('glossary.title')}</h5>
-            </CardHeader>
-            <CardBody>
-                <Row>
-                    <IntelligentTreeSelect
-                        name={"glossary-terms-search"}
-                        onChange={this._onSelect}
-                        value={this.props.selectedTerms}
-                        fetchOptions={this._fetchOptions}
-                        valueKey={"value"}
-                        labelKey={"label"}
-                        childrenKey={"children"}
-                        openButtonLabel={i18n('glossary.form.header')}
-                        openButtonTooltipLabel={i18n('glossary.form.tooltipLabel')}
-                        simpleTreeData={true}
-                        isMenuOpen={true}
-                        multi={false}
-                        options={data}
-                        filterComponent={this._filterComponent}
-                        formComponent={this._formComponent}
-                        onOptionCreate={this._onOptionCreate}
-                        valueRenderer={this._valueRenderer}
-                    />
-                </Row>
-            </CardBody>
-        </Card>;
+        const actions = [];
+        const component = <IntelligentTreeSelect
+            name={"glossary-terms-search"}
+            onChange={this._onSelect}
+            value={this.props.selectedTerms}
+            fetchOptions={this.props.fetchOptions}
+            valueKey={this.props.valueKey}
+            labelKey={this.props.labelKey}
+            childrenKey={this.props.childrenKey}
+            simpleTreeData={true}
+            isMenuOpen={true}
+            multi={false}
+            options={this.props.options}
+            showSettings={false}
+            valueRenderer={this._valueRenderer}
+        />;
+
+        actions.push(<Button key='glossary.createTerm'
+                             color='primary'
+                             title={i18n('glossary.createTerm.tooltip')}
+                             size='sm'
+                             onClick={this._onCreateClick}>{i18n('glossary.createTerm')}</Button>);
+
+        return (<PanelWithActions
+            title={i18n('glossary.title')}
+            component={component}
+            actions={actions}
+        />);
 
     }
 }
 
-export default connect((state: TermItState) => {
+export default withRouter(connect((state: TermItState) => {
     return {
-        selectedTerms: state.terms
+        selectedTerms: state.terms,
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
         selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm))
     };
-})(injectIntl(withI18n(GlossaryTerms)));
+})(injectIntl(withI18n(GlossaryTerms))));

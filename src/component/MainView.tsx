@@ -97,7 +97,8 @@ export class MainView extends React.Component<MainViewProps> {
             <Messages/>
             <Container fluid={true} className="mt-5 mb-5">
                 <Switch>
-                    <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail}/>
+                    <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail} exact={true}/>
+                    <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route component={Dashboard}/>
                 </Switch>
