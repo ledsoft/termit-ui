@@ -9,9 +9,9 @@ import Vocabulary from "../../model/Vocabulary";
 import {loadVocabulary} from "../../action/ComplexActions";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
-import PanelWithActions from "../misc/PanelWithActions";
 import VocabularyMetadata from "./VocabularyMetadata";
 import {Button} from "reactstrap";
+import PanelWithActions from "../misc/PanelWithActions";
 
 interface VocabularySummaryProps {
     vocabulary: Vocabulary;
@@ -31,7 +31,7 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
         actions.push(
             <Link key="vocabulary.summary.gotodetail"
                   to={"/vocabulary/" + this.props.vocabulary.name + "/detail"}>
-                <Button color='primary'
+                <Button color='light'
                         size='sm'
                         title={this.props.i18n('vocabulary.summary.gotodetail.label')}>🔍
                 </Button>
@@ -41,8 +41,8 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
             <PanelWithActions
             title={this.props.formatMessage('vocabulary.summary.title', {name: normalizedName})}
             actions={actions}
-            component={<VocabularyMetadata vocabulary={this.props.vocabulary}/>}
-        /></div>;
+            component={<VocabularyMetadata vocabulary={this.props.vocabulary}/>}/>
+        </div>;
     }
 }
 
