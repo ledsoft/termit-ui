@@ -83,9 +83,12 @@ export function createVocabulary(vocabulary: Vocabulary) {
 export function loadVocabulary(normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.loadVocabularyRequest());
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName)
-            .then((data: object) => jsonld.compact(data, VOCABULARY_CONTEXT))
-            .then((data: VocabularyData) => dispatch(SyncActions.loadVocabularySuccess(data)))
+        return Ajax
+            .get(Constants.API_PREFIX + '/vocabularies/' + normalizedName)
+            .then((data: object) =>
+                jsonld.compact(data, VOCABULARY_CONTEXT))
+            .then((data: VocabularyData) =>
+                dispatch(SyncActions.loadVocabularySuccess(data)))
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.loadVocabularyFailure(error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));

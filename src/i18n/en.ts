@@ -39,6 +39,7 @@ export default {
         'main.nav.dashboard': 'Dashboard',
         'main.nav.vocabularies': 'Vocabularies',
         'main.nav.statistics': 'Statistics',
+        'main.nav.search': 'Search',
         'main.nav.admin': 'Administration',
         'main.user-profile': 'User profile',
         'main.logout': 'Log out',
@@ -48,6 +49,7 @@ export default {
         'dashboard.vocabulary.tile': 'Vocabulary Management',
         'dashboard.document.tile': 'Document Management',
         'dashboard.statistics.tile': 'Statistics',
+        'dashboard.search.tile': 'Search',
         'dashboard.create-vocabulary.tile' : 'Create Vocabulary',
         'dashboard.add-document.tile' : 'Add Document',
 
@@ -61,6 +63,7 @@ export default {
         'vocabulary.name': 'Name',
         'vocabulary.iri': 'Identifier',
         'vocabulary.summary.title': '{name} - Summary',
+        'vocabulary.summary.gotodetail.label' : 'Detail',
         'vocabulary.created.message': 'Vocabulary successfully created.',
         'vocabulary.detail.title': '{name}',
         'vocabulary.detail.subtitle': ' created by {author} at {created}',

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ButtonToolbar, Card, CardBody, CardHeader, Col, Row} from 'reactstrap';
+import {Card, CardBody, CardHeader} from 'reactstrap';
 
 interface PanelWithActionsProps {
     title: string,
@@ -7,22 +7,14 @@ interface PanelWithActionsProps {
     component: JSX.Element
 }
 
-export default (props: PanelWithActionsProps) => <Card>
-    <CardHeader color='info'>
-        <Row>
-            <Col xs={6}><h5>{props.title}</h5></Col>
-            <Col xs={6}>
-                <ButtonToolbar className="pull-right">
+export default (props: PanelWithActionsProps) => <Card style={{zIndex:200}}>
+    <CardHeader tag='h5' color='info'>
+        {props.title}
+                <div className="float-sm-right">
                     {props.actions}
-                </ButtonToolbar>
-            </Col>
-        </Row>
+                </div>
     </CardHeader>
     <CardBody>
-        <Row>
-            <Col md={12}>
-                {props.component}
-            </Col>
-        </Row>
+        {props.component}
     </CardBody>
 </Card>;

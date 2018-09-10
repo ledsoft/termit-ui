@@ -188,7 +188,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     //     message: 'Unable to create vocabulary!'
     // });
     // Mock vocabulary retrieval endpoint
-    mock.onGet(Constants.API_PREFIX + "/vocabularies/metropolitan-plan").reply(200, require('../rest-mock/vocabulary'), {
+    mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), {
         'content-type': Constants.JSON_LD_MIME_TYPE
     });
 }

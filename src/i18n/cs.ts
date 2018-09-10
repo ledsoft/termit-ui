@@ -39,6 +39,7 @@ export default {
         'main.nav.dashboard': 'Hlavní strana',
         'main.nav.vocabularies': 'Slovníky',
         'main.nav.statistics': 'Statistiky',
+        'main.nav.search': 'Vyhledávání pojmů',
         'main.nav.admin': 'Administrace',
         'main.user-profile': 'Profil uživatele',
         'main.logout': 'Odhlásit se',
@@ -48,6 +49,7 @@ export default {
         'dashboard.vocabulary.tile': 'Správa slovníků',
         'dashboard.document.tile': 'Správa dokumentů',
         'dashboard.statistics.tile': 'Statistiky',
+        'dashboard.search.tile': 'Search',
         'dashboard.create-vocabulary.tile' : 'Vytvořit slovník',
         'dashboard.add-document.tile' : 'Přidat dokument',
 
@@ -61,6 +63,7 @@ export default {
         'vocabulary.name': 'Název',
         'vocabulary.iri': 'Identifikátor',
         'vocabulary.summary.title': '{name} - přehled',
+        'vocabulary.summary.gotodetail.label' : 'Detail',
         'vocabulary.created.message': 'Slovník úspěšně vytvořen.',
         'vocabulary.detail.title': '{name}',
         'vocabulary.detail.subtitle': ' vytvořen autorem {author} v {created}',
