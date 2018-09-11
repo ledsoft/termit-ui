@@ -8,5 +8,5 @@ interface OutgoingLinkProps{
 
 export default (props : OutgoingLinkProps) =>
     <span>{props.label}
-        <a href={props.iri}>↱</a>
+        <a href={props.iri} target='_blank'>↱</a>
     </span>;
