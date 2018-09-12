@@ -66,7 +66,7 @@ export default {
         'vocabulary.summary.gotodetail.label' : 'Detail',
         'vocabulary.created.message': 'Slovník úspěšně vytvořen.',
         'vocabulary.detail.title': '{name}',
-        'vocabulary.detail.subtitle': ' vytvořen autorem {author} v {created}',
+        'vocabulary.detail.subtitle': 'Vytvořen autorem {author} v {created}',
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Detail pojmu',
 
