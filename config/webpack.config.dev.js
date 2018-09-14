@@ -95,6 +95,7 @@ module.exports = {
             '.json',
             '.web.jsx',
             '.jsx',
+            '.rq'
         ],
         alias: {
 
@@ -128,7 +129,7 @@ module.exports = {
             },
             {
                 test: /\.rq$/,
-                use: ['raw-loader']
+                loader: require.resolve('raw-loader'),
             },
             {
                 // "oneOf" will traverse all following loaders until one will
