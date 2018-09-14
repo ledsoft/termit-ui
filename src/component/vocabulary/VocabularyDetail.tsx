@@ -57,11 +57,11 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
         return <div>
             <h2 className='page-header'>
                 <OutgoingLink
-                    label={this.props.formatMessage('vocabulary.detail.title', {name})}
+                    label={name}
                     iri={this.props.vocabulary.iri as string}
                 />
             </h2>
-            <h6>{this.props.formatMessage('vocabulary.detail.subtitle', { author, created })}</h6>
+            <h6>{this.props.formatMessage('vocabulary.detail.subtitle', {author, created})}</h6>
             <Row className='detail-row'>
                 <Col md={4}>
                     <GlossaryTerms
