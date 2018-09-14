@@ -1,5 +1,5 @@
 import configureMockStore from 'redux-mock-store';
-import {createVocabulary, loadVocabulary, login} from '../AsyncActions';
+import {createVocabulary, loadVocabularies, loadVocabulary, login} from '../AsyncActions';
 import Constants from '../../util/Constants';
 import Ajax from '../../util/Ajax';
 import thunk, {ThunkDispatch} from 'redux-thunk';
@@ -8,7 +8,7 @@ import Routing from '../../util/Routing';
 import Authentication from '../../util/Authentication';
 import Vocabulary, {CONTEXT} from "../../model/Vocabulary";
 import Routes from '../../util/Routes';
-import {VocabularyLoadingAction} from "../ActionType";
+import {VocabulariesLoadingAction, VocabularyLoadingAction} from "../ActionType";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -103,6 +103,37 @@ describe('Async actions', () => {
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabulary('metropolitan-plan'))).then(() => {
                 const loadSuccessAction: VocabularyLoadingAction = store.getActions()[1];
                 expect(loadSuccessAction.vocabulary.name).toEqual('Metropolitan plan');
+            });
+        });
+    });
+
+    describe('load vocabularies', () => {
+        it('extracts vocabularies from incoming JSON-LD', () => {
+            const vocabularies = require('../../rest-mock/vocabularies');
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(vocabularies));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabularies())).then(() => {
+                const loadSuccessAction: VocabulariesLoadingAction = store.getActions()[1];
+                const result = loadSuccessAction.vocabularies;
+                expect(result.length).toEqual(vocabularies.length);
+                result.sort((a, b) => a.iri.localeCompare(b.iri));
+                vocabularies.sort((a: object, b: object) => a['@id'].localeCompare(b['@id']));
+                for (let i = 0; i < vocabularies.length; i++) {
+                    expect(result[i].iri).toEqual(vocabularies[i]['@id']);
+                }
+            });
+        });
+
+        it('extracts single vocabulary as an array of vocabularies from incoming JSON-LD', () => {
+            const vocabularies = require('../../rest-mock/vocabularies');
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([vocabularies[0]]));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabularies())).then(() => {
+                const loadSuccessAction: VocabulariesLoadingAction = store.getActions()[1];
+                const result = loadSuccessAction.vocabularies;
+                expect(Array.isArray(result)).toBeTruthy();
+                expect(result.length).toEqual(1);
+                expect(result[0].iri).toEqual(vocabularies[0]['@id']);
             });
         });
     });
