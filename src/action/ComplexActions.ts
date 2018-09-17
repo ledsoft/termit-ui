@@ -6,6 +6,8 @@ import {userLogout} from './SyncActions';
 import Routes from '../util/Routes';
 import Routing from '../util/Routing';
 import Vocabulary from "../model/Vocabulary";
+import VocabularyTerm from "../model/VocabularyTerm";
+import FetchOptionsFunction from "../model/Functions";
 
 /*
  * Complex actions are basically just nice names for actions which involve both synchronous and asynchronous actions.
@@ -45,6 +47,12 @@ export function createVocabulary(vocabulary: Vocabulary) {
     };
 }
 
+export function createVocabularyTerm(term: VocabularyTerm, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.createVocabularyTerm(term, normalizedName));
+    };
+}
+
 export function loadVocabulary(normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         return dispatch(AsyncActions.loadVocabulary(normalizedName));
@@ -54,5 +62,23 @@ export function loadVocabulary(normalizedName: string) {
 export function loadVocabularies() {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         return dispatch(AsyncActions.loadVocabularies());
+    };
+}
+
+export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.fetchVocabularyTerms(fetchOptions, normalizedName));
+    };
+}
+
+export function fetchVocabularySubTerms(parentTermID: string, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.fetchVocabularySubTerms(parentTermID, normalizedName));
+    };
+}
+
+export function getVocabularyTermByID(termID: string, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.getVocabularyTermByID(termID, normalizedName));
     };
 }

@@ -69,6 +69,8 @@ export default {
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Detail pojmu',
 
+        'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',
+
         'vocabulary.metadata.identifier': 'Identifikátor',
         'vocabulary.metadata.author': 'Autor',
         'vocabulary.metadata.created': 'Datum vytvoření',

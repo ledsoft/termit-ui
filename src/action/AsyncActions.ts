@@ -14,6 +14,8 @@ import {AxiosResponse} from "axios";
 import * as jsonld from "jsonld";
 import Message, {createFormattedMessage} from "../model/Message";
 import MessageType from "../model/MessageType";
+import VocabularyTerm, {CONTEXT as TERM_CONTEXT, VocabularyTermData} from "../model/VocabularyTerm";
+import FetchOptionsFunction from "../model/Functions";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -80,6 +82,23 @@ export function createVocabulary(vocabulary: Vocabulary) {
     };
 }
 
+export function createVocabularyTerm(term: VocabularyTerm, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.createVocabularyTermRequest());
+        return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/create', content(term.toJsonLd()))
+            .then((resp: AxiosResponse) => {
+                dispatch(SyncActions.createVocabularyTermSuccess());
+                const location = resp.headers[Constants.LOCATION_HEADER];
+                Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
+                return dispatch(SyncActions.publishMessage(new Message({messageId: 'vocabulary.term.created.message'}, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.createVocabularyTermFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function loadVocabulary(normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.loadVocabularyRequest());
@@ -109,6 +128,65 @@ export function loadVocabularies() {
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.loadVocabulariesFailure(error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.fetchVocabularyTermsRequest());
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
+            params({
+                label: fetchOptions.searchString,
+                parentTerm: fetchOptions.optionID,
+                limit: fetchOptions.limit,
+                offset: fetchOptions.offset
+            }))
+            .then((data: object) =>
+                jsonld.compact(data, TERM_CONTEXT)) // TODO implement + operation failed if data is an empty array
+            .then((compacted: object) =>
+                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k])) // TODO implement
+            .then((data: VocabularyTermData[]) => data)
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return []
+            });
+    };
+}
+
+export function fetchVocabularySubTerms(parentTermId: string, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.fetchVocabularyTermsRequest());
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/subterms',
+            params({parent_id: parentTermId}))
+            .then((data: object) =>
+                jsonld.compact(data, TERM_CONTEXT)) // TODO implement
+            .then((compacted: object) =>
+                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k])) // TODO implement
+            .then((data: VocabularyTermData[]) => data)
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return []
+            });
+    };
+}
+
+export function getVocabularyTermByID(termID: string, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.fetchVocabularyTermsRequest());
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/id',
+            params({term_id: termID}))
+            .then((data: object) =>
+                jsonld.compact(data, TERM_CONTEXT)) // TODO implement
+            .then((compacted: object) =>
+                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k])) // TODO implement
+            .then((data: VocabularyTermData[]) => data)
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return []
             });
     };
 }

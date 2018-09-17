@@ -69,6 +69,8 @@ export default {
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Term Detail',
 
+        'vocabulary.term.created.message': 'Term successfully created.',
+
         'vocabulary.metadata.identifier': 'Identifier',
         'vocabulary.metadata.author': 'Author',
         'vocabulary.metadata.created': 'Created',

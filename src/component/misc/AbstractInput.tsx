@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Label, FormText} from "reactstrap";
-import {InputType} from "../../../node_modules/@types/reactstrap/lib/Input";
+import {InputType} from "reactstrap/lib/Input";
 
 export interface AbstractInputProps {
     name?: string,

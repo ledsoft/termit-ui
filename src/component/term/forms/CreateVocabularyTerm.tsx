@@ -6,8 +6,12 @@ import {asField, BasicText, Form, Scope} from 'informed';
 import * as React from "react";
 import {ChangeEvent, CSSProperties} from "react";
 import {
-    Button, ButtonToolbar,
-    Card, CardBody, CardHeader, CardTitle,
+    Button,
+    ButtonToolbar,
+    Card,
+    CardBody,
+    CardHeader,
+    CardTitle,
     Collapse,
     FormFeedback,
     FormGroup,
@@ -22,6 +26,12 @@ import {RouteComponentProps, withRouter} from "react-router";
 import FetchOptionsFunction from "../../../model/Functions";
 import Ajax, {params} from "../../../util/Ajax";
 import Constants from "../../../util/Constants";
+import {connect} from "react-redux";
+import TermItState from "../../../model/TermItState";
+import {ThunkDispatch} from "redux-thunk";
+import {Action} from "redux";
+import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../../model/VocabularyTerm";
+import {createVocabularyTerm, fetchVocabularyTerms} from "../../../action/ComplexActions";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -134,11 +144,9 @@ const Select = asField(({fieldState, ...props}: any) => {
 });
 
 interface CreateVocabularyTermProps extends HasI18n, RouteComponentProps<any> {
-    labelKey: string,
-    valueKey: string,
-    childrenKey: string,
-    options: any[],
-    fetchOptions: ({searchString, optionID, limit, offset}: FetchOptionsFunction) => Promise<any[]> // TODO term object instead of any[]
+    options?: any[],
+    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void,
+    onCreate: (term: VocabularyTerm, normalizedName: string) => void
 }
 
 interface CreateVocabularyTermState {
@@ -166,6 +174,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
         this.validateLengthMin3 = this.validateLengthMin3.bind(this);
         this.validateNotSameAsParent = this.validateNotSameAsParent.bind(this);
         this._cancelCreation = this._cancelCreation.bind(this);
+        this.fetchOptions = this.fetchOptions.bind(this);
 
         this.state = {
             siblings: [],
@@ -180,26 +189,30 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
         Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', normalizedName]])});
     }
 
-    private filterParentOptions(options: any[], filter: string, currentValues: any[]) {
+    private filterParentOptions(options: VocabularyTerm[], filter: string, currentValues: any[]) {
         return options.filter(option => {
-            const label = option[this.props.labelKey];
+            const label = option.label;
             return label.toLowerCase().indexOf(filter.toLowerCase()) !== -1
         })
     }
 
-    private filterChildrenOptions(options: any[], filter: string, currentValues: any[]) {
+    private filterChildrenOptions(options: VocabularyTerm[], filter: string, currentValues: any[]) {
         return options.filter(option => {
-            const label = option[this.props.labelKey];
+            const label = option.label;
             return (label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) && !option.parent
         })
     }
 
-    private _getIDs(children: any[]) {
+    private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
+        return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name)
+    }
+
+    private _getIDs(children: VocabularyTerm[]): string[] {
         if (!children) {
             return [];
         }
-        const ids: any[] = JSON.parse(JSON.stringify(children));
-        return ids.map(obj => obj[this.props.valueKey])
+        const ids: VocabularyTerm[] = JSON.parse(JSON.stringify(children));
+        return ids.map(obj => obj.iri)
     }
 
     private _createNewOption(data: any) {
@@ -215,14 +228,14 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
 
         const children = this._getIDs(data.childOptions);
         let parent = '';
-        if (data.parentOption) {
-            parent = data.parentOption[this.props.valueKey];
+        if (data.parentOption as VocabularyTerm) {
+            parent = data.parentOption.iri;
         }
 
-        const option = {};
-        option[this.props.valueKey] = data.optionURI;
-        option[this.props.labelKey] = data.optionLabel;
-        option[this.props.childrenKey] = children;
+        const option = {} as VocabularyTerm;
+        option.iri = data.optionURI;
+        option.label = data.optionLabel;
+        option.subTerms = children;
         // @ts-ignore
         option.parent = parent;
         if (data.optionDescription) {
@@ -232,24 +245,28 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
 
         Object.assign(option, properties);
 
-        // TODO create option
-
-        this._cancelCreation()
+        this.props.onCreate(new VocabularyTerm({
+            iri: data.optionURI as string,
+            label: data.optionLabel as string,
+            comment: data.optionDescription as string,
+            subTerms: children as string[],
+        }), this.props.match.params.name);
     }
 
     private handleOnChange(name: string) {
-        this.setOptionUri(name, ()=>this.setState({generateUri: false}));
+        this.setOptionUri(name, () => this.setState({generateUri: false}));
     }
 
     private getOptionUri(name: string, fieldApi: any) {
         fieldApi.setValue(name);
-        if (this.state.generateUri && name.length > 4){
-            // TODO different call something like .../vocabulary/:name/identifier
-            Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier', params({name})).then(uri => this.setOptionUri(uri)); // TODO generate uri
+        if (this.state.generateUri && name.length > 4) {
+            const normalizedName = this.props.match.params.name;
+            Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/identifier',
+                params({name})).then(uri => this.setOptionUri(uri));
         }
     }
 
-    private setOptionUri(newUri: string, callback: ()=>void = ()=>null){
+    private setOptionUri(newUri: string, callback: () => void = () => null) {
         this.setState({optionUriValue: newUri}, callback)
     }
 
@@ -286,7 +303,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
     }
 
     public validateNotSameAsParent(value: any, values: any) {
-        return validateNotSameAsParent(value, values, this.props.i18n, this.props.valueKey);
+        return validateNotSameAsParent(value, values, this.props.i18n, TERM_CONTEXT.iri);
     }
 
     public render() {
@@ -328,11 +345,11 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                 options={this.props.options}
                                 multi={false}
                                 placeholder={i18n('glossary.form.field.selectParent')}
-                                labelKey={this.props.labelKey}
-                                valueKey={this.props.valueKey}
-                                childrenKey={this.props.childrenKey}
+                                labelKey={TERM_CONTEXT.label}
+                                valueKey={TERM_CONTEXT.iri}
+                                childrenKey={TERM_CONTEXT.subTerms}
                                 filterOptions={this.filterParentOptions}
-                                fetchOptions={this.props.fetchOptions}
+                                fetchOptions={this.fetchOptions}
                                 expanded={true}
                                 renderAsTree={false}
                         />
@@ -341,12 +358,12 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                 options={this.props.options}
                                 placeholder={i18n('glossary.form.field.selectChildren')}
                                 multi={true}
-                                labelKey={this.props.labelKey}
-                                valueKey={this.props.valueKey}
-                                childrenKey={this.props.childrenKey}
+                                labelKey={TERM_CONTEXT.label}
+                                valueKey={TERM_CONTEXT.iri}
+                                childrenKey={TERM_CONTEXT.subTerms}
                                 filterOptions={this.filterChildrenOptions}
                                 expanded={true}
-                                fetchOptions={this.props.fetchOptions}
+                                fetchOptions={this.fetchOptions}
                                 renderAsTree={false}
                                 validate={this.validateNotSameAsParent}
                                 validateOnChange={true}
@@ -407,5 +424,13 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
 
 }
 
-
-export default withRouter(injectIntl(withI18n(CreateVocabularyTerm)));
+export default connect((state: TermItState) => {
+    return {
+        vocabulary: state.vocabulary
+    };
+}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return {
+        onCreate: (term: VocabularyTerm, normalizedName: string) => dispatch(createVocabularyTerm(term, normalizedName)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
+    };
+})(withRouter(injectIntl(withI18n(CreateVocabularyTerm))));

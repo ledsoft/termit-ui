@@ -5,7 +5,9 @@ import ActionType, {
     ClearErrorAction,
     MessageAction,
     SwitchLanguageAction,
-    UserLoadingAction, VocabulariesLoadingAction, VocabularyLoadingAction
+    UserLoadingAction,
+    VocabulariesLoadingAction,
+    VocabularyLoadingAction
 } from './ActionType';
 import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
 import User, {UserData} from "../model/User";
@@ -13,6 +15,7 @@ import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import {saveLanguagePreference} from "../util/IntlUtil";
+import {VocabularyTermData} from "../model/VocabularyTerm";
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
@@ -125,6 +128,25 @@ export function createVocabularyRequest(): AsyncAction {
     });
 }
 
+export function createVocabularyTermRequest(): AsyncAction {
+    return asyncActionRequest({
+        type: ActionType.CREATE_VOCABULARY_TERM_REQUEST
+    })
+}
+
+export function createVocabularyTermFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
+        type: ActionType.CREATE_VOCABULARY_TERM_FAILURE,
+    }, error);
+}
+
+export function createVocabularyTermSuccess(): AsyncAction {
+    return {
+        type: ActionType.CREATE_VOCABULARY_TERM_SUCCESS,
+        status: AsyncActionStatus.SUCCESS
+    };
+}
+
 export function createVocabularyFailure(error: ErrorData): AsyncFailureAction {
     return asyncActionFailure({
         type: ActionType.CREATE_VOCABULARY_FAILURE,
@@ -178,9 +200,21 @@ export function loadVocabulariesFailure(error: ErrorData): AsyncFailureAction {
     }, error);
 }
 
-export function selectVocabularyTerm(data: any) {
+export function selectVocabularyTerm(data: VocabularyTermData) {
     return{
         type: ActionType.SELECT_VOCABULARY_TERM,
         selectedTerms: data,
     }
+}
+
+export function fetchVocabularyTermsRequest(): AsyncAction {
+    return asyncActionRequest({
+        type: ActionType.FETCH_VOCABULARY_TERMS_REQUEST
+    });
+}
+
+export function fetchVocabularyTermsFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
+        type: ActionType.FETCH_VOCABULARY_TERMS_FAILURE
+    }, error);
 }

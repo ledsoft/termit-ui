@@ -15,9 +15,6 @@ import OutgoingLink from "../misc/OutgoingLink";
 import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 import Routes from "../../util/Routes";
 import CreateVocabularyTerm from "../term/forms/CreateVocabularyTerm";
-// @ts-ignore
-import data from './../../util/__mocks__/generated-data.json' // TODO remove
-import FetchOptionsFunction from "../../model/Functions";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
@@ -31,13 +28,6 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
         this.props.loadVocabulary(normalizedName);
     }
 
-    private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction): Promise<any[]> {
-        return new Promise((resolve) => {
-            // TODO fetch options from the server
-            setTimeout(resolve, 1000, [])
-        });
-    }
-
     public render() {
         const name = this.props.vocabulary.name;
         const author = this.props.vocabulary.author && this.props.vocabulary.author.fullName;
@@ -46,13 +36,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             vocabulary={this.props.vocabulary}
         />;
         // @ts-ignore
-        const createVocabularyTerm = () => <CreateVocabularyTerm
-            valueKey={"value"} // TODO get this value from env or backend
-            labelKey={"label"} // TODO get this value from env or backend
-            childrenKey={"children"} // TODO get this value from env or backend
-            options={data} // TODO fetch default data from backend
-            fetchOptions={this.fetchOptions}
-        />;
+        const createVocabularyTerm = () => <CreateVocabularyTerm/>;
 
         return <div>
             <h2 className='page-header'>
@@ -64,13 +48,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             <h6>{this.props.formatMessage('vocabulary.detail.subtitle', {author, created})}</h6>
             <Row className='detail-row'>
                 <Col md={4}>
-                    <GlossaryTerms
-                        valueKey={"value"} // TODO get this value from env or backend
-                        labelKey={"label"} // TODO get this value from env or backend
-                        childrenKey={"children"} // TODO get this value from env or backend
-                        options={data} // TODO fetch default data from backend
-                        fetchOptions={this.fetchOptions}
-                    />
+                    <GlossaryTerms />
                 </Col>
                 <Col md={8}>
                     <Switch>
@@ -89,6 +67,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        loadVocabulary: (normalizedName: string) => dispatch(loadVocabulary(normalizedName))
+        loadVocabulary: (normalizedName: string) => dispatch(loadVocabulary(normalizedName)),
     };
 })(injectIntl(withI18n(VocabularyDetail)));

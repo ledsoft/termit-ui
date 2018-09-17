@@ -66,6 +66,7 @@ function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
         case ActionType.LOGIN_FAILURE:
         case ActionType.REGISTER_FAILURE:
         case ActionType.CREATE_VOCABULARY_FAILURE:
+        case ActionType.CREATE_VOCABULARY_TERM_FAILURE:
         case ActionType.LOAD_VOCABULARY_FAILURE:
             return (action as FailureAction).error;
         case ActionType.CLEAR_ERROR:

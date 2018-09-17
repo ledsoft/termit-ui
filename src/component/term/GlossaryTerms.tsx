@@ -16,17 +16,14 @@ import Routes from "../../util/Routes";
 import {RouteComponentProps, withRouter} from "react-router";
 import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
+import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";
+import {fetchVocabularyTerms} from "../../action/ComplexActions";
 
-// TODO The vocabulary will be required (or replaced by a tree of terms directly)
 interface GlossaryTermsProps extends HasI18n{
     vocabulary?: Vocabulary
-    selectedTerms: any
-    selectVocabularyTerm: (selectedTerms: any) => void
-    labelKey: string,
-    valueKey: string,
-    childrenKey: string,
-    options: any[],
-    fetchOptions: ({searchString, optionID, limit, offset}: FetchOptionsFunction) => Promise<any[]> // TODO term object instead of any[]
+    selectedTerms?: VocabularyTerm
+    selectVocabularyTerm?: (selectedTerms: VocabularyTerm) => void
+    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void
 }
 
 export class GlossaryTerms extends React.Component<GlossaryTermsProps & RouteComponentProps<any> > {
@@ -34,17 +31,17 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps & RouteCom
 
     constructor(props: GlossaryTermsProps & RouteComponentProps<any> ) {
         super(props);
-        this._onSelect = this._onSelect.bind(this);
         this._valueRenderer = this._valueRenderer.bind(this);
         this._onCreateClick = this._onCreateClick.bind(this);
+        this.fetchOptions = this.fetchOptions.bind(this);
     }
 
-    private _onSelect(options: any) {
-        this.props.selectVocabularyTerm(options)
-    }
-
-    private _valueRenderer(option: any) {
+    private _valueRenderer(option: VocabularyTerm) {
         return option.label
+    }
+
+    private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
+        return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name)
     }
 
     private _onCreateClick() {
@@ -57,16 +54,15 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps & RouteCom
         const actions = [];
         const component = <IntelligentTreeSelect
             name={"glossary-terms-search"}
-            onChange={this._onSelect}
+            onChange={this.props.selectVocabularyTerm}
             value={this.props.selectedTerms}
-            fetchOptions={this.props.fetchOptions}
-            valueKey={this.props.valueKey}
-            labelKey={this.props.labelKey}
-            childrenKey={this.props.childrenKey}
+            fetchOptions={this.fetchOptions}
+            valueKey={TERM_CONTEXT.iri}
+            labelKey={TERM_CONTEXT.label}
+            childrenKey={TERM_CONTEXT.subTerms}
             simpleTreeData={true}
             isMenuOpen={true}
             multi={false}
-            options={this.props.options}
             showSettings={false}
             valueRenderer={this._valueRenderer}
         />;
@@ -92,6 +88,7 @@ export default withRouter(connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm))
+        selectVocabularyTerm: (selectedTerm: VocabularyTerm) => dispatch(selectVocabularyTerm(selectedTerm)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
     };
 })(injectIntl(withI18n(GlossaryTerms))));
