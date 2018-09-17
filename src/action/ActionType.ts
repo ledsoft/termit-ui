@@ -41,7 +41,6 @@ export interface VocabularyLoadingAction extends AsyncAction {
 }
 
 export interface SelectingTermsAction extends Action{
-    // TODO object describing term structure or let be at it is?
     selectedTerms: VocabularyTerm
 }
 
