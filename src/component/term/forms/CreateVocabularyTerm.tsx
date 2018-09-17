@@ -217,6 +217,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
 
     private _createNewOption(data: any) {
 
+        // TODO backend does not support term properties
         let properties = {};
         if (data.siblings) {
             properties = data.siblings.reduce((parameters: { result: any, elem: any }) => {

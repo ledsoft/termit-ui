@@ -85,7 +85,9 @@ export function createVocabulary(vocabulary: Vocabulary) {
 export function createVocabularyTerm(term: VocabularyTerm, normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.createVocabularyTermRequest());
-        return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/create', content(term.toJsonLd()))
+        return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/create',
+            content(term.toJsonLd()))
+        // content(term.toJsonLd()), params({parentTermUri: term.parent})) // TODO Ajax,post support both context and params
             .then((resp: AxiosResponse) => {
                 dispatch(SyncActions.createVocabularyTermSuccess());
                 const location = resp.headers[Constants.LOCATION_HEADER];
