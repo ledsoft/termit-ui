@@ -1,4 +1,6 @@
 import * as React from "react";
+import * as angular from "angular";
+import * as seco from "./semantic-faceted-search/semantic-faceted-search";
 
 // import * as query from 'raw-loader!./sparql.rq';
 import queryx from './sparql.json';
@@ -316,41 +318,49 @@ class SparqlFaceter extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.$rootScope) {
-            this.$rootScope.$destroy();
-        }
+       this.x(prevProps.lang !== this.props.lang);
+    }
 
-        angular.module('facetApp', ['seco.facetedSearch'])
-            .config(['$provide', function ($provide) {
-                $provide.decorator('$browser', ['$delegate', function ($delegate) {
-                    $delegate.onUrlChange = function () {
-                        ;
-                    };
-                    $delegate.url = function () {
-                        return ""
-                    };
-                    return $delegate;
-                }]);
-            }])
-            .controller('MainController', this.MainController)
-            .service('service', this.service);
+x(change) {
+    if (this.$rootScope) {
+        this.$rootScope.$destroy();
+    }
 
-        var injector = angular.injector(['ng', 'facetApp']);
-        // var $compile = injector.get('$compile');
-        // var $rootScope = injector.get('$rootScope');
-        // $compile(this.$el)($rootScope);
-        // $rootScope.$apply();
-        // this.$rootScope = angular.injector(['ng', 'facetApp']).get('$rootScope');
+    angular.module('facetApp', ['seco.facetedSearch'])
+        .config(['$provide', function ($provide) {
+            $provide.decorator('$browser', ['$delegate', function ($delegate) {
+                $delegate.onUrlChange = function () {
+                    ;
+                };
+                $delegate.url = function () {
+                    return ""
+                };
+                return $delegate;
+            }]);
+        }])
+        .controller('MainController', this.MainController)
+        .service('service', this.service);
 
-        if (prevProps.lang !== this.props.lang) {
-            // this.setState({lang : prevProps.lang});
-            // angular.bootstrap(this.container, ['facetApp']);
-            this.setState({reload : !this.state.reload});
-        }
+    // var injector = angular.injector(['ng', 'facetApp']);
+    // var $compile = injector.get('$compile');
+    // var $rootScope = injector.get('$rootScope');
+    // $compile(this.$el)($rootScope);
+    // $rootScope.$apply();
+    // this.$rootScope = angular.injector(['ng', 'facetApp']).get('$rootScope');
+
+    if (change) {
+        // this.setState({lang : prevProps.lang});
+        this.setState({reload : !this.state.reload});
+    }
+}
+
+    componentDidMount() {
+        this.x(true)
+        angular.bootstrap(this.container, ['facetApp']);
     }
 
     render() {
-        const html = this.state.reload+`<div ng-app="facetApp">
+        const html = this.state.reload+`
   <div class="container-fluid" ng-controller="MainController as vm">
     <div class="row">
       <div class="col-md-12">
@@ -435,9 +445,8 @@ class SparqlFaceter extends React.Component {
         </uib-pagination>
       </div>
     </div>
-  </div>
 </div>`;
-        return (<div ref={c => this.container = c} dangerouslySetInnerHTML={{__html: html}}/>);
+        return (<div ng-app="facetApp" ref={c => this.container = c} dangerouslySetInnerHTML={{__html: html}}/>);
     }
 }
 
