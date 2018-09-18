@@ -3,6 +3,7 @@ import User from "../model/User";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary from "../model/Vocabulary";
+import {QueryResultIF} from "../model/QueryResult";
 
 export interface Action {
     type: string
@@ -48,6 +49,11 @@ export interface VocabulariesLoadingAction extends AsyncAction {
     vocabularies: Vocabulary[]
 }
 
+export interface ExecuteQueryAction extends AsyncAction {
+    queryString: string,
+    queryResult: QueryResultIF
+}
+
 export default {
     FETCH_USER_REQUEST: 'FETCH_USER_REQUEST',
     FETCH_USER_FAILURE: 'FETCH_USER_FAILURE',
@@ -81,6 +87,10 @@ export default {
     LOAD_VOCABULARIES_REQUEST: 'LOAD_VOCABULARIES_REQUEST',
     LOAD_VOCABULARIES_SUCCESS: 'LOAD_VOCABULARIES_SUCCESS',
     LOAD_VOCABULARIES_FAILURE: 'LOAD_VOCABULARIES_FAILURE',
+
+    EXECUTE_QUERY_REQUEST: 'EXECUTE_QUERY_REQUEST',
+    EXECUTE_QUERY_SUCCESS: 'EXECUTE_QUERY_SUCCESS',
+    EXECUTE_QUERY_FAILURE: 'EXECUTE_QUERY_FAILURE',
 
     LOGOUT: 'LOGOUT'
 }

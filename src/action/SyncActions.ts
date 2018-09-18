@@ -2,7 +2,7 @@ import ActionType, {
     Action,
     AsyncAction,
     AsyncFailureAction,
-    ClearErrorAction,
+    ClearErrorAction, ExecuteQueryAction,
     MessageAction,
     SwitchLanguageAction,
     UserLoadingAction, VocabulariesLoadingAction, VocabularyLoadingAction
@@ -13,6 +13,8 @@ import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import {saveLanguagePreference} from "../util/IntlUtil";
+import {QueryResultIF} from "../model/QueryResult";
+
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
@@ -175,6 +177,27 @@ export function loadVocabulariesSuccess(data: VocabularyData[]): VocabulariesLoa
 export function loadVocabulariesFailure(error: ErrorData): AsyncFailureAction {
     return asyncActionFailure({
         type: ActionType.LOAD_VOCABULARIES_FAILURE
+    }, error);
+}
+
+export function executeQueryRequest(): AsyncAction {
+    return asyncActionRequest({
+        type: ActionType.EXECUTE_QUERY_REQUEST
+    });
+}
+
+export function executeQuerySuccess(queryString :string, result: QueryResultIF): ExecuteQueryAction {
+    return {
+        type: ActionType.EXECUTE_QUERY_SUCCESS,
+        status: AsyncActionStatus.SUCCESS,
+        queryResult : result,
+        queryString
+    }
+}
+
+export function executeQueryFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
+        type: ActionType.EXECUTE_QUERY_FAILURE
     }, error);
 }
 

@@ -56,3 +56,9 @@ export function loadVocabularies() {
         return dispatch(AsyncActions.loadVocabularies());
     };
 }
+
+export function executeQuery(queryString: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.executeQuery(queryString));
+    };
+}

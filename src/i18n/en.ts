@@ -96,6 +96,8 @@ export default {
         'glossary.form.validation.validateLengthMin3': 'Field must be at least 3 characters',
         'glossary.form.validation.validateNotSameAsParent': 'Child option cannot be same as parent option',
 
+        'statistics.vocabulary.count' : 'Vocabulary Count',
+
         'message.welcome': 'Welcome to TermIt!',
     }
 }

@@ -14,6 +14,7 @@ import {AxiosResponse} from "axios";
 import * as jsonld from "jsonld";
 import Message, {createFormattedMessage} from "../model/Message";
 import MessageType from "../model/MessageType";
+import {QueryResultIF} from "../model/QueryResult";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -108,6 +109,22 @@ export function loadVocabularies() {
                 dispatch(SyncActions.loadVocabulariesSuccess(data)))
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.loadVocabulariesFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function executeQuery(queryString: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.executeQueryRequest());
+        return Ajax
+            .get(Constants.API_PREFIX + '/query?queryString=' + queryString)
+            .then((data: object) =>
+                jsonld.compact(data, VOCABULARY_CONTEXT))
+            .then((data: QueryResultIF) =>
+                dispatch(SyncActions.executeQuerySuccess(queryString, data)))
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.executeQueryFailure(error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };

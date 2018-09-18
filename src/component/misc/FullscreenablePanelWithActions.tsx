@@ -1,23 +1,26 @@
 import * as React from "react";
 import PanelWithActions from "../misc/PanelWithActions";
 import {FullscreenButton} from "./FullscreenButton";
-import withFullscreen from "react-fullscreenable";
+import Fullscreenable, {FullscreenableProps} from "react-fullscreenable";
 
 interface Props {
     title: string,
-    component: JSX.Element
+    component: JSX.Element,
     actions: JSX.Element[],
-    isFullscreen: boolean,
-    toggleFullscreen: () => void
 }
-class FullscreenablePanelWithActions extends React.Component<Props> {
+
+class FullscreenablePanelWithActions extends React.Component<Props & FullscreenableProps> {
+
+    constructor(props : Props & FullscreenableProps) {
+        super(props);
+    }
 
     public render() {
         const props = this.props;
         const components = [...(props.actions || [])];
         components.push(<FullscreenButton key="btnFullscreen"
-                                          isFullscreen={props.isFullscreen}
-                                          toggleFullscreen={props.toggleFullscreen}/>);
+                                          isFullscreen={this.props.isFullscreen}
+                                          toggleFullscreen={this.props.toggleFullscreen}/>);
         return (
             <PanelWithActions
                 title={props.title}
@@ -26,4 +29,4 @@ class FullscreenablePanelWithActions extends React.Component<Props> {
     }
 };
 
-export default withFullscreen(FullscreenablePanelWithActions)(FullscreenablePanelWithActions);
+export default Fullscreenable<Props>()(FullscreenablePanelWithActions);
