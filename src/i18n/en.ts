@@ -97,6 +97,10 @@ export default {
         'glossary.form.validation.validateNotSameAsParent': 'Child option cannot be same as parent option',
 
         'statistics.vocabulary.count' : 'Vocabulary Count',
+        'statistics.term.count' : 'Term Count',
+
+        'fullscreen.exit' : 'Exit fullscreen',
+        'fullscreen.enter' : 'Enter fullscreen',
 
         'message.welcome': 'Welcome to TermIt!',
     }

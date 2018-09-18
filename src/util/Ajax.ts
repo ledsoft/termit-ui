@@ -191,7 +191,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), {
         'content-type': Constants.JSON_LD_MIME_TYPE
     });
-    mock.onGet(/\/rest\/query\?queryString=.+/).reply(200, require('../rest-mock/queryResult'));
+    mock.onGet(/\/rest\/query.+/).reply(200, require('../rest-mock/queryResult'));
 }
 
 const instance = new Ajax();

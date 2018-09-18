@@ -97,6 +97,10 @@ export default {
         'glossary.form.validation.validateNotSameAsParent': 'Potomek nemůže být stejný jako předchůdce',
 
         'statistics.vocabulary.count' : 'Počet slovníků',
+        'statistics.term.count' : 'Počet pojmů',
+
+        'fullscreen.exit' : 'Vrátit zobrazení do okna',
+        'fullscreen.enter' : 'Zobrazit na celou obrazovku',
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',
     }
