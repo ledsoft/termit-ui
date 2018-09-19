@@ -98,6 +98,7 @@ export default {
 
         'statistics.vocabulary.count' : 'Počet slovníků',
         'statistics.term.count' : 'Počet pojmů',
+        'statistics.user.count' : 'Počet uživatelů',
 
         'fullscreen.exit' : 'Vrátit zobrazení do okna',
         'fullscreen.enter' : 'Zobrazit na celou obrazovku',

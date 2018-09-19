@@ -1,3 +1,4 @@
-{
-  "http://www.w3.org/2000/01/rdf-schema#label": "Test Query Result"
-}
+[{
+  "@id" : "http://onto.fel.cvut.cz/ontologies/termit/test/vocabulary",
+  "http://onto.fel.cvut.cz/ontologies/termit/has-count": 6
+}]

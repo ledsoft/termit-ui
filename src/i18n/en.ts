@@ -98,6 +98,8 @@ export default {
 
         'statistics.vocabulary.count' : 'Vocabulary Count',
         'statistics.term.count' : 'Term Count',
+        'statistics.user.count' : 'User Count',
+
 
         'fullscreen.exit' : 'Exit fullscreen',
         'fullscreen.enter' : 'Enter fullscreen',

@@ -36,6 +36,10 @@ const Statistics = (props: HasI18n) => {
                 title={props.i18n('statistics.term.count')}
                 typeIri={Vocabulary.TERM}/>
             </div>
+            <div key="topleft"><AssetCount
+                title={props.i18n('statistics.user.count')}
+                typeIri={Vocabulary.USER}/>
+            </div>
         </ResponsiveReactGridLayout>
     </div>);
 };
