@@ -65,7 +65,6 @@ export function loadVocabularies() {
     };
 }
 
-
 export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         return dispatch(AsyncActions.fetchVocabularyTerms(fetchOptions, normalizedName));
@@ -75,6 +74,12 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
 export function fetchVocabularySubTerms(parentTermID: string, normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         return dispatch(AsyncActions.fetchVocabularySubTerms(parentTermID, normalizedName));
+    };
+}
+
+export function getVocabularyTermByID(termID: string, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.getVocabularyTermByID(termID, normalizedName));
     };
 }
 

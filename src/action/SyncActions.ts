@@ -206,7 +206,7 @@ export function executeQueryRequest(): AsyncAction {
     });
 }
 
-export function executeQuerySuccess(queryString :string, result: QueryResultIF): ExecuteQueryAction {
+export function executeQuerySuccess(queryString :string, result: object): ExecuteQueryAction {
     return {
         type: ActionType.EXECUTE_QUERY_SUCCESS,
         status: AsyncActionStatus.SUCCESS,

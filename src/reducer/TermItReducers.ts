@@ -15,7 +15,7 @@ import IntlData from "../model/IntlData";
 import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
 import AsyncActionStatus from "../action/AsyncActionStatus";
 import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
-import {QueryResultIF} from "../model/QueryResult";
+import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 
 /**
  * Handles changes to the currently logged in user.
@@ -134,7 +134,7 @@ function terms(state: any = null, action: SelectingTermsAction) {
 function queryResults(state: {[key: string] : QueryResultIF} = {}, action: ExecuteQueryAction) {
     switch (action.type) {
         case ActionType.EXECUTE_QUERY_SUCCESS:
-            state[action.queryString] = action.queryResult
+            state[action.queryString] = new QueryResult(action.queryString,action.queryResult)
             return state
         default:
             return state;

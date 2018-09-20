@@ -48,6 +48,11 @@ export interface VocabulariesLoadingAction extends AsyncAction {
     vocabularies: Vocabulary[]
 }
 
+export interface ExecuteQueryAction extends AsyncAction {
+    queryString : string,
+    queryResult: object
+}
+
 export default {
     FETCH_USER_REQUEST: 'FETCH_USER_REQUEST',
     FETCH_USER_FAILURE: 'FETCH_USER_FAILURE',
