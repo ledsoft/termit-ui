@@ -82,3 +82,9 @@ export function getVocabularyTermByID(termID: string, normalizedName: string) {
         return dispatch(AsyncActions.getVocabularyTermByID(termID, normalizedName));
     };
 }
+
+export function executeQuery(queryString: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.executeQuery(queryString));
+    };
+}

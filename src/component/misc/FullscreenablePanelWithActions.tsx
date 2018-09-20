@@ -1,29 +1,39 @@
 import * as React from "react";
 import PanelWithActions from "../misc/PanelWithActions";
-import {FullscreenButton} from "./FullscreenButton";
-import withFullscreen from "react-fullscreenable";
+import FullscreenButton from "./FullscreenButton";
+import Fullscreenable, {FullscreenableProps} from "react-fullscreenable";
 
+/**
+ * A panel that has an action to become (and cease to be) fullscreen-wide.
+ */
 interface Props {
+    /**
+     * Panel header text
+     */
     title: string,
-    component: JSX.Element
+    /**
+     * Component to render inside the panel
+     */
+    component: JSX.Element,
+    /**
+     * An list of additional actions to be shown in the panel heading
+     */
     actions: JSX.Element[],
-    isFullscreen: boolean,
-    toggleFullscreen: () => void
 }
-class FullscreenablePanelWithActions extends React.Component<Props> {
+
+class FullscreenablePanelWithActions extends React.Component<Props & FullscreenableProps> {
 
     public render() {
-        const props = this.props;
-        const components = [...(props.actions || [])];
+        const components = [...this.props.actions];
         components.push(<FullscreenButton key="btnFullscreen"
-                                          isFullscreen={props.isFullscreen}
-                                          toggleFullscreen={props.toggleFullscreen}/>);
+                                          isFullscreen={this.props.isFullscreen}
+                                          toggleFullscreen={this.props.toggleFullscreen}/>);
         return (
             <PanelWithActions
-                title={props.title}
+                title={this.props.title}
                 actions={components}
-                component={props.component}/>);
+                component={this.props.component}/>);
     }
-};
+}
 
-export default withFullscreen(FullscreenablePanelWithActions)(FullscreenablePanelWithActions);
+export default Fullscreenable<Props>()(FullscreenablePanelWithActions);

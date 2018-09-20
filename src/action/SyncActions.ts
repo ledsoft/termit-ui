@@ -2,7 +2,7 @@ import ActionType, {
     Action,
     AsyncAction,
     AsyncFailureAction,
-    ClearErrorAction,
+    ClearErrorAction, ExecuteQueryAction,
     MessageAction,
     SwitchLanguageAction,
     UserLoadingAction,
@@ -197,6 +197,27 @@ export function loadVocabulariesSuccess(data: VocabularyData[]): VocabulariesLoa
 export function loadVocabulariesFailure(error: ErrorData): AsyncFailureAction {
     return asyncActionFailure({
         type: ActionType.LOAD_VOCABULARIES_FAILURE
+    }, error);
+}
+
+export function executeQueryRequest(): AsyncAction {
+    return asyncActionRequest({
+        type: ActionType.EXECUTE_QUERY_REQUEST
+    });
+}
+
+export function executeQuerySuccess(queryString :string, result: object): ExecuteQueryAction {
+    return {
+        type: ActionType.EXECUTE_QUERY_SUCCESS,
+        status: AsyncActionStatus.SUCCESS,
+        queryResult : result,
+        queryString
+    }
+}
+
+export function executeQueryFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
+        type: ActionType.EXECUTE_QUERY_FAILURE
     }, error);
 }
 

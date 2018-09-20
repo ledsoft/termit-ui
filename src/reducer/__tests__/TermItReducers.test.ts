@@ -25,6 +25,7 @@ function stateToPlainObject(state: TermItState) {
         user: state.user,
         vocabulary: state.vocabulary,
         vocabularies: state.vocabularies,
+        queryResults : state.queryResults,
         error: state.error,
         messages: state.messages,
         intl: state.intl,
