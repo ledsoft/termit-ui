@@ -67,35 +67,6 @@ const ErrorText = asField(({fieldState, ...props}: any) => {
     }
 );
 
-const ErrorGroupText = asField(({fieldState, ...props}: any) => {
-        const attributes = {};
-        if (fieldState.touched) {
-            if (fieldState.error) {
-                // @ts-ignore
-                attributes.invalid = true;
-            }
-            else {
-                // @ts-ignore
-                attributes.valid = true;
-            }
-        }
-
-        function _onChange(e: ChangeEvent<HTMLInputElement>) {
-            if (props.onChange) {
-                return props.onChange(e, props.fieldApi)
-            }
-            return props.fieldApi.setValue(e.target.value);
-        }
-
-        return (
-            <span>
-        <Input type={"text"} autoComplete={"off"} placeholder={props.label} {...attributes} onChange={_onChange}/>
-                {fieldState.error ? (<FormFeedback style={{color: 'red'}}>{fieldState.error}</FormFeedback>) : null}
-      </span>
-        )
-    }
-);
-
 const TextInput = asField(({fieldState, ...props}: any) => {
         function _onChange(e: ChangeEvent<HTMLInputElement>) {
             if (props.onChange) {
@@ -216,41 +187,18 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
     }
 
     private _createNewOption(data: any) {
-
-        // TODO backend does not support term properties
-        let properties = {};
-        if (data.siblings) {
-            properties = data.siblings.reduce((parameters: { result: any, elem: any }) => {
-                const {result, elem} = parameters;
-                result[elem.key] = elem.value;
-                return result;
-            }, {});
-        }
-
         const children = this._getIDs(data.childOptions);
         let parent = '';
         if (data.parentOption as VocabularyTerm) {
             parent = data.parentOption.iri;
         }
 
-        const option = {} as VocabularyTerm;
-        option.iri = data.optionURI;
-        option.label = data.optionLabel;
-        option.subTerms = children;
-        // @ts-ignore
-        option.parent = parent;
-        if (data.optionDescription) {
-            // @ts-ignore
-            option.description = data.optionDescription;
-        }
-
-        Object.assign(option, properties);
-
         this.props.onCreate(new VocabularyTerm({
             iri: data.optionURI as string,
             label: data.optionLabel as string,
             comment: data.optionDescription as string,
             subTerms: children as string[],
+            parent: parent as string
         }), this.props.match.params.name);
     }
 
@@ -350,7 +298,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                 valueKey={TERM_CONTEXT.iri}
                                 childrenKey={TERM_CONTEXT.subTerms}
                                 filterOptions={this.filterParentOptions}
-                                fetchOptions={this.fetchOptions}
+                                // fetchOptions={this.fetchOptions}
                                 expanded={true}
                                 renderAsTree={false}
                         />
@@ -364,52 +312,12 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                 childrenKey={TERM_CONTEXT.subTerms}
                                 filterOptions={this.filterChildrenOptions}
                                 expanded={true}
-                                fetchOptions={this.fetchOptions}
+                                // fetchOptions={this.fetchOptions}
                                 renderAsTree={false}
                                 validate={this.validateNotSameAsParent}
                                 validateOnChange={true}
                                 validateOnBlur={true}
                         />
-
-                        <FormGroup>
-                            <Button type="button"
-                                    onClick={this.addSibling}
-                                    color={'primary'} size="sm">
-                                {i18n('glossary.form.button.addProperty')}
-                            </Button>
-                            {this.state.siblings.map((member, index) => (
-                                <FormGroup key={index}
-                                           className={"d-flex justify-content-between align-items-center m-1"}>
-                                    <Scope scope={`siblings[${index}]`}>
-
-                                        <ErrorGroupText
-                                            key={`label-${index}`}
-                                            field="key"
-                                            label={i18n('glossary.form.field.propertyKey')}
-                                            validate={validateLengthMin3}
-                                            validateOnChange={true}
-                                            validateOnBlur={true}
-                                        />
-                                        <ErrorGroupText
-                                            key={`value-${index}`}
-                                            field="value"
-                                            label={i18n('glossary.form.field.propertyValue')}
-                                            validate={validateLengthMin3}
-                                            validateOnChange={true}
-                                            validateOnBlur={true}
-                                        />
-                                    </Scope>
-                                    <span onClick={this.removeSibling} style={styles}
-                                          data-index={index}
-                                          className="Select-clear-zone"
-                                          title={i18n('glossary.form.button.removeProperty')}
-                                          aria-label={i18n('glossary.form.button.removeProperty')}>
-                                        <span className="Select-clear" style={{fontSize: 24 + 'px'}}>×</span>
-                                    </span>
-                                </FormGroup>
-                            ))}
-
-                        </FormGroup>
 
                     </Collapse>
                     <ButtonToolbar className={'d-flex justify-content-end'}>
