@@ -12,17 +12,29 @@ import {Action} from "redux";
 import VocabularyMetadata from "./VocabularyMetadata";
 import {Button} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
+import Vocabulary2, {IRI} from "../../util/Vocabulary";
 
 interface VocabularySummaryProps {
     vocabulary: Vocabulary;
-    loadVocabulary: (name: string) => void;
+    loadVocabulary: (name: IRI) => void;
 }
 
 export class VocabularySummary extends React.Component<VocabularySummaryProps & HasI18n & RouteComponentProps<any>> {
 
     public componentDidMount(): void {
+        this.change();
+    }
+
+    public componentDidUpdate(): void {
+        this.change();
+    }
+
+    public change(): void {
         const normalizedName = this.props.match.params.name;
-        this.props.loadVocabulary(normalizedName);
+        // TODO query parameter ?
+        if ( this.props.vocabulary.iri !== Vocabulary2.resolve({fragment:normalizedName})) {
+            this.props.loadVocabulary({fragment:normalizedName});
+        }
     }
 
     public render() {
@@ -52,6 +64,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        loadVocabulary: (normalizedName: string) => dispatch(loadVocabulary(normalizedName))
+        loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri))
     };
 })(injectIntl(withI18n(VocabularySummary)));

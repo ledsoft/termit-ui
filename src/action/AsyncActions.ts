@@ -16,6 +16,7 @@ import Message, {createFormattedMessage} from "../model/Message";
 import MessageType from "../model/MessageType";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT, VocabularyTermData} from "../model/VocabularyTerm";
 import FetchOptionsFunction from "../model/Functions";
+import {IRI} from "../util/Vocabulary";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -101,11 +102,11 @@ export function createVocabularyTerm(term: VocabularyTerm, normalizedName: strin
     };
 }
 
-export function loadVocabulary(normalizedName: string) {
+export function loadVocabulary(iri: IRI) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.loadVocabularyRequest());
         return Ajax
-            .get(Constants.API_PREFIX + '/vocabularies/' + normalizedName)
+            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment+(iri.namespace ? "?query="+iri.namespace:""))
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((data: VocabularyData) =>

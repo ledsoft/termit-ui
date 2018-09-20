@@ -15,17 +15,18 @@ import OutgoingLink from "../misc/OutgoingLink";
 import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 import Routes from "../../util/Routes";
 import CreateVocabularyTerm from "../term/forms/CreateVocabularyTerm";
+import {IRI} from "../../util/Vocabulary";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
-    loadVocabulary: (normalizedName: string) => void
+    loadVocabulary: (iri: IRI) => void
 }
 
 export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 
     public componentDidMount(): void {
-        const normalizedName = this.props.match.params.name;
-        this.props.loadVocabulary(normalizedName);
+        const normalizedName :string= this.props.match.params.name;
+        this.props.loadVocabulary({fragment:normalizedName});
     }
 
     public render() {
@@ -67,6 +68,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        loadVocabulary: (normalizedName: string) => dispatch(loadVocabulary(normalizedName)),
+        loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri)),
     };
 })(injectIntl(withI18n(VocabularyDetail)));

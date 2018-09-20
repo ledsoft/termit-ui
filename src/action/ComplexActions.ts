@@ -8,6 +8,7 @@ import Routing from '../util/Routing';
 import Vocabulary from "../model/Vocabulary";
 import VocabularyTerm from "../model/VocabularyTerm";
 import FetchOptionsFunction from "../model/Functions";
+import {IRI} from "../util/Vocabulary";
 
 /*
  * Complex actions are basically just nice names for actions which involve both synchronous and asynchronous actions.
@@ -53,9 +54,9 @@ export function createVocabularyTerm(term: VocabularyTerm, normalizedName: strin
     };
 }
 
-export function loadVocabulary(normalizedName: string) {
+export function loadVocabulary(iri: IRI) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
-        return dispatch(AsyncActions.loadVocabulary(normalizedName));
+        return dispatch(AsyncActions.loadVocabulary(iri));
     };
 }
 
