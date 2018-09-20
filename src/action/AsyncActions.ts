@@ -192,3 +192,20 @@ export function getVocabularyTermByID(termID: string, normalizedName: string) {
             });
     };
 }
+
+
+export function executeQuery(queryString: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.executeQueryRequest());
+        return Ajax
+            .get(Constants.API_PREFIX + '/query?queryString=' + encodeURI(queryString))
+            .then((data: object) =>
+                jsonld.compact(data, VOCABULARY_CONTEXT))
+            .then((data: object) =>
+                dispatch(SyncActions.executeQuerySuccess(queryString, data)))
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.executeQueryFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}

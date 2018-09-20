@@ -98,6 +98,13 @@ export default {
         'glossary.form.validation.validateLengthMin3': 'Pole musí mít alespoň 3 znaky',
         'glossary.form.validation.validateNotSameAsParent': 'Potomek nemůže být stejný jako předchůdce',
 
+        'statistics.vocabulary.count' : 'Počet slovníků',
+        'statistics.term.count' : 'Počet pojmů',
+        'statistics.user.count' : 'Počet uživatelů',
+
+        'fullscreen.exit' : 'Vrátit zobrazení do okna',
+        'fullscreen.enter' : 'Zobrazit na celou obrazovku',
+
         'message.welcome': 'Vítejte v aplikaci TermIt!',
     }
 }
