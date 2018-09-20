@@ -1,13 +1,14 @@
-import {CONTEXT as USER_CONTEXT} from "./User";
+import OntologicalVocabulary from "../util/Vocabulary";
 
 const ctx = {
-    iri: '',
-    label: '',
-    subTerms: '',
+    iri: '@id',
+    label: "http://www.w3.org/2000/01/rdf-schema#label",
+    description: "http://www.w3.org/2000/01/rdf-schema#comment",
+    subTerms: "http://www.w3.org/2004/02/skos/core#narrower",
     // TODO impement
 };
 
-export const CONTEXT = Object.assign(ctx, USER_CONTEXT);
+export const CONTEXT = Object.assign(ctx);
 
 export interface VocabularyTermData {
     label: string;
@@ -31,7 +32,6 @@ export default class VocabularyTerm implements VocabularyTermData {
     }
 
     public toJsonLd(): {} {
-        // TODO implement this method
-        throw new Error('Not implemented')
+        return Object.assign({}, this, {"@context": CONTEXT, "@type": [OntologicalVocabulary.TERM]});
     }
 }

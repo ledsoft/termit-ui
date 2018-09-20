@@ -86,8 +86,7 @@ export function createVocabularyTerm(term: VocabularyTerm, normalizedName: strin
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.createVocabularyTermRequest());
         return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/create',
-            content(term.toJsonLd()))
-        // content(term.toJsonLd()), params({parentTermUri: term.parent})) // TODO Ajax,post support both context and params
+            content(term.toJsonLd()).params({parentTermUri: term.parent}))
             .then((resp: AxiosResponse) => {
                 dispatch(SyncActions.createVocabularyTermSuccess());
                 const location = resp.headers[Constants.LOCATION_HEADER];
@@ -145,12 +144,14 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
                 offset: fetchOptions.offset
             }))
             .then((data: object) =>
-                jsonld.compact(data, TERM_CONTEXT)) // TODO implement + operation failed if data is an empty array
-            .then((compacted: object) =>
-                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k])) // TODO implement
+                jsonld.compact(data, TERM_CONTEXT))
+            .then((compacted: object) => {
+                return compacted['@graph'] ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : []
+
+            })
             .then((data: VocabularyTermData[]) => data)
             .catch((error: ErrorData) => {
-                dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                // dispatch(SyncActions.fetchVocabularyTermsFailure(error));
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
                 return []
             });
@@ -163,9 +164,9 @@ export function fetchVocabularySubTerms(parentTermId: string, normalizedName: st
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/subterms',
             params({parent_id: parentTermId}))
             .then((data: object) =>
-                jsonld.compact(data, TERM_CONTEXT)) // TODO implement
+                jsonld.compact(data, TERM_CONTEXT))
             .then((compacted: object) =>
-                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k])) // TODO implement
+                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]))
             .then((data: VocabularyTermData[]) => data)
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.fetchVocabularyTermsFailure(error));
@@ -181,9 +182,9 @@ export function getVocabularyTermByID(termID: string, normalizedName: string) {
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/id',
             params({term_id: termID}))
             .then((data: object) =>
-                jsonld.compact(data, TERM_CONTEXT)) // TODO implement
+                jsonld.compact(data, TERM_CONTEXT))
             .then((compacted: object) =>
-                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k])) // TODO implement
+                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]))
             .then((data: VocabularyTermData[]) => data)
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.fetchVocabularyTermsFailure(error));
