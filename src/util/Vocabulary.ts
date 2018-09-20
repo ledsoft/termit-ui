@@ -34,6 +34,6 @@ export default {
         const hashFragment = iri.indexOf("#");
         const slashFragment = iri.lastIndexOf("/");
         const fragment = hashFragment < 0 ? slashFragment : hashFragment;
-        return iri.substr(fragment);
+        return iri.substr(fragment+1);
     }
 }
