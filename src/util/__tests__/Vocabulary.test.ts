@@ -27,4 +27,23 @@ describe('Vocabulary', () => {
         }
         expect(Vocabulary.equal(iri1,iri2)).toBeTruthy();
     });
+    it('Resolve IRI with namespace', () => {
+        const iri1 : IRI = {
+            namespace : "http://test.org/",
+            fragment : 'fragment'
+        }
+        expect(Vocabulary.resolve(iri1)).toEqual("http://test.org/fragment");
+    });
+    it('Resolve IRI without namespace', () => {
+        const iri1 : IRI = {
+            fragment : 'fragment'
+        }
+        expect(Vocabulary.resolve(iri1)).toEqual(constants.namespace_vocabulary+"fragment");
+    });
+    it('Get Fragment slash', () => {
+        expect(Vocabulary.getFragment("http://test.org/x/y")).toEqual("y");
+    });
+    it('Get Fragment hash', () => {
+        expect(Vocabulary.getFragment("http://test.org/x#y")).toEqual("y");
+    });
 });
