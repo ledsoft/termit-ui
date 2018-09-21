@@ -33,7 +33,7 @@ class VocabularyDetailTabPanel extends React.Component<VocabularyDetailProps> {
     public render() {
         const select = ( id : string ) => {
             this.toggle(id);
-        }
+        };
         const tabs = {};
         tabs['vocabulary.detail.tabs.metadata'] = () => <VocabularyMetadata vocabulary={this.props.vocabulary}/>;
         if (this.isTermSelected()) {

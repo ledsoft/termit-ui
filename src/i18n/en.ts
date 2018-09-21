@@ -65,10 +65,11 @@ export default {
         'vocabulary.summary.title': '{name} - Summary',
         'vocabulary.summary.gotodetail.label' : 'Detail',
         'vocabulary.created.message': 'Vocabulary successfully created.',
-        'vocabulary.detail.title': '{name}',
-        'vocabulary.detail.subtitle': ' created by {author} at {created}',
+        'vocabulary.detail.subtitle': 'Created by {author} at {created}',
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Term Detail',
+
+        'vocabulary.term.created.message': 'Term successfully created.',
 
         'vocabulary.metadata.identifier': 'Identifier',
         'vocabulary.metadata.author': 'Author',
@@ -96,6 +97,14 @@ export default {
         'glossary.form.validation.validateLengthMin5': 'Field must be at least 5 characters',
         'glossary.form.validation.validateLengthMin3': 'Field must be at least 3 characters',
         'glossary.form.validation.validateNotSameAsParent': 'Child option cannot be same as parent option',
+
+        'statistics.vocabulary.count' : 'Vocabulary Count',
+        'statistics.term.count' : 'Term Count',
+        'statistics.user.count' : 'User Count',
+
+
+        'fullscreen.exit' : 'Exit fullscreen',
+        'fullscreen.enter' : 'Enter fullscreen',
 
         'message.welcome': 'Welcome to TermIt!',
     }

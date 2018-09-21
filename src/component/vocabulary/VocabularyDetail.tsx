@@ -15,27 +15,18 @@ import OutgoingLink from "../misc/OutgoingLink";
 import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 import Routes from "../../util/Routes";
 import CreateVocabularyTerm from "../term/forms/CreateVocabularyTerm";
-// @ts-ignore
-import data from './../../util/__mocks__/generated-data.json' // TODO remove
-import FetchOptionsFunction from "../../model/Functions";
+import {IRI} from "../../util/Vocabulary";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
-    loadVocabulary: (normalizedName: string) => void
+    loadVocabulary: (iri: IRI) => void
 }
 
 export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 
     public componentDidMount(): void {
-        const normalizedName = this.props.match.params.name;
-        this.props.loadVocabulary(normalizedName);
-    }
-
-    private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction): Promise<any[]> {
-        return new Promise((resolve) => {
-            // TODO fetch options from the server
-            setTimeout(resolve, 1000, [])
-        });
+        const normalizedName :string= this.props.match.params.name;
+        this.props.loadVocabulary({fragment:normalizedName});
     }
 
     public render() {
@@ -46,31 +37,19 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             vocabulary={this.props.vocabulary}
         />;
         // @ts-ignore
-        const createVocabularyTerm = () => <CreateVocabularyTerm
-            valueKey={"value"} // TODO get this value from env or backend
-            labelKey={"label"} // TODO get this value from env or backend
-            childrenKey={"children"} // TODO get this value from env or backend
-            options={data} // TODO fetch default data from backend
-            fetchOptions={this.fetchOptions}
-        />;
+        const createVocabularyTerm = () => <CreateVocabularyTerm/>;
 
         return <div>
             <h2 className='page-header'>
                 <OutgoingLink
-                    label={this.props.formatMessage('vocabulary.detail.title', {name})}
+                    label={name}
                     iri={this.props.vocabulary.iri as string}
                 />
             </h2>
-            <h6>{this.props.formatMessage('vocabulary.detail.subtitle', { author, created })}</h6>
+            <h6>{this.props.formatMessage('vocabulary.detail.subtitle', {author, created})}</h6>
             <Row className='detail-row'>
                 <Col md={4}>
-                    <GlossaryTerms
-                        valueKey={"value"} // TODO get this value from env or backend
-                        labelKey={"label"} // TODO get this value from env or backend
-                        childrenKey={"children"} // TODO get this value from env or backend
-                        options={data} // TODO fetch default data from backend
-                        fetchOptions={this.fetchOptions}
-                    />
+                    <GlossaryTerms />
                 </Col>
                 <Col md={8}>
                     <Switch>
@@ -89,6 +68,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        loadVocabulary: (normalizedName: string) => dispatch(loadVocabulary(normalizedName))
+        loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri)),
     };
 })(injectIntl(withI18n(VocabularyDetail)));

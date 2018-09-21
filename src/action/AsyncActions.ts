@@ -14,6 +14,9 @@ import {AxiosResponse} from "axios";
 import * as jsonld from "jsonld";
 import Message, {createFormattedMessage} from "../model/Message";
 import MessageType from "../model/MessageType";
+import VocabularyTerm, {CONTEXT as TERM_CONTEXT, VocabularyTermData} from "../model/VocabularyTerm";
+import FetchOptionsFunction from "../model/Functions";
+import {IRI} from "../util/Vocabulary";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -42,7 +45,7 @@ export function login(username: string, password: string) {
                 if (!data.loggedIn) {
                     return Promise.reject(data);
                 } else {
-                    Authentication.saveToken(resp.headers[Constants.AUTHENTICATION_HEADER]);
+                    Authentication.saveToken(resp.headers[Constants.AUTHORIZATION_HEADER]);
                     Routing.transitionToHome();
                     dispatch(SyncActions.loginSuccess());
                     return Promise.resolve();
@@ -80,11 +83,29 @@ export function createVocabulary(vocabulary: Vocabulary) {
     };
 }
 
-export function loadVocabulary(normalizedName: string) {
+export function createVocabularyTerm(term: VocabularyTerm, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.createVocabularyTermRequest());
+        return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/create',
+            content(term.toJsonLd()).params({parentTermUri: term.parent}))
+            .then((resp: AxiosResponse) => {
+                dispatch(SyncActions.createVocabularyTermSuccess());
+                const location = resp.headers[Constants.LOCATION_HEADER];
+                Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
+                return dispatch(SyncActions.publishMessage(new Message({messageId: 'vocabulary.term.created.message'}, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.createVocabularyTermFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function loadVocabulary(iri: IRI) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.loadVocabularyRequest());
         return Ajax
-            .get(Constants.API_PREFIX + '/vocabularies/' + normalizedName)
+            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment+(iri.namespace ? "?query="+iri.namespace:""))
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((data: VocabularyData) =>
@@ -103,11 +124,89 @@ export function loadVocabularies() {
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((compacted: object) =>
-                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]))
+                compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [])
             .then((data: VocabularyData[]) =>
                 dispatch(SyncActions.loadVocabulariesSuccess(data)))
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.loadVocabulariesFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.fetchVocabularyTermsRequest());
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
+            params({
+                label: fetchOptions.searchString,
+                parentTerm: fetchOptions.optionID,
+                limit: fetchOptions.limit,
+                offset: fetchOptions.offset
+            }))
+            .then((data: object) =>
+                jsonld.compact(data, TERM_CONTEXT))
+            .then((compacted: object) => {
+                return compacted['@graph'] ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : []
+
+            })
+            .then((data: VocabularyTermData[]) => data)
+            .catch((error: ErrorData) => {
+                // dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return []
+            });
+    };
+}
+
+export function fetchVocabularySubTerms(parentTermId: string, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.fetchVocabularyTermsRequest());
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/subterms',
+            params({parent_id: parentTermId}))
+            .then((data: object) =>
+                jsonld.compact(data, TERM_CONTEXT))
+            .then((compacted: object) =>
+                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]))
+            .then((data: VocabularyTermData[]) => data)
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return []
+            });
+    };
+}
+
+export function getVocabularyTermByID(termID: string, normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.fetchVocabularyTermsRequest());
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/id',
+            params({term_id: termID}))
+            .then((data: object) =>
+                jsonld.compact(data, TERM_CONTEXT))
+            .then((compacted: object) =>
+                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]))
+            .then((data: VocabularyTermData[]) => data)
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return []
+            });
+    };
+}
+
+
+export function executeQuery(queryString: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.executeQueryRequest());
+        return Ajax
+            .get(Constants.API_PREFIX + '/query?queryString=' + encodeURI(queryString))
+            .then((data: object) =>
+                jsonld.compact(data, VOCABULARY_CONTEXT))
+            .then((data: object) =>
+                dispatch(SyncActions.executeQuerySuccess(queryString, data)))
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.executeQueryFailure(error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };

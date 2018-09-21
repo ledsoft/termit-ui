@@ -10,15 +10,15 @@ interface MessagesProps {
     messages: MessageModel[]
 }
 
-export const Messages:React.SFC<MessagesProps> = (props) => {
+export const Messages: React.SFC<MessagesProps> = (props) => {
     const count = props.messages.length < Constants.MESSAGE_DISPLAY_COUNT ? props.messages.length : Constants.MESSAGE_DISPLAY_COUNT;
     const toRender = props.messages.slice(0, count);
-    return <div className='message-container'>
+    return <div className={'message-container messages-' + count}>
         {toRender.map((m, i) => <Message key={i} message={m}/>)}
     </div>
 };
 
-export default connect((state:TermItState) => {
+export default connect((state: TermItState) => {
     return {
         messages: state.messages
     };

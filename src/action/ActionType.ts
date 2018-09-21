@@ -3,6 +3,7 @@ import User from "../model/User";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary from "../model/Vocabulary";
+import VocabularyTerm from "../model/VocabularyTerm";
 
 export interface Action {
     type: string
@@ -40,12 +41,16 @@ export interface VocabularyLoadingAction extends AsyncAction {
 }
 
 export interface SelectingTermsAction extends Action{
-    // TODO object describing term structure or let be at it is?
-    selectedTerms: any
+    selectedTerms: VocabularyTerm
 }
 
 export interface VocabulariesLoadingAction extends AsyncAction {
     vocabularies: Vocabulary[]
+}
+
+export interface ExecuteQueryAction extends AsyncAction {
+    queryString : string,
+    queryResult: object
 }
 
 export default {
@@ -81,6 +86,17 @@ export default {
     LOAD_VOCABULARIES_REQUEST: 'LOAD_VOCABULARIES_REQUEST',
     LOAD_VOCABULARIES_SUCCESS: 'LOAD_VOCABULARIES_SUCCESS',
     LOAD_VOCABULARIES_FAILURE: 'LOAD_VOCABULARIES_FAILURE',
+
+    EXECUTE_QUERY_REQUEST: 'EXECUTE_QUERY_REQUEST',
+    EXECUTE_QUERY_SUCCESS: 'EXECUTE_QUERY_SUCCESS',
+    EXECUTE_QUERY_FAILURE: 'EXECUTE_QUERY_FAILURE',
+
+    CREATE_VOCABULARY_TERM_REQUEST: 'CREATE_VOCABULARY_TERM_REQUEST',
+    CREATE_VOCABULARY_TERM_SUCCESS: 'CREATE_VOCABULARY_TERM_SUCCESS',
+    CREATE_VOCABULARY_TERM_FAILURE: 'CREATE_VOCABULARY_TERM_FAILURE',
+
+    FETCH_VOCABULARY_TERMS_REQUEST: 'FETCH_VOCABULARY_TERM_REQUEST',
+    FETCH_VOCABULARY_TERMS_FAILURE: 'FETCH_VOCABULARY_TERMS_FAILURE',
 
     LOGOUT: 'LOGOUT'
 }

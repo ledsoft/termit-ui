@@ -73,7 +73,7 @@ export class Ajax {
 
     constructor() {
         this.axiosInstance.interceptors.request.use(reqConfig => {
-            reqConfig.headers[Constants.AUTHENTICATION_HEADER] = Authentication.loadToken();
+            reqConfig.headers[Constants.AUTHORIZATION_HEADER] = Authentication.loadToken();
             return reqConfig;
         });
         this.axiosInstance.interceptors.response.use((resp) => {
@@ -164,7 +164,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         loggedIn: true,
         success: true
     }, {
-        'authentication': 'jwt12345'
+        'authorization': 'jwt12345'
     });
     // Mock registration request
     mock.onPost(Constants.API_PREFIX + '/users').reply(201);
@@ -191,6 +191,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), {
         'content-type': Constants.JSON_LD_MIME_TYPE
     });
+    mock.onGet(/\/rest\/query.+/).reply(200, require('../rest-mock/queryResult'));
 }
 
 const instance = new Ajax();

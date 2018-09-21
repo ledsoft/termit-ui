@@ -1,11 +1,11 @@
 import {combineReducers} from "redux";
 import ActionType, {
     Action, AsyncAction,
-    ClearErrorAction,
+    ClearErrorAction, ExecuteQueryAction,
     FailureAction,
     MessageAction, SelectingTermsAction,
     SwitchLanguageAction,
-    UserLoadingAction, VocabulariesLoadingAction,  VocabularyLoadingAction
+    UserLoadingAction, VocabulariesLoadingAction, VocabularyLoadingAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
@@ -15,6 +15,7 @@ import IntlData from "../model/IntlData";
 import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
 import AsyncActionStatus from "../action/AsyncActionStatus";
 import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
+import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 
 /**
  * Handles changes to the currently logged in user.
@@ -66,6 +67,7 @@ function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
         case ActionType.LOGIN_FAILURE:
         case ActionType.REGISTER_FAILURE:
         case ActionType.CREATE_VOCABULARY_FAILURE:
+        case ActionType.CREATE_VOCABULARY_TERM_FAILURE:
         case ActionType.LOAD_VOCABULARY_FAILURE:
             return (action as FailureAction).error;
         case ActionType.CLEAR_ERROR:
@@ -129,6 +131,18 @@ function terms(state: any = null, action: SelectingTermsAction) {
     }
 }
 
-const rootReducer = combineReducers<TermItState>({user, loading,  vocabulary, vocabularies, error, messages, intl, terms});
+function queryResults(state: {[key: string] : QueryResultIF} = {}, action: ExecuteQueryAction) {
+    switch (action.type) {
+        case ActionType.EXECUTE_QUERY_SUCCESS:
+            // const newState = {}
+            // newState[action.queryString] = new QueryResult(action.queryString,action.queryResult)
+            return {...state,
+                [action.queryString] :  new QueryResult(action.queryString,action.queryResult)}
+        default:
+            return state;
+    }
+}
+
+const rootReducer = combineReducers<TermItState>({user, loading,  vocabulary, vocabularies, error, messages, intl, terms, queryResults});
 
 export default rootReducer;

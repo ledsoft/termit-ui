@@ -65,10 +65,11 @@ export default {
         'vocabulary.summary.title': '{name} - přehled',
         'vocabulary.summary.gotodetail.label' : 'Detail',
         'vocabulary.created.message': 'Slovník úspěšně vytvořen.',
-        'vocabulary.detail.title': '{name}',
-        'vocabulary.detail.subtitle': ' vytvořen autorem {author} v {created}',
+        'vocabulary.detail.subtitle': 'Vytvořen autorem {author} v {created}',
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Detail pojmu',
+
+        'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',
 
         'vocabulary.metadata.identifier': 'Identifikátor',
         'vocabulary.metadata.author': 'Autor',
@@ -96,6 +97,13 @@ export default {
         'glossary.form.validation.validateLengthMin5': 'Pole musí mít alespoň 5 znaků',
         'glossary.form.validation.validateLengthMin3': 'Pole musí mít alespoň 3 znaky',
         'glossary.form.validation.validateNotSameAsParent': 'Potomek nemůže být stejný jako předchůdce',
+
+        'statistics.vocabulary.count' : 'Počet slovníků',
+        'statistics.term.count' : 'Počet pojmů',
+        'statistics.user.count' : 'Počet uživatelů',
+
+        'fullscreen.exit' : 'Vrátit zobrazení do okna',
+        'fullscreen.enter' : 'Zobrazit na celou obrazovku',
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',
     }
