@@ -124,7 +124,8 @@ export function loadVocabularies() {
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((compacted: object) =>
-                compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [])
+                compacted.hasOwnProperty('@graph') ?
+                    Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted])
             .then((data: VocabularyData[]) =>
                 dispatch(SyncActions.loadVocabulariesSuccess(data)))
             .catch((error: ErrorData) => {

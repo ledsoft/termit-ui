@@ -31,9 +31,13 @@ export default {
     },
 
     getFragment(iri : string) :string {
+        return this.create(iri).fragment;
+    },
+
+    create(iri : string) :IRI {
         const hashFragment = iri.indexOf("#");
         const slashFragment = iri.lastIndexOf("/");
         const fragment = hashFragment < 0 ? slashFragment : hashFragment;
-        return iri.substr(fragment+1);
+        return {fragment:iri.substr(fragment+1),namespace:iri.substr(0,fragment+1)};
     }
 }
