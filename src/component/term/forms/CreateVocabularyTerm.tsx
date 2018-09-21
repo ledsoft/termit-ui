@@ -170,7 +170,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
     private filterChildrenOptions(options: VocabularyTerm[], filter: string, currentValues: any[]) {
         return options.filter(option => {
             const label = option.label;
-            return (label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) && !option.parent
+            return (label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) && !option.parentTermUri
         })
     }
 
@@ -198,7 +198,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
             label: data.optionLabel as string,
             comment: data.optionDescription as string,
             subTerms: children as string[],
-            parent: parent as string
+            parentTermUri: parent as string
         }), this.props.match.params.name);
     }
 
@@ -294,9 +294,9 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                 options={this.props.options}
                                 multi={false}
                                 placeholder={i18n('glossary.form.field.selectParent')}
-                                labelKey={TERM_CONTEXT.label}
-                                valueKey={TERM_CONTEXT.iri}
-                                childrenKey={TERM_CONTEXT.subTerms}
+                                valueKey={"iri"}
+                                labelKey={"label"}
+                                childrenKey={"subTerms"}
                                 filterOptions={this.filterParentOptions}
                                 // fetchOptions={this.fetchOptions}
                                 expanded={true}
@@ -307,9 +307,9 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                                 options={this.props.options}
                                 placeholder={i18n('glossary.form.field.selectChildren')}
                                 multi={true}
-                                labelKey={TERM_CONTEXT.label}
-                                valueKey={TERM_CONTEXT.iri}
-                                childrenKey={TERM_CONTEXT.subTerms}
+                                valueKey={"iri"}
+                                labelKey={"label"}
+                                childrenKey={"subTerms"}
                                 filterOptions={this.filterChildrenOptions}
                                 expanded={true}
                                 // fetchOptions={this.fetchOptions}
