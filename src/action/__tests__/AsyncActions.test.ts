@@ -33,7 +33,7 @@ describe('Async actions', () => {
                 headers: {}
             };
             const jwt = 'Bearer jwt12345';
-            resp.headers[Constants.AUTHENTICATION_HEADER] = jwt;
+            resp.headers[Constants.AUTHORIZATION_HEADER] = jwt;
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve(resp));
             Authentication.saveToken = jest.fn();
             const store = mockStore({});
@@ -49,7 +49,7 @@ describe('Async actions', () => {
                 },
                 headers: {}
             };
-            resp.headers[Constants.AUTHENTICATION_HEADER] = 'Bearer jwt12345';
+            resp.headers[Constants.AUTHORIZATION_HEADER] = 'Bearer jwt12345';
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve(resp));
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(login('test', 'test'))).then(() => {

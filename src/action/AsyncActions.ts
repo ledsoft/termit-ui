@@ -45,7 +45,7 @@ export function login(username: string, password: string) {
                 if (!data.loggedIn) {
                     return Promise.reject(data);
                 } else {
-                    Authentication.saveToken(resp.headers[Constants.AUTHENTICATION_HEADER]);
+                    Authentication.saveToken(resp.headers[Constants.AUTHORIZATION_HEADER]);
                     Routing.transitionToHome();
                     dispatch(SyncActions.loginSuccess());
                     return Promise.resolve();
