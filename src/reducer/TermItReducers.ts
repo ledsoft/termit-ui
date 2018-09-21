@@ -134,8 +134,10 @@ function terms(state: any = null, action: SelectingTermsAction) {
 function queryResults(state: {[key: string] : QueryResultIF} = {}, action: ExecuteQueryAction) {
     switch (action.type) {
         case ActionType.EXECUTE_QUERY_SUCCESS:
-            state[action.queryString] = new QueryResult(action.queryString,action.queryResult)
-            return state
+            // const newState = {}
+            // newState[action.queryString] = new QueryResult(action.queryString,action.queryResult)
+            return {...state,
+                [action.queryString] :  new QueryResult(action.queryString,action.queryResult)}
         default:
             return state;
     }

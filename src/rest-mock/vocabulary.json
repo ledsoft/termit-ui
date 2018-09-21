@@ -1,5 +1,5 @@
 {
-  "@id": "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/metropolitan-plan",
+  "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan",
   "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik",
   "http://www.w3.org/2000/01/rdf-schema#label": "Metropolitan plan",
   "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {

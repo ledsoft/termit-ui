@@ -42,7 +42,7 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
         const actions = [];
         actions.push(
             <Link key="vocabulary.summary.gotodetail"
-                  to={"/vocabulary/" + this.props.vocabulary.name + "/detail"}>
+                  to={"/vocabulary/" + Vocabulary2.getFragment(this.props.vocabulary.iri) + "/detail"}>
                 <Button color='light'
                         size='sm'
                         title={this.props.i18n('vocabulary.summary.gotodetail.label')}>🔍

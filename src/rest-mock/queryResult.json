@@ -1,4 +1,1 @@
-[{
-  "@id" : "http://onto.fel.cvut.cz/ontologies/termit/test/vocabulary",
-  "http://onto.fel.cvut.cz/ontologies/termit/has-count": 6
-}]
+[{"@id":"http:\/\/onto.fel.cvut.cz\/ontologies\/slovnik\/agendovy\/popis-dat\/pojem\/slovnik","http:\/\/onto.fel.cvut.cz\/ontologies\/termit\/has-count":[{"@type":"http:\/\/www.w3.org\/2001\/XMLSchema#integer","@value":"2"}]}]

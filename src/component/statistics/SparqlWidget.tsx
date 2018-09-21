@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {QueryResultIF} from "../../model/QueryResult";
 import {executeQuery} from "../../action/ComplexActions";
+import * as _ from "lodash";
 
 interface Props {
     title: string;
@@ -24,6 +25,18 @@ interface InternalActions {
 export class SparqlWidget extends React.Component<Props & InternalProps & InternalActions> {
 
     public componentDidMount() {
+        this.change();
+    }
+
+    public componentDidUpdate(prevProps : Props & InternalProps & InternalActions) {
+        if ( !_.isEqual(this.props.queryResults[this.props.sparqlQuery]
+        ,prevProps.queryResults[this.props.sparqlQuery]
+        )) {
+            this.change();
+        }
+    }
+
+    private change() {
         this.props.executeQuery(this.props.sparqlQuery);
     }
 
@@ -38,7 +51,7 @@ export class SparqlWidget extends React.Component<Props & InternalProps & Intern
 
 export default connect((state: TermItState) : InternalProps => {
     return {
-        queryResults: state.queryResults ? state.queryResults : {}
+        queryResults: state.queryResults
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) : InternalActions => {
     return {
