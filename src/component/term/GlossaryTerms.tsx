@@ -16,7 +16,7 @@ import Routes from "../../util/Routes";
 import {RouteComponentProps, withRouter} from "react-router";
 import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
-import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";
+import VocabularyTerm from "../../model/VocabularyTerm";
 import {fetchVocabularyTerms} from "../../action/ComplexActions";
 
 interface GlossaryTermsProps extends HasI18n{
@@ -57,9 +57,9 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps & RouteCom
             onChange={this.props.selectVocabularyTerm}
             value={this.props.selectedTerms}
             fetchOptions={this.fetchOptions}
-            valueKey={TERM_CONTEXT.iri}
-            labelKey={TERM_CONTEXT.label}
-            childrenKey={TERM_CONTEXT.subTerms}
+            valueKey={"iri"}
+            labelKey={"label"}
+            childrenKey={"subTerms"}
             simpleTreeData={true}
             isMenuOpen={true}
             multi={false}
