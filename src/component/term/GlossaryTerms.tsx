@@ -20,12 +20,12 @@ import VocabularyTerm from "../../model/VocabularyTerm";
 import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any>{
-    vocabulary?: Vocabulary
-    defaultTerms: VocabularyTerm[]
-    selectedTerms: VocabularyTerm
-    selectVocabularyTerm: (selectedTerms: VocabularyTerm) => void
-    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void
-    loadTerms: (normalizedName: string) => void
+    vocabulary?: Vocabulary;
+    defaultTerms: VocabularyTerm[];
+    selectedTerms: VocabularyTerm | null;
+    selectVocabularyTerm: (selectedTerms: VocabularyTerm) => void;
+    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
+    loadTerms: (normalizedName: string) => void;
 }
 
 export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
