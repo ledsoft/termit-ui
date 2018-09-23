@@ -1,23 +1,26 @@
 import * as React from "react";
 import * as angular from "angular";
-import * as seco from "./semantic-faceted-search/semantic-faceted-search";
-// import * as query from 'raw-loader!./sparql.rq';
-import serviceX from './Service';
 import controllerCreator from './MainController';
-import {HasI18n} from "../hoc/withI18n";
+import {HasI18n, default as withI18n} from "../hoc/withI18n";
+import query from './sparql.rq';
+import "./semantic-faceted-search/semantic-faceted-search";
 
+function getSparqlQuery(lang : string) {
+    return query.replace(/\?lang/g, "'" + lang + "'");
+}
 
-// const langX = 'cs';
+import {injectIntl} from "react-intl";
 
 interface Props extends HasI18n {
-    lang:string
+    lang:string,
+    endpointUrl:string,
 }
 
 interface State  {
     rootScope : any,
 }
 
-class SparqlFaceter extends React.Component<HasI18n, State> {
+class SparqlFaceter extends React.Component<Props, State> {
 
     private container : any;
 
@@ -41,20 +44,11 @@ class SparqlFaceter extends React.Component<HasI18n, State> {
                     return $delegate;
                 }]);
             }])
-            .controller('MainController', controllerCreator(this.props.lang,
-                this.props.i18n))
-            .service('service', serviceX);
-        angular.bootstrap(this.container, ['facetApp']);
-        const injector = angular.injector(['ng', 'facetApp']);
-        const rootScope = injector.get('$rootScope');
-        // if (this.container) {
-        //     injector.get('$compile')(this.container)(rootScope);
-        // }
-        // rootScope.$apply();
-
-        this.setState({
-            rootScope
-        });
+            .controller('MainController', controllerCreator(
+                this.props.lang,
+                this.props.i18n,
+                this.props.endpointUrl,
+                getSparqlQuery(this.props.lang)));
     }
 
     private destroyAngular() {
@@ -70,9 +64,26 @@ class SparqlFaceter extends React.Component<HasI18n, State> {
     //     }
     // }
 
-    public componentDidMount() {
-
+    public componentWillUpdate() {
         this.runAngular();
+    }
+
+    public componentDidMount() {
+        this.runAngular();
+        angular.bootstrap(this.container, ['facetApp']);
+        const injector = angular.injector(['ng', 'facetApp']);
+        if (injector) {
+            const rootScope = injector.get('$rootScope');
+            // if (this.container) {
+            //     injector.get('$compile')(this.container)(rootScope);
+            // }
+            // rootScope.$apply();
+
+            this.setState({
+                rootScope
+            });
+        }
+
     }
 
     public componentWillUnmount() {
@@ -102,25 +113,21 @@ class SparqlFaceter extends React.Component<HasI18n, State> {
         <table class="table">
           <thead>
             <tr>
-              <th>{{vm.i18n('pojem')}}</th>
-              <th>{{vm.i18n('informace')}}</th>
-              <th>{{vm.i18n('glosar')}}</th>
+              <th>`+this.props.i18n('search.pojem')+`</th>
+              <th>`+this.props.i18n('search.informace')+`</th>
+              <th>`+this.props.i18n('search.slovnik')+`</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody>   
             <tr ng-repeat="pojem in vm.page">              
               <td style="width:20%">
-                <p ng-if="pojem">
-                  <a ng-href="{{ pojem.id }}">{{ getLabel(pojem) }}</a> 
-                </p>             
+                <p ng-if="pojem">{{ getLabel(pojem) }}<a ng-href="{{ pojem.id }}">↱</a></p>             
               </td>
               <td style="width:50%">
 
-                <p ng-if="pojem.nadtyp">
-                {{vm.i18n('je-specializaci')}} <span ng-repeat="nadtyp in (isArray(pojem.nadtyp) ? pojem.nadtyp : [pojem.nadtyp])"><a ng-href="{{ nadtyp.id }}">{{ getLabel(nadtyp)}}</a><span ng-if="!$last">,&nbsp;</span></span></p>
+                <p ng-if="pojem.nadtyp"><span style="font-weight: bold">`+this.props.i18n('search.je-specializaci')+`</span> <span ng-repeat="nadtyp in (isArray(pojem.nadtyp) ? pojem.nadtyp : [pojem.nadtyp])">{{ getLabel(nadtyp)}}<a ng-href="{{ nadtyp.id }}">↱</a><span ng-if="!$last">,&nbsp;</span></span></p>
 
-                <p ng-if="pojem.typ">
-                {{vm.i18n('je-instanci-typu')}} <span ng-repeat="typ in (isArray(pojem.typ) ? pojem.typ : [pojem.typ])"><a ng-href="{{ typ.id }}">{{ getLabel(typ)}}</a><span ng-if="!$last">,&nbsp;</span></span>
+                <p ng-if="pojem.typ">`+this.props.i18n('search.je-instanci-typu')+` <span ng-repeat="typ in (isArray(pojem.typ) ? pojem.typ : [pojem.typ])">{{ getLabel(typ)}}<a ng-href="{{ typ.id }}">↱</a><span ng-if="!$last">,&nbsp;</span></span>
                 </p>
 
                 <p ng-if="pojem.definice" style="font-style:italic">
@@ -129,7 +136,7 @@ class SparqlFaceter extends React.Component<HasI18n, State> {
 
                 </p>
                 <p ng-if="pojem.typvlastnosti">
-                  {{vm.i18n('ma-vlastnosti-typu')}}
+                `+this.props.i18n('search.ma-vlastnosti-typu')+`
                  	<ul ng-if="pojem.typvlastnosti">
               			<li ng-repeat="typvlastnosti in vm.makeArray(pojem.typvlastnosti)">
             			    <a ng-href="{{ typvlastnosti.id }}">{{ getLabel(typvlastnosti) }}</a>
@@ -138,7 +145,7 @@ class SparqlFaceter extends React.Component<HasI18n, State> {
                 </p>
 
             		<p ng-if="pojem.typvztahu">
-                  {{vm.i18n('ma-vztahy-typu')}}
+                `+this.props.i18n('search.ma-vztahy-typu')+`
                  	<ul ng-if="pojem.typvztahu">
               			<li ng-repeat="typvztahu in vm.makeArray(pojem.typvztahu)">
             			    <a ng-href="{{ typvztahu.id }}">{{ getLabel(typvztahu) }}</a>
@@ -147,7 +154,8 @@ class SparqlFaceter extends React.Component<HasI18n, State> {
                 </p>
               </td>
               <td>
-                 <a ng-href="{{ pojem.glosar.id }}">{{ getLabel(pojem.glosar) }}</a>
+                 <a ng-href="{{ pojem.glosar.link }}">{{ getLabel(pojem.glosar) }}</a>
+                 <a ng-href="{{ pojem.glosar.id }}">↱</a>
               </td>
             </tr>
           </tbody>
@@ -166,8 +174,12 @@ class SparqlFaceter extends React.Component<HasI18n, State> {
       </div>
     </div>
 </div>`;
-        return (<div ref={c => this.container = c} dangerouslySetInnerHTML={{__html: html}}/>);
+
+        return (
+            <div ref={c => this.container = c}
+                 dangerouslySetInnerHTML={{__html: html}}/>
+        );
     }
 }
 
-export default SparqlFaceter;
+export default injectIntl(withI18n(SparqlFaceter));

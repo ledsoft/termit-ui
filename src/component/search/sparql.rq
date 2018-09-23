@@ -5,7 +5,7 @@ SELECT * WHERE {
     ?id a skos:Concept .
 
     OPTIONAL {
-        ?id skos:prefLabel ?nazev .
+        ?id rdfs:label ?nazev .
         FILTER(lang(?nazev)=?lang)
     }
 
@@ -15,23 +15,23 @@ SELECT * WHERE {
     }
 
     OPTIONAL {
-        ?id rdfs:subClassOf ?nadtyp__id .
+        ?id skos:broader|^skos:narrower ?nadtyp__id .
         OPTIONAL {
-            ?nadtyp__id skos:prefLabel ?nadtyp__nazev .
-            FILTER(lang(?nadtyp__nazev) = ?lang)
+            ?nadtyp__id rdfs:label ?nadtyp__nazev .
+            FILTER(lang(?nadtyp__nazev)=?lang)
         }
-        FILTER(?nadtyp__id not in (skos:Concept,owl:Class,owl:NamedIndividual,owl:ObjectProperty,owl:DatatypeProperty,owl:AnnotationProperty))
+        FILTER(?nadtyp__id not in (skos:Concept,owl:Class,owl:NamedIndividual,owl:ObjectProperty,owl:DatatypeProperty,owl:AnnotationProperty,rdfs:Resource,a-popis-dat:term))
         FILTER(isIri(?nadtyp__id))
     }
 
     OPTIONAL {
         ?id a ?typ__id .
         OPTIONAL {
-            ?typ__id skos:prefLabel ?typ__nazev .
-            FILTER(lang(?typ__nazev) = ?lang)
+            ?typ__id rdfs:label ?typ__nazev .
+            FILTER(lang(?typ__nazev)=?lang)
         }
-        FILTER(?typ__id not in (skos:Concept,owl:Class,owl:NamedIndividual,owl:ObjectProperty,owl:DatatypeProperty,owl:AnnotationProperty))
-        FILTER(isIri(?nadtyp__id))
+        FILTER(?typ__id not in (skos:Concept,owl:Class,owl:NamedIndividual,owl:ObjectProperty,owl:DatatypeProperty,owl:AnnotationProperty,rdfs:Resource,a-popis-dat:term))
+        FILTER(isIri(?typ__id))
     }
 
         # UNCOMMENT FOR COMPACT
@@ -63,8 +63,10 @@ SELECT * WHERE {
 
     OPTIONAL {
         ?id skos:inScheme ?glosar__id .
+        ?slovnik__id a-popis-dat:ma-glosar ?glosar__id .
+        BIND(iri(concat(replace(str(?slovnik__id),"http://data.iprpraha.cz/zdroj/slovnik/","http://localhost:3001/#/vocabulary/"),"/detail")) AS ?glosar__link)
         OPTIONAL {
-            ?glosar__id rdfs:label ?glosar__nazev .
+            ?slovnik__id rdfs:label ?glosar__nazev
             FILTER(lang(?glosar__nazev) = ?lang)
         }
     }

@@ -38,7 +38,6 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
     }
 
     public render() {
-        const normalizedName = this.props.match.params.name;
         const actions = [];
         actions.push(
             <Link key="vocabulary.summary.gotodetail"
@@ -51,7 +50,7 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
         );
         return <div>
             <PanelWithActions
-            title={this.props.formatMessage('vocabulary.summary.title', {name: normalizedName})}
+            title={this.props.formatMessage('vocabulary.summary.title', {name: this.props.vocabulary.name})}
             actions={actions}
             component={<VocabularyMetadata vocabulary={this.props.vocabulary}/>}/>
         </div>;

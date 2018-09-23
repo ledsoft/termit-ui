@@ -3,6 +3,8 @@ import * as sparql from "angular-paging-sparql-service";
 import * as uibootstrap from "angular-bootstrap";
 import * as angularSpinner from "angular-spinner";
 import * as checklistModel from "checklist-model";
+import "./semantic-faceted-search.scss";
+import "./bootstrap-part/css/bootstrap.css";
 // import * as Chart from "chart.js";
 
 (function() {

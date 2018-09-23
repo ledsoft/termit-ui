@@ -127,10 +127,7 @@ module.exports = {
                 enforce: 'pre',
                 include: paths.appSrc,
             },
-            {
-                test: /\.rq$/,
-                loader: require.resolve('raw-loader'),
-            },
+
             {
                 // "oneOf" will traverse all following loaders until one will
                 // match the requirements. When no loader matches it will fall
@@ -139,6 +136,11 @@ module.exports = {
                     // "url" loader works like "file" loader except that it embeds assets
                     // smaller than specified limit in bytes as data URLs to avoid requests.
                     // A missing `test` is equivalent to a match.
+                    {
+                        test: /\.rq$/,
+                        use:'raw-loader',
+                        include: paths.appSrc
+                    },
                     {
                         test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
                         loader: require.resolve('url-loader'),
@@ -247,7 +249,7 @@ module.exports = {
                         // its runtime that would otherwise processed through "file" loader.
                         // Also exclude `html` and `json` extensions so they get processed
                         // by webpacks internal loaders.
-                        exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+                        exclude: [/\.(js|jsx|mjs|rq)$/, /\.html$/, /\.json$/],
                         loader: require.resolve('file-loader'),
                         options: {
                             name: 'static/media/[name].[hash:8].[ext]',

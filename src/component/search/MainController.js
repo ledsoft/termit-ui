@@ -1,7 +1,7 @@
 
 export default (lang, ai18n, endpointUrl, query) => {
     return function MainController($scope, FacetHandler, FacetResultHandler, facetUrlStateHandlerService) {
-        var vm = this;
+        const vm = this;
 
         var updateId = 0;
 
@@ -41,9 +41,10 @@ export default (lang, ai18n, endpointUrl, query) => {
                 enabled: true,
                 facetId: 'glosar',
 //                predicate:'<http://www.w3.org/2004/02/skos/core#inScheme>/<http://www.w3.org/2000/01/rdf-schema#label>',
-                name: ai18n('search.glosar'),
-                predicate: '<http://www.w3.org/2004/02/skos/core#inScheme>',
+                name: ai18n('search.slovnik'),
+                predicate: '<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar>',
             },
+
             pojem: {
                 enabled: true,
                 facetId: 'pojem',
@@ -121,7 +122,7 @@ export default (lang, ai18n, endpointUrl, query) => {
             // This function receives the facet selections from the controller
             // and gets the results from DBpedia.
             // Returns a promise.
-            const serviceGetResults = (endpointUrlX, facetSelectionsX, langX) => {
+            const serviceGetResults = (endpointUrlX, facetSelectionsX) => {
                 // If there are variables used in the constraint option (see above),
                 // you can also give getResults another parameter that is the sort
                 // order of the results (as a valid SPARQL ORDER BY sequence, e.g. "?id").
@@ -129,8 +130,9 @@ export default (lang, ai18n, endpointUrl, query) => {
                 var prefixes =
                     ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
                     ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
+                    ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>'+
                     ' PREFIX zs: <https://slovník.gov.cz/základní/pojem/>' +
-                    ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>';
+                    ' PREFIX a-popis-dat: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>';
 
                 const resultOptions = {
                     pagesPerQuery: 1, // optional (default is 1)
