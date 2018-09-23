@@ -2,8 +2,11 @@ import ActionType, {
     Action,
     AsyncAction,
     AsyncFailureAction,
-    ClearErrorAction, ExecuteQueryAction,
+    ClearErrorAction,
+    ExecuteQueryAction,
+    LoadDefaultTermsAction,
     MessageAction,
+    SelectingTermsAction,
     SwitchLanguageAction,
     UserLoadingAction,
     VocabulariesLoadingAction,
@@ -15,7 +18,7 @@ import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import {saveLanguagePreference} from "../util/IntlUtil";
-import {VocabularyTermData} from "../model/VocabularyTerm";
+import VocabularyTerm from "../model/VocabularyTerm";
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
@@ -221,7 +224,7 @@ export function executeQueryFailure(error: ErrorData): AsyncFailureAction {
     }, error);
 }
 
-export function selectVocabularyTerm(data: VocabularyTermData) {
+export function selectVocabularyTerm(data: VocabularyTerm): SelectingTermsAction {
     return{
         type: ActionType.SELECT_VOCABULARY_TERM,
         selectedTerms: data,
@@ -238,4 +241,11 @@ export function fetchVocabularyTermsFailure(error: ErrorData): AsyncFailureActio
     return asyncActionFailure({
         type: ActionType.FETCH_VOCABULARY_TERMS_FAILURE
     }, error);
+}
+
+export function loadDefaultTerms(data: VocabularyTerm[]): LoadDefaultTermsAction {
+    return {
+        type: ActionType.LOAD_DEFAULT_TERMS,
+        options: data
+    }
 }

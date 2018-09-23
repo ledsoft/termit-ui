@@ -113,23 +113,21 @@ export class Ajax {
     }
 
     public post(path: string, config: RequestConfigBuilder) {
-        if (config.getParams()) {
-            const par = new URLSearchParams();
-            // Asserting that config.getParams() are not undefined (as verified by the if condition)
-            const p: {} = config.getParams()!;
-            Object.keys(p).forEach(n => par.append(n, p[n]));
-            return this.axiosInstance.post(path, par, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
+        const conf = {
+            headers: {
+                'Content-Type': config.getContentType()
+            }
+        };
+        const par = new URLSearchParams();
+        // @ts-ignore
+        const paramData: object = config.getParams()!==undefined? config.getParams():{};
+        Object.keys(paramData).forEach(n => par.append(n, paramData[n]));
+
+        if (config.getContentType() === Constants.X_WWW_FORM_URLENCODED) {
+            return this.axiosInstance.post(path, par, conf);
         } else {
-            const conf = {
-                headers: {
-                    'Content-Type': config.getContentType()
-                }
-            };
-            return this.axiosInstance.post(path, config.getContent(), conf);
+            const query: string = config.getParams()? "?"+par.toString() : "";
+            return this.axiosInstance.post(path+query, config.getContent(), conf);
         }
     }
 
