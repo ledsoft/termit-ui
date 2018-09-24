@@ -31,7 +31,7 @@ import VocabularyDetail from "./vocabulary/VocabularyDetail";
 import LanguageSelector from "./main/LanguageSelector";
 import Messages from "./message/Messages";
 import Statistics from "./statistics/Statistics";
-import Search from "./search/Search";
+import Search from "./search/label/Search";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
