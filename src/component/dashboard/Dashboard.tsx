@@ -17,6 +17,10 @@ export class Dashboard extends React.Component<HasI18n> {
         Routing.transitionTo(Routes.vocabularies);
     };
 
+    private static onSearchClick(): void {
+        Routing.transitionTo(Routes.search);
+    };
+
     private static onStatisticsClick(): void {
         Routing.transitionTo(Routes.statistics);
     };
@@ -66,6 +70,9 @@ export class Dashboard extends React.Component<HasI18n> {
                 </Col>
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardQuickAccessTile text={i18n('dashboard.add-document.tile')} onClick={this.onClick}/>
+                </Col>
+                <Col xs={4} className='dashboard-sector'>
+                    <DashboardQuickAccessTile text={i18n('dashboard.search.tile')} onClick={Dashboard.onSearchClick}/>
                 </Col>
             </Row>
         </Container>;

@@ -16,6 +16,7 @@ export interface VocabularyTermData {
     iri: string;
     subTerms?: string[];
     parent?: string;
+    parentTermUri: string;
     types?: string[]
 }
 
@@ -25,6 +26,7 @@ export default class VocabularyTerm implements VocabularyTermData {
     public iri: string;
     public subTerms?: string[];
     public parent?: string;
+    public parentTermUri:string;
     public types?: string[];
 
     constructor(data: VocabularyTermData) {

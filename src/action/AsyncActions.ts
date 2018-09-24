@@ -42,7 +42,10 @@ export function fetchUser() {
 export function login(username: string, password: string) {
     return (dispatch: Dispatch) => {
         dispatch(SyncActions.loginRequest());
-        return Ajax.post('/j_spring_security_check', params({username, password}))
+        return Ajax.post('/j_spring_security_check', params({
+            username,
+            password
+        }).contentType(Constants.X_WWW_FORM_URLENCODED))
             .then((resp: AxiosResponse) => {
                 const data = resp.data;
                 if (!data.loggedIn) {
@@ -89,8 +92,8 @@ export function createVocabulary(vocabulary: Vocabulary) {
 export function createVocabularyTerm(term: VocabularyTerm, normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.createVocabularyTermRequest());
-        return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/create',
-            content(term.toJsonLd()).params({parentTermUri: term.parent}))
+        return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms',
+            content(term.toJsonLd()).params({parentTermUri: term.parentTermUri}).contentType(Constants.JSON_LD_MIME_TYPE))
             .then((resp: AxiosResponse) => {
                 dispatch(SyncActions.createVocabularyTermSuccess());
                 const location = resp.headers[Constants.LOCATION_HEADER];
@@ -108,7 +111,7 @@ export function loadVocabulary(iri: IRI) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.loadVocabularyRequest());
         return Ajax
-            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment+(iri.namespace ? "?query="+iri.namespace:""))
+            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment + (iri.namespace ? "?query=" + iri.namespace : ""))
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((data: VocabularyData) =>
@@ -124,10 +127,14 @@ export function loadVocabularies() {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.loadVocabulariesRequest());
         return Ajax.get(Constants.API_PREFIX + '/vocabularies')
-            .then((data: object) =>
-                jsonld.compact(data, VOCABULARY_CONTEXT))
-            .then((compacted: object) =>
-                compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [])
+            .then((data: object[]) =>
+                data.length !== 0 ? jsonld.compact(data, VOCABULARY_CONTEXT) : [])
+            .then((compacted: object) => {
+                if (!compacted.hasOwnProperty('@context')) {
+                    return []
+                }
+                return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
+            })
             .then((data: VocabularyData[]) =>
                 dispatch(SyncActions.loadVocabulariesSuccess(data)))
             .catch((error: ErrorData) => {
@@ -147,13 +154,18 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
                 limit: fetchOptions.limit,
                 offset: fetchOptions.offset
             }))
-            .then((data: object) =>
-                jsonld.compact(data, TERM_CONTEXT))
+            .then((data: object[]) =>
+                data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => {
-                return compacted['@graph'] ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : []
-
+                if (!compacted.hasOwnProperty('@context')) {
+                    return []
+                }
+                return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
             })
-            .then((data: VocabularyTermData[]) => data)
+            .then((data: VocabularyTermData[]) =>{
+                return data
+                }
+            )
             .catch((error: ErrorData) => {
                 // dispatch(SyncActions.fetchVocabularyTermsFailure(error));
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
@@ -167,10 +179,13 @@ export function fetchVocabularySubTerms(parentTermId: string, normalizedName: st
         dispatch(SyncActions.fetchVocabularyTermsRequest());
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/subterms',
             params({parent_id: parentTermId}))
-            .then((data: object) =>
-                jsonld.compact(data, TERM_CONTEXT))
-            .then((compacted: object) =>
-                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]))
+            .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
+            .then((compacted: object) => {
+                if (!compacted.hasOwnProperty('@context')) {
+                    return []
+                }
+                return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
+            })
             .then((data: VocabularyTermData[]) => data)
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.fetchVocabularyTermsFailure(error));
@@ -185,11 +200,7 @@ export function getVocabularyTermByID(termID: string, normalizedName: string) {
         dispatch(SyncActions.fetchVocabularyTermsRequest());
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/id',
             params({term_id: termID}))
-            .then((data: object) =>
-                jsonld.compact(data, TERM_CONTEXT))
-            .then((compacted: object) =>
-                Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]))
-            .then((data: VocabularyTermData[]) => data)
+            .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.fetchVocabularyTermsFailure(error));
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));

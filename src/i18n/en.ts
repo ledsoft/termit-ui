@@ -102,9 +102,17 @@ export default {
         'statistics.term.count' : 'Term Count',
         'statistics.user.count' : 'User Count',
 
-
         'fullscreen.exit' : 'Exit fullscreen',
         'fullscreen.enter' : 'Enter fullscreen',
+
+        'search.slovnik' : 'Vocabulary',
+        'search.informace' : 'Information',
+        'search.je-instanci-typu' : 'has type',
+        'search.je-specializaci' : 'specializes',
+        'search.ma-vlastnosti-typu' : 'has intrinsic trope types',
+        'search.ma-vztahy-typu' : 'has relation types',
+        'search.pojem' : 'Term',
+        'search.typ' : 'Type',
 
         'message.welcome': 'Welcome to TermIt!',
     }

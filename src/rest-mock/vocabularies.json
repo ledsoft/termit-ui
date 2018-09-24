@@ -1,242 +1,26 @@
 [
   {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/a-new-vocabulary",
-    "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
-    ],
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan",
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik",
+    "http://www.w3.org/2000/01/rdf-schema#label": "Metropolitan plan",
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar/instance-312885544",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
-      ]
+      "@id": "http://onto.fel.cvut.cz/ontologies/termit/glossary/instance12345",
+      "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
+    },
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/termit/model/instance54321",
+      "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
     },
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/application/termit/system-admin-user",
+      "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "Catherine",
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "Halsey",
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "halsey@unsc.org",
       "@type": [
-        "http://onto.fel.cvut.cz/ontologies/application/termit/omezeny-uzivatel-termitu",
-        "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu"
-      ],
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "admin@inbas.cz",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "System",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "Administrator"
-    },
-    "http://www.w3.org/2000/01/rdf-schema#label": "A new vocabulary",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model/instance2037025157",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
+        "http://onto.fel.cvut.cz/ontologies/termit/user",
+        "http://onto.fel.cvut.cz/ontologies/termit/admin"
       ]
     },
-    "http://purl.org/dc/terms/created": 1536223237861
-  },
-  {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/a",
-    "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
-    ],
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar/instance-672131352",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
-      ]
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
-      "@id": "http://data.iprpraha.cz/zdroj/uzivatel/j-p",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/application/termit/omezeny-uzivatel-termitu",
-        "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu"
-      ],
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "u",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "j",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "p"
-    },
-    "http://www.w3.org/2000/01/rdf-schema#label": "a",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model/instance-1437899861",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
-      ]
-    },
-    "http://purl.org/dc/terms/created": 1536223935615
-  },
-  {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/ab",
-    "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
-    ],
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar/instance1542041785",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
-      ]
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
-      "@id": "http://data.iprpraha.cz/zdroj/uzivatel/j-p",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/application/termit/omezeny-uzivatel-termitu",
-        "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu"
-      ],
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "u",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "j",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "p"
-    },
-    "http://www.w3.org/2000/01/rdf-schema#label": "ab",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model/instance-1593678773",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
-      ]
-    },
-    "http://purl.org/dc/terms/created": 1536225093661
-  },
-  {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/ac",
-    "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
-    ],
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar/instance1187906141",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
-      ]
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
-      "@id": "http://data.iprpraha.cz/zdroj/uzivatel/j-p",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/application/termit/omezeny-uzivatel-termitu",
-        "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu"
-      ],
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "u",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "j",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "p"
-    },
-    "http://www.w3.org/2000/01/rdf-schema#label": "ac",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model/instance1126102163",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
-      ]
-    },
-    "http://purl.org/dc/terms/created": 1536225137467
-  },
-  {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/ae",
-    "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
-    ],
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar/instance-642508846",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
-      ]
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
-      "@id": "http://data.iprpraha.cz/zdroj/uzivatel/j-p",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/application/termit/omezeny-uzivatel-termitu",
-        "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu"
-      ],
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "u",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "j",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "p"
-    },
-    "http://www.w3.org/2000/01/rdf-schema#label": "ae",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model/instance-238206592",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
-      ]
-    },
-    "http://purl.org/dc/terms/created": 1536229439417
-  },
-  {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/ax",
-    "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
-    ],
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar/instance1507409879",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
-      ]
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
-      "@id": "http://data.iprpraha.cz/zdroj/uzivatel/j-p",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/application/termit/omezeny-uzivatel-termitu",
-        "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu"
-      ],
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "u",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "j",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "p"
-    },
-    "http://www.w3.org/2000/01/rdf-schema#label": "ax",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model/instance1427089526",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
-      ]
-    },
-    "http://purl.org/dc/terms/created": 1536228999592
-  },
-  {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/j-slovnik",
-    "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
-    ],
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar/instance1817917925",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
-      ]
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
-      "@id": "http://data.iprpraha.cz/zdroj/uzivatel/j-p",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/application/termit/omezeny-uzivatel-termitu",
-        "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu"
-      ],
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "u",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "j",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "p"
-    },
-    "http://www.w3.org/2000/01/rdf-schema#label": "j slovnik",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model/instance-829975150",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
-      ]
-    },
-    "http://purl.org/dc/terms/created": 1536223770464
-  },
-  {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/xx",
-    "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
-    ],
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar/instance128394292",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
-      ]
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
-      "@id": "http://data.iprpraha.cz/zdroj/uzivatel/j-p",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/application/termit/omezeny-uzivatel-termitu",
-        "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu"
-      ],
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "u",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "j",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "p"
-    },
-    "http://www.w3.org/2000/01/rdf-schema#label": "xx",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model/instance-984824210",
-      "@type": [
-        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
-      ]
-    },
-    "http://purl.org/dc/terms/created": 1536230731929
+    "http://purl.org/dc/terms/created": 1534429897893
   }
 ]

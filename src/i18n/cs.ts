@@ -105,6 +105,15 @@ export default {
         'fullscreen.exit' : 'Vrátit zobrazení do okna',
         'fullscreen.enter' : 'Zobrazit na celou obrazovku',
 
+        'search.slovnik' : 'Slovník',
+        'search.informace' : 'Informace',
+        'search.je-instanci-typu' : 'je instancí typu',
+        'search.je-specializaci' : 'je specializací',
+        'search.ma-vlastnosti-typu' : 'má vlastnosti typu',
+        'search.ma-vztahy-typu' : 'má vztahy typu',
+        'search.pojem' : 'Pojem',
+        'search.typ' : 'Typ',
+
         'message.welcome': 'Vítejte v aplikaci TermIt!',
     }
 }

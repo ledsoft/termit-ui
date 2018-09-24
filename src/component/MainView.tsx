@@ -77,6 +77,10 @@ export class MainView extends React.Component<MainViewProps> {
                             <NavLink
                                 href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
                         </NavItem>
+                        <NavItem active={path === Routes.search.path}>
+                            <NavLink
+                                href={MainView.hashPath(Routes.search.path)}>{i18n('main.nav.search')}</NavLink>
+                        </NavItem>
                     </Nav>
                     <Nav navbar={true}>
                         <Search/>
@@ -106,6 +110,7 @@ export class MainView extends React.Component<MainViewProps> {
                     <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route path={Routes.statistics.path} component={Statistics}/>
+                    <Route path={Routes.search.path} component={Search}/>
                     <Route component={Dashboard}/>
                 </Switch>
             </Container>

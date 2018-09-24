@@ -5,6 +5,7 @@ import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {shallow} from "enzyme";
 import {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
 import createMemoryHistory from "history/createMemoryHistory";
+import {IRI} from "../../../util/Vocabulary";
 
 
 describe('VocabularyDetail', () => {
@@ -25,7 +26,7 @@ describe('VocabularyDetail', () => {
         url: 'http://localhost:3000/vocabulary/metropolitan-plan/detail'
     };
 
-    let loadVocabulary: (name: string) => void;
+    let loadVocabulary: (vocabulary: IRI) => void;
 
     beforeEach(() => {
         loadVocabulary = jest.fn();
@@ -35,6 +36,6 @@ describe('VocabularyDetail', () => {
         shallow(<VocabularyDetail vocabulary={EMPTY_VOCABULARY} loadVocabulary={loadVocabulary} i18n={i18n}
                                   formatMessage={formatMessage}
                                   history={history} location={location} match={match} {...intlDataForShallow()}/>);
-        expect(loadVocabulary).toHaveBeenCalledWith('metropolitan-plan');
+        expect(loadVocabulary).toHaveBeenCalledWith({fragment:'metropolitan-plan'});
     });
 });

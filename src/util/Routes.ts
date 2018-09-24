@@ -14,6 +14,7 @@ export default {
     login: new Route('login', '/login'),
     profile: new Route('profile', '/profile'),
     register: new Route('register','/register'),
+    search: new Route('search', '/search'),
     statistics: new Route('statistics', '/statistics'),
     vocabularies: new Route('vocabulary', '/vocabulary'),
     createVocabulary: new Route('createVocabulary', '/vocabulary/create'),
