@@ -215,12 +215,12 @@ export function executeQuery(queryString: string) {
     };
 }
 
-export function search(searchString: string) {
+export function search(searchString: string, disableLoading: boolean = false) {
     const action = {
         type: ActionType.SEARCH
     };
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
-        dispatch(asyncActionRequest(action));
+        dispatch(asyncActionRequest(action, disableLoading));
         return Ajax.get(Constants.API_PREFIX + '/search', params({searchString: encodeURI(searchString)}))
             .then((data: SearchResultData[]) => dispatch(searchSuccess(data)))
             .catch((error: ErrorData) => {

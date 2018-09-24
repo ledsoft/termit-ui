@@ -5,6 +5,7 @@ import en from '../i18n/en';
 import IntlData from "./IntlData";
 import Vocabulary, {EMPTY_VOCABULARY} from "./Vocabulary";
 import {QueryResultIF} from "./QueryResult";
+import SearchResult from "./SearchResult";
 
 /**
  * This is the basic shape of the application's state managed by Redux.
@@ -18,7 +19,8 @@ export default class TermItState {
     public messages: Message[];
     public intl: IntlData;
     public terms: any;
-    public queryResults: {[key: string] : QueryResultIF}
+    public queryResults: {[key: string] : QueryResultIF};
+    public searchResults: SearchResult[];
 
     constructor() {
         this.loading = false;
@@ -30,5 +32,6 @@ export default class TermItState {
         this.intl = en;
         this.terms = null;
         this.queryResults = {};
+        this.searchResults = [];
     }
 }

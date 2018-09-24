@@ -4,13 +4,15 @@ import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary from "../model/Vocabulary";
 import VocabularyTerm from "../model/VocabularyTerm";
+import SearchResult from "../model/SearchResult";
 
 export interface Action {
     type: string
 }
 
 export interface AsyncAction extends Action {
-    status: AsyncActionStatus
+    status: AsyncActionStatus;
+    ignoreLoading?: boolean;    // Allows to prevent loading spinner display on async action
 }
 
 export interface UserLoadingAction extends AsyncAction {
@@ -51,6 +53,10 @@ export interface VocabulariesLoadingAction extends AsyncAction {
 export interface ExecuteQueryAction extends AsyncAction {
     queryString: string,
     queryResult: object
+}
+
+export interface SearchAction extends AsyncAction {
+    results: SearchResult[];
 }
 
 export default {

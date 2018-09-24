@@ -1,5 +1,5 @@
 import configureMockStore from 'redux-mock-store';
-import {createVocabulary, loadVocabularies, loadVocabulary, login} from '../AsyncActions';
+import {createVocabulary, loadVocabularies, loadVocabulary, login, search} from '../AsyncActions';
 import Constants from '../../util/Constants';
 import Ajax from '../../util/Ajax';
 import thunk, {ThunkDispatch} from 'redux-thunk';
@@ -8,7 +8,8 @@ import Routing from '../../util/Routing';
 import Authentication from '../../util/Authentication';
 import Vocabulary, {CONTEXT} from "../../model/Vocabulary";
 import Routes from '../../util/Routes';
-import {VocabulariesLoadingAction, VocabularyLoadingAction} from "../ActionType";
+import {SearchAction, VocabulariesLoadingAction, VocabularyLoadingAction} from "../ActionType";
+import {searchSuccess} from "../SyncActions";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -134,6 +135,17 @@ describe('Async actions', () => {
                 expect(Array.isArray(result)).toBeTruthy();
                 expect(result.length).toEqual(1);
                 expect(result[0].iri).toEqual(vocabularies[0]['@id']);
+            });
+        });
+    });
+
+    describe('search', () => {
+        it('emits search request action with ignore loading switch', () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(search('test'))).then(() => {
+                const searchRequestAction: SearchAction = store.getActions()[0];
+                expect(searchRequestAction.ignoreLoading).toBeTruthy();
             });
         });
     });

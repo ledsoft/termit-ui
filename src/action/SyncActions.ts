@@ -3,7 +3,7 @@ import ActionType, {
     AsyncAction,
     AsyncFailureAction,
     ClearErrorAction, ExecuteQueryAction,
-    MessageAction,
+    MessageAction, SearchAction,
     SwitchLanguageAction,
     UserLoadingAction,
     VocabulariesLoadingAction,
@@ -22,8 +22,8 @@ import SearchResult, {SearchResultData} from "../model/SearchResult";
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
  */
 
-export function asyncActionRequest(a: Action): AsyncAction {
-    return {...a, status: AsyncActionStatus.REQUEST};
+export function asyncActionRequest(a: Action, ignoreLoading: boolean = false): AsyncAction {
+    return {...a, status: AsyncActionStatus.REQUEST, ignoreLoading};
 }
 
 export function asyncActionFailure(a: Action, error: ErrorData): AsyncFailureAction {
@@ -241,7 +241,7 @@ export function fetchVocabularyTermsFailure(error: ErrorData): AsyncFailureActio
     }, error);
 }
 
-export function searchSuccess(results: SearchResultData[]) {
+export function searchSuccess(results: SearchResultData[]): SearchAction {
     return {
         type: ActionType.SEARCH,
         status: AsyncActionStatus.SUCCESS,
