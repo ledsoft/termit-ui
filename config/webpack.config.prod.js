@@ -102,6 +102,7 @@ module.exports = {
             '.json',
             '.web.jsx',
             '.jsx',
+            '.rq'
         ],
         alias: {
 
@@ -131,6 +132,10 @@ module.exports = {
                 loader: require.resolve('source-map-loader'),
                 enforce: 'pre',
                 include: paths.appSrc,
+            },
+            {
+                test: /\.rq$/,
+                loader: require.resolve('raw-loader')
             },
             {
                 // "oneOf" will traverse all following loaders until one will
