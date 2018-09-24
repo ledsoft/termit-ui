@@ -1,7 +1,30 @@
 .search {
   margin-right: 0.5rem;
+  position: relative;
 }
 
 .search-icon {
+  cursor: pointer;
+}
+
+.search-results-overlay {
+  min-width: 20rem;
+}
+
+.search-results-overlay ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.search-results-overlay ul li {
+  padding-top: 0.125rem;
+}
+
+.search-results-overlay ul li:first-child {
+  padding-top: 0;
+}
+
+.search-result-link {
   cursor: pointer;
 }

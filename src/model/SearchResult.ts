@@ -1,3 +1,10 @@
+export const CONTEXT = {
+    "iri": "@id",
+    "label": "http://www.w3.org/2000/01/rdf-schema#label",
+    "vocabularyIri": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku",
+    "types": "@type"
+};
+
 export interface SearchResultData {
     iri: string;
     label: string;

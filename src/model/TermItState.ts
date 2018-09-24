@@ -22,7 +22,7 @@ export default class TermItState {
     public intl: IntlData;
     public selectedTerm: VocabularyTerm | null;
     public queryResults: {[key: string] : QueryResultIF};
-    public searchResults: SearchResult[];
+    public searchResults: SearchResult[] | null;
 
     constructor() {
         this.loading = false;
@@ -35,6 +35,7 @@ export default class TermItState {
         this.intl = en;
         this.selectedTerm = null;
         this.queryResults = {};
-        this.searchResults = [];
+        // Null means initial state before any search, empty array means search without results
+        this.searchResults = null;
     }
 }

@@ -157,6 +157,21 @@ describe('Async actions', () => {
                 expect(searchRequestAction.ignoreLoading).toBeTruthy();
             });
         });
+
+        it('compacts incoming JSON-LD data using VocabularyResult context', () => {
+            const results = require('../../rest-mock/searchResults');
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(results));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(search('test', true))).then(() => {
+                const searchSuccess: SearchAction = store.getActions()[1];
+                const result = searchSuccess.results;
+                expect(Array.isArray(result)).toBeTruthy();
+                result.forEach(r => {
+                    expect(r.iri).toBeDefined();
+                    expect(r.label).toBeDefined();
+                })
+            });
+        });
     });
 
     describe('create term', () => {

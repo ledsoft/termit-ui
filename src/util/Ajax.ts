@@ -190,6 +190,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         'content-type': Constants.JSON_LD_MIME_TYPE
     });
     mock.onGet(/\/rest\/query.+/).reply(200, require('../rest-mock/queryResult'));
+    // Mock label search results
+    mock.onGet('rest/search').reply(200, require('../rest-mock/searchResults'));
 }
 
 const instance = new Ajax();

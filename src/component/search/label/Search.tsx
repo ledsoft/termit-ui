@@ -10,33 +10,56 @@ import TermItState from "../../../model/TermItState";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import {search} from "../../../action/AsyncActions";
+import SearchResultsOverlay from "./SearchResultsOverlay";
 
 interface SearchProps extends HasI18n {
-    searchResults: SearchResult[]
+    searchResults: SearchResult[] | null;
+    search: (searchString: string) => void;
 }
 
 interface SearchState {
-    searchString: string
+    searchString: string;
+    showResults: boolean;
 }
 
-class Search extends React.Component<SearchProps, SearchState> {
+export class Search extends React.Component<SearchProps, SearchState> {
 
     constructor(props: SearchProps) {
         super(props);
         this.state = {
-            searchString: ''
+            searchString: '',
+            showResults: true
         };
     }
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({searchString: e.target.value});
+        const value = e.currentTarget.value;
+        this.setState({searchString: value, showResults: value.length > 0});
+        this.search(value);
+    };
+
+    private search = (str?: string) => {
+        const searchVal = str ? str : this.state.searchString;
+        if (searchVal.trim().length > 0) {
+            this.props.search(searchVal);
+        }
+    };
+
+    private closeResults = () => {
+        this.setState({showResults: false});
+    };
+
+    private openResult = (result: SearchResult) => {
+        // TODO Open detail
+        return null;
     };
 
     public render() {
         const i18n = this.props.i18n;
         return <div className='search'>
             <InputGroup>
-                <Input type='search' placeholder={i18n('main.search.placeholder')} size={32} bsSize='sm'
+                <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')} size={32}
+                       bsSize='sm'
                        value={this.state.searchString} onChange={this.onChange}/>
                 <InputGroupAddon addonType='append' className='search-icon' title={i18n('main.search.tooltip')}>
                     <InputGroupText>
@@ -44,7 +67,16 @@ class Search extends React.Component<SearchProps, SearchState> {
                     </InputGroupText>
                 </InputGroupAddon>
             </InputGroup>
+            {this.renderResults()}
         </div>;
+    }
+
+    private renderResults() {
+        if (!this.props.searchResults || !this.state.showResults) {
+            return null;
+        }
+        return <SearchResultsOverlay searchResults={this.props.searchResults} onClose={this.closeResults}
+                                     targetId='main-search-input' onClick={this.openResult}/>;
     }
 }
 
