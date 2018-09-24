@@ -1,4 +1,5 @@
 import * as SyncActions from './SyncActions';
+import {loadDefaultTerms} from './SyncActions';
 import Ajax, {content, params} from '../util/Ajax';
 import {Action, Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
@@ -144,6 +145,30 @@ export function loadVocabularies() {
     };
 }
 
+export function loadTerms(normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
+            params({
+                limit: 100,
+                offset: 0
+            }))
+            .then((data: object[]) =>
+                data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
+            .then((compacted: object) => {
+                if (!compacted.hasOwnProperty('@context')) {
+                    return []
+                }
+                return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
+            })
+            .then((data: VocabularyTerm[]) => {
+                dispatch(loadDefaultTerms(data))
+            })
+            .catch((error: ErrorData) => {
+                dispatch(loadDefaultTerms([]))
+            })
+    };
+}
+
 export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.fetchVocabularyTermsRequest());
@@ -162,13 +187,13 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
                 }
                 return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
             })
-            .then((data: VocabularyTermData[]) =>{
-                return data
+            .then((data: VocabularyTermData[]) => {
+                    return data
                 }
             )
             .catch((error: ErrorData) => {
-                // dispatch(SyncActions.fetchVocabularyTermsFailure(error));
-                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                // dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
                 return []
             });
     };

@@ -46,6 +46,10 @@ export interface SelectingTermsAction extends Action {
     selectedTerms: VocabularyTerm
 }
 
+export interface LoadDefaultTermsAction extends Action {
+    options: VocabularyTerm[]
+}
+
 export interface VocabulariesLoadingAction extends AsyncAction {
     vocabularies: Vocabulary[]
 }
@@ -103,6 +107,8 @@ export default {
 
     FETCH_VOCABULARY_TERMS_REQUEST: 'FETCH_VOCABULARY_TERM_REQUEST',
     FETCH_VOCABULARY_TERMS_FAILURE: 'FETCH_VOCABULARY_TERMS_FAILURE',
+
+    LOAD_DEFAULT_TERMS: 'LOAD_DEFAULT_TERMS',
 
     SEARCH: 'SEARCH',
 

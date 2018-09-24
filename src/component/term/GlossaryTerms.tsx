@@ -17,23 +17,30 @@ import {RouteComponentProps, withRouter} from "react-router";
 import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
 import VocabularyTerm from "../../model/VocabularyTerm";
-import {fetchVocabularyTerms} from "../../action/ComplexActions";
+import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
 
-interface GlossaryTermsProps extends HasI18n{
-    vocabulary?: Vocabulary
-    selectedTerms?: VocabularyTerm
-    selectVocabularyTerm?: (selectedTerms: VocabularyTerm) => void
-    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void
+interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any>{
+    vocabulary?: Vocabulary;
+    defaultTerms: VocabularyTerm[];
+    selectedTerms: VocabularyTerm | null;
+    selectVocabularyTerm: (selectedTerms: VocabularyTerm) => void;
+    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
+    loadTerms: (normalizedName: string) => void;
 }
 
-export class GlossaryTerms extends React.Component<GlossaryTermsProps & RouteComponentProps<any> > {
+export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
 
 
-    constructor(props: GlossaryTermsProps & RouteComponentProps<any> ) {
+    constructor(props: GlossaryTermsProps) {
         super(props);
         this._valueRenderer = this._valueRenderer.bind(this);
         this._onCreateClick = this._onCreateClick.bind(this);
         this.fetchOptions = this.fetchOptions.bind(this);
+    }
+
+    public componentDidMount(){
+        const normalizedName = this.props.match.params.name;
+        this.props.loadTerms(normalizedName)
     }
 
     private _valueRenderer(option: VocabularyTerm) {
@@ -65,6 +72,7 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps & RouteCom
             multi={false}
             showSettings={false}
             valueRenderer={this._valueRenderer}
+            options = {this.props.defaultTerms}
         />;
 
         actions.push(<Button key='glossary.createTerm'
@@ -84,11 +92,13 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps & RouteCom
 
 export default withRouter(connect((state: TermItState) => {
     return {
-        selectedTerms: state.terms,
+        selectedTerms: state.selectedTerm,
+        defaultTerms: state.defaultTerms,
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
+        loadTerms: (normalizedName: string) => dispatch(loadTerms(normalizedName)),
     };
 })(injectIntl(withI18n(GlossaryTerms))));
