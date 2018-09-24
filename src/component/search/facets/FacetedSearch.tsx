@@ -159,7 +159,7 @@ export class Search extends React.Component<Props, State> {
       <div class="col-md-9">
         <img src="`+loadingLg+`" ng-show="vm.isLoadingResults" />
         <table class="table">
-          <thead>
+          <thead class="thead-light">
             <tr>
               <th>`+this.props.i18n('search.pojem')+`</th>
               <th>`+this.props.i18n('search.informace')+`</th>
