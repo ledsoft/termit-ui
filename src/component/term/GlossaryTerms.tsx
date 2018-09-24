@@ -60,7 +60,6 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         const i18n = this.props.i18n;
         const actions = [];
         const component = <IntelligentTreeSelect
-            name={"glossary-terms-search"}
             onChange={this.props.selectVocabularyTerm}
             value={this.props.selectedTerms}
             fetchOptions={this.fetchOptions}

@@ -17,21 +17,21 @@ import {
     FormGroup,
     Input,
 } from "reactstrap";
-import {validateLengthMin3, validateLengthMin5, validateNotSameAsParent} from "./newOptionValidate";
+import {validateLengthMin3, validateLengthMin5, validateNotSameAsParent} from "./forms/newOptionValidate";
 import {injectIntl} from "react-intl";
-import withI18n, {HasI18n} from "../../hoc/withI18n";
-import Routing from "../../../util/Routing";
-import Routes from "../../../util/Routes";
+import withI18n, {HasI18n} from "../hoc/withI18n";
+import Routing from "../../util/Routing";
+import Routes from "../../util/Routes";
 import {RouteComponentProps, withRouter} from "react-router";
-import FetchOptionsFunction from "../../../model/Functions";
-import Ajax, {params} from "../../../util/Ajax";
-import Constants from "../../../util/Constants";
+import FetchOptionsFunction from "../../model/Functions";
+import Ajax, {params} from "../../util/Ajax";
+import Constants from "../../util/Constants";
 import {connect} from "react-redux";
-import TermItState from "../../../model/TermItState";
+import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
-import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../../model/VocabularyTerm";
-import {createVocabularyTerm, fetchVocabularyTerms} from "../../../action/ComplexActions";
+import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";
+import {createVocabularyTerm, fetchVocabularyTerms} from "../../action/ComplexActions";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -102,7 +102,6 @@ const Select = asField(({fieldState, ...props}: any) => {
                 value={props.fieldApi.getValue()}
                 showSettings={false}
                 maxHeight={150}
-                name={"glossary-terms-search"}
                 fetchOptions={props.fetchOptions}
                 valueRenderer={valueRenderer}
                 {...props}
@@ -127,12 +126,12 @@ interface CreateVocabularyTermState {
     generateUri: boolean
 }
 
-class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, CreateVocabularyTermState> {
+export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, CreateVocabularyTermState> {
 
     constructor(props: CreateVocabularyTermProps) {
         super(props);
 
-        this._createNewOption = this._createNewOption.bind(this);
+        this.createNewOption = this.createNewOption.bind(this);
         this.filterParentOptions = this.filterParentOptions.bind(this);
         this.filterChildrenOptions = this.filterChildrenOptions.bind(this);
         this.addSibling = this.addSibling.bind(this);
@@ -144,7 +143,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
         this.validateLengthMin5 = this.validateLengthMin5.bind(this);
         this.validateLengthMin3 = this.validateLengthMin3.bind(this);
         this.validateNotSameAsParent = this.validateNotSameAsParent.bind(this);
-        this._cancelCreation = this._cancelCreation.bind(this);
+        this.cancelCreation = this.cancelCreation.bind(this);
         this.fetchOptions = this.fetchOptions.bind(this);
 
         this.state = {
@@ -155,7 +154,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
         }
     }
 
-    private _cancelCreation() {
+    private cancelCreation() {
         const normalizedName = this.props.match.params.name;
         Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', normalizedName]])});
     }
@@ -186,7 +185,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
         return ids.map(obj => obj.iri)
     }
 
-    private _createNewOption(data: any) {
+    private createNewOption(data: any) {
         const children = this._getIDs(data.childOptions);
         let parent = '';
         if (data.parentOption as VocabularyTerm) {
@@ -264,7 +263,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                 <CardTitle>{i18n('glossary.form.header')}</CardTitle>
             </CardHeader>
             <CardBody>
-                <Form onSubmit={this._createNewOption}>
+                <Form onSubmit={this.createNewOption}>
                     <ErrorText field="optionLabel" id="optionLabel" label={i18n('glossary.form.field.label')}
                                validate={this.validateLengthMin5}
                                validateOnChange={true}
@@ -324,7 +323,7 @@ class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, Cr
                         <Button color="primary" type="submit"
                                 size="sm">{i18n('glossary.form.button.submit')}</Button>{' '}
                         <Button color="secondary" type="button" size="sm"
-                                onClick={this._cancelCreation}>{i18n('glossary.form.button.cancel')}</Button>
+                                onClick={this.cancelCreation}>{i18n('glossary.form.button.cancel')}</Button>
                     </ButtonToolbar>
                 </Form>
             </CardBody>

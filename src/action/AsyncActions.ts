@@ -1,5 +1,5 @@
 import * as SyncActions from './SyncActions';
-import {loadDefaultTerms} from './SyncActions';
+import {asyncActionFailure, asyncActionRequest, searchSuccess} from './SyncActions';
 import Ajax, {content, params} from '../util/Ajax';
 import {Action, Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
@@ -18,7 +18,6 @@ import MessageType from "../model/MessageType";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT, VocabularyTermData} from "../model/VocabularyTerm";
 import FetchOptionsFunction from "../model/Functions";
 import {IRI} from "../util/Vocabulary";
-import {asyncActionFailure, asyncActionRequest, searchSuccess} from "./SyncActions";
 import ActionType from "./ActionType";
 import {SearchResultData} from "../model/SearchResult";
 
@@ -147,7 +146,7 @@ export function loadVocabularies() {
 
 export function loadTerms(normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
-        Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
             params({
                 limit: 100,
                 offset: 0
@@ -161,10 +160,10 @@ export function loadTerms(normalizedName: string) {
                 return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
             })
             .then((data: VocabularyTerm[]) => {
-                dispatch(loadDefaultTerms(data))
+                return dispatch(SyncActions.loadDefaultTerms(data))
             })
             .catch((error: ErrorData) => {
-                dispatch(loadDefaultTerms([]))
+                return dispatch(SyncActions.loadDefaultTerms([]))
             })
     };
 }

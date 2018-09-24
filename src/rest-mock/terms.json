@@ -1,0 +1,44 @@
+[
+  {
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-1",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 1"
+  },
+  {
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-2",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 2"
+  },
+  {
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-3",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 3"
+  },
+  {
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 4"
+  },
+  {
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-5",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 5"
+  },
+  {
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 6"
+  }
+]

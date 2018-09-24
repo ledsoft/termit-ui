@@ -14,7 +14,7 @@ import './VocabularyDetail.scss';
 import OutgoingLink from "../misc/OutgoingLink";
 import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 import Routes from "../../util/Routes";
-import CreateVocabularyTerm from "../term/forms/CreateVocabularyTerm";
+import CreateVocabularyTerm from "../term/CreateVocabularyTerm";
 import {IRI} from "../../util/Vocabulary";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
