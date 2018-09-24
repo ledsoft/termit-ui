@@ -30,7 +30,7 @@ function stateToPlainObject(state: TermItState) {
         error: state.error,
         messages: state.messages,
         intl: state.intl,
-        searchResults: state.searchResults
+        searchResults: state.searchResults,
         selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms,
     };
