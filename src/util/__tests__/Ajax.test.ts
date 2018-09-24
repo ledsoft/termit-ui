@@ -118,7 +118,7 @@ describe('Ajax', () => {
             mock.onPost().reply(201);
             const spy = jest.spyOn(sut.axios, 'post');
             spy.mockClear();
-            return sut.post('/users', params(formData)).then(() => {
+            return sut.post('/users', params(formData).contentType(Constants.X_WWW_FORM_URLENCODED)).then(() => {
                 const reqConfig = spy.mock.calls[0][2];
                 expect(reqConfig.headers['Content-Type']).toEqual("application/x-www-form-urlencoded");
                 const expParams = new URLSearchParams();

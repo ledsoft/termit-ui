@@ -6,11 +6,11 @@ import {
     dismissMessage,
     fetchUserFailure,
     fetchUserRequest,
-    fetchUserSuccess, loadVocabularyFailure, loadVocabularySuccess,
+    fetchUserSuccess, loadDefaultTerms, loadVocabularyFailure, loadVocabularySuccess,
     loginFailure,
     loginRequest,
     loginSuccess,
-    publishMessage, registerFailure,
+    publishMessage, registerFailure, selectVocabularyTerm,
     switchLanguage, userLogout
 } from "../../action/SyncActions";
 import ErrorInfo, {EMPTY_ERROR} from "../../model/ErrorInfo";
@@ -19,6 +19,7 @@ import Message from "../../model/Message";
 import Constants from "../../util/Constants";
 import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
+import VocabularyTerm, {VocabularyTermData} from "../../model/VocabularyTerm";
 
 function stateToPlainObject(state: TermItState) {
     return {
@@ -30,8 +31,9 @@ function stateToPlainObject(state: TermItState) {
         error: state.error,
         messages: state.messages,
         intl: state.intl,
-        terms: state.terms,
-        searchResults: state.searchResults
+        searchResults: state.searchResults,
+        selectedTerm: state.selectedTerm,
+        defaultTerms: state.defaultTerms,
     };
 }
 
@@ -226,6 +228,34 @@ describe('Reducers', () => {
             };
             expect(reducers(stateToPlainObject(initialState), loadVocabularyFailure(errorData)))
                 .toEqual(Object.assign({}, initialState, {error: new ErrorInfo(ActionType.LOAD_VOCABULARY_FAILURE, errorData)}));
+        });
+    });
+
+    describe('select term', () => {
+        it('sets selectedTerm when it was successfully selected', () => {
+            const term: VocabularyTermData = {
+                label: 'Test term',
+                iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term'
+            };
+            expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(term)))
+                .toEqual(Object.assign({}, initialState, {selectedTerm: new VocabularyTerm(term)}));
+        });
+    });
+
+    describe('load default terms', () => {
+        it('sets default terms when it was successfully loaded', () => {
+            const terms: VocabularyTermData[] = [
+                {
+                    label: 'Test term 1',
+                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
+                },
+                {
+                    label: 'Test term 2',
+                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-2'
+                }
+            ];
+            expect(reducers(stateToPlainObject(initialState), loadDefaultTerms(terms)))
+                .toEqual(Object.assign({}, initialState, {defaultTerms: terms.map(t => new VocabularyTerm(t))}));
         });
     });
 

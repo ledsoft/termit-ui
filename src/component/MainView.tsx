@@ -32,6 +32,7 @@ import LanguageSelector from "./main/LanguageSelector";
 import Messages from "./message/Messages";
 import Statistics from "./statistics/Statistics";
 import Search from "./search/label/Search";
+import FacetedSearch from "./search/facets/FacetedSearch";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -81,6 +82,10 @@ export class MainView extends React.Component<MainViewProps> {
                             <NavLink
                                 href={MainView.hashPath(Routes.search.path)}>{i18n('main.nav.search')}</NavLink>
                         </NavItem>
+                        <NavItem active={path === Routes.facetedSearch.path}>
+                            <NavLink
+                                href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
+                        </NavItem>
                     </Nav>
                     <Nav navbar={true}>
                         <Search/>
@@ -111,6 +116,7 @@ export class MainView extends React.Component<MainViewProps> {
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route path={Routes.statistics.path} component={Statistics}/>
                     <Route path={Routes.search.path} component={Search}/>
+                    <Route path={Routes.facetedSearch.path} component={FacetedSearch}/>
                     <Route component={Dashboard}/>
                 </Switch>
             </Container>

@@ -72,6 +72,12 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
     };
 }
 
+export function loadTerms(normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.loadTerms(normalizedName));
+    };
+}
+
 export function fetchVocabularySubTerms(parentTermID: string, normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         return dispatch(AsyncActions.fetchVocabularySubTerms(parentTermID, normalizedName));

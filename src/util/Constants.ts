@@ -16,6 +16,7 @@ const constants = {
     // Error origin caused by the inability to connect to the backend server
     CONNECTION_ERROR: 'CONNECTION_ERROR',
     JSON_LD_MIME_TYPE: 'application/ld+json',
+    X_WWW_FORM_URLENCODED: 'application/x-www-form-urlencoded',
     // Axios uses lower case for header names
     AUTHORIZATION_HEADER: 'authorization',
     LOCATION_HEADER: 'location',
@@ -28,7 +29,6 @@ const constants = {
     namespace_vocabulary : "http://data.iprpraha.cz/zdroj/slovnik/", // TODO load from server config, https://kbss.felk.cvut.cz/redmine/issues/689
     endpoint_url : "http://onto.fel.cvut.cz/rdf4j-server/repositories/termit-dev", // TODO load from server config.
     // endpointUrl : "https://slovník.gov.cz/sparql"
-    X_WWW_FORM_URLENCODED : "application/x-www-form-urlencoded"
 };
 
 constants.STORAGE_JWT_KEY = constants.APP_NAME + '-' + constants.AUTHORIZATION_HEADER;

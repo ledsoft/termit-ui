@@ -8,6 +8,7 @@ import ActionType, {
     MessageAction,
     SearchAction,
     SelectingTermsAction,
+    LoadDefaultTermsAction,
     SwitchLanguageAction,
     UserLoadingAction,
     VocabulariesLoadingAction,
@@ -23,6 +24,7 @@ import AsyncActionStatus from "../action/AsyncActionStatus";
 import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import SearchResult from "../model/SearchResult";
+import VocabularyTerm from "../model/VocabularyTerm";
 
 /**
  * Handles changes to the currently logged in user.
@@ -132,7 +134,7 @@ function vocabularies(state: {[key:string]:Vocabulary}|any = {}, action: Vocabul
     }
 }
 
-function terms(state: any = null, action: SelectingTermsAction) {
+function selectedTerm(state: VocabularyTerm | null = null, action: SelectingTermsAction) {
     switch (action.type) {
         case ActionType.SELECT_VOCABULARY_TERM:
             return action.selectedTerms;
@@ -141,7 +143,16 @@ function terms(state: any = null, action: SelectingTermsAction) {
     }
 }
 
-function queryResults(state: {[key: string] : QueryResultIF} = {}, action: ExecuteQueryAction) {
+function defaultTerms(state: VocabularyTerm[] = [], action: LoadDefaultTermsAction) {
+    switch (action.type) {
+        case ActionType.LOAD_DEFAULT_TERMS:
+            return action.options;
+        default:
+            return state;
+    }
+}
+
+function queryResults(state: { [key: string]: QueryResultIF } = {}, action: ExecuteQueryAction) {
     switch (action.type) {
         case ActionType.EXECUTE_QUERY_SUCCESS:
             return {...state,
@@ -164,6 +175,18 @@ function searchResults(state: SearchResult[] | null = null, action: SearchAction
     }
 }
 
-const rootReducer = combineReducers<TermItState>({user, loading,  vocabulary, vocabularies, error, messages, intl, terms, queryResults, searchResults});
+const rootReducer = combineReducers<TermItState>({
+    user,
+    loading,
+    vocabulary,
+    vocabularies,
+    error,
+    messages,
+    intl,
+    selectedTerm,
+    defaultTerms,
+    queryResults,
+    searchResults
+});
 
 export default rootReducer;

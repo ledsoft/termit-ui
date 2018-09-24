@@ -1,15 +1,18 @@
 import * as React from "react";
 import * as angular from "angular";
-import controllerCreator from './MainController';
-import {HasI18n, default as withI18n} from "../hoc/withI18n";
-import query from './sparql.rq';
+import {ThunkDispatch} from "redux-thunk";
+import {Action} from "redux";
+import {injectIntl} from "react-intl";
+import {HasI18n, default as withI18n} from "../../hoc/withI18n";
+import TermItState from "../../../model/TermItState";
+import {connect} from "react-redux";
+import {selectVocabularyTerm} from "../../../action/SyncActions";
+import Constants from "../../../util/Constants";
 import "./semantic-faceted-search/semantic-faceted-search";
 
-function getSparqlQuery(lang : string) {
-    return query.replace(/\?lang/g, "'" + lang + "'");
-}
-
-import {injectIntl} from "react-intl";
+import loadingLg from './images/loading-lg.gif';
+import controllerCreator from './MainController';
+import query from './sparql.rq';
 
 interface Props extends HasI18n {
     lang:string,
@@ -20,7 +23,7 @@ interface State  {
     rootScope : any,
 }
 
-class SparqlFaceter extends React.Component<Props, State> {
+export class Search extends React.Component<Props, State> {
 
     private container : any;
 
@@ -29,6 +32,10 @@ class SparqlFaceter extends React.Component<Props, State> {
         this.state = {
             rootScope: null
         };
+    }
+
+    private getSparqlQuery(lang : string) {
+        return query.replace(/\?lang/g, "'" + lang + "'");
     }
 
     private runAngular() {
@@ -48,7 +55,9 @@ class SparqlFaceter extends React.Component<Props, State> {
                 this.props.lang,
                 this.props.i18n,
                 this.props.endpointUrl,
-                getSparqlQuery(this.props.lang)));
+                this.getSparqlQuery(this.props.lang),
+                this.getFacets(),
+                this.getFacetOptions()));
     }
 
     private destroyAngular() {
@@ -68,6 +77,46 @@ class SparqlFaceter extends React.Component<Props, State> {
         this.runAngular();
     }
 
+    private getFacets() {
+        // Facet definitions
+        // 'facetId' is a "friendly" identifier for the facet,
+        //  and should be unique within the set of facets.
+        // 'predicate' is the property that defines the facet (can also be
+        //  a property path, for example).
+        // 'name' is the title of the facet to show to the user.
+        // If 'enabled' is not true, the facet will be disabled by default.
+        return {
+            // Text search facet for names
+            glosar: {
+                enabled: true,
+                facetId: 'glosar',
+                predicate: '<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar>',
+                name: this.props.i18n('search.slovnik'),
+            },
+
+            pojem: {
+                enabled: true,
+                facetId: 'pojem',
+                name: this.props.i18n('search.pojem'),
+                predicate: '<http://www.w3.org/2000/01/rdf-schema#label>',
+            },
+            typ: {
+                enabled: true,
+                facetId: 'typ',
+                name: this.props.i18n('search.typ'),
+                predicate: 'a',
+            },
+        };
+    }
+
+    private getFacetOptions() {
+        return {
+            rdfClass : '<http://www.w3.org/2004/02/skos/core#Concept>',
+            endpointUrl : this.props.endpointUrl,
+            preferredLang : this.props.lang
+        }
+    }
+
     public componentDidMount() {
         this.runAngular();
         angular.bootstrap(this.container, ['facetApp']);
@@ -83,7 +132,6 @@ class SparqlFaceter extends React.Component<Props, State> {
                 rootScope
             });
         }
-
     }
 
     public componentWillUnmount() {
@@ -93,7 +141,7 @@ class SparqlFaceter extends React.Component<Props, State> {
     public render() {
         const html = `
   <div class="container-fluid" ng-controller="MainController as vm">
-    <div class="row">
+   <div class="row">
       <div class="col-md-12">
         <div ng-if="vm.error">
           <uib-alert type="danger">{{ vm.error }}</uib-alert>
@@ -109,7 +157,7 @@ class SparqlFaceter extends React.Component<Props, State> {
       </div>
       <!-- Results view -->
       <div class="col-md-9">
-        <img src="images/loading-lg.gif" ng-show="vm.isLoadingResults" />
+        <img src="`+loadingLg+`" ng-show="vm.isLoadingResults" />
         <table class="table">
           <thead>
             <tr>
@@ -154,8 +202,8 @@ class SparqlFaceter extends React.Component<Props, State> {
                 </p>
               </td>
               <td>
-                 <a ng-href="{{ pojem.glosar.link }}">{{ getLabel(pojem.glosar) }}</a>
-                 <a ng-href="{{ pojem.glosar.id }}">↱</a>
+                 <a ng-href="{{ pojem.slovnik.link }}">{{ getLabel(pojem.slovnik) }}</a>
+                 <a ng-href="{{ pojem.slovnik.id }}">↱</a>
               </td>
             </tr>
           </tbody>
@@ -174,7 +222,6 @@ class SparqlFaceter extends React.Component<Props, State> {
       </div>
     </div>
 </div>`;
-
         return (
             <div ref={c => this.container = c}
                  dangerouslySetInnerHTML={{__html: html}}/>
@@ -182,4 +229,13 @@ class SparqlFaceter extends React.Component<Props, State> {
     }
 }
 
-export default injectIntl(withI18n(SparqlFaceter));
+export default connect((state: TermItState) => {
+    return {
+        lang : state.intl.locale,
+        endpointUrl : Constants.endpoint_url
+    };
+}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return {
+        selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm))
+    };
+})(injectIntl(withI18n(Search)));

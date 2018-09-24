@@ -1,4 +1,5 @@
 import * as SyncActions from './SyncActions';
+import {asyncActionFailure, asyncActionRequest, searchSuccess} from './SyncActions';
 import Ajax, {content, params} from '../util/Ajax';
 import {Action, Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
@@ -17,7 +18,6 @@ import MessageType from "../model/MessageType";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT, VocabularyTermData} from "../model/VocabularyTerm";
 import FetchOptionsFunction from "../model/Functions";
 import {IRI} from "../util/Vocabulary";
-import {asyncActionFailure, asyncActionRequest, searchSuccess} from "./SyncActions";
 import ActionType from "./ActionType";
 import {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 
@@ -139,6 +139,30 @@ export function loadVocabularies() {
     };
 }
 
+export function loadTerms(normalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
+            params({
+                limit: 100,
+                offset: 0
+            }))
+            .then((data: object[]) =>
+                data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
+            .then((compacted: object) => {
+                if (!compacted.hasOwnProperty('@context')) {
+                    return []
+                }
+                return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
+            })
+            .then((data: VocabularyTerm[]) => {
+                return dispatch(SyncActions.loadDefaultTerms(data))
+            })
+            .catch((error: ErrorData) => {
+                return dispatch(SyncActions.loadDefaultTerms([]))
+            })
+    };
+}
+
 export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.fetchVocabularyTermsRequest());
@@ -157,8 +181,8 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
                 }
             )
             .catch((error: ErrorData) => {
-                // dispatch(SyncActions.fetchVocabularyTermsFailure(error));
-                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                // dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
                 return []
             });
     };

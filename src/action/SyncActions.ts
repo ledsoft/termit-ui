@@ -2,8 +2,12 @@ import ActionType, {
     Action,
     AsyncAction,
     AsyncFailureAction,
-    ClearErrorAction, ExecuteQueryAction,
-    MessageAction, SearchAction,
+    SearchAction,
+    ClearErrorAction,
+    ExecuteQueryAction,
+    LoadDefaultTermsAction,
+    MessageAction,
+    SelectingTermsAction,
     SwitchLanguageAction,
     UserLoadingAction,
     VocabulariesLoadingAction,
@@ -15,7 +19,7 @@ import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import {saveLanguagePreference} from "../util/IntlUtil";
-import {VocabularyTermData} from "../model/VocabularyTerm";
+import VocabularyTerm, {VocabularyTermData} from "../model/VocabularyTerm";
 import SearchResult, {SearchResultData} from "../model/SearchResult";
 
 /*
@@ -222,10 +226,10 @@ export function executeQueryFailure(error: ErrorData): AsyncFailureAction {
     }, error);
 }
 
-export function selectVocabularyTerm(data: VocabularyTermData) {
-    return {
+export function selectVocabularyTerm(data: VocabularyTermData): SelectingTermsAction {
+    return{
         type: ActionType.SELECT_VOCABULARY_TERM,
-        selectedTerms: data,
+        selectedTerms: new VocabularyTerm(data),
     }
 }
 
@@ -241,6 +245,12 @@ export function fetchVocabularyTermsFailure(error: ErrorData): AsyncFailureActio
     }, error);
 }
 
+export function loadDefaultTerms(data: VocabularyTermData[]): LoadDefaultTermsAction {
+    return {
+        type: ActionType.LOAD_DEFAULT_TERMS,
+        options: data.map((term: VocabularyTermData) => new VocabularyTerm(term))
+    }
+}
 export function searchSuccess(results: SearchResultData[]): SearchAction {
     return {
         type: ActionType.SEARCH,
