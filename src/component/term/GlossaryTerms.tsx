@@ -23,7 +23,7 @@ interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any>{
     vocabulary?: Vocabulary;
     defaultTerms: VocabularyTerm[];
     selectedTerms: VocabularyTerm | null;
-    selectVocabularyTerm: (selectedTerms: VocabularyTerm) => void;
+    selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => void;
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
     loadTerms: (normalizedName: string) => void;
 }
@@ -38,9 +38,14 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         this.fetchOptions = this.fetchOptions.bind(this);
     }
 
-    public componentDidMount(){
+    public componentWillUpdate(){
+        // @ts-ignore
         const normalizedName = this.props.match.params.name;
-        this.props.loadTerms(normalizedName)
+        // this.props.loadTerms(normalizedName)
+    }
+
+    public componentWillUnmount() {
+        this.props.selectVocabularyTerm(null)
     }
 
     private _valueRenderer(option: VocabularyTerm) {
@@ -60,6 +65,7 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         const i18n = this.props.i18n;
         const actions = [];
         const component = <IntelligentTreeSelect
+            name={"glossary-"+this.props.match.params.name}
             onChange={this.props.selectVocabularyTerm}
             value={this.props.selectedTerms}
             fetchOptions={this.fetchOptions}
@@ -96,7 +102,7 @@ export default withRouter(connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        selectVocabularyTerm: (selectedTerm: VocabularyTerm) => dispatch(selectVocabularyTerm(selectedTerm)),
+        selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
         loadTerms: (normalizedName: string) => dispatch(loadTerms(normalizedName)),
     };

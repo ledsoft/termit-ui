@@ -169,7 +169,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
     private filterChildrenOptions(options: VocabularyTerm[], filter: string, currentValues: any[]) {
         return options.filter(option => {
             const label = option.label;
-            return (label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) && !option.parentTermUri
+            return (label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) && !option.parent
         })
     }
 
@@ -197,7 +197,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
             label: data.optionLabel as string,
             comment: data.optionDescription as string,
             subTerms: children as string[],
-            parentTermUri: parent as string
+            parent: parent as string
         }), this.props.match.params.name);
     }
 
