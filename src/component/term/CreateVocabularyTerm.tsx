@@ -290,6 +290,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
                     <Collapse isOpen={this.state.modalAdvancedSectionVisible}>
 
                         <Select field={"parentOption"}
+                                name={"glossary-"+this.props.match.params.name}
                                 options={this.props.options}
                                 multi={false}
                                 placeholder={i18n('glossary.form.field.selectParent')}
@@ -304,6 +305,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
 
                         <Select field={"childOptions"}
                                 options={this.props.options}
+                                name={"glossary-"+this.props.match.params.name}
                                 placeholder={i18n('glossary.form.field.selectChildren')}
                                 multi={true}
                                 valueKey={"iri"}
