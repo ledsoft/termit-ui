@@ -31,6 +31,7 @@ import VocabularyDetail from "./vocabulary/VocabularyDetail";
 import LanguageSelector from "./main/LanguageSelector";
 import Messages from "./message/Messages";
 import Statistics from "./statistics/Statistics";
+import Search from "./search/Search";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -76,6 +77,9 @@ export class MainView extends React.Component<MainViewProps> {
                             <NavLink
                                 href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
                         </NavItem>
+                    </Nav>
+                    <Nav navbar={true}>
+                        <Search/>
                     </Nav>
                     <Nav navbar={true}>
                         <LanguageSelector/>

@@ -16,6 +16,7 @@ import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import {saveLanguagePreference} from "../util/IntlUtil";
 import {VocabularyTermData} from "../model/VocabularyTerm";
+import SearchResult, {SearchResultData} from "../model/SearchResult";
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
@@ -206,11 +207,11 @@ export function executeQueryRequest(): AsyncAction {
     });
 }
 
-export function executeQuerySuccess(queryString :string, result: object): ExecuteQueryAction {
+export function executeQuerySuccess(queryString: string, result: object): ExecuteQueryAction {
     return {
         type: ActionType.EXECUTE_QUERY_SUCCESS,
         status: AsyncActionStatus.SUCCESS,
-        queryResult : result,
+        queryResult: result,
         queryString
     }
 }
@@ -222,7 +223,7 @@ export function executeQueryFailure(error: ErrorData): AsyncFailureAction {
 }
 
 export function selectVocabularyTerm(data: VocabularyTermData) {
-    return{
+    return {
         type: ActionType.SELECT_VOCABULARY_TERM,
         selectedTerms: data,
     }
@@ -238,4 +239,12 @@ export function fetchVocabularyTermsFailure(error: ErrorData): AsyncFailureActio
     return asyncActionFailure({
         type: ActionType.FETCH_VOCABULARY_TERMS_FAILURE
     }, error);
+}
+
+export function searchSuccess(results: SearchResultData[]) {
+    return {
+        type: ActionType.SEARCH,
+        status: AsyncActionStatus.SUCCESS,
+        results: results.map(r => new SearchResult(r))
+    };
 }

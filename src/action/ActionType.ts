@@ -40,7 +40,7 @@ export interface VocabularyLoadingAction extends AsyncAction {
     vocabulary: Vocabulary
 }
 
-export interface SelectingTermsAction extends Action{
+export interface SelectingTermsAction extends Action {
     selectedTerms: VocabularyTerm
 }
 
@@ -49,7 +49,7 @@ export interface VocabulariesLoadingAction extends AsyncAction {
 }
 
 export interface ExecuteQueryAction extends AsyncAction {
-    queryString : string,
+    queryString: string,
     queryResult: object
 }
 
@@ -97,6 +97,8 @@ export default {
 
     FETCH_VOCABULARY_TERMS_REQUEST: 'FETCH_VOCABULARY_TERM_REQUEST',
     FETCH_VOCABULARY_TERMS_FAILURE: 'FETCH_VOCABULARY_TERMS_FAILURE',
+
+    SEARCH: 'SEARCH',
 
     LOGOUT: 'LOGOUT'
 }

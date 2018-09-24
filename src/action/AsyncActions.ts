@@ -17,6 +17,9 @@ import MessageType from "../model/MessageType";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT, VocabularyTermData} from "../model/VocabularyTerm";
 import FetchOptionsFunction from "../model/Functions";
 import {IRI} from "../util/Vocabulary";
+import {asyncActionFailure, asyncActionRequest, searchSuccess} from "./SyncActions";
+import ActionType from "./ActionType";
+import {SearchResultData} from "../model/SearchResult";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -207,6 +210,21 @@ export function executeQuery(queryString: string) {
                 dispatch(SyncActions.executeQuerySuccess(queryString, data)))
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.executeQueryFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function search(searchString: string) {
+    const action = {
+        type: ActionType.SEARCH
+    };
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.get(Constants.API_PREFIX + '/search', params({searchString: encodeURI(searchString)}))
+            .then((data: SearchResultData[]) => dispatch(searchSuccess(data)))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };

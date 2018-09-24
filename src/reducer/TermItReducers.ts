@@ -137,7 +137,7 @@ function queryResults(state: {[key: string] : QueryResultIF} = {}, action: Execu
             // const newState = {}
             // newState[action.queryString] = new QueryResult(action.queryString,action.queryResult)
             return {...state,
-                [action.queryString] :  new QueryResult(action.queryString,action.queryResult)}
+                [action.queryString] :  new QueryResult(action.queryString,action.queryResult)};
         default:
             return state;
     }
