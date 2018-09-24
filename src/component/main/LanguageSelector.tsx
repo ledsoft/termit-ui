@@ -33,7 +33,7 @@ export class LanguageSelector extends React.Component<LanguageSelectorProps> {
         const csCls = classNames('lang', {'selected': this.props.language === Constants.LANG.CS});
         const enCls = classNames('lang', {'selected': this.props.language === Constants.LANG.EN});
         return <li>
-            <div>
+            <div className='language-selector'>
                 <span className={csCls} onClick={this.onSelectCzech}>{Constants.LANG.CS.toUpperCase()}</span>
                 &nbsp;/&nbsp;
                 <span className={enCls} onClick={this.onSelectEnglish}>{Constants.LANG.EN.toUpperCase()}</span>

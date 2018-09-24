@@ -2,6 +2,7 @@ import ActionType, {
     Action,
     AsyncAction,
     AsyncFailureAction,
+    SearchAction,
     ClearErrorAction,
     ExecuteQueryAction,
     LoadDefaultTermsAction,
@@ -19,13 +20,14 @@ import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import {saveLanguagePreference} from "../util/IntlUtil";
 import VocabularyTerm from "../model/VocabularyTerm";
+import SearchResult, {SearchResultData} from "../model/SearchResult";
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
  */
 
-export function asyncActionRequest(a: Action): AsyncAction {
-    return {...a, status: AsyncActionStatus.REQUEST};
+export function asyncActionRequest(a: Action, ignoreLoading: boolean = false): AsyncAction {
+    return {...a, status: AsyncActionStatus.REQUEST, ignoreLoading};
 }
 
 export function asyncActionFailure(a: Action, error: ErrorData): AsyncFailureAction {
@@ -209,11 +211,11 @@ export function executeQueryRequest(): AsyncAction {
     });
 }
 
-export function executeQuerySuccess(queryString :string, result: object): ExecuteQueryAction {
+export function executeQuerySuccess(queryString: string, result: object): ExecuteQueryAction {
     return {
         type: ActionType.EXECUTE_QUERY_SUCCESS,
         status: AsyncActionStatus.SUCCESS,
-        queryResult : result,
+        queryResult: result,
         queryString
     }
 }
@@ -248,4 +250,11 @@ export function loadDefaultTerms(data: VocabularyTerm[]): LoadDefaultTermsAction
         type: ActionType.LOAD_DEFAULT_TERMS,
         options: data
     }
+}
+export function searchSuccess(results: SearchResultData[]): SearchAction {
+    return {
+        type: ActionType.SEARCH,
+        status: AsyncActionStatus.SUCCESS,
+        results: results.map(r => new SearchResult(r))
+    };
 }

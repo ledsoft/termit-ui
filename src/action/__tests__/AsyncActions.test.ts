@@ -1,5 +1,5 @@
 import configureMockStore from 'redux-mock-store';
-import {createVocabulary, loadVocabularies, loadVocabulary, login} from '../AsyncActions';
+import {createVocabulary, loadVocabularies, loadVocabulary, login, search} from '../AsyncActions';
 import Constants from '../../util/Constants';
 import Ajax from '../../util/Ajax';
 import thunk, {ThunkDispatch} from 'redux-thunk';
@@ -9,7 +9,7 @@ import Authentication from '../../util/Authentication';
 import Vocabulary, {CONTEXT} from "../../model/Vocabulary";
 import Vocabulary2 from "../../util/Vocabulary";
 import Routes from '../../util/Routes';
-import {VocabulariesLoadingAction, VocabularyLoadingAction} from "../ActionType";
+import {SearchAction, VocabulariesLoadingAction, VocabularyLoadingAction} from "../ActionType";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -101,9 +101,9 @@ describe('Async actions', () => {
         it('extracts vocabulary data from incoming JSON-LD', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(require('../../rest-mock/vocabulary')));
             const store = mockStore({});
-            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabulary({fragment:'metropolitan-plan'}))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabulary({fragment: 'metropolitan-plan'}))).then(() => {
                 const loadSuccessAction: VocabularyLoadingAction = store.getActions()[1];
-                expect(Vocabulary2.equal(Vocabulary2.create(loadSuccessAction.vocabulary.iri),Vocabulary2.complete({fragment:'metropolitan-plan'}))).toBeTruthy();
+                expect(Vocabulary2.equal(Vocabulary2.create(loadSuccessAction.vocabulary.iri), Vocabulary2.complete({fragment: 'metropolitan-plan'}))).toBeTruthy();
             });
         });
     });
@@ -135,6 +135,17 @@ describe('Async actions', () => {
                 expect(Array.isArray(result)).toBeTruthy();
                 expect(result.length).toEqual(1);
                 expect(result[0].iri).toEqual(vocabularies[0]['@id']);
+            });
+        });
+    });
+
+    describe('search', () => {
+        it('emits search request action with ignore loading switch', () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(search('test', true))).then(() => {
+                const searchRequestAction: SearchAction = store.getActions()[0];
+                expect(searchRequestAction.ignoreLoading).toBeTruthy();
             });
         });
     });

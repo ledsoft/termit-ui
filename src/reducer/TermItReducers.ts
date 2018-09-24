@@ -1,11 +1,18 @@
 import {combineReducers} from "redux";
 import ActionType, {
-    Action, AsyncAction,
-    ClearErrorAction, ExecuteQueryAction,
-    FailureAction, LoadDefaultTermsAction,
-    MessageAction, SelectingTermsAction,
+    Action,
+    AsyncAction,
+    ClearErrorAction,
+    ExecuteQueryAction,
+    FailureAction,
+    MessageAction,
+    SearchAction,
+    SelectingTermsAction,
+    LoadDefaultTermsAction,
     SwitchLanguageAction,
-    UserLoadingAction, VocabulariesLoadingAction, VocabularyLoadingAction
+    UserLoadingAction,
+    VocabulariesLoadingAction,
+    VocabularyLoadingAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
@@ -16,6 +23,7 @@ import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUti
 import AsyncActionStatus from "../action/AsyncActionStatus";
 import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
+import SearchResult from "../model/SearchResult";
 import VocabularyTerm from "../model/VocabularyTerm";
 
 /**
@@ -44,6 +52,9 @@ function user(state: User = EMPTY_USER, action: UserLoadingAction): User {
  * each other
  */
 function loading(state = false, action: AsyncAction): boolean {
+    if (action.ignoreLoading) {
+        return state;
+    }
     switch (action.status) {
         case AsyncActionStatus.REQUEST:
             return true;
@@ -110,7 +121,7 @@ function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: VocabularyLoad
     }
 }
 
-function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: VocabulariesLoadingAction): { [key: string]: Vocabulary } {
+function vocabularies(state: {[key:string]:Vocabulary}|any = {}, action: VocabulariesLoadingAction): {[key:string]:Vocabulary} {
     switch (action.type) {
         case ActionType.LOAD_VOCABULARIES_SUCCESS:
             const map = {};
@@ -144,12 +155,21 @@ function defaultTerms(state: VocabularyTerm[] = [], action: LoadDefaultTermsActi
 function queryResults(state: { [key: string]: QueryResultIF } = {}, action: ExecuteQueryAction) {
     switch (action.type) {
         case ActionType.EXECUTE_QUERY_SUCCESS:
-            // const newState = {}
-            // newState[action.queryString] = new QueryResult(action.queryString,action.queryResult)
-            return {
-                ...state,
-                [action.queryString]: new QueryResult(action.queryString, action.queryResult)
-            };
+            return {...state,
+                [action.queryString] :  new QueryResult(action.queryString,action.queryResult)};
+        default:
+            return state;
+    }
+}
+
+function searchResults(state: SearchResult[] = [], action: SearchAction) {
+    switch (action.type) {
+        case ActionType.SEARCH:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                return action.results;
+            } else {
+                return state;
+            }
         default:
             return state;
     }
@@ -165,7 +185,8 @@ const rootReducer = combineReducers<TermItState>({
     intl,
     selectedTerm,
     defaultTerms,
-    queryResults
+    queryResults,
+    searchResults
 });
 
 export default rootReducer;

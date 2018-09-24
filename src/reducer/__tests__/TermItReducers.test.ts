@@ -18,6 +18,7 @@ import User, {EMPTY_USER} from "../../model/User";
 import Message from "../../model/Message";
 import Constants from "../../util/Constants";
 import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
+import AsyncActionStatus from "../../action/AsyncActionStatus";
 
 function stateToPlainObject(state: TermItState) {
     return {
@@ -29,6 +30,7 @@ function stateToPlainObject(state: TermItState) {
         error: state.error,
         messages: state.messages,
         intl: state.intl,
+        searchResults: state.searchResults
         selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms,
     };
@@ -226,5 +228,14 @@ describe('Reducers', () => {
             expect(reducers(stateToPlainObject(initialState), loadVocabularyFailure(errorData)))
                 .toEqual(Object.assign({}, initialState, {error: new ErrorInfo(ActionType.LOAD_VOCABULARY_FAILURE, errorData)}));
         });
+    });
+
+    it('does not change loading status on request action with ignoreLoading specified', () => {
+        const action = {
+            type: ActionType.SEARCH,
+            status: AsyncActionStatus.REQUEST,
+            ignoreLoading: true
+        };
+        expect(reducers(stateToPlainObject(initialState), action)).toEqual(initialState);
     });
 });
