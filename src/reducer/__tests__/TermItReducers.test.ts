@@ -34,6 +34,7 @@ function stateToPlainObject(state: TermItState) {
         searchResults: state.searchResults,
         selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms,
+        createdTermsCounter: state.createdTermsCounter
     };
 }
 

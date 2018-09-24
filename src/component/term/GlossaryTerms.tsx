@@ -19,8 +19,10 @@ import FetchOptionsFunction from "../../model/Functions";
 import VocabularyTerm from "../../model/VocabularyTerm";
 import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
 
+
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any>{
     vocabulary?: Vocabulary;
+    counter: number;
     defaultTerms: VocabularyTerm[];
     selectedTerms: VocabularyTerm | null;
     selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => void;
@@ -38,10 +40,10 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         this.fetchOptions = this.fetchOptions.bind(this);
     }
 
-    public componentWillUpdate(){
-        // @ts-ignore
-        const normalizedName = this.props.match.params.name;
-        // this.props.loadTerms(normalizedName)
+    public componentDidUpdate(prevProps: GlossaryTermsProps){
+        if (prevProps.counter < this.props.counter){
+            this.forceUpdate()
+        }
     }
 
     public componentWillUnmount() {
@@ -65,6 +67,7 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         const i18n = this.props.i18n;
         const actions = [];
         const component = <IntelligentTreeSelect
+            className={"p-0"}
             name={"glossary-"+this.props.match.params.name}
             onChange={this.props.selectVocabularyTerm}
             value={this.props.selectedTerms}
@@ -88,6 +91,7 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
 
         return (<PanelWithActions
             title={i18n('glossary.title')}
+            className={"px-0"}
             component={component}
             actions={actions}
         />);
@@ -99,6 +103,7 @@ export default withRouter(connect((state: TermItState) => {
     return {
         selectedTerms: state.selectedTerm,
         defaultTerms: state.defaultTerms,
+        counter: state.createdTermsCounter
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {

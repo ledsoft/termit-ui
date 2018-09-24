@@ -4,7 +4,9 @@ import {Card, CardBody, CardHeader} from 'reactstrap';
 interface PanelWithActionsProps {
     title: string,
     actions: JSX.Element[],
-    component: JSX.Element
+    component: JSX.Element,
+    className?: string,
+
 }
 
 export default (props: PanelWithActionsProps) => <Card style={{zIndex:200}}>
@@ -14,7 +16,7 @@ export default (props: PanelWithActionsProps) => <Card style={{zIndex:200}}>
                     {props.actions}
                 </div>
     </CardHeader>
-    <CardBody>
+    <CardBody className={props.className}>
         {props.component}
     </CardBody>
 </Card>;
