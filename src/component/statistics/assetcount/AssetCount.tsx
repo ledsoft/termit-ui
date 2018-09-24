@@ -1,5 +1,5 @@
 import * as React from "react";
-import SparqlWidget from "./SparqlWidget";
+import SparqlWidget from "../SparqlWidget";
 import LD from "ld-query";
 import queryTemplate from "./AssetCount.rq";
 

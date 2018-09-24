@@ -1,14 +1,19 @@
-import _ from "lodash";
-import * as sparql from "angular-paging-sparql-service";
-import * as uibootstrap from "angular-bootstrap";
-import * as angularSpinner from "angular-spinner";
-import * as checklistModel from "checklist-model";
 import "./bootstrap-part/css/bootstrap.css";
-// import * as Chart from "chart.js";
-
 (function() {
     'use strict';
 
+    const _ = require("lodash");
+
+    let sparql;
+    // TODO this is a nasty hack to make tests working. Should be removed upon component refactoring
+    if (process.env.JEST_WORKER_ID) {
+        sparql = require.resolve("angular-paging-sparql-service");
+    } else {
+        sparql = require("angular-paging-sparql-service");
+    }
+    const uibootstrap = require( "angular-bootstrap" );
+    const angularSpinner = require("angular-spinner");
+    const checklistModel =require( "checklist-model");
     angular.module('seco.facetedSearch', [
         'sparql', 'ui.bootstrap', 'angularSpinner', 'checklist-model'//, 'chart.js'
     ])
