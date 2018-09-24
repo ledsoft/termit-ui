@@ -90,7 +90,7 @@ export class Search extends React.Component<Props, State> {
             glosar: {
                 enabled: true,
                 facetId: 'glosar',
-                predicate: '<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar>',
+                predicate: '(^skos:narrower)*/<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar>',
                 name: this.props.i18n('search.slovnik'),
             },
 

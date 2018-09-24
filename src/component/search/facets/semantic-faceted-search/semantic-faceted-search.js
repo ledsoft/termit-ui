@@ -3,7 +3,6 @@ import * as sparql from "angular-paging-sparql-service";
 import * as uibootstrap from "angular-bootstrap";
 import * as angularSpinner from "angular-spinner";
 import * as checklistModel from "checklist-model";
-import "./semantic-faceted-search.scss";
 import "./bootstrap-part/css/bootstrap.css";
 // import * as Chart from "chart.js";
 
@@ -2048,15 +2047,10 @@ angular.module('seco.facetedSearch').run(['$templateCache', function($templateCa
   $templateCache.put('src/facets/facets.facet-wrapper.directive.html',
     "<div class=\"facet-wrapper\">\n" +
     "  <div class=\"facet\">\n" +
-    "    <div class=\"well well-sm\">\n" +
-    "      <div class=\"row\">\n" +
-    "        <div class=\"col-xs-12 text-left\">\n" +
+    "    <div class=\"card\">\n" +
+    "      <div class=\"card-header\">\n" +
     "          <div class=\"alert alert-danger\" ng-if=\"vm.error\">{{ vm.error|limitTo:100 }}</div>\n" +
-    "          <div class=\"row vertical-align\">\n" +
-    "            <div class=\"col-xs-10 text-left\">\n" +
-    "              <h5 class=\"facet-name pull-left\">{{ vm.facet.name }}</h5>\n" +
-    "            </div>\n" +
-    "            <div class=\"facet-enable-btn-container col-xs-2 text-right\">\n" +
+    "              <h5 color=\"info\" class=\"facet-name header\">{{ vm.facet.name }}<div class=\"facet-enable-btn-container float-sm-right\">\n" +
     "              <button ng-show=\"vm.hasChartButton()\"\n" +
     "                  class=\"btn btn-default btn-toggle-chart btn-xs pull-right\"\n" +
     "                  ng-click=\"vm.toggleChart()\">\n" +
@@ -2065,15 +2059,13 @@ angular.module('seco.facetedSearch').run(['$templateCache', function($templateCa
     "              <button\n" +
     "                  ng-disabled=\"vm.isLoading()\"\n" +
     "                  ng-click=\"vm.toggleFacetEnabled()\"\n" +
-    "                  class=\"btn btn-default btn-facet-toggle btn-xs pull-right\"\n" +
+    "                  class=\"btn btn-primary btn-facet-toggle btn-sm\"\n" +
     "                  ng-class=\"vm.facet.isEnabled() ? 'btn-facet-close' : 'btn-facet-open'\">\n" +
-    "                <span class=\"glyphicon\" ng-class=\"vm.facet.isEnabled() ? 'glyphicon-minus' : 'glyphicon-plus'\"></span>\n" +
+    "                <span class=\"glyphicon\" ng-class=\"vm.facet.isEnabled() ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'\"></span>\n" +
     "              </button>\n" +
-    "            </div>\n" +
-    "          </div>\n" +
-    "        </div>\n" +
+      "</h5>\n" +
     "      </div>\n" +
-    "      <div class=\"row\" ng-if=\"vm.facet.isEnabled()\">\n" +
+    "      <div class=\"card-body\" ng-if=\"vm.facet.isEnabled()\">\n" +
     "        <div class=\"col-xs-12 text-left\">\n" +
     "          <span spinner-key=\"vm.getSpinnerKey()\" spinner-start-active=\"true\"\n" +
     "                us-spinner=\"{radius:15, width:6, length: 20}\" ng-if=\"vm.isLoading()\"></span>\n" +

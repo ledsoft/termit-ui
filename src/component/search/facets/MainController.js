@@ -25,7 +25,8 @@ export default (lang, ai18n, endpointUrl, query, facets, facetOptions) => {
             initListener();
         });
 
-        $scope.getLabel = (o) => o.nazev ? o.nazev : o.id;
+        $scope.getLabel = (o) =>
+            o.nazev ? o.nazev : o.id;
 
 
         // Facet definitions
