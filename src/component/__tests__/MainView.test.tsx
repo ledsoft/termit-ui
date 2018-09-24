@@ -40,7 +40,7 @@ describe('MainView', () => {
             firstName: 'Catherine',
             lastName: 'Halsey',
             username: 'halsey@unsc.org',
-            uri: 'http://onto.fel.cvut.cz/ontologies/termit/catherine-halsey'
+            iri: 'http://onto.fel.cvut.cz/ontologies/termit/catherine-halsey'
         });
         shallow(<MainView user={user} loadUser={loadUser} logout={logout} i18n={i18n}
                           formatMessage={formatMessage} history={history} location={location} match={match}/>);

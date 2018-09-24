@@ -19,7 +19,7 @@ import FetchOptionsFunction from "../model/Functions";
 import {IRI} from "../util/Vocabulary";
 import {asyncActionFailure, asyncActionRequest, searchSuccess} from "./SyncActions";
 import ActionType from "./ActionType";
-import {SearchResultData} from "../model/SearchResult";
+import {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -129,12 +129,7 @@ export function loadVocabularies() {
         return Ajax.get(Constants.API_PREFIX + '/vocabularies')
             .then((data: object[]) =>
                 data.length !== 0 ? jsonld.compact(data, VOCABULARY_CONTEXT) : [])
-            .then((compacted: object) => {
-                if (!compacted.hasOwnProperty('@context')) {
-                    return []
-                }
-                return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
-            })
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: VocabularyData[]) =>
                 dispatch(SyncActions.loadVocabulariesSuccess(data)))
             .catch((error: ErrorData) => {
@@ -156,14 +151,9 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
             }))
             .then((data: object[]) =>
                 data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
-            .then((compacted: object) => {
-                if (!compacted.hasOwnProperty('@context')) {
-                    return []
-                }
-                return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
-            })
-            .then((data: VocabularyTermData[]) =>{
-                return data
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: VocabularyTermData[]) => {
+                    return data
                 }
             )
             .catch((error: ErrorData) => {
@@ -180,12 +170,7 @@ export function fetchVocabularySubTerms(parentTermId: string, normalizedName: st
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/subterms',
             params({parent_id: parentTermId}))
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
-            .then((compacted: object) => {
-                if (!compacted.hasOwnProperty('@context')) {
-                    return []
-                }
-                return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
-            })
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: VocabularyTermData[]) => data)
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.fetchVocabularyTermsFailure(error));
@@ -233,10 +218,19 @@ export function search(searchString: string, disableLoading: boolean = false) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(asyncActionRequest(action, disableLoading));
         return Ajax.get(Constants.API_PREFIX + '/search', params({searchString: encodeURI(searchString)}))
+            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: SearchResultData[]) => dispatch(searchSuccess(data)))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
+}
+
+function loadArrayFromCompactedGraph(compacted: object): object[] {
+    if (!compacted.hasOwnProperty('@context')) {
+        return []
+    }
+    return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
 }

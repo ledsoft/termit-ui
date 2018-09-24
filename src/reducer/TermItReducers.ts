@@ -151,7 +151,7 @@ function queryResults(state: {[key: string] : QueryResultIF} = {}, action: Execu
     }
 }
 
-function searchResults(state: SearchResult[] = [], action: SearchAction) {
+function searchResults(state: SearchResult[] | null = null, action: SearchAction) {
     switch (action.type) {
         case ActionType.SEARCH:
             if (action.status === AsyncActionStatus.SUCCESS) {
