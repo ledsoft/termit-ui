@@ -40,6 +40,7 @@ export default {
         'main.nav.vocabularies': 'Slovníky',
         'main.nav.statistics': 'Statistiky',
         'main.nav.search': 'Vyhledávání pojmů',
+        'main.nav.facetedSearch': 'Facetové vyhledávání pojmů',
         'main.nav.admin': 'Administrace',
         'main.user-profile': 'Profil uživatele',
         'main.logout': 'Odhlásit se',

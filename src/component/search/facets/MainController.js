@@ -1,5 +1,5 @@
 
-export default (lang, ai18n, endpointUrl, query) => {
+export default (lang, ai18n, endpointUrl, query, facets, facetOptions) => {
     return function MainController($scope, FacetHandler, FacetResultHandler, facetUrlStateHandlerService) {
         const vm = this;
 
@@ -30,35 +30,13 @@ export default (lang, ai18n, endpointUrl, query) => {
 
         // Facet definitions
         // 'facetId' is a "friendly" identifier for the facet,
+        // 'facetId' is a "friendly" identifier for the facet,
         //  and should be unique within the set of facets.
         // 'predicate' is the property that defines the facet (can also be
         //  a property path, for example).
         // 'name' is the title of the facet to show to the user.
         // If 'enabled' is not true, the facet will be disabled by default.
-        vm.facets = {
-            // Text search facet for names
-            glosar: {
-                enabled: true,
-                facetId: 'glosar',
-//                predicate:'<http://www.w3.org/2004/02/skos/core#inScheme>/<http://www.w3.org/2000/01/rdf-schema#label>',
-                name: ai18n('search.slovnik'),
-                predicate: '<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar>',
-            },
-
-            pojem: {
-                enabled: true,
-                facetId: 'pojem',
-                name: ai18n('search.pojem'),
-                // SGoV <http://www.w3.org/2004/02/skos/core#prefLabel>|
-                predicate: '<http://www.w3.org/2000/01/rdf-schema#label>',
-            },
-            typ: {
-                enabled: true,
-                facetId: 'typ',
-                name: ai18n('search.typ'),
-                predicate: 'a',
-            },
-        };
+        vm.facets = facets;
 
         // Initialize the facet handler
         vm.handler = new FacetHandler(getFacetOptions(vm.lang));
@@ -83,12 +61,9 @@ export default (lang, ai18n, endpointUrl, query) => {
             // 'rdfClass' is just a shorthand constraint for '?id a <rdfClass> .'
             // Both rdfClass and constraint are optional, but you should define at least
             // one of them, or you might get bad results when there are no facet selections.
-            const options = {};
-            options.rdfClass = '<http://www.w3.org/2004/02/skos/core#Concept>';
-            options.endpointUrl = endpointUrl;
-            options.preferredLang = lang;
-            options.scope = $scope;
+            const options = facetOptions;
 
+            options.scope = $scope;
             // Get initial facet values from URL parameters (refresh/bookmark) using facetUrlStateHandlerService.
             options.initialState = facetUrlStateHandlerService.getFacetValuesFromUrlParams();
             return options;
@@ -127,7 +102,7 @@ export default (lang, ai18n, endpointUrl, query) => {
                 // you can also give getResults another parameter that is the sort
                 // order of the results (as a valid SPARQL ORDER BY sequence, e.g. "?id").
                 // The results are sorted by URI (?id) by default.
-                var prefixes =
+                const prefixes =
                     ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
                     ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
                     ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>'+
@@ -142,8 +117,7 @@ export default (lang, ai18n, endpointUrl, query) => {
                     resultsPerPage: 500, // optional (default is 10)
                 };
 
-                var resultHandler = new FacetResultHandler(endpointUrlX, resultOptions);
-
+                const resultHandler = new FacetResultHandler(endpointUrlX, resultOptions);
 
                 return resultHandler.getResults(facetSelectionsX).then(function (pager) {
                     // We'll also query for the total number of results, and load the
