@@ -25,7 +25,7 @@ class FileDetail extends React.Component<FileDetailProps> {
     private containerElement: HTMLDivElement | null;
 
     public componentDidMount(): void {
-        const normalizedName = 'metropolitan-plan-p1.html'; // this.props.match.params.name; //TODO remove
+        const normalizedName =  this.props.match.params.name;
         this.props.loadContentFile(Vocabulary.create(this.props.document.iri), normalizedName);
     }
 
