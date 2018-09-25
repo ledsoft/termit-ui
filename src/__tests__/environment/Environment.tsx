@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {ReactElement} from 'react';
-import {mount} from "enzyme";
+import {mount, MountRendererProps} from "enzyme";
 import intlData from '../../i18n/en';
 import {IntlProvider} from "react-intl";
 import {Provider} from "react-redux";
@@ -13,9 +13,10 @@ const mockStore = configureMockStore([thunk]);
  * Uses enzyme's mount function, but wraps the specified component in Provider and IntlProvider, so that Redux and
  * React Intl context are set up.
  * @param node The element to render
+ * @param options Optional rendering options for Enzyme
  */
-export function mountWithIntl(node: ReactElement<any>) {
-    return mount(<Provider store={mockStore({})}><IntlProvider {...intlData}>{node}</IntlProvider></Provider>);
+export function mountWithIntl(node: ReactElement<any>, options?: MountRendererProps) {
+    return mount(<Provider store={mockStore({})}><IntlProvider {...intlData}>{node}</IntlProvider></Provider>, options);
 }
 
 export function intlDataForShallow(): {} {

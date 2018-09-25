@@ -2,7 +2,7 @@ import reducers from '../TermItReducers';
 import ActionType, {FailureAction, UserLoadingAction} from "../../action/ActionType";
 import TermItState from "../../model/TermItState";
 import {
-    clearError,
+    clearError, clearSearchResults,
     dismissMessage,
     fetchUserFailure,
     fetchUserRequest,
@@ -20,6 +20,7 @@ import Constants from "../../util/Constants";
 import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import VocabularyTerm, {VocabularyTermData} from "../../model/VocabularyTerm";
+import SearchResult from "../../model/SearchResult";
 
 function stateToPlainObject(state: TermItState) {
     return {
@@ -27,7 +28,7 @@ function stateToPlainObject(state: TermItState) {
         user: state.user,
         vocabulary: state.vocabulary,
         vocabularies: state.vocabularies,
-        queryResults : state.queryResults,
+        queryResults: state.queryResults,
         error: state.error,
         messages: state.messages,
         intl: state.intl,
@@ -278,5 +279,16 @@ describe('Reducers', () => {
             ignoreLoading: true
         };
         expect(reducers(stateToPlainObject(initialState), action)).toEqual(initialState);
+    });
+
+    describe('clear search results', () => {
+        it('resets search results to initial state', () => {
+            initialState.searchResults = [new SearchResult({
+                iri: 'http://test',
+                label: 'test',
+                types: ['http://term']
+            })];
+            expect(reducers((stateToPlainObject(initialState)), clearSearchResults())).toEqual(Object.assign({}, initialState, {searchResults: null}));
+        });
     });
 });
