@@ -1,6 +1,7 @@
 .search {
   margin-right: 0.5rem;
   position: relative;
+  min-width: 18rem;
 }
 
 .search-icon {
@@ -27,4 +28,11 @@
 
 .search-result-link {
   cursor: pointer;
+}
+
+.search-result-info {
+  @extend .search-result-link;
+  border-top: 1px solid rgba(0, 0, 0, 0.15) !important;
+  font-weight: bold;
+  font-style: italic;
 }
