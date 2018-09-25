@@ -76,8 +76,9 @@ const TextInput = asField(({fieldState, ...props}: any) => {
         }
 
         return (
-            <FormGroup>
+            <FormGroup className={props.className}>
                 <Input type={"text"} autoComplete={"off"} placeholder={props.label} onChange={_onChange}/>
+                {props.children}
             </FormGroup>
         );
     }
@@ -186,6 +187,12 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
     }
 
     private createNewOption(data: any) {
+
+        let types: string[] = [];
+        if (data.siblings) {
+            types = data.siblings.map((o: any) => o.type)
+        }
+
         const children = this._getIDs(data.childOptions);
         let parent = '';
         if (data.parentOption as VocabularyTerm) {
@@ -197,7 +204,9 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
             label: data.optionLabel as string,
             comment: data.optionDescription as string,
             subTerms: children as string[],
-            parent: parent as string
+            parent: parent as string,
+            types: types as string[],
+            source: data.optionSource as string,
         }), this.props.match.params.name);
     }
 
@@ -257,7 +266,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
     public render() {
         const i18n = this.props.i18n;
         // @ts-ignore
-        const styles: CSSProperties = {pointer: 'cursor'};
+        const styles: CSSProperties = {pointer: 'cursor', margin: '8px'};
         return (<Card>
             <CardHeader color='info'>
                 <CardTitle>{i18n('glossary.form.header')}</CardTitle>
@@ -290,7 +299,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
                     <Collapse isOpen={this.state.modalAdvancedSectionVisible}>
 
                         <Select field={"parentOption"}
-                                name={"glossary-"+this.props.match.params.name}
+                                name={"glossary-" + this.props.match.params.name}
                                 options={this.props.options}
                                 multi={false}
                                 placeholder={i18n('glossary.form.field.selectParent')}
@@ -298,27 +307,59 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
                                 labelKey={"label"}
                                 childrenKey={"subTerms"}
                                 filterOptions={this.filterParentOptions}
-                                // fetchOptions={this.fetchOptions}
+                            // fetchOptions={this.fetchOptions}
                                 expanded={true}
                                 renderAsTree={false}
                         />
 
-                        <Select field={"childOptions"}
-                                options={this.props.options}
-                                name={"glossary-"+this.props.match.params.name}
-                                placeholder={i18n('glossary.form.field.selectChildren')}
-                                multi={true}
-                                valueKey={"iri"}
-                                labelKey={"label"}
-                                childrenKey={"subTerms"}
-                                filterOptions={this.filterChildrenOptions}
-                                expanded={true}
-                                // fetchOptions={this.fetchOptions}
-                                renderAsTree={false}
-                                validate={this.validateNotSameAsParent}
-                                validateOnChange={true}
-                                validateOnBlur={true}
-                        />
+                        {/*<Select field={"childOptions"}*/}
+                        {/*options={this.props.options}*/}
+                        {/*name={"glossary-"+this.props.match.params.name}*/}
+                        {/*placeholder={i18n('glossary.form.field.selectChildren')}*/}
+                        {/*multi={true}*/}
+                        {/*valueKey={"iri"}*/}
+                        {/*labelKey={"label"}*/}
+                        {/*childrenKey={"subTerms"}*/}
+                        {/*filterOptions={this.filterChildrenOptions}*/}
+                        {/*expanded={true}*/}
+                        {/*// fetchOptions={this.fetchOptions}*/}
+                        {/*renderAsTree={false}*/}
+                        {/*validate={this.validateNotSameAsParent}*/}
+                        {/*validateOnChange={true}*/}
+                        {/*validateOnBlur={true}*/}
+                        {/*/>*/}
+
+                        <TextInput field="optionSource" id="optionSource"
+                                   label={i18n('glossary.form.field.source')}/>
+
+                        <FormGroup>
+                            <FormGroup>
+                                <Button type="button"
+                                        onClick={this.addSibling}
+                                        color={'primary'} size="sm">
+                                    {i18n('glossary.form.button.addType')}
+                                </Button>
+                            </FormGroup>
+                            {this.state.siblings.map((member, index) => (
+                                <FormGroup key={index}>
+                                    <TextInput field="type" key={`type-${index}`}
+                                               label={i18n('glossary.form.field.type')}
+                                               className={"d-flex justify-content-between align-items-center m-1"}
+                                               children={
+                                                   <span onClick={this.removeSibling} style={styles}
+                                                         data-index={index}
+                                                         className="Select-clear-zone"
+                                                         title={i18n('glossary.form.button.removeType')}
+                                                         aria-label={i18n('glossary.form.button.removeType')}>
+                                                    <span className="Select-clear"
+                                                          style={{fontSize: 24 + 'px'}}>×</span>
+                                                    </span>
+                                               }
+                                    />
+                                </FormGroup>
+                            ))}
+
+                        </FormGroup>
 
                     </Collapse>
                     <ButtonToolbar className={'d-flex justify-content-end'}>
