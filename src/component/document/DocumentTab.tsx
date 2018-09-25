@@ -29,7 +29,7 @@ class DocumentTab extends React.Component<DocumentTabProps> {
 
         const select = ( id : string ) => {id.toString()};
         const tabs = {};
-        if (this.props.vocabulary.document !== null) {
+        if (this.props.vocabulary.document) {
             const documentIRI =  IRIFactory.create(this.props.vocabulary.document!.iri);
             tabs['vocabulary.detail.tabs.annotations'] = () => <DocumentDetail iri={documentIRI}/>;
         }
