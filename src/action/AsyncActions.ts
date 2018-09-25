@@ -248,7 +248,7 @@ export function search(searchString: string, disableLoading: boolean = false) {
     };
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(asyncActionRequest(action, disableLoading));
-        return Ajax.get(Constants.API_PREFIX + '/search', params({searchString: encodeURI(searchString)}))
+        return Ajax.get(Constants.API_PREFIX + '/search/label', params({searchString: encodeURI(searchString)}))
             .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: SearchResultData[]) => dispatch(searchSuccess(data)))
