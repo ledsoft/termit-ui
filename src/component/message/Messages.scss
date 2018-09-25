@@ -1,0 +1,33 @@
+.message-container {
+  width: 25%;
+  height: 25%;
+  position: fixed;
+  top: 60px;
+  right: 1rem;
+  margin: auto;
+  z-index: 102;
+}
+
+.messages-0 {
+  height: 0;
+}
+
+.messages-1 {
+  height: 4.125rem;
+}
+
+.messages-2 {
+  height: 8.25rem;
+}
+
+.messages-3 {
+  height: 12.375rem;
+}
+
+.messages-4 {
+  height: 16.5rem;
+}
+
+.messages-5 {
+  height: 20.625rem;
+}

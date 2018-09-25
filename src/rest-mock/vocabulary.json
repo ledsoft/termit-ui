@@ -1,0 +1,28 @@
+{
+  "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan",
+  "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik",
+  "http://www.w3.org/2000/01/rdf-schema#label": "Metropolitan plan",
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
+    "@id": "http://onto.fel.cvut.cz/ontologies/termit/glossary/instance12345",
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
+  },
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
+    "@id": "http://onto.fel.cvut.cz/ontologies/termit/model/instance54321",
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
+  },
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument": {
+    "@id": "http://onto.fel.cvut.cz/ontologies/termit/dokument/instance13579",
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/dokument"
+  },
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
+    "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "Catherine",
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "Halsey",
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "halsey@unsc.org",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/termit/user",
+      "http://onto.fel.cvut.cz/ontologies/termit/admin"
+    ]
+  },
+  "http://purl.org/dc/terms/created": 1534429897893
+}
