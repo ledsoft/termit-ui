@@ -41,6 +41,7 @@ export default {
         'main.nav.statistics': 'Statistics',
         'main.nav.search': 'Term Search',
         'main.nav.facetedSearch': 'Faceted Term Search',
+        'main.nav.document': 'Document',
         'main.nav.admin': 'Administration',
         'main.user-profile': 'User profile',
         'main.logout': 'Log out',
@@ -70,6 +71,7 @@ export default {
         'vocabulary.detail.subtitle': 'Created by {author} at {created}',
         'vocabulary.detail.tabs.metadata': 'Metadata',
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
+        'vocabulary.detail.tabs.annotations' : 'Document annotations',
 
         'vocabulary.term.created.message': 'Term successfully created.',
 

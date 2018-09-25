@@ -4,6 +4,7 @@ import Constants from './Constants';
 import Routes from "./Routes";
 import MockAdapter from "axios-mock-adapter";
 import Authentication from "./Authentication";
+import fileContent from "../rest-mock/file";
 
 class RequestConfigBuilder {
     private mContent?: any;
@@ -192,6 +193,12 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/query.+/).reply(200, require('../rest-mock/queryResult'));
     // Mock label search results
     mock.onGet('rest/search').reply(200, require('../rest-mock/searchResults'));
+
+    // Mock get file content
+    mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, fileContent, {'content-type': Constants.HTML_MIME_TYPE});
+
+    // Mock get document
+    mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'));
 }
 
 const instance = new Ajax();
