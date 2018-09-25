@@ -93,7 +93,7 @@ export function createVocabularyTerm(term: VocabularyTerm, normalizedName: strin
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.createVocabularyTermRequest());
         return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms',
-            content(term.toJsonLd()).params({parentTermUri: term.parentTermUri}).contentType(Constants.JSON_LD_MIME_TYPE))
+            content(term.toJsonLd()).params({parentTermUri: term.parent}).contentType(Constants.JSON_LD_MIME_TYPE))
             .then((resp: AxiosResponse) => {
                 dispatch(SyncActions.createVocabularyTermSuccess());
                 const location = resp.headers[Constants.LOCATION_HEADER];
@@ -177,7 +177,13 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
                 data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: VocabularyTermData[]) => {
-                    return data
+                    data.forEach((term: VocabularyTerm) => {
+                        if (term.subTerms) {
+                            // @ts-ignore
+                            term.subTerms = Array.isArray(term.subTerms) ? term.subTerms.map(subTerm => subTerm.iri) : [term.subTerms.iri];
+                        }
+                    });
+                return data
                 }
             )
             .catch((error: ErrorData) => {

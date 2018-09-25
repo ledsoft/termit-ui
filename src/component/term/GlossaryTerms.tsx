@@ -19,11 +19,13 @@ import FetchOptionsFunction from "../../model/Functions";
 import VocabularyTerm from "../../model/VocabularyTerm";
 import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
 
+
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any>{
     vocabulary?: Vocabulary;
+    counter: number;
     defaultTerms: VocabularyTerm[];
     selectedTerms: VocabularyTerm | null;
-    selectVocabularyTerm: (selectedTerms: VocabularyTerm) => void;
+    selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => void;
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
     loadTerms: (normalizedName: string) => void;
 }
@@ -38,9 +40,14 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         this.fetchOptions = this.fetchOptions.bind(this);
     }
 
-    public componentDidMount(){
-        const normalizedName = this.props.match.params.name;
-        this.props.loadTerms(normalizedName)
+    public componentDidUpdate(prevProps: GlossaryTermsProps){
+        if (prevProps.counter < this.props.counter){
+            this.forceUpdate()
+        }
+    }
+
+    public componentWillUnmount() {
+        this.props.selectVocabularyTerm(null)
     }
 
     private _valueRenderer(option: VocabularyTerm) {
@@ -60,6 +67,8 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         const i18n = this.props.i18n;
         const actions = [];
         const component = <IntelligentTreeSelect
+            className={"p-0"}
+            name={"glossary-"+this.props.match.params.name}
             onChange={this.props.selectVocabularyTerm}
             value={this.props.selectedTerms}
             fetchOptions={this.fetchOptions}
@@ -82,6 +91,7 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
 
         return (<PanelWithActions
             title={i18n('glossary.title')}
+            className={"px-0"}
             component={component}
             actions={actions}
         />);
@@ -93,10 +103,11 @@ export default withRouter(connect((state: TermItState) => {
     return {
         selectedTerms: state.selectedTerm,
         defaultTerms: state.defaultTerms,
+        counter: state.createdTermsCounter
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        selectVocabularyTerm: (selectedTerm: VocabularyTerm) => dispatch(selectVocabularyTerm(selectedTerm)),
+        selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
         loadTerms: (normalizedName: string) => dispatch(loadTerms(normalizedName)),
     };

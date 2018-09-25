@@ -43,7 +43,7 @@ export interface VocabularyLoadingAction extends AsyncAction {
 }
 
 export interface SelectingTermsAction extends Action {
-    selectedTerms: VocabularyTerm
+    selectedTerms: VocabularyTerm | null
 }
 
 export interface LoadDefaultTermsAction extends Action {

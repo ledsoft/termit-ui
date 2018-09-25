@@ -1,5 +1,5 @@
 import * as React from "react";
-import AssetCount from "./AssetCount";
+import AssetCount from "./assetcount/AssetCount";
 import Vocabulary from "../../util/Vocabulary";
 import {HasI18n, default as withI18n} from "../hoc/withI18n";
 import {injectIntl} from "react-intl";

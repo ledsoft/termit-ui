@@ -23,6 +23,7 @@ export default class TermItState {
     public selectedTerm: VocabularyTerm | null;
     public queryResults: {[key: string] : QueryResultIF};
     public searchResults: SearchResult[] | null;
+    public createdTermsCounter: number;
 
     constructor() {
         this.loading = false;
@@ -37,5 +38,6 @@ export default class TermItState {
         this.queryResults = {};
         // Null means initial state before any search, empty array means search without results
         this.searchResults = null;
+        this.createdTermsCounter = 0;
     }
 }

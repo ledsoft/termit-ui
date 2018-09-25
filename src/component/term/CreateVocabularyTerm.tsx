@@ -169,7 +169,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
     private filterChildrenOptions(options: VocabularyTerm[], filter: string, currentValues: any[]) {
         return options.filter(option => {
             const label = option.label;
-            return (label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) && !option.parentTermUri
+            return (label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) && !option.parent
         })
     }
 
@@ -197,7 +197,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
             label: data.optionLabel as string,
             comment: data.optionDescription as string,
             subTerms: children as string[],
-            parentTermUri: parent as string
+            parent: parent as string
         }), this.props.match.params.name);
     }
 
@@ -290,6 +290,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
                     <Collapse isOpen={this.state.modalAdvancedSectionVisible}>
 
                         <Select field={"parentOption"}
+                                name={"glossary-"+this.props.match.params.name}
                                 options={this.props.options}
                                 multi={false}
                                 placeholder={i18n('glossary.form.field.selectParent')}
@@ -304,6 +305,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
 
                         <Select field={"childOptions"}
                                 options={this.props.options}
+                                name={"glossary-"+this.props.match.params.name}
                                 placeholder={i18n('glossary.form.field.selectChildren')}
                                 multi={true}
                                 valueKey={"iri"}

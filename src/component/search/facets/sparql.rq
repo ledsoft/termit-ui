@@ -62,8 +62,7 @@ SELECT * WHERE {
     # END UNCOMMENT
 
     OPTIONAL {
-        ?id skos:inScheme ?glosar__id .
-        ?slovnik__id a-popis-dat:ma-glosar ?glosar__id .
+        ?slovnik__id a-popis-dat:ma-glosar/(^<http://www.w3.org/2004/02/skos/core#inScheme>)/(skos:narrower*) ?id .
         BIND(iri(concat(replace(str(?slovnik__id),"http://data.iprpraha.cz/zdroj/slovnik/","http://localhost:3001/#/vocabulary/"),"/detail")) AS ?slovnik__link)
         OPTIONAL {
             ?slovnik__id rdfs:label ?slovnik__nazev

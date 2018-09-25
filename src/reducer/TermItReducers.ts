@@ -143,6 +143,15 @@ function selectedTerm(state: VocabularyTerm | null = null, action: SelectingTerm
     }
 }
 
+function createdTermsCounter(state: number = 0, action: AsyncAction) {
+    switch (action.type) {
+        case ActionType.CREATE_VOCABULARY_TERM_SUCCESS:
+            return state+1;
+        default:
+            return state;
+    }
+}
+
 function defaultTerms(state: VocabularyTerm[] = [], action: LoadDefaultTermsAction) {
     switch (action.type) {
         case ActionType.LOAD_DEFAULT_TERMS:
@@ -188,7 +197,8 @@ const rootReducer = combineReducers<TermItState>({
     selectedTerm,
     defaultTerms,
     queryResults,
-    searchResults
+    searchResults,
+    createdTermsCounter
 });
 
 export default rootReducer;

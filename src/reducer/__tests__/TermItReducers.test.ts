@@ -35,6 +35,7 @@ function stateToPlainObject(state: TermItState) {
         searchResults: state.searchResults,
         selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms,
+        createdTermsCounter: state.createdTermsCounter
     };
 }
 
@@ -240,6 +241,17 @@ describe('Reducers', () => {
             };
             expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(term)))
                 .toEqual(Object.assign({}, initialState, {selectedTerm: new VocabularyTerm(term)}));
+        });
+
+        it('sets selectedTerm when it was successfully selected then deselect it', () => {
+            const term: VocabularyTermData = {
+                label: 'Test term',
+                iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term'
+            };
+            expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(term)))
+                .toEqual(Object.assign({}, initialState, {selectedTerm: new VocabularyTerm(term)}));
+            expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(null)))
+                .toEqual(Object.assign({}, initialState, {selectedTerm: null}));
         });
     });
 

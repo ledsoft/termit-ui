@@ -226,17 +226,17 @@ export function executeQueryFailure(error: ErrorData): AsyncFailureAction {
     }, error);
 }
 
-export function selectVocabularyTerm(data: VocabularyTermData): SelectingTermsAction {
-    return {
+export function selectVocabularyTerm(data: VocabularyTermData | null): SelectingTermsAction {
+    return{
         type: ActionType.SELECT_VOCABULARY_TERM,
-        selectedTerms: new VocabularyTerm(data),
+        selectedTerms: data? new VocabularyTerm(data): data,
     }
 }
 
 export function fetchVocabularyTermsRequest(): AsyncAction {
     return asyncActionRequest({
-        type: ActionType.FETCH_VOCABULARY_TERMS_REQUEST
-    });
+        type: ActionType.FETCH_VOCABULARY_TERMS_REQUEST,
+    }, true);
 }
 
 export function fetchVocabularyTermsFailure(error: ErrorData): AsyncFailureAction {
