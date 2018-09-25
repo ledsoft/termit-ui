@@ -18,7 +18,7 @@ interface TabsProps extends HasI18n {
     changeTab: (selectedTabLabelKey: string) => void
 }
 
-class Tabs extends React.Component<TabsProps> {
+export class Tabs extends React.Component<TabsProps> {
 
     constructor(props: TabsProps) {
         super(props);
@@ -27,9 +27,15 @@ class Tabs extends React.Component<TabsProps> {
     public render() {
         const navlinks: any[] = [];
         const tabs: any[] = [];
+        const activeKey = this.props.activeTabLabelKey;
+        const propsChangeTab = this.props.changeTab;
 
         Object.keys(this.props.tabs).forEach((id) => {
-            const changeTab = () => this.props.changeTab(id);
+            const changeTab = () => {
+                if (id !== activeKey) {
+                    propsChangeTab(id);
+                }
+            }
             navlinks.push(
                 <NavItem key={id}>
                     <NavLink
@@ -39,7 +45,6 @@ class Tabs extends React.Component<TabsProps> {
                     </NavLink>
                 </NavItem>
             );
-
             const tabComponent = this.props.tabs[id]({});
             tabs.push(
                 <TabPane tabId={id} key={id}>
