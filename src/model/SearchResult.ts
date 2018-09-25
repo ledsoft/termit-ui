@@ -1,3 +1,5 @@
+import Vocabulary from "../util/Vocabulary";
+
 export const CONTEXT = {
     "iri": "@id",
     "label": "http://www.w3.org/2000/01/rdf-schema#label",
@@ -20,7 +22,7 @@ export default class SearchResult {
     private readonly mTypes: string[];
     private readonly mVocabularyIri?: string;
 
-    constructor(data:SearchResultData) {
+    constructor(data: SearchResultData) {
         this.mIri = data.iri;
         this.mLabel = data.label;
         this.mMatch = data.match;
@@ -46,5 +48,15 @@ export default class SearchResult {
 
     public get vocabularyIri(): string | undefined {
         return this.mVocabularyIri;
+    }
+
+    public get typeNameId(): string {
+        if (this.mTypes.indexOf(Vocabulary.VOCABULARY) !== -1) {
+            return 'type.vocabulary';
+        } else if (this.mTypes.indexOf(Vocabulary.TERM) !== -1) {
+            return 'type.term';
+        } else {
+            return '';
+        }
     }
 }

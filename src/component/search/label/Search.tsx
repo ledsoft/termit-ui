@@ -14,6 +14,7 @@ import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
 import Routing from '../../../util/Routing';
 import {clearSearchResults} from "../../../action/SyncActions";
+import Vocabulary from "../../../util/Vocabulary";
 
 interface SearchProps extends HasI18n {
     searchResults: SearchResult[] | null;
@@ -57,9 +58,13 @@ export class Search extends React.Component<SearchProps, SearchState> {
         this.setState({searchString: ''});
     };
 
-    private openResult = (result: SearchResult) => {
-        // TODO Open detail
-        return null;
+    public openResult = (result: SearchResult) => {
+        this.props.clearSearch();
+        this.clearInput();
+        if (result.types.indexOf(Vocabulary.VOCABULARY) !== -1) {
+            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
+        }
+        // TODO Transition to term otherwise (once term detail is implemented)
     };
 
     private openSearchView = () => {

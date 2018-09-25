@@ -16,9 +16,12 @@ interface SearchResultsOverlayProps extends HasI18n {
 const MAX_RENDERED_RESULTS = 10;
 
 const SearchResultsOverlay: React.SFC<SearchResultsOverlayProps> = (props: SearchResultsOverlayProps) => {
-    const items = props.searchResults.slice(0, MAX_RENDERED_RESULTS).map(r => <li key={r.iri}
-                                                                                  className='btn-link search-result-link'
-                                                                                  onClick={props.onClick.bind(r)}>{r.label}</li>);
+    const items = props.searchResults.slice(0, MAX_RENDERED_RESULTS).map(r => {
+        const typeInfo = <span className='italics'>{props.i18n(r.typeNameId)}</span>;
+        return <li key={r.iri} className='btn-link search-result-link'
+                   onClick={props.onClick.bind(null, r)}>{r.label} ({typeInfo})</li>;
+    });
+
     if (props.searchResults.length > MAX_RENDERED_RESULTS) {
         items.push(<li key='full-info' className='btn-link search-result-info' onClick={props.onOpenSearch}>
             {props.formatMessage('main.search.count-info-and-link', {

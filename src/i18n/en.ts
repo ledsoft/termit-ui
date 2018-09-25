@@ -52,8 +52,8 @@ export default {
         'dashboard.document.tile': 'Document Management',
         'dashboard.statistics.tile': 'Statistics',
         'dashboard.search.tile': 'Search',
-        'dashboard.create-vocabulary.tile' : 'Create Vocabulary',
-        'dashboard.add-document.tile' : 'Add Document',
+        'dashboard.create-vocabulary.tile': 'Create Vocabulary',
+        'dashboard.add-document.tile': 'Add Document',
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
@@ -65,11 +65,11 @@ export default {
         'vocabulary.name': 'Name',
         'vocabulary.iri': 'Identifier',
         'vocabulary.summary.title': '{name} - Summary',
-        'vocabulary.summary.gotodetail.label' : 'Detail',
+        'vocabulary.summary.gotodetail.label': 'Detail',
         'vocabulary.created.message': 'Vocabulary successfully created.',
         'vocabulary.detail.subtitle': 'Created by {author} at {created}',
-        'vocabulary.detail.tabs.metadata' : 'Metadata',
-        'vocabulary.detail.tabs.termdetail' : 'Term Detail',
+        'vocabulary.detail.tabs.metadata': 'Metadata',
+        'vocabulary.detail.tabs.termdetail': 'Term Detail',
 
         'vocabulary.term.created.message': 'Term successfully created.',
 
@@ -100,22 +100,25 @@ export default {
         'glossary.form.validation.validateLengthMin3': 'Field must be at least 3 characters',
         'glossary.form.validation.validateNotSameAsParent': 'Child option cannot be same as parent option',
 
-        'statistics.vocabulary.count' : 'Vocabulary Count',
-        'statistics.term.count' : 'Term Count',
-        'statistics.user.count' : 'User Count',
+        'statistics.vocabulary.count': 'Vocabulary Count',
+        'statistics.term.count': 'Term Count',
+        'statistics.user.count': 'User Count',
 
-        'fullscreen.exit' : 'Exit fullscreen',
-        'fullscreen.enter' : 'Enter fullscreen',
+        'fullscreen.exit': 'Exit fullscreen',
+        'fullscreen.enter': 'Enter fullscreen',
 
-        'search.slovnik' : 'Vocabulary',
-        'search.informace' : 'Information',
-        'search.je-instanci-typu' : 'has type',
-        'search.je-specializaci' : 'specializes',
-        'search.ma-vlastnosti-typu' : 'has intrinsic trope types',
-        'search.ma-vztahy-typu' : 'has relation types',
-        'search.pojem' : 'Term',
-        'search.typ' : 'Type',
+        'search.slovnik': 'Vocabulary',
+        'search.informace': 'Information',
+        'search.je-instanci-typu': 'has type',
+        'search.je-specializaci': 'specializes',
+        'search.ma-vlastnosti-typu': 'has intrinsic trope types',
+        'search.ma-vztahy-typu': 'has relation types',
+        'search.pojem': 'Term',
+        'search.typ': 'Type',
 
         'message.welcome': 'Welcome to TermIt!',
+
+        'type.term': 'Term',
+        'type.vocabulary': 'Vocabulary'
     }
 }

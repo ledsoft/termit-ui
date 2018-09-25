@@ -5,6 +5,11 @@ import {formatMessage, i18n} from "../../../../__tests__/environment/IntlUtil";
 import SearchResultsOverlay from "../SearchResultsOverlay";
 import SearchResult from "../../../../model/SearchResult";
 import Generator from "../../../../__tests__/environment/Generator";
+import Vocabulary from "../../../../util/Vocabulary";
+import Routing from '../../../../util/Routing';
+import Routes from "../../../../util/Routes";
+
+jest.mock('../../../../util/Routing');
 
 describe('Search', () => {
 
@@ -50,7 +55,7 @@ describe('Search', () => {
             results.push(new SearchResult({
                 iri: Generator.generateUri(),
                 label: 'Result ' + i,
-                types: ['http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term']
+                types: [Vocabulary.TERM]
             }));
         }
         const div = document.createElement('div');
@@ -62,5 +67,21 @@ describe('Search', () => {
             const items = wrapper.find('.search-result-link');
             expect(items.length).toEqual(10);
         });
+    });
+
+    it('transitions to vocabulary detail on open result', () => {
+        const normalizedName = 'result-one';
+        const result = new SearchResult({
+            label: 'Result One',
+            iri: 'http://test/' + normalizedName,
+            types: [Vocabulary.VOCABULARY]
+        });
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+        const wrapper = mountWithIntl(<Search search={search} clearSearch={clearSearch} searchResults={[result]}
+                                              i18n={i18n}
+                                              formatMessage={formatMessage}/>, {attachTo: div});
+        (wrapper.find(Search).instance() as Search).openResult(result);
+        expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.vocabularyDetail, {params: new Map([['name', normalizedName]])});
     });
 });

@@ -9,7 +9,7 @@
   "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
   "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/metropolitan-plan"
 },{
-  "@id": "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/one",
-  "http://www.w3.org/2000/01/rdf-schema#label": "Vocabulary One",
+  "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan",
+  "http://www.w3.org/2000/01/rdf-schema#label": "Metropolitan plan",
   "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
 }]

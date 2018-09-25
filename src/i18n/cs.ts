@@ -117,5 +117,8 @@ export default {
         'search.typ' : 'Typ',
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',
+
+        'type.term': 'Pojem',
+        'type.vocabulary': 'Slovník'
     }
 }
