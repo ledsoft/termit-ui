@@ -20,7 +20,7 @@
     "fs-extra": "3.0.1",
     "html-to-react": "^1.3.3",
     "html-webpack-plugin": "2.29.0",
-    "intelligent-tree-select": "^0.4.6",
+    "intelligent-tree-select": "^0.4.7",
     "jest": "22.4.2",
     "jquery": "^3.3.1",
     "angular": "^1.7.4",
