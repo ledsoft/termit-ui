@@ -5,6 +5,8 @@ const ctx = {
     label: "http://www.w3.org/2000/01/rdf-schema#label",
     description: "http://www.w3.org/2000/01/rdf-schema#comment",
     subTerms: "http://www.w3.org/2004/02/skos/core#narrower",
+    source: "http://purl.org/dc/elements/1.1/source",
+    type: "@type",
 };
 
 export const CONTEXT = Object.assign(ctx);

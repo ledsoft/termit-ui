@@ -80,7 +80,7 @@ export default {
         'term.metadata.identifier': 'Identifikátor',
         'term.metadata.label': 'Popisek',
         'term.metadata.comment': 'Komentář',
-        'term.metadata.subTerms': 'Identifikátory potomků',
+        'term.metadata.subTerms': 'Podřazené pojmy',
         'term.metadata.types': 'Typ/y pojmu',
         'term.metadata.source': 'Zdroj pojmu',
 
