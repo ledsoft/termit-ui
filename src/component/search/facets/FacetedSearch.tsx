@@ -3,7 +3,7 @@ import * as angular from "angular";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import {injectIntl} from "react-intl";
-import {HasI18n, default as withI18n} from "../../hoc/withI18n";
+import {default as withI18n, HasI18n} from "../../hoc/withI18n";
 import TermItState from "../../../model/TermItState";
 import {connect} from "react-redux";
 import {selectVocabularyTerm} from "../../../action/SyncActions";
@@ -15,33 +15,77 @@ import controllerCreator from './MainController';
 import query from './sparql.rq';
 
 interface Props extends HasI18n {
-    lang:string,
-    endpointUrl:string,
+    lang: string,
+    endpointUrl: string,
 }
 
-interface State  {
-    rootScope : any,
+interface State {
+    rootScope: any,
 }
 
-export class Search extends React.Component<Props, State> {
+interface State2 {
+    component: JSX.Element | null
+}
 
-    private container : any;
-
-    constructor(props : Props) {
+/**
+ * This component only helps to reinitialize Angular by throwing away the whole react component and mounting it back.
+ */
+class SearchWrapper extends React.Component<Props, State2> {
+    constructor(props: Props) {
         super(props);
         this.state = {
-            rootScope: null
+            component: null
         };
     }
 
-    private getSparqlQuery(lang : string) {
+    public componentDidMount() {
+        this.change(true);
+    }
+
+    public componentDidUpdate(prevProps: Props) {
+        this.change(prevProps.lang !== this.props.lang);
+    }
+
+    private change(changed: boolean) {
+        if (changed) {
+            this.setState({
+                component: null
+            });
+        } else if (this.state.component == null) {
+            this.setState({
+                component: <Search lang={this.props.lang}
+                                   endpointUrl={this.props.endpointUrl}
+                                   i18n={this.props.i18n}
+                                   formatMessage={this.props.formatMessage}/>
+            });
+        }
+    }
+
+    public render() {
+        return this.state.component;
+    }
+}
+
+
+export class Search extends React.Component<Props, State> {
+
+    private container: any;
+
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            rootScope: null,
+        };
+    }
+
+    private getSparqlQuery(lang: string) {
         return query.replace(/\?lang/g, "'" + lang + "'");
     }
 
     private runAngular() {
         angular.module('facetApp', ['seco.facetedSearch'])
-            .config(['$provide', ($provide : any) => {
-                $provide.decorator('$browser', ['$delegate', ($delegate : any) => {
+            .config(['$provide', ($provide: any) => {
+                $provide.decorator('$browser', ['$delegate', ($delegate: any) => {
                     $delegate.onUrlChange = () => {
                         ;
                     };
@@ -65,13 +109,6 @@ export class Search extends React.Component<Props, State> {
             this.state.rootScope.$destroy();
         }
     }
-
-    // public componentDidUpdate(prevProps : Props, prevState : State, snapshot) {
-    //     if (prevProps.lang !== this.props.lang) {
-    //         this.destroyAngular();
-    //         this.runAngular();
-    //     }
-    // }
 
     public componentWillUpdate() {
         this.runAngular();
@@ -111,9 +148,9 @@ export class Search extends React.Component<Props, State> {
 
     private getFacetOptions() {
         return {
-            rdfClass : '<http://www.w3.org/2004/02/skos/core#Concept>',
-            endpointUrl : this.props.endpointUrl,
-            preferredLang : this.props.lang
+            rdfClass: '<http://www.w3.org/2004/02/skos/core#Concept>',
+            endpointUrl: this.props.endpointUrl,
+            preferredLang: this.props.lang
         }
     }
 
@@ -121,17 +158,9 @@ export class Search extends React.Component<Props, State> {
         this.runAngular();
         angular.bootstrap(this.container, ['facetApp']);
         const injector = angular.injector(['ng', 'facetApp']);
-        if (injector) {
-            const rootScope = injector.get('$rootScope');
-            // if (this.container) {
-            //     injector.get('$compile')(this.container)(rootScope);
-            // }
-            // rootScope.$apply();
-
-            this.setState({
-                rootScope
-            });
-        }
+        this.setState({
+            rootScope: injector.get('$rootScope')
+        });
     }
 
     public componentWillUnmount() {
@@ -157,13 +186,13 @@ export class Search extends React.Component<Props, State> {
       </div>
       <!-- Results view -->
       <div class="col-md-9">
-        <img src="`+loadingLg+`" ng-show="vm.isLoadingResults" />
+        <img src="` + loadingLg + `" ng-show="vm.isLoadingResults" />
         <table class="table">
           <thead class="thead-light">
             <tr>
-              <th>`+this.props.i18n('search.pojem')+`</th>
-              <th>`+this.props.i18n('search.informace')+`</th>
-              <th>`+this.props.i18n('search.slovnik')+`</th>
+              <th>` + this.props.i18n('search.pojem') + `</th>
+              <th>` + this.props.i18n('search.informace') + `</th>
+              <th>` + this.props.i18n('search.slovnik') + `</th>
             </tr>
           </thead>
           <tbody>   
@@ -173,9 +202,9 @@ export class Search extends React.Component<Props, State> {
               </td>
               <td style="width:50%">
 
-                <p ng-if="pojem.nadtyp"><span style="font-weight: bold">`+this.props.i18n('search.je-specializaci')+`</span> <span ng-repeat="nadtyp in (isArray(pojem.nadtyp) ? pojem.nadtyp : [pojem.nadtyp])">{{ getLabel(nadtyp)}}<a ng-href="{{ nadtyp.id }}">↱</a><span ng-if="!$last">,&nbsp;</span></span></p>
+                <p ng-if="pojem.nadtyp"><span style="font-weight: bold">` + this.props.i18n('search.je-specializaci') + `</span> <span ng-repeat="nadtyp in (isArray(pojem.nadtyp) ? pojem.nadtyp : [pojem.nadtyp])">{{ getLabel(nadtyp)}}<a ng-href="{{ nadtyp.id }}">↱</a><span ng-if="!$last">,&nbsp;</span></span></p>
 
-                <p ng-if="pojem.typ">`+this.props.i18n('search.je-instanci-typu')+` <span ng-repeat="typ in (isArray(pojem.typ) ? pojem.typ : [pojem.typ])">{{ getLabel(typ)}}<a ng-href="{{ typ.id }}">↱</a><span ng-if="!$last">,&nbsp;</span></span>
+                <p ng-if="pojem.typ">` + this.props.i18n('search.je-instanci-typu') + ` <span ng-repeat="typ in (isArray(pojem.typ) ? pojem.typ : [pojem.typ])">{{ getLabel(typ)}}<a ng-href="{{ typ.id }}">↱</a><span ng-if="!$last">,&nbsp;</span></span>
                 </p>
 
                 <p ng-if="pojem.definice" style="font-style:italic">
@@ -184,7 +213,7 @@ export class Search extends React.Component<Props, State> {
 
                 </p>
                 <p ng-if="pojem.typvlastnosti">
-                `+this.props.i18n('search.ma-vlastnosti-typu')+`
+                ` + this.props.i18n('search.ma-vlastnosti-typu') + `
                  	<ul ng-if="pojem.typvlastnosti">
               			<li ng-repeat="typvlastnosti in vm.makeArray(pojem.typvlastnosti)">
             			    <a ng-href="{{ typvlastnosti.id }}">{{ getLabel(typvlastnosti) }}</a>
@@ -193,7 +222,7 @@ export class Search extends React.Component<Props, State> {
                 </p>
 
             		<p ng-if="pojem.typvztahu">
-                `+this.props.i18n('search.ma-vztahy-typu')+`
+                ` + this.props.i18n('search.ma-vztahy-typu') + `
                  	<ul ng-if="pojem.typvztahu">
               			<li ng-repeat="typvztahu in vm.makeArray(pojem.typvztahu)">
             			    <a ng-href="{{ typvztahu.id }}">{{ getLabel(typvztahu) }}</a>
@@ -231,11 +260,11 @@ export class Search extends React.Component<Props, State> {
 
 export default connect((state: TermItState) => {
     return {
-        lang : state.intl.locale,
-        endpointUrl : Constants.endpoint_url
+        lang: state.intl.locale,
+        endpointUrl: Constants.endpoint_url
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
         selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm))
     };
-})(injectIntl(withI18n(Search)));
+})(injectIntl(withI18n(SearchWrapper)));
