@@ -82,7 +82,7 @@ export default {
         'term.metadata.identifier': 'Identifier',
         'term.metadata.label': 'Label',
         'term.metadata.comment': 'Comment',
-        'term.metadata.subTerms': 'Sub terms identifiers',
+        'term.metadata.subTerms': 'Sub terms',
         'term.metadata.types': 'Type/s',
         'term.metadata.source': 'Source',
 

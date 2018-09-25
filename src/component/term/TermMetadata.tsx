@@ -3,6 +3,7 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Col, Label, Row} from "reactstrap";
 import VocabularyTerm from "../../model/VocabularyTerm";
+import OutgoingLink from "../misc/OutgoingLink";
 
 interface VocabularyMetadataProps extends HasI18n {
     term: VocabularyTerm,
@@ -17,7 +18,7 @@ const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: Vocabular
                 <Label>{i18n('term.metadata.identifier')}</Label>
             </Col>
             <Col md={10}>
-                <a href={term.iri} target='_blank'>{term.iri}</a>
+                <OutgoingLink iri={term.iri} label={term.iri}/>
             </Col>
         </Row>
         <Row>
@@ -41,7 +42,9 @@ const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: Vocabular
                 <Label>{i18n('term.metadata.subTerms')}</Label>
             </Col>
             <Col md={10}>
-                {term.subTerms && term.subTerms.toString()}
+                <ul>
+                    {term.subTerms && term.subTerms.map(st => <li key={st}><OutgoingLink iri={st} label={st}/></li>)}
+                </ul>
             </Col>
         </Row>
         <Row>
