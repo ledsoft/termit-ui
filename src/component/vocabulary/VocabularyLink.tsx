@@ -11,7 +11,7 @@ interface VocabularyLinkProps {
 export default (props : VocabularyLinkProps) => {
     const {fragment,namespace} = Vocabulary2.create(props.vocabulary.iri)
     return <div>
-        <Link to={"/asset/" + fragment + (namespace===Constants.namespace_vocabulary ? "" : "?namespace="+namespace )}>
+        <Link to={"/vocabulary/" + fragment + (namespace===Constants.namespace_vocabulary ? "" : "?namespace="+namespace )}>
             {props.vocabulary.name}
         </Link>
     </div>;
