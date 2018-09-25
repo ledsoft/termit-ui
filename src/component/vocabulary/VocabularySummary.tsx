@@ -13,6 +13,7 @@ import VocabularyMetadata from "./VocabularyMetadata";
 import {Button} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import Vocabulary2, {IRI} from "../../util/Vocabulary";
+import {GoThreeBars} from 'react-icons/go';
 
 interface VocabularySummaryProps {
     vocabulary: Vocabulary;
@@ -44,7 +45,8 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
                   to={"/vocabulary/" + Vocabulary2.getFragment(this.props.vocabulary.iri) + "/detail"}>
                 <Button color='light'
                         size='sm'
-                        title={this.props.i18n('vocabulary.summary.gotodetail.label')}>🔍
+                        title={this.props.i18n('vocabulary.summary.gotodetail.label')}>
+                    <GoThreeBars/>
                 </Button>
             </Link>
         );
