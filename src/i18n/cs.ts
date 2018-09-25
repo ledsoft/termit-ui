@@ -76,6 +76,13 @@ export default {
         'vocabulary.metadata.author': 'Autor',
         'vocabulary.metadata.created': 'Datum vytvoření',
 
+        'term.metadata.identifier': 'Identifikátor',
+        'term.metadata.label': 'Popisek',
+        'term.metadata.comment': 'Komentář',
+        'term.metadata.subTerms': 'Identifikátory potomků',
+        'term.metadata.types': 'Typ/y pojmu',
+        'term.metadata.source': 'Zdroj pojmu',
+
         'glossary.title': 'Pojmy',
         'glossary.createTerm': 'Vytvořit nový pojem',
         'glossary.createTerm.tooltip': 'Vytvořit nový pojem ve slovníku',

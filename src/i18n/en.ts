@@ -76,6 +76,13 @@ export default {
         'vocabulary.metadata.author': 'Author',
         'vocabulary.metadata.created': 'Created',
 
+        'term.metadata.identifier': 'Identifier',
+        'term.metadata.label': 'Label',
+        'term.metadata.comment': 'Comment',
+        'term.metadata.subTerms': 'Sub terms identifiers',
+        'term.metadata.types': 'Type/s',
+        'term.metadata.source': 'Source',
+
         'glossary.title': 'Terms',
         'glossary.createTerm': 'Create new term',
         'glossary.createTerm.tooltip': "Create new vocabulary's term",
