@@ -270,9 +270,9 @@ export function loadFileContent(documentIri: IRI, fileName: string) {
     return (dispatch: ThunkDispatch<object, undefined, Action>) => {
         dispatch(SyncActions.loadFileContentRequest());
         return Ajax
-            .get(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content"
-                 + "?file=" + fileName + "&"
-                 + (documentIri.namespace ? "?namespace=" + documentIri.namespace : "")
+            .get(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content?"
+                 + "file=" + fileName + "&"
+                 + (documentIri.namespace ? "namespace=" + documentIri.namespace : "")
                 )
             .then((data: object) =>
                     data.toString()
