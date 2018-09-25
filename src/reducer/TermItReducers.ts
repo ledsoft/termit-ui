@@ -12,7 +12,10 @@ import ActionType, {
     SwitchLanguageAction,
     UserLoadingAction,
     VocabulariesLoadingAction,
-    VocabularyLoadingAction
+    VocabularyLoadingAction,
+    DocumentLoadingAction,
+    FileContentLoadingAction,
+    FileSelectingAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
@@ -25,6 +28,7 @@ import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import SearchResult from "../model/SearchResult";
 import VocabularyTerm from "../model/VocabularyTerm";
+import Document, {EMPTY_DOCUMENT} from "../model/Document";
 
 /**
  * Handles changes to the currently logged in user.
@@ -186,6 +190,33 @@ function searchResults(state: SearchResult[] | null = null, action: SearchAction
     }
 }
 
+function fileContent(state: string|null = null, action: FileContentLoadingAction): string|null {
+    switch (action.type) {
+        case ActionType.LOAD_FILE_CONTENT_SUCCESS:
+            return action.fileContent;
+        default:
+            return state;
+    }
+}
+
+function fileIri(state: string|null = null, action: FileSelectingAction): string|null {
+    switch (action.type) {
+        case ActionType.SELECT_FILE:
+            return action.fileIri;
+        default:
+            return state;
+    }
+}
+
+function document(state: Document = EMPTY_DOCUMENT, action: DocumentLoadingAction): Document {
+    switch (action.type) {
+        case ActionType.LOAD_DOCUMENT_SUCCESS:
+            return action.document;
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers<TermItState>({
     user,
     loading,
@@ -198,7 +229,10 @@ const rootReducer = combineReducers<TermItState>({
     defaultTerms,
     queryResults,
     searchResults,
-    createdTermsCounter
+    createdTermsCounter,
+    document,
+    fileIri,
+    fileContent
 });
 
 export default rootReducer;

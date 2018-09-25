@@ -10,6 +10,10 @@
     "@id": "http://onto.fel.cvut.cz/ontologies/termit/model/instance54321",
     "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
   },
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument": {
+    "@id": "http://onto.fel.cvut.cz/ontologies/termit/dokument/instance13579",
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/dokument"
+  },
   "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
     "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "Catherine",

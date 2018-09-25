@@ -11,7 +11,10 @@ import ActionType, {
     SwitchLanguageAction,
     UserLoadingAction,
     VocabulariesLoadingAction,
-    VocabularyLoadingAction
+    VocabularyLoadingAction,
+    DocumentLoadingAction,
+    FileContentLoadingAction,
+    FileSelectingAction
 } from './ActionType';
 import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
 import User, {UserData} from "../model/User";
@@ -21,6 +24,8 @@ import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import {saveLanguagePreference} from "../util/IntlUtil";
 import VocabularyTerm, {VocabularyTermData} from "../model/VocabularyTerm";
 import SearchResult, {SearchResultData} from "../model/SearchResult";
+import Document, {DocumentData} from "../model/Document";
+import {FileData} from "../model/File";
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
@@ -185,6 +190,27 @@ export function loadVocabularyFailure(error: ErrorData): AsyncFailureAction {
     }, error);
 }
 
+export function loadDocumentRequest(): AsyncAction {
+    return asyncActionRequest({
+        type: ActionType.LOAD_DOCUMENT_REQUEST
+    });
+}
+
+export function loadDocumentSuccess(data: DocumentData): DocumentLoadingAction {
+    return {
+        type: ActionType.LOAD_DOCUMENT_SUCCESS,
+        status: AsyncActionStatus.SUCCESS,
+        document: new Document(data)
+    }
+}
+
+export function loadDocumentFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
+        type: ActionType.LOAD_DOCUMENT_FAILURE
+    }, error);
+}
+
+
 export function loadVocabulariesRequest(): AsyncAction {
     return asyncActionRequest({
         type: ActionType.LOAD_VOCABULARIES_REQUEST
@@ -264,4 +290,31 @@ export function clearSearchResults() {
     return {
         type: ActionType.CLEAR_SEARCH_RESULTS
     };
+}
+
+export function selectFile(data: FileData | null): FileSelectingAction {
+    return{
+        type: ActionType.SELECT_FILE,
+        fileIri: data? (data.iri ? data.iri: null) : data,
+    }
+}
+
+export function loadFileContentRequest(): AsyncAction {
+    return asyncActionRequest({
+        type: ActionType.LOAD_FILE_CONTENT_REQUEST
+    });
+}
+
+export function loadFileContentSuccess(data: string): FileContentLoadingAction {
+    return {
+        type: ActionType.LOAD_FILE_CONTENT_SUCCESS,
+        status: AsyncActionStatus.SUCCESS,
+        fileContent: data
+    }
+}
+
+export function loadFileContentFailure(error: ErrorData): AsyncFailureAction {
+    return asyncActionFailure({
+        type: ActionType.LOAD_FILE_CONTENT_FAILURE
+    }, error);
 }
