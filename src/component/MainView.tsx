@@ -33,6 +33,7 @@ import Messages from "./message/Messages";
 import Statistics from "./statistics/Statistics";
 import Search from "./search/label/Search";
 import FacetedSearch from "./search/facets/FacetedSearch";
+import FileDetail from "./file/FileDetail";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -113,6 +114,7 @@ export class MainView extends React.Component<MainViewProps> {
                 <Switch>
                     <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
+                    <Route path={Routes.annotateFile.path} component={FileDetail} exact={true}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route path={Routes.statistics.path} component={Statistics}/>
                     <Route path={Routes.search.path} component={Search}/>

@@ -20,6 +20,7 @@ import FetchOptionsFunction from "../model/Functions";
 import {IRI} from "../util/Vocabulary";
 import ActionType from "./ActionType";
 import {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
+import {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -263,4 +264,40 @@ function loadArrayFromCompactedGraph(compacted: object): object[] {
         return []
     }
     return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
+}
+
+export function loadFileContent(documentIri: IRI, fileName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.loadFileContentRequest());
+        return Ajax
+            .get(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content"
+                 + "?file=" + fileName + "&"
+                 + (documentIri.namespace ? "?namespace=" + documentIri.namespace : "")
+                )
+            .then((data: object) =>
+                    data.toString()
+                )
+            .then((data: string) =>
+                dispatch(SyncActions.loadFileContentSuccess(data)))
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.loadFileContentFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function loadDocument(iri: IRI) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.loadDocumentRequest());
+        return Ajax
+            .get(Constants.API_PREFIX + '/documents/' + iri.fragment + (iri.namespace ? "?namespace=" + iri.namespace : ""))
+            .then((data: object) =>
+                jsonld.compact(data, DOCUMENT_CONTEXT))
+            .then((data: DocumentData) =>
+                dispatch(SyncActions.loadDocumentSuccess(data)))
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.loadDocumentFailure(error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
 }

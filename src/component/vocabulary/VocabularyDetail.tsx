@@ -16,6 +16,7 @@ import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 import Routes from "../../util/Routes";
 import CreateVocabularyTerm from "../term/CreateVocabularyTerm";
 import {IRI} from "../../util/Vocabulary";
+import DocumentTab from "../document/DocumentTab";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
@@ -56,6 +57,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
                         <Route path={Routes.vocabularyDetail.path} component={vocabularyDetailTabPanel}/>
                         <Route path={Routes.createVocabularyTerm.path} component={createVocabularyTerm}/>
                     </Switch>
+                    <DocumentTab/>
                 </Col>
             </Row>
         </div>;

@@ -95,3 +95,15 @@ export function executeQuery(queryString: string) {
         return dispatch(AsyncActions.executeQuery(queryString));
     };
 }
+export function loadFileContent(iri: IRI, fileName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.loadFileContent(iri, fileName));
+    };
+}
+
+export function loadDocument(iri: IRI) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        return dispatch(AsyncActions.loadDocument(iri));
+    };
+}
+

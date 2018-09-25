@@ -12,6 +12,8 @@ export interface IRI {
 export default {
     VOCABULARY: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik",
     TERM: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
+    FILE: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor",
+    DOCUMENT: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/document",
     USER: "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu",
 
     equal(iri1 : IRI, iri2: IRI) {

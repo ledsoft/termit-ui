@@ -5,6 +5,7 @@ import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary from "../model/Vocabulary";
 import VocabularyTerm from "../model/VocabularyTerm";
 import SearchResult from "../model/SearchResult";
+import Document from "../model/Document";
 
 export interface Action {
     type: string
@@ -63,6 +64,18 @@ export interface SearchAction extends AsyncAction {
     results: SearchResult[];
 }
 
+export interface DocumentLoadingAction extends AsyncAction {
+    document: Document
+}
+
+export interface FileSelectingAction extends Action {
+    fileIri: string | null
+}
+
+export interface FileContentLoadingAction extends AsyncAction {
+    fileContent: string | null
+}
+
 export default {
     FETCH_USER_REQUEST: 'FETCH_USER_REQUEST',
     FETCH_USER_FAILURE: 'FETCH_USER_FAILURE',
@@ -112,6 +125,16 @@ export default {
 
     SEARCH: 'SEARCH',
     CLEAR_SEARCH_RESULTS: 'CLEAR_SEARCH_RESULTS',
+
+    LOAD_DOCUMENT_REQUEST: 'LOAD_DOCUMENT_REQUEST',
+    LOAD_DOCUMENT_SUCCESS: 'LOAD_DOCUMENT_SUCCESS',
+    LOAD_DOCUMENT_FAILURE: 'LOAD_DOCUMENT_FAILURE',
+
+    SELECT_FILE: 'SELECT_FILE',
+
+    LOAD_FILE_CONTENT_REQUEST: 'LOAD_FILE_CONTENT_REQUEST',
+    LOAD_FILE_CONTENT_SUCCESS: 'LOAD_FILE_CONTENT_SUCCESS',
+    LOAD_FILE_CONTENT_FAILURE: 'LOAD_FILE_CONTENT_FAILURE',
 
     LOGOUT: 'LOGOUT'
 }

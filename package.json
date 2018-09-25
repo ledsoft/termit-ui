@@ -113,7 +113,6 @@
     "redux-mock-store": "^1.5.3",
     "sass-loader": "^7.0.3",
     "string-replace-loader": "^2.1.1",
-    "to-string": "^0.2.0",
     "typescript": "^2.9.2"
   },
   "jest": {

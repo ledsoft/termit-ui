@@ -4,8 +4,7 @@ import Constants from './Constants';
 import Routes from "./Routes";
 import MockAdapter from "axios-mock-adapter";
 import Authentication from "./Authentication";
-// @ts-ignore
-import file from "file-to-string!../rest-mock/file.html.txt";
+import fileContent from "../rest-mock/file";
 
 class RequestConfigBuilder {
     private mContent?: any;
@@ -155,16 +154,6 @@ export class Ajax {
     }
 }
 
-// TODO replace it by appropriate loader (without need to include it in public resources)
-// e.g. https://github.com/webpack-contrib/raw-loader (requires webpack 4)
-function readStringFromFile(filePath: string) {
-    const request = new XMLHttpRequest();
-    request.open("GET", filePath, false);
-    request.send(null);
-    return request.responseText;
-}
-
-
 function mockRestApi(axiosInst: AxiosInstance): void {
     const mock = new MockAdapter(axiosInst, {delayResponse: 500});
     // Mock current user data
@@ -205,11 +194,11 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock label search results
     mock.onGet('rest/search').reply(200, require('../rest-mock/searchResults'));
 
+    // Mock get file content
+    mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, fileContent, {'content-type': Constants.HTML_MIME_TYPE});
+
     // Mock get document
     mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'));
-
-    // Mock get files
-    mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, readStringFromFile(file), {'content-type': Constants.HTML_MIME_TYPE});
 }
 
 const instance = new Ajax();

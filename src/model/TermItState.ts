@@ -7,6 +7,7 @@ import Vocabulary, {EMPTY_VOCABULARY} from "./Vocabulary";
 import {QueryResultIF} from "./QueryResult";
 import VocabularyTerm from "./VocabularyTerm";
 import SearchResult from "./SearchResult";
+import Document, {EMPTY_DOCUMENT} from "./Document";
 
 /**
  * This is the basic shape of the application's state managed by Redux.
@@ -16,7 +17,10 @@ export default class TermItState {
     public user: User;
     public vocabulary: Vocabulary;
     public defaultTerms: VocabularyTerm[];
-    public vocabularies: {[key:string]: Vocabulary};
+    public vocabularies: { [key: string]: Vocabulary };
+    public document: Document;
+    public fileIri: string | null;
+    public fileContent: string | null;
     public error: ErrorInfo;
     public messages: Message[];
     public intl: IntlData;
@@ -31,6 +35,9 @@ export default class TermItState {
         this.vocabulary = EMPTY_VOCABULARY;
         this.defaultTerms = [];
         this.vocabularies = {};
+        this.document = EMPTY_DOCUMENT;
+        this.fileIri = null;
+        this.fileContent = null;
         this.error = EMPTY_ERROR;
         this.messages = [];
         this.intl = en;
