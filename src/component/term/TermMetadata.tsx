@@ -60,7 +60,9 @@ const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: Vocabular
                 <Label>{i18n('term.metadata.source')}</Label>
             </Col>
             <Col md={10}>
-                {term.source}
+                <ul>
+                {(term.sources && term.sources.map) ? term.sources.map(st => <li key={st}>{st}</li>) : term.sources}
+                </ul>
             </Col>
         </Row>
     </div>;
