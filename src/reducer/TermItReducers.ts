@@ -170,6 +170,8 @@ function searchResults(state: SearchResult[] | null = null, action: SearchAction
             } else {
                 return state;
             }
+        case ActionType.CLEAR_SEARCH_RESULTS:
+            return null;
         default:
             return state;
     }

@@ -46,6 +46,7 @@ export default {
         'main.logout': 'Odhlásit se',
         'main.search.placeholder': 'Hledat',
         'main.search.tooltip': 'Hledat daný výraz ve všech slovnících a pojmech',
+        'main.search.count-info-and-link': 'Zobrazeno {displayed} z {count} výsledků. Zobrazit všechny.',
 
         'dashboard.vocabulary.tile': 'Správa slovníků',
         'dashboard.document.tile': 'Správa dokumentů',

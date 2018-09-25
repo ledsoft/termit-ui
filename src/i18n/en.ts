@@ -46,6 +46,7 @@ export default {
         'main.logout': 'Log out',
         'main.search.placeholder': 'Search',
         'main.search.tooltip': 'Search in all vocabularies and terms',
+        'main.search.count-info-and-link': 'Showing {displayed} of {count} results. See all results.',
 
         'dashboard.vocabulary.tile': 'Vocabulary Management',
         'dashboard.document.tile': 'Document Management',

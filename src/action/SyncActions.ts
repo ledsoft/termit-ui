@@ -227,7 +227,7 @@ export function executeQueryFailure(error: ErrorData): AsyncFailureAction {
 }
 
 export function selectVocabularyTerm(data: VocabularyTermData): SelectingTermsAction {
-    return{
+    return {
         type: ActionType.SELECT_VOCABULARY_TERM,
         selectedTerms: new VocabularyTerm(data),
     }
@@ -251,10 +251,17 @@ export function loadDefaultTerms(data: VocabularyTermData[]): LoadDefaultTermsAc
         options: data.map((term: VocabularyTermData) => new VocabularyTerm(term))
     }
 }
+
 export function searchSuccess(results: SearchResultData[]): SearchAction {
     return {
         type: ActionType.SEARCH,
         status: AsyncActionStatus.SUCCESS,
         results: results.map(r => new SearchResult(r))
+    };
+}
+
+export function clearSearchResults() {
+    return {
+        type: ActionType.CLEAR_SEARCH_RESULTS
     };
 }
