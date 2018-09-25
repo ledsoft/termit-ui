@@ -5,7 +5,10 @@ const ctx = {
     "iri": "@id",
     "name": "http://www.w3.org/2000/01/rdf-schema#label",
     "description": "http://purl.org/dc/elements/1.1/description",
-    "files": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-soubor"
+    "files": {
+        "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-soubor",
+        "@container": "@set"
+    }
 };
 
 export const CONTEXT = Object.assign(ctx, FILE_CONTEXT);
