@@ -6,6 +6,7 @@ export default {
     messages: {
         'please-wait': 'Prosím, čekejte...',
         'cancel': 'Zrušit',
+        'not-implemented': 'Zatím není naimplementováno!',
 
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
@@ -39,8 +40,8 @@ export default {
         'main.nav.dashboard': 'Hlavní strana',
         'main.nav.vocabularies': 'Slovníky',
         'main.nav.statistics': 'Statistiky',
-        'main.nav.search': 'Vyhledávání pojmů',
-        'main.nav.facetedSearch': 'Facetové vyhledávání pojmů',
+        'main.nav.search': 'Vyhledávání',
+        'main.nav.facetedSearch': 'Facetové vyhledávání',
         'main.nav.admin': 'Administrace',
         'main.user-profile': 'Profil uživatele',
         'main.logout': 'Odhlásit se',

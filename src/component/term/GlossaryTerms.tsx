@@ -3,6 +3,7 @@ import {injectIntl} from 'react-intl';
 import {Button} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import Vocabulary from "../../model/Vocabulary";
+import VocabularyUtils from "../../util/VocabularyUtils";
 // @ts-ignore
 import {IntelligentTreeSelect} from 'intelligent-tree-select';
 import "intelligent-tree-select/lib/styles.css";
@@ -20,7 +21,7 @@ import VocabularyTerm from "../../model/VocabularyTerm";
 import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
 
 
-interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any>{
+interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
     counter: number;
     defaultTerms: VocabularyTerm[];
@@ -37,11 +38,12 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         super(props);
         this._valueRenderer = this._valueRenderer.bind(this);
         this._onCreateClick = this._onCreateClick.bind(this);
+        this._onChange = this._onChange.bind(this);
         this.fetchOptions = this.fetchOptions.bind(this);
     }
 
-    public componentDidUpdate(prevProps: GlossaryTermsProps){
-        if (prevProps.counter < this.props.counter){
+    public componentDidUpdate(prevProps: GlossaryTermsProps) {
+        if (prevProps.counter < this.props.counter) {
             this.forceUpdate()
         }
     }
@@ -63,13 +65,21 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
         Routing.transitionTo(Routes.createVocabularyTerm, {params: new Map([['name', normalizedName]])});
     }
 
+    private _onChange(term: VocabularyTerm | null) {
+        this.props.selectVocabularyTerm(term);
+        if (term) {
+            Routing.transitionTo(Routes.vocabularyTermDetail,
+                {params: new Map([['name', this.props.match.params.name], ['termName', VocabularyUtils.getFragment(term.iri)]])});
+        }
+    }
+
     public render() {
         const i18n = this.props.i18n;
         const actions = [];
         const component = <IntelligentTreeSelect
             className={"p-0"}
-            name={"glossary-"+this.props.match.params.name}
-            onChange={this.props.selectVocabularyTerm}
+            name={"glossary-" + this.props.match.params.name}
+            onChange={this._onChange}
             value={this.props.selectedTerms}
             fetchOptions={this.fetchOptions}
             valueKey={"iri"}
@@ -80,7 +90,7 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
             multi={false}
             showSettings={false}
             valueRenderer={this._valueRenderer}
-            options = {this.props.defaultTerms}
+            options={this.props.defaultTerms}
         />;
 
         actions.push(<Button key='glossary.createTerm'
@@ -91,7 +101,7 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
 
         return (<PanelWithActions
             title={i18n('glossary.title')}
-            className={"px-0"}
+            className={"p-0"}
             component={component}
             actions={actions}
         />);

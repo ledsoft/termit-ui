@@ -11,7 +11,7 @@ import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from '
 import Annotation from "../annotation/Annotation";
 import * as ReactDOM from 'react-dom';
 import {RouteComponentProps} from "react-router";
-import Vocabulary2, {IRI} from "../../util/Vocabulary";
+import Vocabulary2, {IRI} from "../../util/VocabularyUtils";
 import Vocabulary from "../../model/Vocabulary";
 import TermItStore from "../../store/TermItStore";
 import IntlData from "../../model/IntlData";

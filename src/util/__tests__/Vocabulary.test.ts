@@ -1,7 +1,7 @@
 /**
  * Vocabulary used by the application ontological model.
  */
-import {IRI, default as Vocabulary} from "../Vocabulary";
+import {IRI, default as Vocabulary} from "../VocabularyUtils";
 import constants from "../Constants";
 
 describe('Vocabulary', () => {

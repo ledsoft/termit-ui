@@ -1,5 +1,5 @@
 import User, {UserData, CONTEXT as USER_CONTEXT} from "./User";
-import OntologicalVocabulary from '../util/Vocabulary';
+import OntologicalVocabulary from '../util/VocabularyUtils';
 
 const ctx = {
     "name": "http://www.w3.org/2000/01/rdf-schema#label",

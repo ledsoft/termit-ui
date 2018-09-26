@@ -83,10 +83,6 @@ export class MainView extends React.Component<MainViewProps> {
                             <NavLink
                                 href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
                         </NavItem>
-                        <NavItem active={path === Routes.search.path}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.search.path)}>{i18n('main.nav.search')}</NavLink>
-                        </NavItem>
                         <NavItem active={path === Routes.facetedSearch.path}>
                             <NavLink
                                 href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
@@ -104,8 +100,9 @@ export class MainView extends React.Component<MainViewProps> {
                                 {user.abbreviatedName}
                             </DropdownToggle>
                             <DropdownMenu right={true}>
-                                <DropdownItem
-                                    onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
+                                <DropdownItem disabled={true}
+                                              title={i18n('not-implemented')}
+                                              onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
                                 <DropdownItem divider={true}/>
                                 <DropdownItem onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem>
                             </DropdownMenu>
@@ -118,6 +115,7 @@ export class MainView extends React.Component<MainViewProps> {
                 <Switch>
                     <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
+                    <Route path={Routes.vocabularyTermDetail.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.annotateFile.path} component={FileDetail} exact={true}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route path={Routes.statistics.path} component={Statistics}/>

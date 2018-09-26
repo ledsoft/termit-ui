@@ -5,7 +5,6 @@ import {Action, Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
 import Routing from '../util/Routing';
 import Constants from '../util/Constants';
-import Authentication from '../util/Authentication';
 import {CONTEXT as USER_CONTEXT, UserData} from '../model/User';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT, VocabularyData} from "../model/Vocabulary";
 import Routes from "../util/Routes";
@@ -17,7 +16,7 @@ import Message, {createFormattedMessage} from "../model/Message";
 import MessageType from "../model/MessageType";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT, VocabularyTermData} from "../model/VocabularyTerm";
 import FetchOptionsFunction from "../model/Functions";
-import {IRI} from "../util/Vocabulary";
+import {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
 import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
@@ -56,7 +55,6 @@ export function login(username: string, password: string) {
                 if (!data.loggedIn) {
                     return Promise.reject(data);
                 } else {
-                    Authentication.saveToken(resp.headers[Constants.AUTHORIZATION_HEADER]);
                     Routing.transitionToHome();
                     dispatch(SyncActions.loginSuccess());
                     return Promise.resolve();
@@ -224,7 +222,21 @@ export function getVocabularyTermByID(termID: string, normalizedName: string) {
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.fetchVocabularyTermsFailure(error));
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-                return []
+                return null
+            });
+    };
+}
+
+// TODO server return http code 406
+export function getVocabularyTermByName(termNormalizedName: string, vocabularyNormalizedName: string) {
+    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+        dispatch(SyncActions.fetchVocabularyTermsRequest());
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/'+termNormalizedName)
+            .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.fetchVocabularyTermsFailure(error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return null
             });
     };
 }

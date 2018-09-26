@@ -4,10 +4,12 @@ import Routing from '../Routing';
 import {EMPTY_USER} from "../../model/User";
 import Constants from "../Constants";
 import Routes from '../Routes';
-import {AxiosInstance} from "axios";
+import {AxiosInstance, AxiosRequestConfig} from "axios";
 import {ErrorData} from "../../model/ErrorInfo";
+import Authentication from "../Authentication";
 
 jest.mock('../Routing');
+jest.mock('../Authentication');
 
 export class MockableAjax extends Ajax {
     get axios(): AxiosInstance {
@@ -19,9 +21,33 @@ describe('Ajax', () => {
 
     const sut = new MockableAjax();
     const mock = new MockAdapter(sut.axios);
+    const jwt = '12345';
+
+    let headers: {};
 
     beforeEach(() => {
         mock.reset();
+        localStorage.clear();
+        headers = {};
+        headers[Constants.AUTHORIZATION_HEADER] = jwt;
+    });
+
+    it('loads JWT and sets it on request', () => {
+        Authentication.loadToken = jest.fn().mockReturnValue(jwt);
+        mock.onGet('/users/current').reply((config: AxiosRequestConfig) => {
+            expect(config.headers[Constants.AUTHORIZATION_HEADER]).toContain(jwt);
+            return [200, require('../../rest-mock/current'), headers];
+        });
+        return sut.get('/users/current');
+    });
+
+    it('extracts current JWT from response and saves it using Authentication', () => {
+        headers[Constants.AUTHORIZATION_HEADER] = jwt;
+        Authentication.saveToken = jest.fn();
+        mock.onGet('/users/current').reply(200, require('../../rest-mock/current'), headers);
+        return sut.get('/users/current').then(() => {
+            expect(Authentication.saveToken).toHaveBeenCalledWith(jwt);
+        })
     });
 
     describe('error handling', () => {
@@ -83,13 +109,12 @@ describe('Ajax', () => {
     });
 
     describe('request configuration', () => {
-
         it('puts query parameters into GET request url', () => {
             const qParams = {
                 page: '1',
                 size: '100'
             };
-            mock.onAny().reply(200, {});
+            mock.onAny().reply(200, {}, headers);
             const spy = jest.spyOn(sut.axios, 'get');
             spy.mockClear();    // Safeguard because the spy tends to leak into subsequent test specs
             return sut.get('/terms', params(qParams)).then(() => {
@@ -99,7 +124,7 @@ describe('Ajax', () => {
         });
 
         it('it adds JSON-LD Accept header by default', () => {
-            mock.onAny().reply(200, {});
+            mock.onAny().reply(200, {}, headers);
             const spy = jest.spyOn(sut.axios, 'get');
             spy.mockClear();
             return sut.get('/terms/count').then(() => {
@@ -110,7 +135,7 @@ describe('Ajax', () => {
 
         it('adds accept header into GET request', () => {
             const acceptType = 'text/plain';
-            mock.onAny().reply(200, {});
+            mock.onAny().reply(200, {}, headers);
             const spy = jest.spyOn(sut.axios, 'get');
             spy.mockClear();
             return sut.get('/terms/count', accept(acceptType)).then(() => {
@@ -122,7 +147,7 @@ describe('Ajax', () => {
         it('adds content with specified content type in POST', () => {
             const data = EMPTY_USER;
             const mimeType = "application/json";
-            mock.onPost().reply(201);
+            mock.onPost().reply(201, undefined, headers);
             const spy = jest.spyOn(sut.axios, 'post');
             spy.mockClear();
             return sut.post('/users', content(data).contentType(mimeType)).then(() => {
@@ -138,7 +163,7 @@ describe('Ajax', () => {
                 username: 'halsey@unsc.org',
                 password: '117'
             };
-            mock.onPost().reply(201);
+            mock.onPost().reply(201, undefined, headers);
             const spy = jest.spyOn(sut.axios, 'post');
             spy.mockClear();
             return sut.post('/users', params(formData).contentType(Constants.X_WWW_FORM_URLENCODED)).then(() => {
@@ -154,7 +179,7 @@ describe('Ajax', () => {
         it('adds content with specified content type in PUT', () => {
             const data = EMPTY_USER;
             const mimeType = "application/json";
-            mock.onPut().reply(204);
+            mock.onPut().reply(204, undefined, headers);
             const spy = jest.spyOn(sut.axios, 'put');
             spy.mockClear();
             return sut.put('/users/current', content(data).contentType(mimeType)).then(() => {
@@ -167,7 +192,7 @@ describe('Ajax', () => {
 
         it('adds accept header in PUT', () => {
             const mimeType = 'text/plain';
-            mock.onPut().reply(204);
+            mock.onPut().reply(204, undefined, headers);
             const spy = jest.spyOn(sut.axios, 'put');
             spy.mockClear();
             return sut.put('/users/status', accept(mimeType)).then(() => {
@@ -181,7 +206,7 @@ describe('Ajax', () => {
                 key: 'http://kbss.felk.cvut.cz/termit/users/Catherine+Halsey'
             };
             const data = EMPTY_USER;
-            mock.onPut().reply(204);
+            mock.onPut().reply(204, undefined, headers);
             const spy = jest.spyOn(sut.axios, 'put');
             spy.mockClear();
             return sut.put('/users/current', content(data).params(qParams)).then(() => {
@@ -197,7 +222,7 @@ describe('Ajax', () => {
             const qParams = {
                 key: 'http://kbss.felk.cvut.cz/termit/users/Catherine+Halsey'
             };
-            mock.onDelete().reply(204);
+            mock.onDelete().reply(204, undefined, headers);
             const spy = jest.spyOn(sut.axios, 'delete');
             spy.mockClear();
             return sut.delete('/users', params(qParams)).then(() => {
