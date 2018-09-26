@@ -29,7 +29,6 @@ const constants = {
     MESSAGE_DISPLAY_TIMEOUT: 5000,
     namespace_vocabulary : "http://data.iprpraha.cz/zdroj/slovnik/", // TODO load from server config, https://kbss.felk.cvut.cz/redmine/issues/689
     endpoint_url : "http://onto.fel.cvut.cz/rdf4j-server/repositories/termit-dev", // TODO load from server config.
-    // endpointUrl : "https://slovník.gov.cz/sparql"
 };
 
 constants.STORAGE_JWT_KEY = constants.APP_NAME + '-' + constants.AUTHORIZATION_HEADER;
