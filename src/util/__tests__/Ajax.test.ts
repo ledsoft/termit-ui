@@ -47,7 +47,15 @@ describe('Ajax', () => {
         mock.onGet('/users/current').reply(200, require('../../rest-mock/current'), headers);
         return sut.get('/users/current').then(() => {
             expect(Authentication.saveToken).toHaveBeenCalledWith(jwt);
-        })
+        });
+    });
+
+    it('does not extract JWT when there is none in response', () => {
+        Authentication.saveToken = jest.fn();
+        mock.onGet('/users/username').reply(200, false);
+        return sut.get('/users/username').then(() => {
+            expect(Authentication.saveToken).not.toHaveBeenCalled();
+        });
     });
 
     describe('error handling', () => {

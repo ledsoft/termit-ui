@@ -78,7 +78,9 @@ export class Ajax {
             return reqConfig;
         });
         this.axiosInstance.interceptors.response.use((resp) => {
-            Authentication.saveToken(resp.headers[Constants.AUTHORIZATION_HEADER]);
+            if (resp.headers && resp.headers[Constants.AUTHORIZATION_HEADER]) {
+                Authentication.saveToken(resp.headers[Constants.AUTHORIZATION_HEADER]);
+            }
             return resp;
         }, (error) => {
             if (!error.response) {
@@ -158,15 +160,15 @@ export class Ajax {
 
 function mockRestApi(axiosInst: AxiosInstance): void {
     const mock = new MockAdapter(axiosInst, {delayResponse: 500});
+    const header = {};
+    header[Constants.AUTHORIZATION_HEADER] = '12345';
     // Mock current user data
-    mock.onGet(Constants.API_PREFIX + '/users/current').reply(200, require('../rest-mock/current'));
+    mock.onGet(Constants.API_PREFIX + '/users/current').reply(200, require('../rest-mock/current'), header);
     // Mock login return value
     mock.onPost('/j_spring_security_check').reply(200, {
         loggedIn: true,
         success: true
-    }, {
-        'authorization': 'jwt12345'
-    });
+    }, header);
     // Mock registration request
     mock.onPost(Constants.API_PREFIX + '/users').reply(201);
     // Mock username existence check
@@ -176,31 +178,31 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         } else {
             return [200, false]
         }
-    });
+    }, header);
     // Mock vocabulary IRI generator
-    mock.onGet(Constants.API_PREFIX + '/vocabularies/identifier').reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test');
+    mock.onGet(Constants.API_PREFIX + '/vocabularies/identifier').reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test', header);
     // Mock get vocabularies
-    mock.onGet(Constants.API_PREFIX + '/vocabularies').reply(200, require('../rest-mock/vocabularies'));
+    mock.onGet(Constants.API_PREFIX + '/vocabularies').reply(200, require('../rest-mock/vocabularies'), header);
     // Mock vocabulary create endpoint
-    mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(201, null, {
+    mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(201, null, Object.assign({}, header, {
         'location': 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/metropolitan-plan'
-    });
+    }));
     // mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(500, {
     //     message: 'Unable to create vocabulary!'
     // });
     // Mock vocabulary retrieval endpoint
-    mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), {
+    mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE
-    });
-    mock.onGet(/\/rest\/query.+/).reply(200, require('../rest-mock/queryResult'));
+    }));
+    mock.onGet(/\/rest\/query.+/).reply(200, require('../rest-mock/queryResult'), header);
     // Mock label search results
-    mock.onGet('rest/search/label').reply(200, require('../rest-mock/searchResults'));
+    mock.onGet('rest/search/label').reply(200, require('../rest-mock/searchResults'), header);
 
     // Mock get file content
-    mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, fileContent, {'content-type': Constants.HTML_MIME_TYPE});
+    mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
 
     // Mock get document
-    mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'));
+    mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'), header);
 }
 
 const instance = new Ajax();
