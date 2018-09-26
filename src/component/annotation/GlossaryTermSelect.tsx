@@ -22,7 +22,7 @@ import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
 interface GlossaryTermSelectProps extends HasI18n, RouteComponentProps<any>{
     vocabulary?: Vocabulary;
     defaultTerms: VocabularyTerm[];
-    selectedTerms: VocabularyTerm | null;
+    selectedTerm: VocabularyTerm | null;
     selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => void;
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
     loadTerms: (normalizedName: string) => void;
@@ -67,7 +67,7 @@ export class GlossaryTermSelect extends React.Component<GlossaryTermSelectProps>
         const component = <IntelligentTreeSelect
             name={"glossary-"+this.props.match.params.name}
             onChange={this.props.selectVocabularyTerm}
-            value={this.props.selectedTerms}
+            value={this.props.selectedTerm}
             fetchOptions={this.fetchOptions}
             valueKey={"iri"}
             labelKey={"label"}
@@ -97,7 +97,7 @@ export class GlossaryTermSelect extends React.Component<GlossaryTermSelectProps>
 
 export default withRouter(connect((state: TermItState) => {
     return {
-        selectedTerms: state.selectedTerm,
+        selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms,
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {

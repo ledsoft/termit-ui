@@ -10,7 +10,6 @@ import withI18n from "../hoc/withI18n";
 import {Button} from "reactstrap";
 import SimplePopupWithActions from "./SimplePopupWithActions";
 import "./Annotation.scss";
-import {getVocabularyTermByID} from "../../action/ComplexActions";
 import TermItState from "../../model/TermItState";
 import Vocabulary from "../../model/Vocabulary";
 import OutgoingLink from "../misc/OutgoingLink";
@@ -24,8 +23,7 @@ interface AnnotationProps {
     selectedTerm: VocabularyTerm | null
     defaultTerms: VocabularyTerm[];
     vocabulary: Vocabulary
-    selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => Promise<object>;
-    getVocabularyTermByID: (termId: string, vocabularyName: string) => Promise<object>;
+    selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => Promise<object>;
 }
 
 interface AnnotationState {
@@ -56,14 +54,28 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         }
     }
 
-    private toggle = () => {
+    private toggleOpen = () => {
         this.setState({
             popoverOpen: !this.state.popoverOpen
         });
     };
 
+    private toggleEdit = () => {
+        if (!this.state.isEditable) {
+            if (this.props.resource) {
+                this.props.selectVocabularyTerm(this.findTermByIri(this.props.resource));
+            } else {
+                this.props.selectVocabularyTerm(null);
+            }
+        }
+        this.setState({
+            isEditable: !this.state.isEditable
+        });
+
+    };
+
     private onClick = () => {
-        this.toggle();
+        this.toggleOpen();
     };
 
     private getReadOnlyComponent = () => {
@@ -127,16 +139,20 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         const id = 'id' + this.props.about.substring(2);
         const termClassName = this.getTermState();
         const actions = [];
-        actions.push(<Button key='glossary.edit'
-                             color='secondary'
-                             title={"edit"}
-                             size='sm'
-                             onClick={this.onClick}>{"✎"}</Button>);
-        actions.push(<Button key='glossary.save'
-                             color='secondary'
-                             title={"save"}
-                             size='sm'
-                             onClick={this.onClick}>{"✓"}</Button>);
+        if (!this.state.isEditable) {
+            actions.push(<Button key='glossary.edit'
+                                 color='secondary'
+                                 title={"edit"}
+                                 size='sm'
+                                 onClick={this.toggleEdit}>{"✎"}</Button>);
+        }
+        if (this.state.isEditable) {
+            actions.push(<Button key='glossary.save'
+                                 color='secondary'
+                                 title={"save"}
+                                 size='sm'
+                                 onClick={this.toggleEdit}>{"✓"}</Button>);
+        }
         actions.push(<Button key='glossary.close'
                              color='secondary'
                              title={"close"}
@@ -152,7 +168,7 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         >
         {this.props.text}
             <SimplePopupWithActions isOpen={this.state.popoverOpen} isEditable={this.state.popoverOpen}
-                                    target={id} toggle={this.toggle}
+                                    target={id} toggle={this.toggleOpen}
                                     component={this.getComponent()} actions={actions} title={this.props.text}/>
 
         </span>;
@@ -180,6 +196,5 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
-        getVocabularyTermByID: (termId: string, vocabularyName: string) => dispatch(getVocabularyTermByID(termId, vocabularyName))
     };
 })(injectIntl(withI18n(Annotation)));
