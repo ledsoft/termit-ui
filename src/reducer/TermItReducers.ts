@@ -1,6 +1,5 @@
-import {combineReducers} from "redux";
+import {Action, combineReducers} from "redux";
 import ActionType, {
-    Action,
     AsyncAction,
     ClearErrorAction,
     DocumentLoadingAction,

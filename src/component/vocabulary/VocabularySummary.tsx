@@ -7,13 +7,12 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Vocabulary from "../../model/Vocabulary";
 import {loadVocabulary} from "../../action/ComplexActions";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import VocabularyMetadata from "./VocabularyMetadata";
 import {Button} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import Vocabulary2, {IRI} from "../../util/VocabularyUtils";
 import {GoThreeBars} from 'react-icons/go';
+import {ThunkDispatch} from "../../util/Types";
 
 interface VocabularySummaryProps {
     vocabulary: Vocabulary;
@@ -33,8 +32,8 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
     public change(): void {
         const normalizedName = this.props.match.params.name;
         // TODO query parameter ?
-        if ( this.props.vocabulary.iri !== Vocabulary2.resolve({fragment:normalizedName})) {
-            this.props.loadVocabulary({fragment:normalizedName});
+        if (this.props.vocabulary.iri !== Vocabulary2.resolve({fragment: normalizedName})) {
+            this.props.loadVocabulary({fragment: normalizedName});
         }
     }
 
@@ -52,9 +51,9 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
         );
         return <div>
             <PanelWithActions
-            title={this.props.formatMessage('vocabulary.summary.title', {name: this.props.vocabulary.name})}
-            actions={actions}
-            component={<VocabularyMetadata vocabulary={this.props.vocabulary}/>}/>
+                title={this.props.formatMessage('vocabulary.summary.title', {name: this.props.vocabulary.name})}
+                actions={actions}
+                component={<VocabularyMetadata vocabulary={this.props.vocabulary}/>}/>
         </div>;
     }
 }
@@ -63,7 +62,7 @@ export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri))
     };

@@ -6,13 +6,12 @@ import {GoSearch} from "react-icons/go";
 import './NavbarSearch.scss';
 import SearchResult from "../../../model/SearchResult";
 import {connect} from "react-redux";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import {search} from "../../../action/AsyncActions";
 import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
 import Routing from '../../../util/Routing';
 import Vocabulary from "../../../util/VocabularyUtils";
+import {ThunkDispatch} from '../../../util/Types';
 
 interface NavbarSearchProps extends HasI18n {
     search: (searchString: string) => Promise<object>;
@@ -102,7 +101,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     }
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
         search: (searchString: string) => dispatch(search(searchString, true))
     };

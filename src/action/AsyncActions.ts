@@ -1,8 +1,7 @@
 import * as SyncActions from './SyncActions';
 import {asyncActionFailure, asyncActionRequest, asyncActionSuccess} from './SyncActions';
 import Ajax, {content, params} from '../util/Ajax';
-import {Action, Dispatch} from 'redux';
-import {ThunkDispatch} from 'redux-thunk';
+import {ThunkDispatch} from '../util/Types';
 import Routing from '../util/Routing';
 import Constants from '../util/Constants';
 import {CONTEXT as USER_CONTEXT, UserData} from '../model/User';
@@ -27,7 +26,7 @@ import {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
  */
 
 export function fetchUser() {
-    return (dispatch: Dispatch) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.fetchUserRequest());
         return Ajax.get(Constants.API_PREFIX + '/users/current')
             .then((data: object) => jsonld.compact(data, USER_CONTEXT))
@@ -44,7 +43,7 @@ export function fetchUser() {
 }
 
 export function login(username: string, password: string) {
-    return (dispatch: Dispatch) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.loginRequest());
         return Ajax.post('/j_spring_security_check', params({
             username,
@@ -66,7 +65,7 @@ export function login(username: string, password: string) {
 }
 
 export function register(user: { username: string, password: string }) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.registerRequest());
         return Ajax.post(Constants.API_PREFIX + '/users', content(user).contentType('application/json'))
             .then(() => dispatch(SyncActions.registerSuccess()))
@@ -76,7 +75,7 @@ export function register(user: { username: string, password: string }) {
 }
 
 export function createVocabulary(vocabulary: Vocabulary) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.createVocabularyRequest());
         return Ajax.post(Constants.API_PREFIX + '/vocabularies', content(vocabulary.toJsonLd()))
             .then((resp: AxiosResponse) => {
@@ -93,7 +92,7 @@ export function createVocabulary(vocabulary: Vocabulary) {
 }
 
 export function createVocabularyTerm(term: VocabularyTerm, normalizedName: string) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.createVocabularyTermRequest());
         return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms',
             content(term.toJsonLd()).params({parentTermUri: term.parent}).contentType(Constants.JSON_LD_MIME_TYPE))
@@ -111,7 +110,7 @@ export function createVocabularyTerm(term: VocabularyTerm, normalizedName: strin
 }
 
 export function loadVocabulary(iri: IRI) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.loadVocabularyRequest());
         return Ajax
             .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment + (iri.namespace ? "?query=" + iri.namespace : ""))
@@ -127,7 +126,7 @@ export function loadVocabulary(iri: IRI) {
 }
 
 export function loadVocabularies() {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.loadVocabulariesRequest());
         return Ajax.get(Constants.API_PREFIX + '/vocabularies')
             .then((data: object[]) =>
@@ -143,7 +142,7 @@ export function loadVocabularies() {
 }
 
 export function loadTerms(normalizedName: string) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
             params({
                 limit: 100,
@@ -167,7 +166,7 @@ export function loadTerms(normalizedName: string) {
 }
 
 export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.fetchVocabularyTermsRequest());
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
             params({
@@ -198,7 +197,7 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
 }
 
 export function fetchVocabularySubTerms(parentTermId: string, normalizedName: string) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.fetchVocabularyTermsRequest());
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/subterms',
             params({parent_id: parentTermId}))
@@ -214,7 +213,7 @@ export function fetchVocabularySubTerms(parentTermId: string, normalizedName: st
 }
 
 export function getVocabularyTermByID(termID: string, normalizedName: string) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.fetchVocabularyTermsRequest());
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/id',
             params({term_id: termID}))
@@ -229,9 +228,9 @@ export function getVocabularyTermByID(termID: string, normalizedName: string) {
 
 // TODO server return http code 406
 export function getVocabularyTermByName(termNormalizedName: string, vocabularyNormalizedName: string) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.fetchVocabularyTermsRequest());
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/'+termNormalizedName)
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedName)
             .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
             .catch((error: ErrorData) => {
                 dispatch(SyncActions.fetchVocabularyTermsFailure(error));
@@ -243,7 +242,7 @@ export function getVocabularyTermByName(termNormalizedName: string, vocabularyNo
 
 
 export function executeQuery(queryString: string) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.executeQueryRequest());
         return Ajax
             .get(Constants.API_PREFIX + '/query?queryString=' + encodeURI(queryString))
@@ -262,7 +261,7 @@ export function search(searchString: string, disableLoading: boolean = false) {
     const action = {
         type: ActionType.SEARCH
     };
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, disableLoading));
         return Ajax.get(Constants.API_PREFIX + '/search/label', params({searchString: encodeURI(searchString)}))
             .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
@@ -285,7 +284,7 @@ function loadArrayFromCompactedGraph(compacted: object): object[] {
 }
 
 export function loadFileContent(documentIri: IRI, fileName: string) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.loadFileContentRequest());
         return Ajax
             .get(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content?"
@@ -305,7 +304,7 @@ export function loadFileContent(documentIri: IRI, fileName: string) {
 }
 
 export function loadDocument(iri: IRI) {
-    return (dispatch: ThunkDispatch<object, undefined, Action>) => {
+    return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.loadDocumentRequest());
         return Ajax
             .get(Constants.API_PREFIX + '/documents/' + iri.fragment + (iri.namespace ? "?namespace=" + iri.namespace : ""))

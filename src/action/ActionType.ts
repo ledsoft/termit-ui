@@ -6,10 +6,7 @@ import Vocabulary from "../model/Vocabulary";
 import VocabularyTerm from "../model/VocabularyTerm";
 import SearchResult from "../model/SearchResult";
 import Document from "../model/Document";
-
-export interface Action {
-    type: string
-}
+import {Action} from "redux";
 
 export interface AsyncAction extends Action {
     status: AsyncActionStatus;

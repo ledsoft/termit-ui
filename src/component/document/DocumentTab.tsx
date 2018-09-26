@@ -6,10 +6,9 @@ import Vocabulary from "../../model/Vocabulary";
 import DocumentDetail from "./DocumentDetail";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import IRIFactory, {IRI} from "../../util/VocabularyUtils";
 import {loadVocabulary} from "../../action/ComplexActions";
+import {ThunkDispatch} from "../../util/Types";
 
 interface DocumentTabProps extends HasI18n {
     vocabulary: Vocabulary
@@ -27,18 +26,20 @@ class DocumentTab extends React.Component<DocumentTabProps> {
 
     public render() {
 
-        const select = ( id : string ) => {id.toString()};
+        const select = (id: string) => {
+            id.toString()
+        };
         const tabs = {};
         if (this.props.vocabulary.document) {
-            const documentIRI =  IRIFactory.create(this.props.vocabulary.document!.iri);
+            const documentIRI = IRIFactory.create(this.props.vocabulary.document!.iri);
             tabs['vocabulary.detail.tabs.annotations'] = () => <DocumentDetail iri={documentIRI}/>;
         }
         return <div>
-        <Tabs
-            activeTabLabelKey={this.getActiveTab()}
-            tabs={ tabs }
-            changeTab={select}
-        />
+            <Tabs
+                activeTabLabelKey={this.getActiveTab()}
+                tabs={tabs}
+                changeTab={select}
+            />
         </div>
     }
 }
@@ -47,7 +48,7 @@ export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri))
     };

@@ -11,9 +11,8 @@ import Ajax, {params} from "../../util/Ajax";
 import Constants from '../../util/Constants';
 import withLoading from "../hoc/withLoading";
 import {createVocabulary} from "../../action/ComplexActions";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import Vocabulary from "../../model/Vocabulary";
+import {ThunkDispatch} from "../../util/Types";
 
 interface CreateVocabularyProps extends HasI18n {
     onCreate: (vocabulary: Vocabulary) => void
@@ -101,7 +100,7 @@ export default connect((state: TermItState) => {
     return {
         loading: state.loading
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         onCreate: (vocabulary: Vocabulary) => dispatch(createVocabulary(vocabulary))
     };

@@ -1,5 +1,4 @@
 import ActionType, {
-    Action,
     AsyncAction,
     AsyncFailureAction,
     ClearErrorAction,
@@ -24,6 +23,7 @@ import {saveLanguagePreference} from "../util/IntlUtil";
 import VocabularyTerm, {VocabularyTermData} from "../model/VocabularyTerm";
 import Document, {DocumentData} from "../model/Document";
 import {FileData} from "../model/File";
+import {Action} from 'redux';
 
 /*
  * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
