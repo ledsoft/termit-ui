@@ -69,7 +69,7 @@ class Search extends React.Component<SearchProps, SearchState> {
             Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
         } else {
             // TODO Transition to term (once term detail is implemented)
-            alert('Not implemented, yet!');
+            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.vocabularyIri!)]])});
         }
     };
 

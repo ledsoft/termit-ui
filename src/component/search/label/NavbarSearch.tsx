@@ -62,7 +62,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
             Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
         } else {
             // TODO Transition to term otherwise (once term detail is implemented)
-            alert('Not implemented, yet!');
+            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.vocabularyIri!)]])});
         }
     };
 
