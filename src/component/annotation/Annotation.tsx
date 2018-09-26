@@ -56,14 +56,20 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         }
     }
 
-    private toggle = () => {
+    private toggleOpen = () => {
         this.setState({
             popoverOpen: !this.state.popoverOpen
         });
     };
 
+    private toggleEdit = () => {
+        this.setState({
+            isEditable: !this.state.isEditable
+        });
+    };
+
     private onClick = () => {
-        this.toggle();
+        this.toggleOpen();
     };
 
     private getReadOnlyComponent = () => {
@@ -127,16 +133,20 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         const id = 'id' + this.props.about.substring(2);
         const termClassName = this.getTermState();
         const actions = [];
-        actions.push(<Button key='glossary.edit'
-                             color='secondary'
-                             title={"edit"}
-                             size='sm'
-                             onClick={this.onClick}>{"✎"}</Button>);
-        actions.push(<Button key='glossary.save'
-                             color='secondary'
-                             title={"save"}
-                             size='sm'
-                             onClick={this.onClick}>{"✓"}</Button>);
+        if (!this.state.isEditable) {
+            actions.push(<Button key='glossary.edit'
+                                 color='secondary'
+                                 title={"edit"}
+                                 size='sm'
+                                 onClick={this.toggleEdit}>{"✎"}</Button>);
+        }
+        if (this.state.isEditable) {
+            actions.push(<Button key='glossary.save'
+                                 color='secondary'
+                                 title={"save"}
+                                 size='sm'
+                                 onClick={this.onClick}>{"✓"}</Button>);
+        }
         actions.push(<Button key='glossary.close'
                              color='secondary'
                              title={"close"}
@@ -152,7 +162,7 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         >
         {this.props.text}
             <SimplePopupWithActions isOpen={this.state.popoverOpen} isEditable={this.state.popoverOpen}
-                                    target={id} toggle={this.toggle}
+                                    target={id} toggle={this.toggleOpen}
                                     component={this.getComponent()} actions={actions} title={this.props.text}/>
 
         </span>;
