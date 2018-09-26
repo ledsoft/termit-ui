@@ -7,22 +7,37 @@ import VocabularyTerm from "../../model/VocabularyTerm";
 import {selectVocabularyTerm} from "../../action/SyncActions";
 import {injectIntl} from "react-intl";
 import withI18n from "../hoc/withI18n";
-import PopupWithActions from "./PopupWithActions";
 import {Button} from "reactstrap";
-
+import SimplePopupWithActions from "./SimplePopupWithActions";
+import "./Annotation.scss";
+import {getVocabularyTermByID} from "../../action/ComplexActions";
+import TermItState from "../../model/TermItState";
+import Vocabulary from "../../model/Vocabulary";
+import OutgoingLink from "../misc/OutgoingLink";
 
 interface AnnotationProps {
     about: string
     property: string
-    resource: string
+    resource?: string
     typeof: string
     text: string
-    selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => void;
+    selectedTerm: VocabularyTerm | null
+    defaultTerms: VocabularyTerm[];
+    vocabulary: Vocabulary
+    selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => Promise<object>;
+    getVocabularyTermByID: (termId: string, vocabularyName: string) => Promise<object>;
 }
 
 interface AnnotationState {
     popoverOpen: boolean
+    isEditable: boolean
 }
+
+const TermState = {
+    INVALID: 'invalid-term',
+    ASSIGNED: 'assigned-term',
+    SUGGESTED: 'suggested-term',
+};
 
 class Annotation extends React.Component<AnnotationProps, AnnotationState> {
 
@@ -30,8 +45,15 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         super(props);
 
         this.state = {
-            popoverOpen: false
+            popoverOpen: false,
+            isEditable: false
         };
+    }
+
+    public componentDidMount() {
+        if (this.props.resource) {
+            this.findTermByIri(this.props.resource);
+        }
     }
 
     private toggle = () => {
@@ -44,27 +66,79 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         this.toggle();
     };
 
+    private getReadOnlyComponent = () => {
+        const term = (this.props.resource) ? this.findTermByIri(this.props.resource) : null;
+        let outputComponent = <div/>;
+        switch (this.getTermState()) {
+            case TermState.ASSIGNED:
+                const termCommentRow = (term!.comment) ? <tr>
+                    <td>{'Term info : '}</td>
+                    <td>{term!.comment}</td>
+                </tr> : "";
+
+                outputComponent = <table>
+                    <tr>
+                        <td>{'Assigned term : '}</td>
+                        <td><OutgoingLink
+                            label={term!.label}
+                            iri={term!.iri}/></td>
+                    </tr>
+                    {termCommentRow}
+                </table>;
+                break;
+            case TermState.SUGGESTED:
+                outputComponent = <span className={'an-warning'}>
+                    {'Phrase is not assigned to a vocabulary term.'}
+                    </span>
+                break;
+            case TermState.INVALID:
+                outputComponent = <span className={'an-error'}>
+                    {'Term "' + this.props.resource + '" not found in vocabulary.'}
+                    </span>
+                break;
+        }
+        return outputComponent;
+    };
+
+    private getEditableComponent = () => <div>
+        <GlossaryTermSelect/>
+    </div>;
+
+    private getComponent = () => {
+        if (this.state.isEditable) {
+            return this.getEditableComponent();
+        } else {
+            return this.getReadOnlyComponent();
+        }
+    }
+
+    private getTermState = () => {
+        if (! this.props.resource) {
+            return TermState.SUGGESTED;
+        }
+        if (this.findTermByIri(this.props.resource)){
+            return TermState.ASSIGNED
+        }
+        return TermState.INVALID;
+    }
+
+
     public render() {
-        const id = 'id'+this.props.about.substring(2);
-        const assignedTermBackgroundColor = "rgb(188, 239, 184)";
-        const notAssignedTermBackgroundColor = "rgb(239, 207, 184)";
-        const backgroundColor = (this.props.resource) ? assignedTermBackgroundColor : notAssignedTermBackgroundColor;
-        const component = <div>
-                <GlossaryTermSelect/>
-        </div>;
+        const id = 'id' + this.props.about.substring(2);
+        const termClassName = this.getTermState();
         const actions = [];
-        actions.push(<Button key='glossary.close'
-                             color='primary'
+        actions.push(<Button key='glossary.edit'
+                             color='secondary'
                              title={"edit"}
                              size='sm'
                              onClick={this.onClick}>{"✎"}</Button>);
-        actions.push(<Button key='glossary.close'
-                             color='primary'
+        actions.push(<Button key='glossary.save'
+                             color='secondary'
                              title={"save"}
                              size='sm'
                              onClick={this.onClick}>{"✓"}</Button>);
-        actions.push(<Button key='glossary.createTerm'
-                             color='primary'
+        actions.push(<Button key='glossary.close'
+                             color='secondary'
                              title={"close"}
                              size='sm'
                              onClick={this.onClick}>{"x"}</Button>);
@@ -74,18 +148,38 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
                      property={this.props.property}
                      resource={this.props.resource}
                      typeof={this.props.typeof}
-                     style={{backgroundColor}}
+                     className={termClassName}
         >
         {this.props.text}
-        <PopupWithActions isOpen={this.state.popoverOpen} target={id} toggle={this.toggle} component={component} actions={actions} title={this.props.text} />
+            <SimplePopupWithActions isOpen={this.state.popoverOpen} isEditable={this.state.popoverOpen}
+                                    target={id} toggle={this.toggle}
+                                    component={this.getComponent()} actions={actions} title={this.props.text}/>
 
         </span>
+    }
+
+    private findTermByIri(iri: string): VocabularyTerm | null {
+        return this.undefinedToNull(this.props.defaultTerms.filter((t, i) => (t.iri === iri)).pop());
+    }
+
+    private undefinedToNull(value: any) {
+        if (value === undefined) {
+            return null;
+        }
+        return value;
     }
 }
 
 
-export default connect((dispatch: ThunkDispatch<object, undefined, Action>) => {
+export default connect((state: TermItState) => {
+    return {
+        vocabulary: state.vocabulary,
+        selectedTerm: state.selectedTerm,
+        defaultTerms: state.defaultTerms
+    };
+}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
+        getVocabularyTermByID: (termId: string, vocabularyName: string) => dispatch(getVocabularyTermByID(termId, vocabularyName))
     };
 })(injectIntl(withI18n(Annotation)));
