@@ -10,7 +10,6 @@ import withI18n from "../hoc/withI18n";
 import {Button} from "reactstrap";
 import SimplePopupWithActions from "./SimplePopupWithActions";
 import "./Annotation.scss";
-import {getVocabularyTermByID} from "../../action/ComplexActions";
 import TermItState from "../../model/TermItState";
 import Vocabulary from "../../model/Vocabulary";
 import OutgoingLink from "../misc/OutgoingLink";
@@ -24,8 +23,7 @@ interface AnnotationProps {
     selectedTerm: VocabularyTerm | null
     defaultTerms: VocabularyTerm[];
     vocabulary: Vocabulary
-    selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => Promise<object>;
-    getVocabularyTermByID: (termId: string, vocabularyName: string) => Promise<object>;
+    selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => Promise<object>;
 }
 
 interface AnnotationState {
@@ -63,9 +61,17 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
     };
 
     private toggleEdit = () => {
+        if (!this.state.isEditable) {
+            if (this.props.resource) {
+                this.props.selectVocabularyTerm(this.findTermByIri(this.props.resource));
+            } else {
+                this.props.selectVocabularyTerm(null);
+            }
+        }
         this.setState({
             isEditable: !this.state.isEditable
         });
+
     };
 
     private onClick = () => {
@@ -145,7 +151,7 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
                                  color='secondary'
                                  title={"save"}
                                  size='sm'
-                                 onClick={this.onClick}>{"✓"}</Button>);
+                                 onClick={this.toggleEdit}>{"✓"}</Button>);
         }
         actions.push(<Button key='glossary.close'
                              color='secondary'
@@ -190,6 +196,5 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
-        getVocabularyTermByID: (termId: string, vocabularyName: string) => dispatch(getVocabularyTermByID(termId, vocabularyName))
     };
 })(injectIntl(withI18n(Annotation)));
