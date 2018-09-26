@@ -18,7 +18,8 @@ const MAX_RENDERED_RESULTS = 10;
 const SearchResultsOverlay: React.SFC<SearchResultsOverlayProps> = (props: SearchResultsOverlayProps) => {
     let items;
     if (props.searchResults.length === 0) {
-        items = [<li key='full-info' className='btn-link search-result-info' onClick={props.onOpenSearch}>
+        items = [<li key='full-info' className='btn-link search-result-no-results' onClick={props.onOpenSearch}
+                     title={props.i18n('main.search.tooltip')}>
             {props.i18n('main.search.no-results')}
         </li>];
     } else {
