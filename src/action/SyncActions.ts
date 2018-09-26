@@ -2,19 +2,18 @@ import ActionType, {
     Action,
     AsyncAction,
     AsyncFailureAction,
-    SearchAction,
     ClearErrorAction,
+    DocumentLoadingAction,
     ExecuteQueryAction,
+    FileContentLoadingAction,
+    FileSelectingAction,
     LoadDefaultTermsAction,
     MessageAction,
     SelectingTermsAction,
     SwitchLanguageAction,
     UserLoadingAction,
     VocabulariesLoadingAction,
-    VocabularyLoadingAction,
-    DocumentLoadingAction,
-    FileContentLoadingAction,
-    FileSelectingAction
+    VocabularyLoadingAction
 } from './ActionType';
 import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
 import User, {UserData} from "../model/User";
@@ -23,7 +22,6 @@ import AsyncActionStatus from "./AsyncActionStatus";
 import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import {saveLanguagePreference} from "../util/IntlUtil";
 import VocabularyTerm, {VocabularyTermData} from "../model/VocabularyTerm";
-import SearchResult, {SearchResultData} from "../model/SearchResult";
 import Document, {DocumentData} from "../model/Document";
 import {FileData} from "../model/File";
 
@@ -37,6 +35,10 @@ export function asyncActionRequest(a: Action, ignoreLoading: boolean = false): A
 
 export function asyncActionFailure(a: Action, error: ErrorData): AsyncFailureAction {
     return {...a, status: AsyncActionStatus.FAILURE, error: new ErrorInfo(a.type, error)};
+}
+
+export function asyncActionSuccess(a: Action): AsyncAction {
+    return {...a, status: AsyncActionStatus.SUCCESS};
 }
 
 export function fetchUserRequest(): AsyncAction {
@@ -253,9 +255,9 @@ export function executeQueryFailure(error: ErrorData): AsyncFailureAction {
 }
 
 export function selectVocabularyTerm(data: VocabularyTermData | null): SelectingTermsAction {
-    return{
+    return {
         type: ActionType.SELECT_VOCABULARY_TERM,
-        selectedTerms: data? new VocabularyTerm(data): data,
+        selectedTerms: data ? new VocabularyTerm(data) : data,
     }
 }
 
@@ -278,24 +280,10 @@ export function loadDefaultTerms(data: VocabularyTermData[]): LoadDefaultTermsAc
     }
 }
 
-export function searchSuccess(results: SearchResultData[]): SearchAction {
-    return {
-        type: ActionType.SEARCH,
-        status: AsyncActionStatus.SUCCESS,
-        results: results.map(r => new SearchResult(r))
-    };
-}
-
-export function clearSearchResults() {
-    return {
-        type: ActionType.CLEAR_SEARCH_RESULTS
-    };
-}
-
 export function selectFile(data: FileData | null): FileSelectingAction {
-    return{
+    return {
         type: ActionType.SELECT_FILE,
-        fileIri: data? (data.iri ? data.iri: null) : data,
+        fileIri: data ? (data.iri ? data.iri : null) : data,
     }
 }
 

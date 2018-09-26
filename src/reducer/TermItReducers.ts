@@ -3,19 +3,18 @@ import ActionType, {
     Action,
     AsyncAction,
     ClearErrorAction,
+    DocumentLoadingAction,
     ExecuteQueryAction,
     FailureAction,
-    MessageAction,
-    SearchAction,
-    SelectingTermsAction,
+    FileContentLoadingAction,
+    FileSelectingAction,
     LoadDefaultTermsAction,
+    MessageAction,
+    SelectingTermsAction,
     SwitchLanguageAction,
     UserLoadingAction,
     VocabulariesLoadingAction,
-    VocabularyLoadingAction,
-    DocumentLoadingAction,
-    FileContentLoadingAction,
-    FileSelectingAction
+    VocabularyLoadingAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
@@ -26,7 +25,6 @@ import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUti
 import AsyncActionStatus from "../action/AsyncActionStatus";
 import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
-import SearchResult from "../model/SearchResult";
 import VocabularyTerm from "../model/VocabularyTerm";
 import Document, {EMPTY_DOCUMENT} from "../model/Document";
 
@@ -125,7 +123,7 @@ function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: VocabularyLoad
     }
 }
 
-function vocabularies(state: {[key:string]:Vocabulary}|any = {}, action: VocabulariesLoadingAction): {[key:string]:Vocabulary} {
+function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: VocabulariesLoadingAction): { [key: string]: Vocabulary } {
     switch (action.type) {
         case ActionType.LOAD_VOCABULARIES_SUCCESS:
             const map = {};
@@ -150,7 +148,7 @@ function selectedTerm(state: VocabularyTerm | null = null, action: SelectingTerm
 function createdTermsCounter(state: number = 0, action: AsyncAction) {
     switch (action.type) {
         case ActionType.CREATE_VOCABULARY_TERM_SUCCESS:
-            return state+1;
+            return state + 1;
         default:
             return state;
     }
@@ -168,29 +166,16 @@ function defaultTerms(state: VocabularyTerm[] = [], action: LoadDefaultTermsActi
 function queryResults(state: { [key: string]: QueryResultIF } = {}, action: ExecuteQueryAction) {
     switch (action.type) {
         case ActionType.EXECUTE_QUERY_SUCCESS:
-            return {...state,
-                [action.queryString] :  new QueryResult(action.queryString,action.queryResult)};
+            return {
+                ...state,
+                [action.queryString]: new QueryResult(action.queryString, action.queryResult)
+            };
         default:
             return state;
     }
 }
 
-function searchResults(state: SearchResult[] | null = null, action: SearchAction) {
-    switch (action.type) {
-        case ActionType.SEARCH:
-            if (action.status === AsyncActionStatus.SUCCESS) {
-                return action.results;
-            } else {
-                return state;
-            }
-        case ActionType.CLEAR_SEARCH_RESULTS:
-            return null;
-        default:
-            return state;
-    }
-}
-
-function fileContent(state: string|null = null, action: FileContentLoadingAction): string|null {
+function fileContent(state: string | null = null, action: FileContentLoadingAction): string | null {
     switch (action.type) {
         case ActionType.LOAD_FILE_CONTENT_SUCCESS:
             return action.fileContent;
@@ -199,7 +184,7 @@ function fileContent(state: string|null = null, action: FileContentLoadingAction
     }
 }
 
-function fileIri(state: string|null = null, action: FileSelectingAction): string|null {
+function fileIri(state: string | null = null, action: FileSelectingAction): string | null {
     switch (action.type) {
         case ActionType.SELECT_FILE:
             return action.fileIri;
@@ -228,7 +213,6 @@ const rootReducer = combineReducers<TermItState>({
     selectedTerm,
     defaultTerms,
     queryResults,
-    searchResults,
     createdTermsCounter,
     document,
     fileIri,

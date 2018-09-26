@@ -1,112 +1,158 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../../hoc/withI18n";
-import {Input, InputGroup, InputGroupAddon, InputGroupText} from "reactstrap";
-import {GoSearch} from "react-icons/go";
-import './Search.scss';
-import SearchResult from "../../../model/SearchResult";
+import {RouteComponentProps, withRouter} from "react-router";
 import {connect} from "react-redux";
-import TermItState from "../../../model/TermItState";
+import {Button, Card, CardBody, CardHeader, Col, Form, FormGroup, Input, Row} from "reactstrap";
+import SearchResult from "../../../model/SearchResult";
+import './Search.scss';
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import {search} from "../../../action/AsyncActions";
-import SearchResultsOverlay from "./SearchResultsOverlay";
-import Routes from "../../../util/Routes";
-import Routing from '../../../util/Routing';
-import {clearSearchResults} from "../../../action/SyncActions";
 import Vocabulary from "../../../util/Vocabulary";
+import Routing from "../../../util/Routing";
+import Routes from "../../../util/Routes";
 
-interface SearchProps extends HasI18n {
-    searchResults: SearchResult[] | null;
-    search: (searchString: string) => void;
-    clearSearch: () => void;
+interface SearchProps extends HasI18n, RouteComponentProps<any> {
+    search: (searchString: string) => Promise<object>;
 }
 
 interface SearchState {
     searchString: string;
-    showResults: boolean;
+    results: SearchResult[] | null;
 }
 
-export class Search extends React.Component<SearchProps, SearchState> {
+class Search extends React.Component<SearchProps, SearchState> {
 
     constructor(props: SearchProps) {
         super(props);
         this.state = {
             searchString: '',
-            showResults: false
+            results: null
         };
+    }
+
+    public componentDidMount() {
+        const query = this.props.location.search;
+        const match = query.match(/searchString=(.+)/);
+        if (match) {
+            const searchString = match[1];
+            this.setState({searchString});
+            this.search(searchString);
+        }
     }
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
-        this.setState({searchString: value, showResults: value.length > 0});
-        this.search(value);
+        this.setState({searchString: value});
     };
 
-    private search = (str?: string) => {
-        const searchVal = str ? str : this.state.searchString;
-        if (searchVal.trim().length > 0) {
-            this.props.search(searchVal);
+    private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            this.search(this.state.searchString);
         }
     };
 
-    private closeResults = () => {
-        this.setState({showResults: false});
+    private onClick = () => {
+        this.search(this.state.searchString);
     };
 
-    private clearInput = () => {
-        this.setState({searchString: ''});
+    public search = (searchString: string) => {
+        if (searchString.trim().length > 0) {
+            this.props.search(searchString).then((data: SearchResult[]) => this.setState({results: data}));
+        }
     };
 
-    public openResult = (result: SearchResult) => {
-        this.props.clearSearch();
-        this.clearInput();
+    private openResult = (result: SearchResult) => {
+        this.clear();
         if (result.types.indexOf(Vocabulary.VOCABULARY) !== -1) {
             Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
+        } else {
+            // TODO Transition to term (once term detail is implemented)
+            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.vocabularyIri!)]])});
         }
-        // TODO Transition to term otherwise (once term detail is implemented)
     };
 
-    private openSearchView = () => {
-        const searchString = this.state.searchString;
-        Routing.transitionTo(Routes.search, {query: new Map([['searchString', encodeURI(searchString)]])});
-        this.clearInput();
+    private clear = () => {
+        this.setState({searchString: '', results: null});
     };
 
     public render() {
         const i18n = this.props.i18n;
-        return <div className='search'>
-            <InputGroup>
-                <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')}
-                       bsSize='sm'
-                       value={this.state.searchString} onChange={this.onChange}/>
-                <InputGroupAddon addonType='append' className='search-icon' title={i18n('main.search.tooltip')}>
-                    <InputGroupText>
-                        <GoSearch onClick={this.openSearchView}/>
-                    </InputGroupText>
-                </InputGroupAddon>
-            </InputGroup>
-            {this.renderResults()}
+        return <div>
+            <h2 className='page-header'>{i18n('search.title')}</h2>
+            <Row>
+                <Col md={4}>
+                    <Form inline={true}>
+                        <FormGroup className='mb-2 mr-sm-2 search-input-container'>
+                            <Input type='search' bsSize='sm' className='search-input' value={this.state.searchString}
+                                   onChange={this.onChange} onKeyPress={this.onKeyPress}/>
+                        </FormGroup>
+                        <div className='mb-2'>
+                            <Button size='sm' color='primary' onClick={this.onClick}>{i18n('search.title')}</Button>
+                        </div>
+                    </Form>
+                </Col>
+            </Row>
+            <Row>
+                {this.renderResults()}
+            </Row>
         </div>;
     }
 
     private renderResults() {
-        if (!this.props.searchResults) {
+        if (this.state.results === null) {
             return null;
         }
-        return <SearchResultsOverlay show={this.state.showResults} searchResults={this.props.searchResults}
-                                     onClose={this.closeResults} targetId='main-search-input'
-                                     onClick={this.openResult} onOpenSearch={this.openSearchView}/>;
+        const title =
+            <h5>{this.props.formatMessage('search.results.title', {searchString: this.state.searchString})}</h5>;
+        let content;
+        if (this.state.results.length === 0) {
+            content = <Row><Col md={6}>
+                <div className='italics'>{this.props.i18n('main.search.no-results')}</div>
+            </Col></Row>;
+        } else {
+            content = <div>
+                <Row><Col md={12}>{this.renderVocabularies()}</Col></Row>
+                <Row><Col md={12}>{this.renderTerms()}</Col></Row>
+            </div>;
+        }
+        return <div className='container-fluid'>
+            <hr/>
+            {title}
+            {content}
+        </div>;
+    }
+
+    private renderVocabularies() {
+        return <Card className='search-result-container'>
+            <CardHeader tag='h5' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
+            <CardBody>
+                {this.state.results!.filter(r => r.hasType(Vocabulary.VOCABULARY)).map(r => {
+                    return <span key={r.iri} className='search-result-item search-result-link btn-link'
+                                 title={this.props.i18n('search.results.item.vocabulary.tooltip')}
+                                 onClick={this.openResult.bind(null, r)}>{r.label}</span>;
+                })}
+            </CardBody>
+        </Card>;
+    }
+
+    private renderTerms() {
+        return <Card className='search-result-container'>
+            <CardHeader tag='h5' color='info'>{this.props.i18n('search.pojem')}</CardHeader>
+            <CardBody>
+                {this.state.results!.filter(r => r.hasType(Vocabulary.TERM)).map(r => {
+                    return <span key={r.iri} className='search-result-item search-result-link btn-link'
+                                 title={this.props.i18n('search.results.item.term.tooltip')}
+                                 onClick={this.openResult.bind(null, r)}>{r.label}</span>;
+                })}
+            </CardBody>
+        </Card>;
     }
 }
 
-export default connect((state: TermItState) => {
+export default connect(undefined, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        searchResults: state.searchResults
+        search: (searchString: string) => dispatch(search(searchString))
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
-    return {
-        search: (searchString: string) => dispatch(search(searchString, true)),
-        clearSearch: () => dispatch(clearSearchResults())
-    };
-})(injectIntl(withI18n(Search)));
+})(withRouter(injectIntl(withI18n(Search))));

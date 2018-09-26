@@ -31,6 +31,7 @@ import VocabularyDetail from "./vocabulary/VocabularyDetail";
 import LanguageSelector from "./main/LanguageSelector";
 import Messages from "./message/Messages";
 import Statistics from "./statistics/Statistics";
+import NavbarSearch from "./search/label/NavbarSearch";
 import Search from "./search/label/Search";
 import FacetedSearch from "./search/facets/FacetedSearch";
 import FileDetail from "./file/FileDetail";
@@ -89,7 +90,7 @@ export class MainView extends React.Component<MainViewProps> {
                         </NavItem>
                     </Nav>
                     <Nav navbar={true}>
-                        <Search/>
+                        <NavbarSearch/>
                     </Nav>
                     <Nav navbar={true}>
                         <LanguageSelector/>

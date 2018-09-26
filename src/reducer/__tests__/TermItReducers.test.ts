@@ -2,16 +2,22 @@ import reducers from '../TermItReducers';
 import ActionType, {FailureAction, UserLoadingAction} from "../../action/ActionType";
 import TermItState from "../../model/TermItState";
 import {
-    clearError, clearSearchResults,
+    clearError,
     dismissMessage,
     fetchUserFailure,
     fetchUserRequest,
-    fetchUserSuccess, loadDefaultTerms, loadVocabularyFailure, loadVocabularySuccess,
+    fetchUserSuccess,
+    loadDefaultTerms,
+    loadVocabularyFailure,
+    loadVocabularySuccess,
     loginFailure,
     loginRequest,
     loginSuccess,
-    publishMessage, registerFailure, selectVocabularyTerm,
-    switchLanguage, userLogout
+    publishMessage,
+    registerFailure,
+    selectVocabularyTerm,
+    switchLanguage,
+    userLogout
 } from "../../action/SyncActions";
 import ErrorInfo, {EMPTY_ERROR} from "../../model/ErrorInfo";
 import User, {EMPTY_USER} from "../../model/User";
@@ -20,7 +26,6 @@ import Constants from "../../util/Constants";
 import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import VocabularyTerm, {VocabularyTermData} from "../../model/VocabularyTerm";
-import SearchResult from "../../model/SearchResult";
 
 function stateToPlainObject(state: TermItState) {
     return {
@@ -32,7 +37,6 @@ function stateToPlainObject(state: TermItState) {
         error: state.error,
         messages: state.messages,
         intl: state.intl,
-        searchResults: state.searchResults,
         selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms,
         createdTermsCounter: state.createdTermsCounter,
@@ -282,16 +286,5 @@ describe('Reducers', () => {
             ignoreLoading: true
         };
         expect(reducers(stateToPlainObject(initialState), action)).toEqual(initialState);
-    });
-
-    describe('clear search results', () => {
-        it('resets search results to initial state', () => {
-            initialState.searchResults = [new SearchResult({
-                iri: 'http://test',
-                label: 'test',
-                types: ['http://term']
-            })];
-            expect(reducers((stateToPlainObject(initialState)), clearSearchResults())).toEqual(Object.assign({}, initialState, {searchResults: null}));
-        });
     });
 });

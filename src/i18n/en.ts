@@ -48,6 +48,7 @@ export default {
         'main.search.placeholder': 'Search',
         'main.search.tooltip': 'Search in all vocabularies and terms',
         'main.search.count-info-and-link': 'Showing {displayed} of {count} results. See all results.',
+        'main.search.no-results': 'No results found.',
 
         'dashboard.vocabulary.tile': 'Vocabulary Management',
         'dashboard.document.tile': 'Document Management',
@@ -116,6 +117,10 @@ export default {
         'fullscreen.exit': 'Exit fullscreen',
         'fullscreen.enter': 'Enter fullscreen',
 
+        'search.title': 'Search',
+        'search.results.title': 'Results for \'{searchString}\'',
+        'search.results.item.vocabulary.tooltip': 'Open vocabulary detail',
+        'search.results.item.term.tooltip': 'Open term detail',
         'search.slovnik': 'Vocabulary',
         'search.informace': 'Information',
         'search.je-instanci-typu': 'has type',

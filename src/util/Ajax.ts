@@ -192,7 +192,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     });
     mock.onGet(/\/rest\/query.+/).reply(200, require('../rest-mock/queryResult'));
     // Mock label search results
-    mock.onGet('rest/search').reply(200, require('../rest-mock/searchResults'));
+    mock.onGet('rest/search/label').reply(200, require('../rest-mock/searchResults'));
 
     // Mock get file content
     mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, fileContent, {'content-type': Constants.HTML_MIME_TYPE});

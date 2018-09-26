@@ -47,6 +47,7 @@ export default {
         'main.search.placeholder': 'Hledat',
         'main.search.tooltip': 'Hledat daný výraz ve všech slovnících a pojmech',
         'main.search.count-info-and-link': 'Zobrazeno {displayed} z {count} výsledků. Zobrazit všechny.',
+        'main.search.no-results': 'Nenalezeny žádné výsledky.',
 
         'dashboard.vocabulary.tile': 'Správa slovníků',
         'dashboard.document.tile': 'Správa dokumentů',
@@ -115,6 +116,10 @@ export default {
         'fullscreen.exit' : 'Vrátit zobrazení do okna',
         'fullscreen.enter' : 'Zobrazit na celou obrazovku',
 
+        'search.title': 'Vyhledávání',
+        'search.results.title': 'Výsledky vyhledávání \'{searchString}\'',
+        'search.results.item.vocabulary.tooltip': 'Detail slovníku',
+        'search.results.item.term.tooltip': 'Detail pojmu',
         'search.slovnik' : 'Slovník',
         'search.informace' : 'Informace',
         'search.je-instanci-typu' : 'je instancí typu',

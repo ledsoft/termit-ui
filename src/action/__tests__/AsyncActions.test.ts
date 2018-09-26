@@ -1,7 +1,8 @@
 import configureMockStore from 'redux-mock-store';
 import {
     createVocabulary,
-    createVocabularyTerm, fetchVocabularyTerms,
+    createVocabularyTerm,
+    fetchVocabularyTerms,
     loadTerms,
     loadVocabularies,
     loadVocabulary,
@@ -19,6 +20,7 @@ import Vocabulary2 from "../../util/Vocabulary";
 import Routes from '../../util/Routes';
 import {LoadDefaultTermsAction, SearchAction, VocabulariesLoadingAction, VocabularyLoadingAction} from "../ActionType";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";
+import SearchResult from "../../model/SearchResult";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -162,9 +164,7 @@ describe('Async actions', () => {
             const results = require('../../rest-mock/searchResults');
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(results));
             const store = mockStore({});
-            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(search('test', true))).then(() => {
-                const searchSuccess: SearchAction = store.getActions()[1];
-                const result = searchSuccess.results;
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(search('test', true))).then((result: SearchResult[]) => {
                 expect(Array.isArray(result)).toBeTruthy();
                 result.forEach(r => {
                     expect(r.iri).toBeDefined();
@@ -205,7 +205,7 @@ describe('Async actions', () => {
                 {
                     label: 'Test term 2',
                     iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-2',
-                    parentTermUri: parentTerm.iri
+                    parent: parentTerm.iri
                 },
             );
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
@@ -261,5 +261,4 @@ describe('Async actions', () => {
                 });
         });
     });
-
 });
