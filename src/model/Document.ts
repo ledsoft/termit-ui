@@ -1,4 +1,4 @@
-import OntologicalVocabulary from '../util/Vocabulary';
+import OntologicalVocabulary from '../util/VocabularyUtils';
 import File, {CONTEXT as FILE_CONTEXT} from "./File";
 
 const ctx = {

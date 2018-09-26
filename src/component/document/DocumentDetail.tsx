@@ -7,7 +7,7 @@ import {ThunkDispatch} from "redux-thunk";
 import {connect} from "react-redux";
 import {Action} from "redux";
 import {loadDocument} from "../../action/ComplexActions";
-import {IRI} from "../../util/Vocabulary";
+import {IRI} from "../../util/VocabularyUtils";
 import Document from "../../model/Document";
 
 

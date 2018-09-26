@@ -5,7 +5,7 @@ import {formatMessage, i18n} from "../../../../__tests__/environment/IntlUtil";
 import SearchResultsOverlay from "../SearchResultsOverlay";
 import SearchResult from "../../../../model/SearchResult";
 import Generator from "../../../../__tests__/environment/Generator";
-import Vocabulary from "../../../../util/Vocabulary";
+import Vocabulary from "../../../../util/VocabularyUtils";
 import Routing from '../../../../util/Routing';
 import Routes from "../../../../util/Routes";
 

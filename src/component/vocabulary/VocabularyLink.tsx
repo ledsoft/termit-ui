@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Vocabulary from "../../model/Vocabulary";
-import Vocabulary2 from "../../util/Vocabulary";
+import Vocabulary2 from "../../util/VocabularyUtils";
 import {Link} from "react-router-dom";
 import Constants from "../../util/Constants";
 

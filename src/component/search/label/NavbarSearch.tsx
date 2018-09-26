@@ -12,7 +12,7 @@ import {search} from "../../../action/AsyncActions";
 import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
 import Routing from '../../../util/Routing';
-import Vocabulary from "../../../util/Vocabulary";
+import Vocabulary from "../../../util/VocabularyUtils";
 
 interface NavbarSearchProps extends HasI18n {
     search: (searchString: string) => Promise<object>;

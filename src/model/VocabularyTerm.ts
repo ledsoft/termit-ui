@@ -1,9 +1,9 @@
-import OntologicalVocabulary from "../util/Vocabulary";
+import OntologicalVocabulary from "../util/VocabularyUtils";
 
 const ctx = {
     iri: '@id',
     label: "http://www.w3.org/2000/01/rdf-schema#label",
-    description: "http://www.w3.org/2000/01/rdf-schema#comment",
+    comment: "http://www.w3.org/2000/01/rdf-schema#comment",
     subTerms: "http://www.w3.org/2004/02/skos/core#narrower",
     sources: "http://purl.org/dc/elements/1.1/source",
     type: "@type",

@@ -5,7 +5,7 @@ import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {shallow} from "enzyme";
 import {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
 import createMemoryHistory from "history/createMemoryHistory";
-import {IRI} from "../../../util/Vocabulary";
+import {IRI} from "../../../util/VocabularyUtils";
 
 
 describe('VocabularyDetail', () => {

@@ -16,7 +16,7 @@ import thunk, {ThunkDispatch} from 'redux-thunk';
 import {Action} from 'redux';
 import Routing from '../../util/Routing';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
-import Vocabulary2 from "../../util/Vocabulary";
+import Vocabulary2 from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
 import ActionType, {
     LoadDefaultTermsAction,

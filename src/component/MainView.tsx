@@ -115,6 +115,7 @@ export class MainView extends React.Component<MainViewProps> {
                 <Switch>
                     <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
+                    <Route path={Routes.vocabularyTermDetail.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.annotateFile.path} component={FileDetail} exact={true}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route path={Routes.statistics.path} component={Statistics}/>
