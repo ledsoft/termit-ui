@@ -181,7 +181,7 @@ describe('Async actions', () => {
             });
         });
 
-        it('compacts incoming JSON-LD data using VocabularyResult context', () => {
+        it('compacts incoming JSON-LD data using SearchResult context', () => {
             const results = require('../../rest-mock/searchResults');
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(results));
             const store = mockStore({});
@@ -190,6 +190,9 @@ describe('Async actions', () => {
                 result.forEach(r => {
                     expect(r.iri).toBeDefined();
                     expect(r.label).toBeDefined();
+                    if (r.hasType(Vocabulary2.TERM)) {
+                        expect(r.vocabularyIri).toBeDefined();
+                    }
                 })
             });
         });
