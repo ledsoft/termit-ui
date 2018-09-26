@@ -130,6 +130,11 @@ export default {
         'search.pojem' : 'Pojem',
         'search.typ' : 'Typ',
 
+        'annotation.form.suggestedterm.message': 'Fráze není přiřazena žádnemu termínu.',
+        'annotation.form.invalidterm.message': 'Termín "%" nebyl nalezen v slovníku. ',
+        'annotation.form.assignedterm.termInfoLabel': 'Informace o termínu:',
+        'annotation.term.assignedterm.termLabel': 'Přiřazený termín:',
+
         'message.welcome': 'Vítejte v aplikaci TermIt!',
 
         'type.term': 'Pojem',

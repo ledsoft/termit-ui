@@ -114,26 +114,30 @@ class FileDetail extends React.Component<FileDetailProps> {
     }
 
     private handleMouseLeave = () => {
-
-        if (this.containerElement !== null) {
-            // const range = this.captureDocumentSelection(this.containerElement, this.containerElement.ownerDocument);
-            const range = this.surroundSelection(this.containerElement, this.containerElement.ownerDocument)
-
-            // tslint:disable-next-line:no-console
-            console.log(range);
-
-            // tslint:disable-next-line:no-console
-            console.log(this.containerElement);
+        if (this.containerElement) {
+            this.surroundSelection(this.containerElement, this.containerElement.ownerDocument)
         }
-
-
-        const sel = window.getSelection();
-        // tslint:disable-next-line:no-console
-        console.log(sel);
     };
 
+    // private onAnnotate = () => {
+    // };
+    //
+    // private onSave = () => {
+    // };
 
     public render() {
+        // const actions = [];
+        // actions.push(<Button key='glossary.edit'
+        //                          color='secondary'
+        //                          title={"annotate"}
+        //                          size='sm'
+        //                          onClick={this.onAnnotate}>{"✎"}</Button>);
+        // actions.push(<Button key='glossary.save'
+        //                          color='secondary'
+        //                          title={"save"}
+        //                          size='sm'
+        //                          onClick={this.onSave}>{"✓"}</Button>);
+
         const isValidNode = () => {
             return true;
         };
@@ -150,16 +154,6 @@ class FileDetail extends React.Component<FileDetailProps> {
         </div>
     }
 
-    public componentDidUpdate() {
-        if (this.containerElement && (this.containerElement.children.length !== 0)) {
-
-            // tslint:disable-next-line:no-console
-            console.log(this.containerElement);
-        } else {
-            // tslint:disable-next-line:no-console
-            console.log('not yet ...');
-        }
-    }
 }
 
 export default connect((state: TermItState) => {

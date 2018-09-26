@@ -6,7 +6,7 @@ import {Action} from "redux";
 import VocabularyTerm from "../../model/VocabularyTerm";
 import {selectVocabularyTerm} from "../../action/SyncActions";
 import {injectIntl} from "react-intl";
-import withI18n from "../hoc/withI18n";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button} from "reactstrap";
 import SimplePopupWithActions from "./SimplePopupWithActions";
 import "./Annotation.scss";
@@ -14,7 +14,7 @@ import TermItState from "../../model/TermItState";
 import Vocabulary from "../../model/Vocabulary";
 import OutgoingLink from "../misc/OutgoingLink";
 
-interface AnnotationProps {
+interface AnnotationProps extends HasI18n {
     about: string
     property: string
     resource?: string
@@ -79,18 +79,19 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
     };
 
     private getReadOnlyComponent = () => {
+        const i18n = this.props.i18n;
         const term = (this.props.resource) ? this.findTermByIri(this.props.resource) : null;
         let outputComponent = <div/>;
         switch (this.getTermState()) {
             case TermState.ASSIGNED:
                 const termCommentRow = (term!.comment) ? <tr>
-                    <td>{'Term info : '}</td>
+                    <td>{i18n('annotation.form.assignedterm.termInfoLabel')}</td>
                     <td>{term!.comment}</td>
                 </tr> : "";
 
                 outputComponent = <table>
                     <tr>
-                        <td>{'Assigned term : '}</td>
+                        <td>{i18n('annotation.term.assignedterm.termLabel')}</td>
                         <td><OutgoingLink
                             label={term!.label}
                             iri={term!.iri}/></td>
@@ -100,12 +101,12 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
                 break;
             case TermState.SUGGESTED:
                 outputComponent = <span className={'an-warning'}>
-                    {'Phrase is not assigned to a vocabulary term.'}
+                    {i18n('annotation.form.suggestedterm.message')}
                     </span>
                 break;
             case TermState.INVALID:
                 outputComponent = <span className={'an-error'}>
-                    {'Term "' + this.props.resource + '" not found in vocabulary.'}
+                    {i18n('annotation.form.invalidterm.message').replace('%', this.props.resource!)}
                     </span>
                 break;
         }
