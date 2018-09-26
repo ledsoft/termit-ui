@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import {injectIntl, IntlProvider} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
-import {connect} from "react-redux";
+import {connect, Provider} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {loadFileContent, loadTerms} from "../../action/ComplexActions";
 import {ThunkDispatch} from "redux-thunk";
@@ -13,22 +13,25 @@ import * as ReactDOM from 'react-dom';
 import {RouteComponentProps} from "react-router";
 import Vocabulary2, {IRI} from "../../util/VocabularyUtils";
 import Vocabulary from "../../model/Vocabulary";
+import TermItStore from "../../store/TermItStore";
+import IntlData from "../../model/IntlData";
 
 
 interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
     document: Document,
     fileIri: string | null,
-    fileContent: string| null
+    fileContent: string | null
     loadContentFile: (documentIri: IRI, fileName: string) => void
     loadTerms: (normalizedVocabularyName: string) => void
+    intl: IntlData
 }
 
 class FileDetail extends React.Component<FileDetailProps> {
     private containerElement: HTMLDivElement | null;
 
     public componentDidMount(): void {
-        const normalizedFileName =  this.props.match.params.name;
+        const normalizedFileName = this.props.match.params.name;
         if (this.props.vocabulary.iri) {
             this.props.loadTerms(this.getNormalizedName(this.props.vocabulary.iri))
         }
@@ -68,27 +71,47 @@ class FileDetail extends React.Component<FileDetailProps> {
         const selection = window.getSelection();
 
         if (!selection.isCollapsed) {
-            const span = document.createElement("span");
+
 
             if (selection) {
                 const sel = window.getSelection();
                 if (sel.rangeCount) {
                     const range = sel.getRangeAt(0).cloneRange();
-                    range.surroundContents(span);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
 
-                    ReactDOM.render(this.getAnnotation("sample-text"), span);
+                    const fragment = range.cloneContents();
+                    if ((fragment.childNodes.length === 1) && (fragment.childNodes[0].nodeType === Node.TEXT_NODE)) {
+                        const span = document.createElement("span");
+                        const text = fragment.childNodes[0].nodeValue!;
+
+                        range.extractContents();
+                        range.surroundContents(span);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+
+                        ReactDOM.render(
+                            this.getAnnotation(text),
+                            span);
+                    }
+
+
                 }
             }
         }
     }
 
 
-    private getAnnotation(text: string) {
-        return <Annotation about={'_:fsdjifoisj'} property={"ddo:je-vyskytem-termu"} resource={"http://test.org/pojem/metropolitni-plan"} typeof={"ddo:vyskyt-termu"} text={text}/>
+    private getAnnotation = (text: string) => {
+        return <Provider store={TermItStore}>
+            <IntlProvider {...this.props.intl}>
+                <Annotation about={this.getRDFNodeId()} property={"ddo:je-vyskytem-termu"} typeof={"ddo:vyskyt-termu"}
+                            text={text}/>
+            </IntlProvider>
+        </Provider>
     }
 
+    private getRDFNodeId(): string {
+        return '_:' + Math.random().toString(36).substring(8);
+    }
 
     private handleMouseLeave = () => {
 
@@ -108,7 +131,6 @@ class FileDetail extends React.Component<FileDetailProps> {
         // tslint:disable-next-line:no-console
         console.log(sel);
     };
-
 
 
     public render() {
@@ -145,7 +167,8 @@ export default connect((state: TermItState) => {
         vocabulary: state.vocabulary,
         document: state.document,
         fileIri: state.fileIri,
-        fileContent: state.fileContent
+        fileContent: state.fileContent,
+        intl: state.intl
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {

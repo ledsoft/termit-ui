@@ -1,7 +1,8 @@
 export interface ErrorData {
     requestUrl?: string,
     messageId?: string,
-    message?: string
+    message?: string,
+    status?: number  // Response status
 }
 
 /**
@@ -12,31 +13,37 @@ export default class ErrorInfo {
     private readonly mRequestUrl?: string;
     private readonly mMessageId?: string;
     private readonly mMessage?: string;
+    private readonly mStatus?: number;
 
     constructor(origin: string, data: ErrorData) {
         this.mOrigin = origin;
         this.mRequestUrl = data.requestUrl;
         this.mMessage = data.message;
         this.mMessageId = data.messageId;
+        this.mStatus = data.status;
     }
 
     /**
      * Represents the action which originated this error
      */
-    get origin(): string {
+    public get origin(): string {
         return this.mOrigin;
     }
 
-    get requestUrl(): string | undefined {
+    public get requestUrl(): string | undefined {
         return this.mRequestUrl;
     }
 
-    get messageId(): string | undefined {
+    public get messageId(): string | undefined {
         return this.mMessageId;
     }
 
-    get message(): string | undefined {
+    public get message(): string | undefined {
         return this.mMessage;
+    }
+
+    public get status(): number | undefined {
+        return this.mStatus;
     }
 }
 

@@ -6,6 +6,7 @@ export default {
     messages: {
         'please-wait': 'Please wait...',
         'cancel': 'Cancel',
+        'not-implemented': 'Not implemented, yet!',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
@@ -39,8 +40,8 @@ export default {
         'main.nav.dashboard': 'Dashboard',
         'main.nav.vocabularies': 'Vocabularies',
         'main.nav.statistics': 'Statistics',
-        'main.nav.search': 'Term Search',
-        'main.nav.facetedSearch': 'Faceted Term Search',
+        'main.nav.search': 'Search',
+        'main.nav.facetedSearch': 'Faceted Search',
         'main.nav.document': 'Document',
         'main.nav.admin': 'Administration',
         'main.user-profile': 'User profile',

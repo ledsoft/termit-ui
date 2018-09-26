@@ -86,15 +86,16 @@ export class Ajax {
                 });
             }
             const response = error.response;
-            if (response.status === 401) {
+            if (response.status === Constants.STATUS_UNAUTHORIZED) {
                 Routing.transitionTo(Routes.login);
             }
             if (typeof response.data === "string") {
                 return Promise.reject({
-                    messageId: 'ajax.unparseable-error'
+                    messageId: 'ajax.unparseable-error',
+                    status: response.status
                 });
             } else {
-                return Promise.reject(response.data);
+                return Promise.reject(Object.assign({}, response.data, {status: response.status}));
             }
         });
         if (process.env.REACT_APP_MOCK_REST_API) {
@@ -121,14 +122,14 @@ export class Ajax {
         };
         const par = new URLSearchParams();
         // @ts-ignore
-        const paramData: object = config.getParams()!==undefined? config.getParams():{};
+        const paramData: object = config.getParams() !== undefined ? config.getParams() : {};
         Object.keys(paramData).forEach(n => par.append(n, paramData[n]));
 
         if (config.getContentType() === Constants.X_WWW_FORM_URLENCODED) {
             return this.axiosInstance.post(path, par, conf);
         } else {
-            const query: string = config.getParams()? "?"+par.toString() : "";
-            return this.axiosInstance.post(path+query, config.getContent(), conf);
+            const query: string = config.getParams() ? "?" + par.toString() : "";
+            return this.axiosInstance.post(path + query, config.getContent(), conf);
         }
     }
 

@@ -9,9 +9,6 @@ import Routing from '../../util/Routing';
 import Routes from '../../util/Routes';
 
 export class Dashboard extends React.Component<HasI18n> {
-    private onClick = () => {
-        //
-    };
 
     private static onVocabularyManagementClick(): void {
         Routing.transitionTo(Routes.vocabularies);
@@ -50,9 +47,9 @@ export class Dashboard extends React.Component<HasI18n> {
                     <DashboardTile text={i18n('dashboard.vocabulary.tile')}
                                    onClick={Dashboard.onVocabularyManagementClick}/>
                 </Col>
-                <Col xs={4} className='dashboard-sector'>
-                    <DashboardTile text={i18n('dashboard.document.tile')} onClick={this.onClick}/>
-                </Col>
+                {/*<Col xs={4} className='dashboard-sector'>*/}
+                {/*<DashboardTile text={i18n('dashboard.document.tile')} onClick={this.onClick}/>*/}
+                {/*</Col>*/}
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardTile text={i18n('dashboard.statistics.tile')} onClick={Dashboard.onStatisticsClick}/>
                 </Col>
@@ -68,9 +65,9 @@ export class Dashboard extends React.Component<HasI18n> {
                     <DashboardQuickAccessTile text={i18n('dashboard.create-vocabulary.tile')}
                                               onClick={Dashboard.onCreateVocabularyClick}/>
                 </Col>
-                <Col xs={4} className='dashboard-sector'>
-                    <DashboardQuickAccessTile text={i18n('dashboard.add-document.tile')} onClick={this.onClick}/>
-                </Col>
+                {/*<Col xs={4} className='dashboard-sector'>*/}
+                {/*<DashboardQuickAccessTile text={i18n('dashboard.add-document.tile')} onClick={this.onClick}/>*/}
+                {/*</Col>*/}
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardQuickAccessTile text={i18n('dashboard.search.tile')} onClick={Dashboard.onSearchClick}/>
                 </Col>

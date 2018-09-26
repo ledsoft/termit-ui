@@ -8,7 +8,7 @@ import {
     Container,
     DropdownItem,
     DropdownMenu,
-    DropdownToggle,
+    DropdownToggle, Jumbotron,
     Nav,
     Navbar,
     NavbarBrand,
@@ -61,6 +61,9 @@ export class MainView extends React.Component<MainViewProps> {
     public render() {
         const {i18n, user} = this.props;
         const path = this.props.location.pathname;
+        if (user === EMPTY_USER) {
+            return this.renderPlaceholder();
+        }
         return <div className='wrapper'>
             <header>
                 <Navbar color="light" light={true} expand={"md"} className={"d-flex"}>
@@ -80,10 +83,6 @@ export class MainView extends React.Component<MainViewProps> {
                             <NavLink
                                 href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
                         </NavItem>
-                        <NavItem active={path === Routes.search.path}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.search.path)}>{i18n('main.nav.search')}</NavLink>
-                        </NavItem>
                         <NavItem active={path === Routes.facetedSearch.path}>
                             <NavLink
                                 href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
@@ -101,8 +100,9 @@ export class MainView extends React.Component<MainViewProps> {
                                 {user.abbreviatedName}
                             </DropdownToggle>
                             <DropdownMenu right={true}>
-                                <DropdownItem
-                                    onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
+                                <DropdownItem disabled={true}
+                                              title={i18n('not-implemented')}
+                                              onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
                                 <DropdownItem divider={true}/>
                                 <DropdownItem onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem>
                             </DropdownMenu>
@@ -125,6 +125,11 @@ export class MainView extends React.Component<MainViewProps> {
                 </Switch>
             </Container>
             <Footer/>
+        </div>;
+    }
+
+    private renderPlaceholder() {
+        return <div className='wrapper center'><Jumbotron><h1>{this.props.i18n('message.welcome')}</h1></Jumbotron>
         </div>;
     }
 

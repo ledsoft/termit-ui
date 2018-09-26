@@ -12,6 +12,10 @@
   min-width: 20rem;
 }
 
+.search-results-overlay .popover-body {
+  background-color: #ffffff;
+}
+
 .search-results-overlay ul {
   list-style: none;
   padding: 0;
@@ -35,4 +39,9 @@
   border-top: 1px solid rgba(0, 0, 0, 0.15) !important;
   font-weight: bold;
   font-style: italic;
+}
+
+.search-result-no-results {
+  @extend .search-result-info;
+  border-top: none !important;
 }

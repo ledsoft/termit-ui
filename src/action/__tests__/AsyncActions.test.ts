@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import {
     createVocabulary,
-    createVocabularyTerm,
+    createVocabularyTerm, fetchUser,
     fetchVocabularyTerms,
     loadTerms,
     loadVocabularies,
@@ -18,9 +18,15 @@ import Authentication from '../../util/Authentication';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
 import Vocabulary2 from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
-import {LoadDefaultTermsAction, SearchAction, VocabulariesLoadingAction, VocabularyLoadingAction} from "../ActionType";
+import ActionType, {
+    LoadDefaultTermsAction,
+    SearchAction,
+    VocabulariesLoadingAction,
+    VocabularyLoadingAction
+} from "../ActionType";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";
 import SearchResult from "../../model/SearchResult";
+import {ErrorData} from "../../model/ErrorInfo";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -35,8 +41,23 @@ const mockStore = configureMockStore([thunk]);
 
 describe('Async actions', () => {
 
-    describe('login', () => {
+    describe('fetch user', () => {
+        it('does not publish error message when status is 401', () => {
+            const error: ErrorData = {
+                message: 'Unauthorized',
+                status: Constants.STATUS_UNAUTHORIZED
+            };
+            Ajax.get = jest.fn().mockImplementation(() => Promise.reject(error));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(fetchUser())).then(() => {
+                const actions: Action[] = store.getActions();
+                const found = actions.find(a => a.type === ActionType.PUBLISH_MESSAGE);
+                return expect(found).not.toBeDefined();
+            });
+        });
+    });
 
+    describe('login', () => {
         it('saves JWT on login success', () => {
             const resp = {
                 data: {
@@ -160,7 +181,7 @@ describe('Async actions', () => {
             });
         });
 
-        it('compacts incoming JSON-LD data using VocabularyResult context', () => {
+        it('compacts incoming JSON-LD data using SearchResult context', () => {
             const results = require('../../rest-mock/searchResults');
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(results));
             const store = mockStore({});
@@ -169,6 +190,9 @@ describe('Async actions', () => {
                 result.forEach(r => {
                     expect(r.iri).toBeDefined();
                     expect(r.label).toBeDefined();
+                    if (r.hasType(Vocabulary2.TERM)) {
+                        expect(r.vocabularyIri).toBeDefined();
+                    }
                 })
             });
         });
