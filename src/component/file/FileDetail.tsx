@@ -3,7 +3,7 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadFileContent} from "../../action/ComplexActions";
+import {loadFileContent, loadTerms} from "../../action/ComplexActions";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import Document from "../../model/Document";
@@ -11,22 +11,32 @@ import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from '
 import Annotation from "../annotation/Annotation";
 import * as ReactDOM from 'react-dom';
 import {RouteComponentProps} from "react-router";
-import Vocabulary, {IRI} from "../../util/Vocabulary";
+import Vocabulary2, {IRI} from "../../util/Vocabulary";
+import Vocabulary from "../../model/Vocabulary";
 
 
 interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
+    vocabulary: Vocabulary,
     document: Document,
     fileIri: string | null,
     fileContent: string| null
     loadContentFile: (documentIri: IRI, fileName: string) => void
+    loadTerms: (normalizedVocabularyName: string) => void
 }
 
 class FileDetail extends React.Component<FileDetailProps> {
     private containerElement: HTMLDivElement | null;
 
     public componentDidMount(): void {
-        const normalizedName =  this.props.match.params.name;
-        this.props.loadContentFile(Vocabulary.create(this.props.document.iri), normalizedName);
+        const normalizedFileName =  this.props.match.params.name;
+        if (this.props.vocabulary.iri) {
+            this.props.loadTerms(this.getNormalizedName(this.props.vocabulary.iri))
+        }
+        this.props.loadContentFile(Vocabulary2.create(this.props.document.iri), normalizedFileName);
+    }
+
+    private getNormalizedName(iri: string): string {
+        return Vocabulary2.create(iri).fragment;
     }
 
     private getProcessingInstructions(): Instruction[] {
@@ -73,6 +83,7 @@ class FileDetail extends React.Component<FileDetailProps> {
             }
         }
     }
+
 
     private getAnnotation(text: string) {
         return <Annotation about={'_:fsdjifoisj'} property={"ddo:je-vyskytem-termu"} resource={"http://test.org/pojem/metropolitni-plan"} typeof={"ddo:vyskyt-termu"} text={text}/>
@@ -131,12 +142,14 @@ class FileDetail extends React.Component<FileDetailProps> {
 
 export default connect((state: TermItState) => {
     return {
+        vocabulary: state.vocabulary,
         document: state.document,
         fileIri: state.fileIri,
         fileContent: state.fileContent
     };
 }, (dispatch: ThunkDispatch<object, undefined, Action>) => {
     return {
-        loadContentFile: (documentIri: IRI, fileName: string) => dispatch(loadFileContent(documentIri, fileName))
+        loadContentFile: (documentIri: IRI, fileName: string) => dispatch(loadFileContent(documentIri, fileName)),
+        loadTerms: (normalizedVocabularyName: string) => dispatch(loadTerms(normalizedVocabularyName))
     };
 })(injectIntl(withI18n(FileDetail)));
