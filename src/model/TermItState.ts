@@ -6,7 +6,6 @@ import IntlData from "./IntlData";
 import Vocabulary, {EMPTY_VOCABULARY} from "./Vocabulary";
 import {QueryResultIF} from "./QueryResult";
 import VocabularyTerm from "./VocabularyTerm";
-import SearchResult from "./SearchResult";
 import Document, {EMPTY_DOCUMENT} from "./Document";
 
 /**
@@ -25,8 +24,7 @@ export default class TermItState {
     public messages: Message[];
     public intl: IntlData;
     public selectedTerm: VocabularyTerm | null;
-    public queryResults: {[key: string] : QueryResultIF};
-    public searchResults: SearchResult[] | null;
+    public queryResults: { [key: string]: QueryResultIF };
     public createdTermsCounter: number;
 
     constructor() {
@@ -43,8 +41,6 @@ export default class TermItState {
         this.intl = en;
         this.selectedTerm = null;
         this.queryResults = {};
-        // Null means initial state before any search, empty array means search without results
-        this.searchResults = null;
         this.createdTermsCounter = 0;
     }
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Search} from '../Search';
+import {NavbarSearch} from '../NavbarSearch';
 import {mountWithIntl} from "../../../../__tests__/environment/Environment";
 import {formatMessage, i18n} from "../../../../__tests__/environment/IntlUtil";
 import SearchResultsOverlay from "../SearchResultsOverlay";
@@ -11,36 +11,36 @@ import Routes from "../../../../util/Routes";
 
 jest.mock('../../../../util/Routing');
 
-describe('Search', () => {
+describe('NavbarSearch', () => {
 
-    let search: (str: string) => void;
-    let clearSearch: () => void;
+    let search: (str: string) => Promise<object>;
 
     beforeEach(() => {
-        search = jest.fn();
-        clearSearch = jest.fn();
+        search = jest.fn().mockImplementation(() => Promise.resolve([]));
     });
 
     it('does not render results component for initial state', () => {
-        const wrapper = mountWithIntl(<Search search={search} clearSearch={clearSearch} searchResults={null} i18n={i18n}
-                                              formatMessage={formatMessage}/>);
+        const wrapper = mountWithIntl(<NavbarSearch search={search} i18n={i18n} formatMessage={formatMessage}/>);
         const resultsOverlay = wrapper.find(SearchResultsOverlay);
         expect(resultsOverlay.exists()).toBeFalsy();
     });
 
     it('invokes search on change', () => {
-        const wrapper = mountWithIntl(<Search search={search} clearSearch={clearSearch} searchResults={null} i18n={i18n}
-                                              formatMessage={formatMessage}/>);
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+        const wrapper = mountWithIntl(<NavbarSearch search={search} i18n={i18n}
+                                                    formatMessage={formatMessage}/>, {attachTo: div});
         const searchStr = 'test';
         const input = wrapper.find('input');
         (input.getDOMNode() as HTMLInputElement).value = searchStr;
         input.simulate('change', input);
-        expect(search).toHaveBeenCalledWith(searchStr);
+        return Promise.resolve().then(() => {
+            expect(search).toHaveBeenCalledWith(searchStr);
+        });
     });
 
     it('does not invoke search on change if input is empty', () => {
-        const wrapper = mountWithIntl(<Search search={search} clearSearch={clearSearch} searchResults={null} i18n={i18n}
-                                              formatMessage={formatMessage}/>);
+        const wrapper = mountWithIntl(<NavbarSearch search={search} i18n={i18n} formatMessage={formatMessage}/>);
         const input = wrapper.find('input');
         (input.getDOMNode() as HTMLInputElement).value = '';
         input.simulate('change', input);
@@ -60,9 +60,8 @@ describe('Search', () => {
         }
         const div = document.createElement('div');
         document.body.appendChild(div);
-        const wrapper = mountWithIntl(<Search search={search} clearSearch={clearSearch} searchResults={results}
-                                              i18n={i18n}
-                                              formatMessage={formatMessage}/>, {attachTo: div});
+        const wrapper = mountWithIntl(<NavbarSearch search={search} i18n={i18n}
+                                                    formatMessage={formatMessage}/>, {attachTo: div});
         return Promise.resolve().then(() => {
             const items = wrapper.find('.search-result-link');
             expect(items.length).toEqual(10);
@@ -76,12 +75,15 @@ describe('Search', () => {
             iri: 'http://test/' + normalizedName,
             types: [Vocabulary.VOCABULARY]
         });
+        jest.fn().mockImplementation(() => Promise.resolve([result]));
         const div = document.createElement('div');
         document.body.appendChild(div);
-        const wrapper = mountWithIntl(<Search search={search} clearSearch={clearSearch} searchResults={[result]}
-                                              i18n={i18n}
-                                              formatMessage={formatMessage}/>, {attachTo: div});
-        (wrapper.find(Search).instance() as Search).openResult(result);
-        expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.vocabularyDetail, {params: new Map([['name', normalizedName]])});
+        const wrapper = mountWithIntl(<NavbarSearch search={search} i18n={i18n}
+                                                    formatMessage={formatMessage}/>, {attachTo: div});
+        (wrapper.find(NavbarSearch).instance() as NavbarSearch).search('test');
+        return Promise.resolve().then(() => {
+            (wrapper.find(NavbarSearch).instance() as NavbarSearch).openResult(result);
+            expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.vocabularyDetail, {params: new Map([['name', normalizedName]])});
+        });
     });
 });

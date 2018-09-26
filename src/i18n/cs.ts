@@ -47,6 +47,7 @@ export default {
         'main.search.placeholder': 'Hledat',
         'main.search.tooltip': 'Hledat daný výraz ve všech slovnících a pojmech',
         'main.search.count-info-and-link': 'Zobrazeno {displayed} z {count} výsledků. Zobrazit všechny.',
+        'main.search.no-results': 'Nenalezeny žádné výsledky.',
 
         'dashboard.vocabulary.tile': 'Správa slovníků',
         'dashboard.document.tile': 'Správa dokumentů',

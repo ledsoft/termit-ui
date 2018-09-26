@@ -48,6 +48,7 @@ export default {
         'main.search.placeholder': 'Search',
         'main.search.tooltip': 'Search in all vocabularies and terms',
         'main.search.count-info-and-link': 'Showing {displayed} of {count} results. See all results.',
+        'main.search.no-results': 'No results found.',
 
         'dashboard.vocabulary.tile': 'Vocabulary Management',
         'dashboard.document.tile': 'Document Management',

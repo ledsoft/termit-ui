@@ -1,5 +1,5 @@
 import * as SyncActions from './SyncActions';
-import {asyncActionFailure, asyncActionRequest, searchSuccess} from './SyncActions';
+import {asyncActionFailure, asyncActionRequest} from './SyncActions';
 import Ajax, {content, params} from '../util/Ajax';
 import {Action, Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
@@ -19,7 +19,7 @@ import VocabularyTerm, {CONTEXT as TERM_CONTEXT, VocabularyTermData} from "../mo
 import FetchOptionsFunction from "../model/Functions";
 import {IRI} from "../util/Vocabulary";
 import ActionType from "./ActionType";
-import {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
+import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 
 /*
@@ -184,7 +184,7 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
                             term.subTerms = Array.isArray(term.subTerms) ? term.subTerms.map(subTerm => subTerm.iri) : [term.subTerms.iri];
                         }
                     });
-                return data
+                    return data
                 }
             )
             .catch((error: ErrorData) => {
@@ -251,7 +251,7 @@ export function search(searchString: string, disableLoading: boolean = false) {
         return Ajax.get(Constants.API_PREFIX + '/search/label', params({searchString: encodeURI(searchString)}))
             .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: SearchResultData[]) => dispatch(searchSuccess(data)))
+            .then((data: SearchResultData[]) => data.map(d => new SearchResult(d)))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
@@ -271,12 +271,12 @@ export function loadFileContent(documentIri: IRI, fileName: string) {
         dispatch(SyncActions.loadFileContentRequest());
         return Ajax
             .get(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content?"
-                 + "file=" + fileName + "&"
-                 + (documentIri.namespace ? "namespace=" + documentIri.namespace : "")
-                )
+                + "file=" + fileName + "&"
+                + (documentIri.namespace ? "namespace=" + documentIri.namespace : "")
+            )
             .then((data: object) =>
-                    data.toString()
-                )
+                data.toString()
+            )
             .then((data: string) =>
                 dispatch(SyncActions.loadFileContentSuccess(data)))
             .catch((error: ErrorData) => {
