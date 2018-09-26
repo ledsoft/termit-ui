@@ -9,7 +9,7 @@ import './Search.scss';
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
 import {search} from "../../../action/AsyncActions";
-import Vocabulary from "../../../util/Vocabulary";
+import Vocabulary from "../../../util/VocabularyUtils";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
 

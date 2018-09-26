@@ -1,4 +1,4 @@
-import Vocabulary from "../util/Vocabulary";
+import Vocabulary from "../util/VocabularyUtils";
 
 export const CONTEXT = {
     "iri": "@id",

@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "redux-thunk";
 import {Action} from "redux";
-import IRIFactory, {IRI} from "../../util/Vocabulary";
+import IRIFactory, {IRI} from "../../util/VocabularyUtils";
 import {loadVocabulary} from "../../action/ComplexActions";
 
 interface DocumentTabProps extends HasI18n {

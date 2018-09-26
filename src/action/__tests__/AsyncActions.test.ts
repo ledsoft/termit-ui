@@ -16,7 +16,7 @@ import {Action} from 'redux';
 import Routing from '../../util/Routing';
 import Authentication from '../../util/Authentication';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
-import Vocabulary2 from "../../util/Vocabulary";
+import Vocabulary2 from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
 import {LoadDefaultTermsAction, SearchAction, VocabulariesLoadingAction, VocabularyLoadingAction} from "../ActionType";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";

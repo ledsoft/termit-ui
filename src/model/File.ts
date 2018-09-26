@@ -1,4 +1,4 @@
-import OntologicalVocabulary from '../util/Vocabulary';
+import OntologicalVocabulary from '../util/VocabularyUtils';
 
 const ctx = {
     "iri": "@id",

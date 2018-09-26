@@ -1,6 +1,6 @@
 import * as React from "react";
 import AssetCount from "./assetcount/AssetCount";
-import Vocabulary from "../../util/Vocabulary";
+import Vocabulary from "../../util/VocabularyUtils";
 import {HasI18n, default as withI18n} from "../hoc/withI18n";
 import {injectIntl} from "react-intl";
 import {Responsive, WidthProvider} from 'react-grid-layout';

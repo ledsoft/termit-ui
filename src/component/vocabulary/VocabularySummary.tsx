@@ -12,7 +12,7 @@ import {Action} from "redux";
 import VocabularyMetadata from "./VocabularyMetadata";
 import {Button} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
-import Vocabulary2, {IRI} from "../../util/Vocabulary";
+import Vocabulary2, {IRI} from "../../util/VocabularyUtils";
 import {GoThreeBars} from 'react-icons/go';
 
 interface VocabularySummaryProps {
