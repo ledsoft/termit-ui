@@ -206,7 +206,7 @@ export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermPr
             subTerms: children as string[],
             parent: parent as string,
             types: types as string[],
-            source: data.optionSource as string,
+            sources: [data.optionSource as string],
         }), this.props.match.params.name);
     }
 
