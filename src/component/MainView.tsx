@@ -104,8 +104,9 @@ export class MainView extends React.Component<MainViewProps> {
                                 {user.abbreviatedName}
                             </DropdownToggle>
                             <DropdownMenu right={true}>
-                                <DropdownItem
-                                    onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
+                                <DropdownItem disabled={true}
+                                              title={i18n('not-implemented')}
+                                              onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
                                 <DropdownItem divider={true}/>
                                 <DropdownItem onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem>
                             </DropdownMenu>

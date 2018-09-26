@@ -6,6 +6,7 @@ export default {
     messages: {
         'please-wait': 'Prosím, čekejte...',
         'cancel': 'Zrušit',
+        'not-implemented': 'Zatím není naimplementováno!',
 
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
