@@ -83,6 +83,15 @@ export class Search extends React.Component<Props, State> {
     }
 
     private runAngular() {
+        const controller = controllerCreator(
+            this.props.lang,
+            this.props.i18n,
+            this.props.endpointUrl,
+            this.getSparqlQuery(this.props.lang),
+            this.getFacets(),
+            this.getFacetOptions());
+        // https://docs.angularjs.org/guide/di#inline-array-annotation
+        controller.$inject = ['$scope', 'FacetHandler', 'FacetResultHandler', 'facetUrlStateHandlerService'];
         angular.module('facetApp', ['seco.facetedSearch'])
             .config(['$provide', ($provide: any) => {
                 $provide.decorator('$browser', ['$delegate', ($delegate: any) => {
@@ -95,13 +104,7 @@ export class Search extends React.Component<Props, State> {
                     return $delegate;
                 }]);
             }])
-            .controller('MainController', controllerCreator(
-                this.props.lang,
-                this.props.i18n,
-                this.props.endpointUrl,
-                this.getSparqlQuery(this.props.lang),
-                this.getFacets(),
-                this.getFacetOptions()));
+            .controller('MainController', controller );
     }
 
     private destroyAngular() {
