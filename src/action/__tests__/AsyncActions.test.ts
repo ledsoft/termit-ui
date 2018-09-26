@@ -1,7 +1,8 @@
 import configureMockStore from 'redux-mock-store';
 import {
     createVocabulary,
-    createVocabularyTerm, fetchUser,
+    createVocabularyTerm,
+    fetchUser,
     fetchVocabularyTerms,
     loadTerms,
     loadVocabularies,
@@ -14,7 +15,6 @@ import Ajax from '../../util/Ajax';
 import thunk, {ThunkDispatch} from 'redux-thunk';
 import {Action} from 'redux';
 import Routing from '../../util/Routing';
-import Authentication from '../../util/Authentication';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
 import Vocabulary2 from "../../util/Vocabulary";
 import Routes from '../../util/Routes';
@@ -35,7 +35,6 @@ jest.mock('../../util/Ajax', () => ({
     params: require.requireActual('../../util/Ajax').params,
     accept: require.requireActual('../../util/Ajax').accept,
 }));
-jest.mock('../../util/Authentication');
 
 const mockStore = configureMockStore([thunk]);
 
@@ -58,23 +57,6 @@ describe('Async actions', () => {
     });
 
     describe('login', () => {
-        it('saves JWT on login success', () => {
-            const resp = {
-                data: {
-                    loggedIn: true
-                },
-                headers: {}
-            };
-            const jwt = 'Bearer jwt12345';
-            resp.headers[Constants.AUTHORIZATION_HEADER] = jwt;
-            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve(resp));
-            Authentication.saveToken = jest.fn();
-            const store = mockStore({});
-            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(login('test', 'test'))).then(() => {
-                expect(Authentication.saveToken).toHaveBeenCalledWith(jwt);
-            });
-        });
-
         it('transitions to home on login success', () => {
             const resp = {
                 data: {

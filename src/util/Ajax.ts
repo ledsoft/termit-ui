@@ -78,6 +78,7 @@ export class Ajax {
             return reqConfig;
         });
         this.axiosInstance.interceptors.response.use((resp) => {
+            Authentication.saveToken(resp.headers[Constants.AUTHORIZATION_HEADER]);
             return resp;
         }, (error) => {
             if (!error.response) {

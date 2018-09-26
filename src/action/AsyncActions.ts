@@ -5,7 +5,6 @@ import {Action, Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
 import Routing from '../util/Routing';
 import Constants from '../util/Constants';
-import Authentication from '../util/Authentication';
 import {CONTEXT as USER_CONTEXT, UserData} from '../model/User';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT, VocabularyData} from "../model/Vocabulary";
 import Routes from "../util/Routes";
@@ -56,7 +55,6 @@ export function login(username: string, password: string) {
                 if (!data.loggedIn) {
                     return Promise.reject(data);
                 } else {
-                    Authentication.saveToken(resp.headers[Constants.AUTHORIZATION_HEADER]);
                     Routing.transitionToHome();
                     dispatch(SyncActions.loginSuccess());
                     return Promise.resolve();
