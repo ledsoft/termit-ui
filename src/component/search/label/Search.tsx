@@ -32,6 +32,16 @@ class Search extends React.Component<SearchProps, SearchState> {
         };
     }
 
+    public componentDidMount() {
+        const query = this.props.location.search;
+        const match = query.match(/searchString=(.+)/);
+        if (match) {
+            const searchString = match[1];
+            this.setState({searchString});
+            this.search(searchString);
+        }
+    }
+
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         this.setState({searchString: value});
@@ -39,14 +49,17 @@ class Search extends React.Component<SearchProps, SearchState> {
 
     private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            this.search();
+            this.search(this.state.searchString);
         }
     };
 
-    public search = () => {
-        const searchVal = this.state.searchString;
-        if (searchVal.trim().length > 0) {
-            this.props.search(searchVal).then((data: SearchResult[]) => this.setState({results: data}));
+    private onClick = () => {
+        this.search(this.state.searchString);
+    };
+
+    public search = (searchString: string) => {
+        if (searchString.trim().length > 0) {
+            this.props.search(searchString).then((data: SearchResult[]) => this.setState({results: data}));
         }
     };
 
@@ -76,7 +89,7 @@ class Search extends React.Component<SearchProps, SearchState> {
                                    onChange={this.onChange} onKeyPress={this.onKeyPress}/>
                         </FormGroup>
                         <div className='mb-2'>
-                            <Button size='sm' color='primary' onClick={this.search}>{i18n('search.title')}</Button>
+                            <Button size='sm' color='primary' onClick={this.onClick}>{i18n('search.title')}</Button>
                         </div>
                     </Form>
                 </Col>

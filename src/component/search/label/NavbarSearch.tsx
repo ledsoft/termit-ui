@@ -60,8 +60,10 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         this.clear();
         if (result.types.indexOf(Vocabulary.VOCABULARY) !== -1) {
             Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
+        } else {
+            // TODO Transition to term otherwise (once term detail is implemented)
+            alert('Not implemented, yet!');
         }
-        // TODO Transition to term otherwise (once term detail is implemented)
     };
 
     private openSearchView = () => {
