@@ -42,7 +42,6 @@ export default {
         'main.nav.statistics': 'Statistics',
         'main.nav.search': 'Search',
         'main.nav.facetedSearch': 'Faceted Search',
-        'main.nav.document': 'Document',
         'main.nav.admin': 'Administration',
         'main.user-profile': 'User profile',
         'main.logout': 'Log out',
@@ -130,6 +129,11 @@ export default {
         'search.ma-vztahy-typu': 'has relation types',
         'search.pojem': 'Term',
         'search.typ': 'Type',
+
+        'annotation.form.suggestedterm.message': 'Phrase is not assigned to a vocabulary term.',
+        'annotation.form.invalidterm.message': 'Term "%" not found in vocabulary.',
+        'annotation.form.assignedterm.termInfoLabel': 'Term info : ',
+        'annotation.term.assignedterm.termLabel': 'Assigned term : ',
 
         'message.welcome': 'Welcome to TermIt!',
 
