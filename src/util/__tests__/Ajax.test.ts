@@ -5,6 +5,7 @@ import {EMPTY_USER} from "../../model/User";
 import Constants from "../Constants";
 import Routes from '../Routes';
 import {AxiosInstance} from "axios";
+import {ErrorData} from "../../model/ErrorInfo";
 
 jest.mock('../Routing');
 
@@ -24,8 +25,8 @@ describe('Ajax', () => {
     });
 
     describe('error handling', () => {
-        it('directly transitions to login route when Unauthorized is received', () => {
-            mock.onGet('/users/current').reply(401);
+        it('directly transitions to login route when 401 Unauthorized is received', () => {
+            mock.onGet('/users/current').reply(Constants.STATUS_UNAUTHORIZED);
             return sut.get('/users/current').catch(() => {
                 return expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.login);
             });
@@ -46,7 +47,8 @@ describe('Ajax', () => {
             };
             mock.onAny().reply(409, errorObj);
             return sut.put('/users/current', content(EMPTY_USER)).catch(error => {
-                return expect(error).toEqual(errorObj);
+                expect(error.message).toEqual(errorObj.message);
+                return expect(error.requestUrl).toEqual(errorObj.requestUrl);
             });
         });
 
@@ -54,6 +56,27 @@ describe('Ajax', () => {
             mock.onAny().reply(500, "<html>Fatal error occurred on server</html>");
             return sut.get('/users').catch(error => {
                 expect(error.messageId).toBeDefined();
+                return expect(error.messageId).toEqual('ajax.unparseable-error');
+            });
+        });
+
+        it('provides response status in error info object', () => {
+            const status = 409;
+            const errorObj = {
+                message: 'Validation of record failed',
+                requestUrl: '/users/current'
+            };
+            mock.onAny().reply(status, errorObj);
+            return sut.put('/users/current', content(EMPTY_USER)).catch((error: ErrorData) => {
+                return expect(error.status).toEqual(status);
+            });
+        });
+
+        it('provides response status when response content is not parseable JSON error info', () => {
+            const status = 500;
+            mock.onAny().reply(status, "<html>Fatal error occurred on server</html>");
+            return sut.get('/users').catch(error => {
+                expect(error.status).toEqual(status);
                 return expect(error.messageId).toEqual('ajax.unparseable-error');
             });
         });

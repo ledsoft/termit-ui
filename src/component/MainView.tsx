@@ -8,7 +8,7 @@ import {
     Container,
     DropdownItem,
     DropdownMenu,
-    DropdownToggle,
+    DropdownToggle, Jumbotron,
     Nav,
     Navbar,
     NavbarBrand,
@@ -61,6 +61,9 @@ export class MainView extends React.Component<MainViewProps> {
     public render() {
         const {i18n, user} = this.props;
         const path = this.props.location.pathname;
+        if (user === EMPTY_USER) {
+            return this.renderPlaceholder();
+        }
         return <div className='wrapper'>
             <header>
                 <Navbar color="light" light={true} expand={"md"} className={"d-flex"}>
@@ -124,6 +127,11 @@ export class MainView extends React.Component<MainViewProps> {
                 </Switch>
             </Container>
             <Footer/>
+        </div>;
+    }
+
+    private renderPlaceholder() {
+        return <div className='wrapper center'><Jumbotron><h1>{this.props.i18n('message.welcome')}</h1></Jumbotron>
         </div>;
     }
 
