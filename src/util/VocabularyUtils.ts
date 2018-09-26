@@ -1,8 +1,6 @@
 /**
  * Vocabulary used by the application ontological model.
  */
-import constants from "./Constants";
-import * as _ from "lodash";
 
 export interface IRI {
     namespace? : string,
@@ -15,22 +13,6 @@ export default {
     FILE: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor",
     DOCUMENT: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/document",
     USER: "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu",
-
-    equal(iri1 : IRI, iri2: IRI) {
-        return _.isEqual(this.complete(iri1),this.complete(iri2));
-    },
-
-    resolve(iri : IRI) {
-        const completed = this.complete(iri);
-        return completed.namespace + completed.fragment;
-    },
-
-    complete(iri : IRI) {
-        if (!iri.namespace) {
-            iri.namespace = constants.namespace_vocabulary;
-        }
-        return iri;
-    },
 
     getFragment(iri : string) :string {
         return this.create(iri).fragment;

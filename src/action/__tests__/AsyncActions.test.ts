@@ -117,7 +117,7 @@ describe('Async actions', () => {
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabulary({fragment: 'metropolitan-plan'}))).then(() => {
                 const loadSuccessAction: VocabularyLoadingAction = store.getActions()[1];
-                expect(Vocabulary2.equal(Vocabulary2.create(loadSuccessAction.vocabulary.iri), Vocabulary2.complete({fragment: 'metropolitan-plan'}))).toBeTruthy();
+                expect(Vocabulary2.create(loadSuccessAction.vocabulary.iri).fragment).toEqual('metropolitan-plan');
             });
         });
     });
