@@ -59,4 +59,8 @@ export default class SearchResult {
             return '';
         }
     }
+
+    public hasType(type: string): boolean {
+        return this.mTypes.indexOf(type) !== -1;
+    }
 }

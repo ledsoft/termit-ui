@@ -1,5 +1,5 @@
 import * as SyncActions from './SyncActions';
-import {asyncActionFailure, asyncActionRequest} from './SyncActions';
+import {asyncActionFailure, asyncActionRequest, asyncActionSuccess} from './SyncActions';
 import Ajax, {content, params} from '../util/Ajax';
 import {Action, Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
@@ -251,8 +251,10 @@ export function search(searchString: string, disableLoading: boolean = false) {
         return Ajax.get(Constants.API_PREFIX + '/search/label', params({searchString: encodeURI(searchString)}))
             .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: SearchResultData[]) => data.map(d => new SearchResult(d)))
-            .catch((error: ErrorData) => {
+            .then((data: SearchResultData[]) => {
+                dispatch(asyncActionSuccess(action));
+                return data.map(d => new SearchResult(d));
+            }).catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });

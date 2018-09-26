@@ -14,19 +14,19 @@ import Routes from "../../../util/Routes";
 import Routing from '../../../util/Routing';
 import Vocabulary from "../../../util/Vocabulary";
 
-interface SearchProps extends HasI18n {
+interface NavbarSearchProps extends HasI18n {
     search: (searchString: string) => Promise<object>;
 }
 
-interface SearchState {
+interface NavbarSearchState {
     searchString: string;
     showResults: boolean;
     results: SearchResult[] | null;
 }
 
-export class NavbarSearch extends React.Component<SearchProps, SearchState> {
+export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearchState> {
 
-    constructor(props: SearchProps) {
+    constructor(props: NavbarSearchProps) {
         super(props);
         this.state = {
             searchString: '',

@@ -37,6 +37,10 @@ export function asyncActionFailure(a: Action, error: ErrorData): AsyncFailureAct
     return {...a, status: AsyncActionStatus.FAILURE, error: new ErrorInfo(a.type, error)};
 }
 
+export function asyncActionSuccess(a: Action): AsyncAction {
+    return {...a, status: AsyncActionStatus.SUCCESS};
+}
+
 export function fetchUserRequest(): AsyncAction {
     return asyncActionRequest({
         type: ActionType.FETCH_USER_REQUEST
