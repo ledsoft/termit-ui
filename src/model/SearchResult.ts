@@ -3,7 +3,7 @@ import Vocabulary from "../util/Vocabulary";
 export const CONTEXT = {
     "iri": "@id",
     "label": "http://www.w3.org/2000/01/rdf-schema#label",
-    "vocabularyIri": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku",
+    "vocabulary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku",
     "types": "@type"
 };
 
@@ -12,7 +12,7 @@ export interface SearchResultData {
     label: string;
     match?: string;
     types: string[];
-    vocabularyIri?: string;
+    vocabulary?: { iri: string };
 }
 
 export default class SearchResult {
@@ -27,7 +27,7 @@ export default class SearchResult {
         this.mLabel = data.label;
         this.mMatch = data.match;
         this.mTypes = data.types;
-        this.mVocabularyIri = data.vocabularyIri;
+        this.mVocabularyIri = data.vocabulary ? data.vocabulary.iri : undefined;
     }
 
     public get iri(): string {

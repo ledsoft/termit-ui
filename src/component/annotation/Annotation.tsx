@@ -113,10 +113,10 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
     }
 
     private getTermState = () => {
-        if (! this.props.resource) {
+        if (!this.props.resource) {
             return TermState.SUGGESTED;
         }
-        if (this.findTermByIri(this.props.resource)){
+        if (this.findTermByIri(this.props.resource)) {
             return TermState.ASSIGNED
         }
         return TermState.INVALID;
@@ -155,7 +155,7 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
                                     target={id} toggle={this.toggle}
                                     component={this.getComponent()} actions={actions} title={this.props.text}/>
 
-        </span>
+        </span>;
     }
 
     private findTermByIri(iri: string): VocabularyTerm | null {
