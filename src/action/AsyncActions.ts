@@ -34,8 +34,12 @@ export function fetchUser() {
             .then((data: object) => jsonld.compact(data, USER_CONTEXT))
             .then((data: UserData) => dispatch(SyncActions.fetchUserSuccess(data)))
             .catch((error: ErrorData) => {
-                dispatch(SyncActions.fetchUserFailure(error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                if (error.status === Constants.STATUS_UNAUTHORIZED) {
+                    return dispatch(SyncActions.fetchUserFailure(error));
+                } else {
+                    dispatch(SyncActions.fetchUserFailure(error));
+                    return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                }
             });
     };
 }

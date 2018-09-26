@@ -18,6 +18,8 @@ const constants = {
     JSON_LD_MIME_TYPE: 'application/ld+json',
     HTML_MIME_TYPE: 'text/html',
     X_WWW_FORM_URLENCODED: 'application/x-www-form-urlencoded',
+    // HTTP response status 401 Unauthorized
+    STATUS_UNAUTHORIZED: 401,
     // Axios uses lower case for header names
     AUTHORIZATION_HEADER: 'authorization',
     LOCATION_HEADER: 'location',
