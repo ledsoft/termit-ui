@@ -12,6 +12,7 @@ import loadingLg from './images/loading-lg.gif';
 import controllerCreator from './MainController';
 import query from './sparql.rq';
 import {ThunkDispatch} from "../../../util/Types";
+import remount from "../../misc/remount";
 
 interface Props extends HasI18n {
     lang: string,
@@ -22,51 +23,7 @@ interface State {
     rootScope: any,
 }
 
-interface State2 {
-    component: JSX.Element | null
-}
-
-/**
- * This component only helps to reinitialize Angular by throwing away the whole react component and mounting it back.
- */
-class SearchWrapper extends React.Component<Props, State2> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            component: null
-        };
-    }
-
-    public componentDidMount() {
-        this.change(true);
-    }
-
-    public componentDidUpdate(prevProps: Props) {
-        this.change(prevProps.lang !== this.props.lang);
-    }
-
-    private change(changed: boolean) {
-        if (changed) {
-            this.setState({
-                component: null
-            });
-        } else if (this.state.component == null) {
-            this.setState({
-                component: <Search lang={this.props.lang}
-                                   endpointUrl={this.props.endpointUrl}
-                                   i18n={this.props.i18n}
-                                   formatMessage={this.props.formatMessage}/>
-            });
-        }
-    }
-
-    public render() {
-        return this.state.component;
-    }
-}
-
-
-export class Search extends React.Component<Props, State> {
+export class FacetedSearch extends React.Component<Props, State> {
 
     private container: any;
 
@@ -269,4 +226,4 @@ export default connect((state: TermItState) => {
     return {
         selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm))
     };
-})(injectIntl(withI18n(SearchWrapper)));
+})(injectIntl(withI18n(remount(FacetedSearch))));
