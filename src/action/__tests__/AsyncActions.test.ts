@@ -223,7 +223,8 @@ describe('Async actions', () => {
         });
     });
 
-    describe('load default terms', () => {
+    describe.skip('load default terms', () => {
+
         it('extracts terms from incoming JSON-LD', () => {
             const terms = require('../../rest-mock/terms');
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
