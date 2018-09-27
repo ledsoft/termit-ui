@@ -162,29 +162,17 @@ export function loadVocabularies() {
     };
 }
 
-export function loadTerms(normalizedName: string) {
+export function loadDefaultTerms(normalizedName: string) {
     const action = {
         type: ActionType.LOAD_DEFAULT_TERMS
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
-            params({
-                limit: 100,
-                offset: 0
-            }))
-            .then((data: object[]) =>
-                data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: VocabularyTerm[]) => dispatch(asyncActionSuccessWithPayload(action, data.map(vt => new VocabularyTerm(vt)))))
-            .catch((error: ErrorData) => {
-                // TODO JL This swallows the error without any notification/action whatsoever!!!
-                return dispatch(dispatch(asyncActionSuccessWithPayload(action, [])))
-            });
-    };
+        dispatch(fetchVocabularyTerms({limit: 100, offset: 0, searchString: '', optionID: ''}, normalizedName))
+            .then((result: VocabularyTerm[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
+    }
+
 }
 
-// TODO JL What is the effective difference between loadTerms and fetchVocabularyTerms?
 export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
@@ -231,7 +219,6 @@ export function fetchVocabularySubTerms(parentTermId: string, normalizedName: st
             .then((data: VocabularyTermData[]) => data)
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
-                // TODO JL Why does this publish an error message and fetchVocabularyTerms does not?
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
                 return []
             });
@@ -256,8 +243,6 @@ export function getVocabularyTermByID(termID: string, normalizedName: string) {
 }
 
 // TODO server return http code 406
-// TODO JL What does this method do? I don't see any corresponding REST endpoint on the backend. Moreover, its
-// functionality is virtually the same as getVocabularyTermByID, as normalized name is part of identifier
 export function getVocabularyTermByName(termNormalizedName: string, vocabularyNormalizedName: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS

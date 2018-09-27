@@ -15,7 +15,7 @@ import {RouteComponentProps, withRouter} from "react-router";
 import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
 import VocabularyTerm from "../../model/VocabularyTerm";
-import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
+import {fetchVocabularyTerms} from "../../action/ComplexActions";
 import {ThunkDispatch} from '../../util/Types';
 
 interface GlossaryTermSelectProps extends HasI18n, RouteComponentProps<any> {
@@ -24,7 +24,6 @@ interface GlossaryTermSelectProps extends HasI18n, RouteComponentProps<any> {
     selectedTerm: VocabularyTerm | null;
     selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => void;
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
-    loadTerms: (normalizedName: string) => void;
 }
 
 export class GlossaryTermSelect extends React.Component<GlossaryTermSelectProps> {
@@ -35,12 +34,6 @@ export class GlossaryTermSelect extends React.Component<GlossaryTermSelectProps>
         this._valueRenderer = this._valueRenderer.bind(this);
         this._onCreateClick = this._onCreateClick.bind(this);
         this.fetchOptions = this.fetchOptions.bind(this);
-    }
-
-    public componentWillUpdate() {
-        // @ts-ignore
-        const normalizedName = this.props.match.params.name;
-        // this.props.loadTerms(normalizedName)
     }
 
     public componentWillUnmount() {
@@ -76,7 +69,6 @@ export class GlossaryTermSelect extends React.Component<GlossaryTermSelectProps>
             multi={false}
             showSettings={false}
             valueRenderer={this._valueRenderer}
-            options={this.props.defaultTerms}
         />;
 
         actions.push(<Button key='glossary.createTerm'
@@ -97,12 +89,10 @@ export class GlossaryTermSelect extends React.Component<GlossaryTermSelectProps>
 export default withRouter(connect((state: TermItState) => {
     return {
         selectedTerm: state.selectedTerm,
-        defaultTerms: state.defaultTerms,
     };
 }, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
-        loadTerms: (normalizedName: string) => dispatch(loadTerms(normalizedName)),
     };
 })(injectIntl(withI18n(GlossaryTermSelect))));

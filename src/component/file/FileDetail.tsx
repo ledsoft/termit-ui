@@ -3,7 +3,7 @@ import {injectIntl, IntlProvider} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import {connect, Provider} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadFileContent, loadTerms} from "../../action/ComplexActions";
+import {loadFileContent} from "../../action/ComplexActions";
 import Document from "../../model/Document";
 import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from 'html-to-react';
 import Annotation from "../annotation/Annotation";
@@ -22,7 +22,6 @@ interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
     fileIri: string | null,
     fileContent: string | null
     loadContentFile: (documentIri: IRI, fileName: string) => void
-    loadTerms: (normalizedVocabularyName: string) => void
     intl: IntlData
 }
 
@@ -31,14 +30,7 @@ class FileDetail extends React.Component<FileDetailProps> {
 
     public componentDidMount(): void {
         const normalizedFileName = this.props.match.params.name;
-        if (this.props.vocabulary.iri) {
-            this.props.loadTerms(this.getNormalizedName(this.props.vocabulary.iri))
-        }
         this.props.loadContentFile(Vocabulary2.create(this.props.document.iri), normalizedFileName);
-    }
-
-    private getNormalizedName(iri: string): string {
-        return Vocabulary2.create(iri).fragment;
     }
 
     private getProcessingInstructions(): Instruction[] {
@@ -167,6 +159,5 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         loadContentFile: (documentIri: IRI, fileName: string) => dispatch(loadFileContent(documentIri, fileName)),
-        loadTerms: (normalizedVocabularyName: string) => dispatch(loadTerms(normalizedVocabularyName))
     };
 })(injectIntl(withI18n(FileDetail)));
