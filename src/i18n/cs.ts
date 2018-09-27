@@ -53,7 +53,7 @@ export default {
         'dashboard.vocabulary.tile': 'Správa slovníků',
         'dashboard.document.tile': 'Správa dokumentů',
         'dashboard.statistics.tile': 'Statistiky',
-        'dashboard.search.tile': 'Search',
+        'dashboard.search.tile': 'Vyhledávání',
         'dashboard.create-vocabulary.tile' : 'Vytvořit slovník',
         'dashboard.add-document.tile' : 'Přidat dokument',
 

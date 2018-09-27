@@ -32,7 +32,7 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
     public change(): void {
         const normalizedName = this.props.match.params.name;
         // TODO query parameter ?
-        if (this.props.vocabulary.iri !== Vocabulary2.resolve({fragment: normalizedName})) {
+        if (Vocabulary2.create(this.props.vocabulary.iri).fragment !== normalizedName) {
             this.props.loadVocabulary({fragment: normalizedName});
         }
     }

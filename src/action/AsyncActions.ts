@@ -267,7 +267,7 @@ export function executeQuery(queryString: string) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            .get(Constants.API_PREFIX + '/query', params({queryString: encodeURI(queryString)}))
+            .get(Constants.API_PREFIX + '/query', params({queryString}))
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((data: object) =>
