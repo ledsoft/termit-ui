@@ -1,8 +1,6 @@
 import * as React from 'react';
 import GlossaryTermSelect from "./GlossaryTermSelect";
 import {connect} from "react-redux";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import VocabularyTerm from "../../model/VocabularyTerm";
 import {selectVocabularyTerm} from "../../action/SyncActions";
 import {injectIntl} from "react-intl";
@@ -13,6 +11,7 @@ import "./Annotation.scss";
 import TermItState from "../../model/TermItState";
 import Vocabulary from "../../model/Vocabulary";
 import OutgoingLink from "../misc/OutgoingLink";
+import {ThunkDispatch} from "../../util/Types";
 
 interface AnnotationProps extends HasI18n {
     about: string
@@ -194,7 +193,7 @@ export default connect((state: TermItState) => {
         selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
     };

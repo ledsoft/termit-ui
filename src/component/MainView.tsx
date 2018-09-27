@@ -8,7 +8,8 @@ import {
     Container,
     DropdownItem,
     DropdownMenu,
-    DropdownToggle, Jumbotron,
+    DropdownToggle,
+    Jumbotron,
     Nav,
     Navbar,
     NavbarBrand,
@@ -21,8 +22,6 @@ import User, {EMPTY_USER} from '../model/User';
 import './MainView.scss';
 import Routes from '../util/Routes';
 import Footer from './Footer';
-import {ThunkDispatch} from 'redux-thunk';
-import {Action} from 'redux';
 import {loadUser, logout} from '../action/ComplexActions';
 import {Route, RouteComponentProps, Switch, withRouter} from 'react-router';
 import Dashboard from './dashboard/Dashboard';
@@ -35,6 +34,7 @@ import NavbarSearch from "./search/label/NavbarSearch";
 import Search from "./search/label/Search";
 import FacetedSearch from "./search/facets/FacetedSearch";
 import FileDetail from "./file/FileDetail";
+import {ThunkDispatch} from "../util/Types";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -147,7 +147,7 @@ export default connect((state: TermItState) => {
         user: state.user,
         intl: state.intl    // Pass intl in props to force UI re-render on language switch
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         loadUser: () => dispatch(loadUser()),
         logout: () => dispatch(logout())

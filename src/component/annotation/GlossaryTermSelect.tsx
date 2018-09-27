@@ -8,8 +8,6 @@ import {IntelligentTreeSelect} from 'intelligent-tree-select';
 import "intelligent-tree-select/lib/styles.css";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import {selectVocabularyTerm} from "../../action/SyncActions";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
@@ -18,8 +16,9 @@ import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
 import VocabularyTerm from "../../model/VocabularyTerm";
 import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
+import {ThunkDispatch} from '../../util/Types';
 
-interface GlossaryTermSelectProps extends HasI18n, RouteComponentProps<any>{
+interface GlossaryTermSelectProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
     defaultTerms: VocabularyTerm[];
     selectedTerm: VocabularyTerm | null;
@@ -38,7 +37,7 @@ export class GlossaryTermSelect extends React.Component<GlossaryTermSelectProps>
         this.fetchOptions = this.fetchOptions.bind(this);
     }
 
-    public componentWillUpdate(){
+    public componentWillUpdate() {
         // @ts-ignore
         const normalizedName = this.props.match.params.name;
         // this.props.loadTerms(normalizedName)
@@ -65,7 +64,7 @@ export class GlossaryTermSelect extends React.Component<GlossaryTermSelectProps>
         const i18n = this.props.i18n;
         const actions = [];
         const component = <IntelligentTreeSelect
-            name={"glossary-"+this.props.match.params.name}
+            name={"glossary-" + this.props.match.params.name}
             onChange={this.props.selectVocabularyTerm}
             value={this.props.selectedTerm}
             fetchOptions={this.fetchOptions}
@@ -77,7 +76,7 @@ export class GlossaryTermSelect extends React.Component<GlossaryTermSelectProps>
             multi={false}
             showSettings={false}
             valueRenderer={this._valueRenderer}
-            options = {this.props.defaultTerms}
+            options={this.props.defaultTerms}
         />;
 
         actions.push(<Button key='glossary.createTerm'
@@ -100,7 +99,7 @@ export default withRouter(connect((state: TermItState) => {
         selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms,
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),

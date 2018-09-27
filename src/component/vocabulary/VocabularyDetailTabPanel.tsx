@@ -7,8 +7,6 @@ import VocabularyMetadata from "./VocabularyMetadata";
 import Tabs from "../misc/Tabs";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import VocabularyTerm from "../../model/VocabularyTerm";
 import TermMetadata from "../term/TermMetadata";
 import {RouteComponentProps, withRouter} from "react-router";
@@ -16,6 +14,7 @@ import Routes from "../../util/Routes";
 import {selectVocabularyTerm} from "../../action/SyncActions";
 import {getVocabularyTermByName} from "../../action/ComplexActions";
 import Routing from "../../util/Routing";
+import {ThunkDispatch} from '../../util/Types';
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary
@@ -38,7 +37,7 @@ class VocabularyDetailTabPanel extends React.Component<VocabularyDetailProps, Vo
         }
     }
 
-    public componentDidMount(){
+    public componentDidMount() {
         if (this.props.match.path === Routes.vocabularyTermDetail.path && !this.props.selectedTerm) {
             this.props.getVocabularyTermByName(this.props.match.params.termName, this.props.match.params.name)
                 .then((term: VocabularyTerm | null) => {
@@ -93,7 +92,7 @@ export default withRouter(connect((state: TermItState) => {
     return {
         selectedTerm: state.selectedTerm
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         getVocabularyTermByName: (termNormalizedName: string, vocabularyNormalizedName: string) => dispatch(getVocabularyTermByName(termNormalizedName, vocabularyNormalizedName)),
         selectTerm: (term: VocabularyTerm | null) => dispatch(selectVocabularyTerm(term)),

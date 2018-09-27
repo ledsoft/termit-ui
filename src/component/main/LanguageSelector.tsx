@@ -4,9 +4,8 @@ import Constants from '../../util/Constants';
 import './LanguageSelector.scss';
 import {connect} from 'react-redux';
 import TermItState from '../../model/TermItState';
-import {ThunkDispatch} from 'redux-thunk';
-import {Action} from 'redux';
 import {switchLanguage} from '../../action/SyncActions';
+import {ThunkDispatch} from '../../util/Types';
 
 interface LanguageSelectorProps {
     language: string,
@@ -46,7 +45,7 @@ export default connect((state: TermItState) => {
     return {
         language: state.intl.locale
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         switchLanguage: (lang: string) => dispatch(switchLanguage(lang))
     }

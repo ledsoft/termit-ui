@@ -6,8 +6,6 @@ import {Route, RouteComponentProps, Switch} from "react-router";
 import GlossaryTerms from "../term/GlossaryTerms";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import {loadVocabulary} from "../../action/ComplexActions";
 import Vocabulary from "../../model/Vocabulary";
 import './VocabularyDetail.scss';
@@ -17,6 +15,7 @@ import Routes from "../../util/Routes";
 import CreateVocabularyTerm from "../term/CreateVocabularyTerm";
 import {IRI} from "../../util/VocabularyUtils";
 import DocumentTab from "../document/DocumentTab";
+import {ThunkDispatch} from '../../util/Types';
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
@@ -26,8 +25,8 @@ interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
 export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 
     public componentDidMount(): void {
-        const normalizedName :string= this.props.match.params.name;
-        this.props.loadVocabulary({fragment:normalizedName});
+        const normalizedName: string = this.props.match.params.name;
+        this.props.loadVocabulary({fragment: normalizedName});
     }
 
     public render() {
@@ -50,7 +49,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             <h6>{this.props.formatMessage('vocabulary.detail.subtitle', {author, created})}</h6>
             <Row className='detail-row'>
                 <Col md={4}>
-                    <GlossaryTerms />
+                    <GlossaryTerms/>
                 </Col>
                 <Col md={8}>
                     <Switch>
@@ -69,7 +68,7 @@ export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri)),
     };

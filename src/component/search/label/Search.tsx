@@ -6,12 +6,11 @@ import {connect} from "react-redux";
 import {Button, Card, CardBody, CardHeader, Col, Form, FormGroup, Input, Row} from "reactstrap";
 import SearchResult from "../../../model/SearchResult";
 import './Search.scss';
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import {search} from "../../../action/AsyncActions";
 import Vocabulary from "../../../util/VocabularyUtils";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
+import {ThunkDispatch} from '../../../util/Types';
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     search: (searchString: string) => Promise<object>;
@@ -151,7 +150,7 @@ class Search extends React.Component<SearchProps, SearchState> {
     }
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
         search: (searchString: string) => dispatch(search(searchString))
     };

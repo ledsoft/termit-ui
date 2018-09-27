@@ -9,8 +9,6 @@ import {IntelligentTreeSelect} from 'intelligent-tree-select';
 import "intelligent-tree-select/lib/styles.css";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import {selectVocabularyTerm} from "../../action/SyncActions";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
@@ -19,6 +17,7 @@ import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
 import VocabularyTerm from "../../model/VocabularyTerm";
 import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
+import {ThunkDispatch} from '../../util/Types';
 
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
@@ -115,7 +114,7 @@ export default withRouter(connect((state: TermItState) => {
         defaultTerms: state.defaultTerms,
         counter: state.createdTermsCounter
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),

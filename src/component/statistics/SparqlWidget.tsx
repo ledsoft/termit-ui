@@ -1,12 +1,11 @@
 import * as React from "react";
 import Widget from "./Widget";
-import {Action} from "redux";
-import {ThunkDispatch} from "redux-thunk";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {QueryResultIF} from "../../model/QueryResult";
 import {executeQuery} from "../../action/ComplexActions";
 import * as _ from "lodash";
+import {ThunkDispatch} from "../../util/Types";
 
 interface Props {
     title: string;
@@ -19,7 +18,7 @@ interface InternalProps {
 }
 
 interface InternalActions {
-    executeQuery : (queryString : string) => any;
+    executeQuery: (queryString: string) => any;
 }
 
 export class SparqlWidget extends React.Component<Props & InternalProps & InternalActions> {
@@ -28,9 +27,9 @@ export class SparqlWidget extends React.Component<Props & InternalProps & Intern
         this.change();
     }
 
-    public componentDidUpdate(prevProps : Props & InternalProps & InternalActions) {
-        if ( !_.isEqual(this.props.queryResults[this.props.sparqlQuery]
-        ,prevProps.queryResults[this.props.sparqlQuery]
+    public componentDidUpdate(prevProps: Props & InternalProps & InternalActions) {
+        if (!_.isEqual(this.props.queryResults[this.props.sparqlQuery]
+            , prevProps.queryResults[this.props.sparqlQuery]
         )) {
             this.change();
         }
@@ -43,17 +42,18 @@ export class SparqlWidget extends React.Component<Props & InternalProps & Intern
     public render() {
         return (<div>
             <Widget title={this.props.title}
-                    component={<div>{this.props.componentFunction(this.props.queryResults[this.props.sparqlQuery])}</div>}
+                    component={
+                        <div>{this.props.componentFunction(this.props.queryResults[this.props.sparqlQuery])}</div>}
                     actions={[]}/>
         </div>);
     }
 };
 
-export default connect((state: TermItState) : InternalProps => {
+export default connect((state: TermItState): InternalProps => {
     return {
         queryResults: state.queryResults
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) : InternalActions => {
+}, (dispatch: ThunkDispatch): InternalActions => {
     return {
         executeQuery: (queryString: string) => dispatch(executeQuery(queryString))
     };

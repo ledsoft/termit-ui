@@ -4,8 +4,6 @@ import withI18n, {HasI18n} from '../hoc/withI18n';
 import {connect, Provider} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {loadFileContent, loadTerms} from "../../action/ComplexActions";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import Document from "../../model/Document";
 import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from 'html-to-react';
 import Annotation from "../annotation/Annotation";
@@ -15,6 +13,7 @@ import Vocabulary2, {IRI} from "../../util/VocabularyUtils";
 import Vocabulary from "../../model/Vocabulary";
 import TermItStore from "../../store/TermItStore";
 import IntlData from "../../model/IntlData";
+import {ThunkDispatch} from "../../util/Types";
 
 
 interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
@@ -53,7 +52,8 @@ class FileDetail extends React.Component<FileDetailProps> {
                     return node.name && (node.name === 'span') && (node.attribs.typeof === "ddo:vyskyt-termu")
                 },
                 processNode: (node: any, children: any) => {
-                    // node.attribs = Object.assign(node.attribs, { style:'background-color: rgb(132, 210, 255); padding: 0px 4px;'})
+                    // node.attribs = Object.assign(node.attribs, { style:'background-color: rgb(132, 210, 255);
+                    // padding: 0px 4px;'})
                     return <Annotation text={node.children[0].data} {...node.attribs} />
                     // return node.data.toUpperCase();
                 }
@@ -164,7 +164,7 @@ export default connect((state: TermItState) => {
         fileContent: state.fileContent,
         intl: state.intl
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         loadContentFile: (documentIri: IRI, fileName: string) => dispatch(loadFileContent(documentIri, fileName)),
         loadTerms: (normalizedVocabularyName: string) => dispatch(loadTerms(normalizedVocabularyName))

@@ -10,14 +10,13 @@ import Routing from '../../util/Routing';
 import Mask from '../misc/Mask';
 import {connect} from 'react-redux';
 import TermItState from '../../model/TermItState';
-import {ThunkDispatch} from 'redux-thunk';
-import {Action} from 'redux';
 import {clearError} from '../../action/SyncActions';
 import ActionType from '../../action/ActionType';
 import {register} from '../../action/ComplexActions';
 import Footer from '../Footer';
 import Ajax, {params} from "../../util/Ajax";
 import Constants from '../../util/Constants';
+import {ThunkDispatch} from "../../util/Types";
 
 interface RegisterProps extends HasI18n {
     loading: boolean,
@@ -83,7 +82,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     }
 
     private errorRelevant() {
-        return this.props.error.origin === ActionType.REGISTER_FAILURE;
+        return this.props.error.origin === ActionType.REGISTER;
     }
 
     private onRegister = () => {
@@ -199,9 +198,9 @@ export default connect((state: TermItState) => {
         loading: state.loading,
         error: state.error
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         register: (user: { username: string, password: string }) => dispatch(register(user)),
-        clearError: () => dispatch(clearError(ActionType.REGISTER_FAILURE))
+        clearError: () => dispatch(clearError(ActionType.REGISTER))
     }
 })(injectIntl(withI18n(Register)));

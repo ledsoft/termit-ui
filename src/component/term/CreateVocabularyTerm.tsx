@@ -28,10 +28,9 @@ import Ajax, {params} from "../../util/Ajax";
 import Constants from "../../util/Constants";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";
 import {createVocabularyTerm, fetchVocabularyTerms} from "../../action/ComplexActions";
+import {ThunkDispatch} from "../../util/Types";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -379,7 +378,7 @@ export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         onCreate: (term: VocabularyTerm, normalizedName: string) => dispatch(createVocabularyTerm(term, normalizedName)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),

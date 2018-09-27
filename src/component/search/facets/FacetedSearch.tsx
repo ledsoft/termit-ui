@@ -1,7 +1,5 @@
 import * as React from "react";
 import * as angular from "angular";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
 import {injectIntl} from "react-intl";
 import {default as withI18n, HasI18n} from "../../hoc/withI18n";
 import TermItState from "../../../model/TermItState";
@@ -13,6 +11,7 @@ import "./semantic-faceted-search/semantic-faceted-search";
 import loadingLg from './images/loading-lg.gif';
 import controllerCreator from './MainController';
 import query from './sparql.rq';
+import {ThunkDispatch} from "../../../util/Types";
 
 interface Props extends HasI18n {
     lang: string,
@@ -104,7 +103,7 @@ export class Search extends React.Component<Props, State> {
                     return $delegate;
                 }]);
             }])
-            .controller('MainController', controller );
+            .controller('MainController', controller);
     }
 
     private destroyAngular() {
@@ -266,7 +265,7 @@ export default connect((state: TermItState) => {
         lang: state.intl.locale,
         endpointUrl: Constants.endpoint_url
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm))
     };

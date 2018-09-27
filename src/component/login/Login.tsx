@@ -10,12 +10,11 @@ import Mask from "../misc/Mask";
 import {connect} from 'react-redux';
 import TermItState from "../../model/TermItState";
 import {login} from "../../action/ComplexActions";
-import {Action} from "redux";
-import {ThunkDispatch} from "redux-thunk";
 import ErrorInfo from "../../model/ErrorInfo";
 import ActionType from "../../action/ActionType";
 import {clearError} from "../../action/SyncActions";
 import Footer from "../Footer";
+import {ThunkDispatch} from "../../util/Types";
 
 interface LoginProps extends HasI18n {
     loading: boolean,
@@ -63,7 +62,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
     };
 
     private errorRelevant() {
-        return this.props.error.origin === ActionType.LOGIN_FAILURE;
+        return this.props.error.origin === ActionType.LOGIN;
     }
 
     private isValid() {
@@ -128,9 +127,9 @@ export default connect((state: TermItState) => {
         loading: state.loading,
         error: state.error
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         login: (username: string, password: string) => dispatch(login(username, password)),
-        clearError: () => dispatch(clearError(ActionType.LOGIN_FAILURE))
+        clearError: () => dispatch(clearError(ActionType.LOGIN))
     };
 })(injectIntl(withI18n(Login)));
