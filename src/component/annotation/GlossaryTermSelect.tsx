@@ -20,7 +20,6 @@ import {ThunkDispatch} from '../../util/Types';
 
 interface GlossaryTermSelectProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
-    defaultTerms: VocabularyTerm[];
     selectedTerm: VocabularyTerm | null;
     selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => void;
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;

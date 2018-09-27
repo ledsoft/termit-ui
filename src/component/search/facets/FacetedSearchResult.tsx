@@ -3,7 +3,7 @@ import {injectIntl} from "react-intl";
 import {default as withI18n, HasI18n} from "../../hoc/withI18n";
 import TermItState from "../../../model/TermItState";
 import {connect} from "react-redux";
-import {Row} from "reactstrap";
+import {Row, Table} from "reactstrap";
 
 interface Props extends HasI18n {
     data: object
@@ -18,7 +18,7 @@ export class FacetedSearchResult extends React.Component<Props> {
     public render() {
         const rows: Row[] =
             ((this.props.data as any).data || []).map((pojem: any) =>
-                <tr key={pojem.iri}>
+                <tr key={pojem.id}>
                     <td style={{width: '20%'}}>
                         <p>{this.getLabel(pojem)}<a href={pojem.id}>↱</a></p>
                     </td>
@@ -27,7 +27,7 @@ export class FacetedSearchResult extends React.Component<Props> {
                             <p><span style={{fontWeight: 'bold'}}>{this.props.i18n('search.je-specializaci')}</span>
                                 {(Array.isArray(pojem.nadtyp) ? pojem.nadtyp : [pojem.nadtyp]).map(
                                     (nt: any) =>
-                                        <span key={pojem.iri+nt.id}> {this.getLabel(nt)}
+                                        <span key={pojem.id+''+nt.id}> {this.getLabel(nt)}
                                             <a href={nt.id}>↱</a>
                                         </span>
                                 )}
@@ -66,7 +66,7 @@ export class FacetedSearchResult extends React.Component<Props> {
                 </tr>);
 
         return (
-            <table style={{width:'100%'}}>
+            <Table style={{width:'100%'}}>
                 <thead>
                 <tr>
                     <th>{this.props.i18n('search.pojem')}</th>
@@ -77,7 +77,7 @@ export class FacetedSearchResult extends React.Component<Props> {
                 <tbody>
                 {rows}
                 </tbody>
-            </table>);
+            </Table>);
     }
 }
 
