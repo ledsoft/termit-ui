@@ -71,9 +71,9 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
     };
 }
 
-export function loadTerms(normalizedName: string) {
+export function loadDefaultTerms(normalizedName: string) {
     return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.loadTerms(normalizedName));
+        return dispatch(AsyncActions.loadDefaultTerms(normalizedName));
     };
 }
 

@@ -16,18 +16,16 @@ import {RouteComponentProps, withRouter} from "react-router";
 import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
 import VocabularyTerm from "../../model/VocabularyTerm";
-import {fetchVocabularyTerms, loadTerms} from "../../action/ComplexActions";
+import {fetchVocabularyTerms} from "../../action/ComplexActions";
 import {ThunkDispatch} from '../../util/Types';
 
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
     counter: number;
-    defaultTerms: VocabularyTerm[];
     selectedTerms: VocabularyTerm | null;
     selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => void;
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
-    loadTerms: (normalizedName: string) => void;
 }
 
 export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
@@ -89,7 +87,6 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
             multi={false}
             showSettings={false}
             valueRenderer={this._valueRenderer}
-            options={this.props.defaultTerms}
         />;
 
         actions.push(<Button key='glossary.createTerm'
@@ -111,13 +108,11 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
 export default withRouter(connect((state: TermItState) => {
     return {
         selectedTerms: state.selectedTerm,
-        defaultTerms: state.defaultTerms,
         counter: state.createdTermsCounter
     };
 }, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
-        loadTerms: (normalizedName: string) => dispatch(loadTerms(normalizedName)),
     };
 })(injectIntl(withI18n(GlossaryTerms))));
