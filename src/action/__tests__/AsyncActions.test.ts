@@ -18,12 +18,7 @@ import Routing from '../../util/Routing';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
 import Vocabulary2 from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
-import ActionType, {
-    LoadDefaultTermsAction,
-    SearchAction,
-    VocabulariesLoadingAction,
-    VocabularyLoadingAction
-} from "../ActionType";
+import ActionType, {AsyncAction, AsyncActionSuccess,} from "../ActionType";
 import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";
 import SearchResult from "../../model/SearchResult";
 import {ErrorData} from "../../model/ErrorInfo";
@@ -116,8 +111,8 @@ describe('Async actions', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(require('../../rest-mock/vocabulary')));
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabulary({fragment: 'metropolitan-plan'}))).then(() => {
-                const loadSuccessAction: VocabularyLoadingAction = store.getActions()[1];
-                expect(Vocabulary2.equal(Vocabulary2.create(loadSuccessAction.vocabulary.iri), Vocabulary2.complete({fragment: 'metropolitan-plan'}))).toBeTruthy();
+                const loadSuccessAction: AsyncActionSuccess<Vocabulary> = store.getActions()[1];
+                expect(Vocabulary2.equal(Vocabulary2.create(loadSuccessAction.payload.iri), Vocabulary2.complete({fragment: 'metropolitan-plan'}))).toBeTruthy();
             });
         });
     });
@@ -128,8 +123,8 @@ describe('Async actions', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(vocabularies));
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabularies())).then(() => {
-                const loadSuccessAction: VocabulariesLoadingAction = store.getActions()[1];
-                const result = loadSuccessAction.vocabularies;
+                const loadSuccessAction: AsyncActionSuccess<Vocabulary[]> = store.getActions()[1];
+                const result = loadSuccessAction.payload;
                 expect(result.length).toEqual(vocabularies.length);
                 result.sort((a, b) => a.iri.localeCompare(b.iri));
                 vocabularies.sort((a: object, b: object) => a['@id'].localeCompare(b['@id']));
@@ -144,8 +139,8 @@ describe('Async actions', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([vocabularies[0]]));
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadVocabularies())).then(() => {
-                const loadSuccessAction: VocabulariesLoadingAction = store.getActions()[1];
-                const result = loadSuccessAction.vocabularies;
+                const loadSuccessAction: AsyncActionSuccess<Vocabulary[]> = store.getActions()[1];
+                const result = loadSuccessAction.payload;
                 expect(Array.isArray(result)).toBeTruthy();
                 expect(result.length).toEqual(1);
                 expect(result[0].iri).toEqual(vocabularies[0]['@id']);
@@ -158,7 +153,7 @@ describe('Async actions', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(search('test', true))).then(() => {
-                const searchRequestAction: SearchAction = store.getActions()[0];
+                const searchRequestAction: AsyncAction = store.getActions()[0];
                 expect(searchRequestAction.ignoreLoading).toBeTruthy();
             });
         });
@@ -234,8 +229,8 @@ describe('Async actions', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadTerms('test-vocabulary'))).then(() => {
-                const loadSuccessAction: LoadDefaultTermsAction = store.getActions()[0];
-                const result = loadSuccessAction.options;
+                const loadSuccessAction: AsyncActionSuccess<VocabularyTerm[]> = store.getActions()[1];
+                const result = loadSuccessAction.payload;
                 expect(result.length).toEqual(terms.length);
                 result.sort((a, b) => a.iri.localeCompare(b.iri));
                 terms.sort((a: object, b: object) => a['@id'].localeCompare(b['@id']));

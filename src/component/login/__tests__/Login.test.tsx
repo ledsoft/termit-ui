@@ -74,7 +74,7 @@ describe('Login', () => {
     });
 
     it('renders alert with error when error is relevant', () => {
-        const error = new ErrorInfo(ActionType.LOGIN_FAILURE, {});
+        const error = new ErrorInfo(ActionType.LOGIN, {});
         const wrapper = mountWithIntl(<Login loading={false} error={error} login={login} clearError={clearError}
                                              i18n={i18n} formatMessage={formatMessage}/>);
         const alert = wrapper.find(Alert);
@@ -82,7 +82,7 @@ describe('Login', () => {
     });
 
     it('does not render alert when error is not relevant', () => {
-        const error = new ErrorInfo(ActionType.FETCH_USER_FAILURE, {});
+        const error = new ErrorInfo(ActionType.FETCH_USER, {});
         const wrapper = mountWithIntl(<Login loading={false} error={error} login={login} clearError={clearError}
                                              i18n={i18n} formatMessage={formatMessage}/>);
         const alert = wrapper.find(Alert);
@@ -90,7 +90,7 @@ describe('Login', () => {
     });
 
     it('clears error after user input', () => {
-        const error = new ErrorInfo(ActionType.LOGIN_FAILURE, {});
+        const error = new ErrorInfo(ActionType.LOGIN, {});
         const wrapper = mountWithIntl(<Login loading={false} error={error} login={login} clearError={clearError}
                                              i18n={i18n} formatMessage={formatMessage}/>);
         const usernameInput = wrapper.find('input[name="username"]');

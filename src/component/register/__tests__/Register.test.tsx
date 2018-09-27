@@ -108,7 +108,7 @@ describe('Registration', () => {
     });
 
     it('renders alert with error info', () => {
-        const error = new ErrorInfo(ActionType.REGISTER_FAILURE, {
+        const error = new ErrorInfo(ActionType.REGISTER, {
             message: 'Error'
         });
         const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={error}
@@ -117,7 +117,7 @@ describe('Registration', () => {
     });
 
     it('clears error o change', () => {
-        const error = new ErrorInfo(ActionType.REGISTER_FAILURE, {
+        const error = new ErrorInfo(ActionType.REGISTER, {
             message: 'Error'
         });
         const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={error}

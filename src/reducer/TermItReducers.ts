@@ -1,19 +1,14 @@
 import {Action, combineReducers} from "redux";
 import ActionType, {
     AsyncAction,
+    AsyncActionSuccess,
     ClearErrorAction,
-    DocumentLoadingAction,
     ExecuteQueryAction,
     FailureAction,
-    FileContentLoadingAction,
     FileSelectingAction,
-    LoadDefaultTermsAction,
     MessageAction,
     SelectingTermsAction,
-    SwitchLanguageAction,
-    UserLoadingAction,
-    VocabulariesLoadingAction,
-    VocabularyLoadingAction
+    SwitchLanguageAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
@@ -32,10 +27,10 @@ import Document, {EMPTY_DOCUMENT} from "../model/Document";
  *
  * The initial state is an empty user, which basically shouldn't be allowed to do anything.
  */
-function user(state: User = EMPTY_USER, action: UserLoadingAction): User {
+function user(state: User = EMPTY_USER, action: AsyncActionSuccess<User>): User {
     switch (action.type) {
-        case ActionType.FETCH_USER_SUCCESS:
-            return action.user;
+        case ActionType.FETCH_USER:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         case ActionType.LOGOUT:
             return EMPTY_USER;
         default:
@@ -76,17 +71,13 @@ function loading(state = false, action: AsyncAction): boolean {
  */
 function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
     switch (action.type) {
-        case ActionType.FETCH_USER_FAILURE:
-        case ActionType.LOGIN_FAILURE:
-        case ActionType.REGISTER_FAILURE:
-        case ActionType.CREATE_VOCABULARY_FAILURE:
-        case ActionType.CREATE_VOCABULARY_TERM_FAILURE:
-        case ActionType.LOAD_VOCABULARY_FAILURE:
-            return (action as FailureAction).error;
         case ActionType.CLEAR_ERROR:
             const errAction = action as ClearErrorAction;
             return errAction.origin === state.origin ? EMPTY_ERROR : state;
         default:
+            if ((action as FailureAction).error) {
+                return (action as FailureAction).error;
+            }
             return state;
     }
 }
@@ -113,23 +104,27 @@ function intl(state: IntlData = loadInitialLocalizationData(), action: SwitchLan
     }
 }
 
-function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: VocabularyLoadingAction): Vocabulary {
+function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary>): Vocabulary {
     switch (action.type) {
-        case ActionType.LOAD_VOCABULARY_SUCCESS:
-            return action.vocabulary;
+        case ActionType.LOAD_VOCABULARY:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         default:
             return state;
     }
 }
 
-function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: VocabulariesLoadingAction): { [key: string]: Vocabulary } {
+function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: AsyncActionSuccess<Vocabulary[]>): { [key: string]: Vocabulary } {
     switch (action.type) {
-        case ActionType.LOAD_VOCABULARIES_SUCCESS:
-            const map = {};
-            action.vocabularies.forEach(v =>
-                map[v.iri] = v
-            );
-            return map;
+        case ActionType.LOAD_VOCABULARIES:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const map = {};
+                action.payload.forEach(v =>
+                    map[v.iri] = v
+                );
+                return map;
+            } else {
+                return state;
+            }
         default:
             return state;
     }
@@ -146,17 +141,17 @@ function selectedTerm(state: VocabularyTerm | null = null, action: SelectingTerm
 
 function createdTermsCounter(state: number = 0, action: AsyncAction) {
     switch (action.type) {
-        case ActionType.CREATE_VOCABULARY_TERM_SUCCESS:
-            return state + 1;
+        case ActionType.CREATE_VOCABULARY_TERM:
+            return action.status === AsyncActionStatus.SUCCESS ? state + 1 : state;
         default:
             return state;
     }
 }
 
-function defaultTerms(state: VocabularyTerm[] = [], action: LoadDefaultTermsAction) {
+function defaultTerms(state: VocabularyTerm[] = [], action: AsyncActionSuccess<VocabularyTerm[]>): VocabularyTerm[] {
     switch (action.type) {
         case ActionType.LOAD_DEFAULT_TERMS:
-            return action.options;
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         default:
             return state;
     }
@@ -164,20 +159,24 @@ function defaultTerms(state: VocabularyTerm[] = [], action: LoadDefaultTermsActi
 
 function queryResults(state: { [key: string]: QueryResultIF } = {}, action: ExecuteQueryAction) {
     switch (action.type) {
-        case ActionType.EXECUTE_QUERY_SUCCESS:
-            return {
-                ...state,
-                [action.queryString]: new QueryResult(action.queryString, action.queryResult)
-            };
+        case ActionType.EXECUTE_QUERY:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                return {
+                    ...state,
+                    [action.queryString]: new QueryResult(action.queryString, action.queryResult)
+                };
+            } else {
+                return state;
+            }
         default:
             return state;
     }
 }
 
-function fileContent(state: string | null = null, action: FileContentLoadingAction): string | null {
+function fileContent(state: string | null = null, action: AsyncActionSuccess<string>): string | null {
     switch (action.type) {
-        case ActionType.LOAD_FILE_CONTENT_SUCCESS:
-            return action.fileContent;
+        case ActionType.LOAD_FILE_CONTENT:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         default:
             return state;
     }
@@ -192,10 +191,10 @@ function fileIri(state: string | null = null, action: FileSelectingAction): stri
     }
 }
 
-function document(state: Document = EMPTY_DOCUMENT, action: DocumentLoadingAction): Document {
+function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<Document>): Document {
     switch (action.type) {
-        case ActionType.LOAD_DOCUMENT_SUCCESS:
-            return action.document;
+        case ActionType.LOAD_DOCUMENT:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         default:
             return state;
     }

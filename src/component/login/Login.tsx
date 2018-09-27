@@ -62,7 +62,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
     };
 
     private errorRelevant() {
-        return this.props.error.origin === ActionType.LOGIN_FAILURE;
+        return this.props.error.origin === ActionType.LOGIN;
     }
 
     private isValid() {
@@ -130,6 +130,6 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         login: (username: string, password: string) => dispatch(login(username, password)),
-        clearError: () => dispatch(clearError(ActionType.LOGIN_FAILURE))
+        clearError: () => dispatch(clearError(ActionType.LOGIN))
     };
 })(injectIntl(withI18n(Login)));

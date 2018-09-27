@@ -82,7 +82,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     }
 
     private errorRelevant() {
-        return this.props.error.origin === ActionType.REGISTER_FAILURE;
+        return this.props.error.origin === ActionType.REGISTER;
     }
 
     private onRegister = () => {
@@ -201,6 +201,6 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         register: (user: { username: string, password: string }) => dispatch(register(user)),
-        clearError: () => dispatch(clearError(ActionType.REGISTER_FAILURE))
+        clearError: () => dispatch(clearError(ActionType.REGISTER))
     }
 })(injectIntl(withI18n(Register)));
