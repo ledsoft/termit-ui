@@ -84,6 +84,13 @@ export function selectVocabularyTerm(data: VocabularyTermData | null): Selecting
     }
 }
 
+export function setFacetedSearchResults(data: any) {
+    return {
+        type: ActionType.SET_FACETED_SEARCH_RESULT,
+        data
+    };
+}
+
 // TODO MB Unused
 export function selectFile(data: FileData | null): FileSelectingAction {
     return {

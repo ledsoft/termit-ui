@@ -1,11 +1,9 @@
 
-export default (lang, ai18n, endpointUrl, query, facets, facetOptions) => {
+export default (lang, ai18n, endpointUrl, query, facets, facetOptions, getResults) => {
     return function MainController($scope, FacetHandler, FacetResultHandler, facetUrlStateHandlerService) {
         const vm = this;
 
         var updateId = 0;
-
-        vm.lang = lang;
 
         // page is the current page of results.
         vm.page = [];
@@ -40,7 +38,7 @@ export default (lang, ai18n, endpointUrl, query, facets, facetOptions) => {
         vm.facets = facets;
 
         // Initialize the facet handler
-        vm.handler = new FacetHandler(getFacetOptions(vm.lang));
+        vm.handler = new FacetHandler(getFacetOptions(lang));
 
         // Disable the facets while reusults are being retrieved.
         function disableFacets() {
@@ -118,32 +116,30 @@ export default (lang, ai18n, endpointUrl, query, facets, facetOptions) => {
                     resultsPerPage: 500, // optional (default is 10)
                 };
 
-                const resultHandler = new FacetResultHandler(endpointUrlX, resultOptions);
-
-                return resultHandler.getResults(facetSelectionsX).then(function (pager) {
+                return new FacetResultHandler(endpointUrlX, resultOptions)
+                    .getResults(facetSelectionsX)
+                    .then((pager) =>
                     // We'll also query for the total number of results, and load the
                     // first page of results.
-                    return pager.getTotalCount().then(function (count) {
+                    pager.getTotalCount()
+                        .then((count) => {
                         pager.totalCount = count;
                         return pager;
-                    }).then(function () {
-                        return pager;
-                    });
-                });
-            }
-
-            return serviceGetResults(endpointUrl, facetSelections, vm.lang)
-                .then(function (pager) {
+                    }).then(() => pager ))
+                    .then((pager) => {
                     if (uid === updateId) {
                         vm.pager = pager;
                         vm.totalCount = pager.totalCount;
                         vm.pageNo = 1;
-                        getPage(uid).then(function () {
+                        getPage(uid).then(() => {
                             vm.lock = false;
                             return vm.page;
                         });
                     }
                 });
+            }
+
+            return serviceGetResults(endpointUrl, facetSelections)
         }
 
         // Get a page of mapped objects.
@@ -152,13 +148,15 @@ export default (lang, ai18n, endpointUrl, query, facets, facetOptions) => {
             vm.isLoadingResults = true;
             // Get the page.
             // (The pager uses 0-indexed pages, whereas Angular-UI pagination uses 1-indexed pages).
-            return vm.pager.getPage(vm.pageNo - 1).then(function (page) {
+            return vm.pager.getPage(vm.pageNo - 1).then((page) => {
                 // Check if it's ok to change the page
                 if (!vm.lock || (uid === updateId)) {
+                    getResults(page);
                     vm.page = page;
                     vm.isLoadingResults = false;
                 }
-            }).catch(function (error) {
+            }).catch((error) => {
+                getResults(null);
                 vm.error = error;
                 vm.isLoadingResults = false;
             });

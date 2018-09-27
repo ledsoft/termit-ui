@@ -26,6 +26,7 @@ export default class TermItState {
     public selectedTerm: VocabularyTerm | null;
     public queryResults: { [key: string]: QueryResultIF };
     public createdTermsCounter: number;
+    public facetedSearchResult: object;
 
     constructor() {
         this.loading = false;
@@ -42,5 +43,6 @@ export default class TermItState {
         this.selectedTerm = null;
         this.queryResults = {};
         this.createdTermsCounter = 0;
+        this.facetedSearchResult = {};
     }
 }

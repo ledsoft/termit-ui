@@ -46,6 +46,10 @@ export interface ExecuteQueryAction extends AsyncAction {
     queryResult: object
 }
 
+export interface SetFacetedSearchResultAction extends Action {
+    data: object
+}
+
 export interface FileSelectingAction extends Action {
     fileIri: string | null
 }
@@ -71,6 +75,7 @@ export default {
     LOAD_DEFAULT_TERMS: 'LOAD_DEFAULT_TERMS',
 
     EXECUTE_QUERY: 'EXECUTE_QUERY',
+    SET_FACETED_SEARCH_RESULT: 'SET_FACETED_SEARCH_RESULT',
     SEARCH: 'SEARCH',
 
     LOAD_DOCUMENT: 'LOAD_DOCUMENT',

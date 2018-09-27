@@ -7,7 +7,7 @@ import ActionType, {
     FailureAction,
     FileSelectingAction,
     MessageAction,
-    SelectingTermsAction,
+    SelectingTermsAction, SetFacetedSearchResultAction,
     SwitchLanguageAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
@@ -173,6 +173,15 @@ function queryResults(state: { [key: string]: QueryResultIF } = {}, action: Exec
     }
 }
 
+function facetedSearchResult(state: object = {}, action: SetFacetedSearchResultAction) {
+    switch (action.type) {
+        case ActionType.SET_FACETED_SEARCH_RESULT:
+            return action.data;
+        default:
+            return state;
+    }
+}
+
 function fileContent(state: string | null = null, action: AsyncActionSuccess<string>): string | null {
     switch (action.type) {
         case ActionType.LOAD_FILE_CONTENT:
@@ -214,7 +223,8 @@ const rootReducer = combineReducers<TermItState>({
     createdTermsCounter,
     document,
     fileIri,
-    fileContent
+    fileContent,
+    facetedSearchResult
 });
 
 export default rootReducer;
