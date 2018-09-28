@@ -89,8 +89,8 @@ export function fireFacetedSearchRequested() {
 export function fireFacetedSearchFinished(data: any) {
     return asyncActionSuccessWithPayload({type: ActionType.FACETED_SEARCH},data)
 }
-export function fireFacetedSearchFailed() {
-    return asyncActionFailure({type: ActionType.FACETED_SEARCH},{})
+export function fireFacetedSearchFailed(error: any) {
+    return asyncActionFailure({type: ActionType.FACETED_SEARCH},error)
 }
 
 // TODO MB Unused

@@ -24,7 +24,7 @@ interface Props extends HasI18n {
     endpointUrl: string,
     fireFacetedSearchRequested: ()=>void
     fireFacetedSearchFinished: (data : object)=>void
-    fireFacetedSearchFailed: ()=>void
+    fireFacetedSearchFailed: (error : any)=>void
 }
 
 interface State {
@@ -56,16 +56,20 @@ export class Facets extends React.Component<Props, State> {
         this.props.fireFacetedSearchFinished({data});
     }
 
-    private fireQueryFailed() {
-        this.props.fireFacetedSearchFailed();
+    private fireQueryFailed(error:any) {
+        this.props.fireFacetedSearchFailed(error);
     }
 
     private runAngular() {
+
+        // If there are variables used in the constraint option (see above),
+        // you can also give getResults another parameter that is the sort
+        // order of the results (as a valid SPARQL ORDER BY sequence, e.g. "?id").
+        // The results are sorted by URI (?id) by default.
+
         const controller = controllerCreator(
-            this.props.lang,
-            this.props.i18n,
             this.props.endpointUrl,
-            this.getSparqlQuery(this.props.lang),
+            this.getResultOptions(),
             this.getFacets(),
             this.getFacetOptions(),
             this.fireQueryRequested.bind(this),
@@ -98,6 +102,21 @@ export class Facets extends React.Component<Props, State> {
         this.runAngular();
     }
 
+    private getResultOptions() {
+        return {
+            pagesPerQuery: 1, // optional (default is 1)
+            paging: true, // optional (default is true), if true, enable paging of the results
+            prefixes:  // required if the queryTemplate uses prefixes
+                ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
+                ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
+                ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>' +
+                ' PREFIX zs: <https://slovník.gov.cz/základní/pojem/>' +
+                ' PREFIX a-popis-dat: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>',
+            queryTemplate: this.getSparqlQuery(this.props.lang), // required
+            resultsPerPage: 500, // optional (default is 10)
+        };
+    }
+
     private getFacets() {
         // Facet definitions
         // 'facetId' is a "friendly" identifier for the facet,
@@ -108,7 +127,7 @@ export class Facets extends React.Component<Props, State> {
         // If 'enabled' is not true, the facet will be disabled by default.
         return {
             // Text search facet for names
-            glosar: {
+            slovnik: {
                 enabled: true,
                 facetId: 'glosar',
                 predicate: '(^skos:narrower)*/<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar>',
@@ -153,19 +172,11 @@ export class Facets extends React.Component<Props, State> {
 
     public render() {
         const html = `
-  <div  ng-controller="MainController as vm">
-   <div class="row">
-      <!--<div class="col-md-12">-->
-        <div ng-if="vm.error">
-          <uib-alert type="danger">{{ vm.error }}</uib-alert>
-        </div>
-      <!--</div>-->
-    </div>
+   <div ng-controller="MainController as vm">
     <div class="row">
       <div class="col-md-20">
-        <!-- Facets are defined here using the configurations defined in the controller -->
         <seco-text-facet data-options="vm.facets.pojem"></seco-text-facet>
-        <seco-basic-facet data-options="vm.facets.glosar"></seco-basic-facet>
+        <seco-basic-facet data-options="vm.facets.slovnik"></seco-basic-facet>
         <seco-basic-facet data-options="vm.facets.typ"></seco-basic-facet>
       </div>
     </div>
@@ -187,6 +198,6 @@ export default connect((state: TermItState) => {
         selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm)),
         fireFacetedSearchRequested: () => dispatch(fireFacetedSearchRequested()),
         fireFacetedSearchFinished: (data: any) => dispatch(fireFacetedSearchFinished(data)),
-        fireFacetedSearchFailed: () => dispatch(fireFacetedSearchFailed())
+        fireFacetedSearchFailed: (error : any) => dispatch(fireFacetedSearchFailed(error))
     };
 })(injectIntl(withI18n(withRemounting(Facets))));
