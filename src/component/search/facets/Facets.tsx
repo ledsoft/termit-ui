@@ -4,7 +4,12 @@ import {injectIntl} from "react-intl";
 import {default as withI18n, HasI18n} from "../../hoc/withI18n";
 import TermItState from "../../../model/TermItState";
 import {connect} from "react-redux";
-import {selectVocabularyTerm, setFacetedSearchResults} from "../../../action/SyncActions";
+import {
+    fireFacetedSearchFailed,
+    fireFacetedSearchFinished,
+    fireFacetedSearchRequested,
+    selectVocabularyTerm
+} from "../../../action/SyncActions";
 import Constants from "../../../util/Constants";
 import "./semantic-faceted-search/semantic-faceted-search";
 
@@ -12,12 +17,14 @@ import "./semantic-faceted-search/semantic-faceted-search";
 import controllerCreator from './MainController';
 import query from './sparql.rq';
 import {ThunkDispatch} from "../../../util/Types";
-import remount from "../../misc/remount";
+import withRemounting from "../../hoc/withRemounting";
 
 interface Props extends HasI18n {
     lang: string,
     endpointUrl: string,
-    setResults: (data : object)=>void
+    fireFacetedSearchRequested: ()=>void
+    fireFacetedSearchFinished: (data : object)=>void
+    fireFacetedSearchFailed: ()=>void
 }
 
 interface State {
@@ -41,8 +48,16 @@ export class Facets extends React.Component<Props, State> {
         return query.replace(/\?lang/g, "'" + lang + "'");
     }
 
-    private setResults(data: any) {
-        this.props.setResults({data});
+    private fireQueryRequested() {
+        this.props.fireFacetedSearchRequested();
+    }
+
+    private fireQueryFinished(data: any) {
+        this.props.fireFacetedSearchFinished({data});
+    }
+
+    private fireQueryFailed() {
+        this.props.fireFacetedSearchFailed();
     }
 
     private runAngular() {
@@ -52,7 +67,10 @@ export class Facets extends React.Component<Props, State> {
             this.props.endpointUrl,
             this.getSparqlQuery(this.props.lang),
             this.getFacets(),
-            this.getFacetOptions(),this.setResults.bind(this));
+            this.getFacetOptions(),
+            this.fireQueryRequested.bind(this),
+            this.fireQueryFinished.bind(this),
+            this.fireQueryFailed.bind(this));
         // https://docs.angularjs.org/guide/di#inline-array-annotation
         controller.$inject = ['$scope', 'FacetHandler', 'FacetResultHandler', 'facetUrlStateHandlerService'];
         angular.module('facetApp', ['seco.facetedSearch'])
@@ -167,6 +185,8 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm)),
-        setResults: (data: any) => dispatch(setFacetedSearchResults(data))
+        fireFacetedSearchRequested: () => dispatch(fireFacetedSearchRequested()),
+        fireFacetedSearchFinished: (data: any) => dispatch(fireFacetedSearchFinished(data)),
+        fireFacetedSearchFailed: () => dispatch(fireFacetedSearchFailed())
     };
-})(injectIntl(withI18n(remount(Facets))));
+})(injectIntl(withI18n(withRemounting(Facets))));

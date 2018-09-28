@@ -1,5 +1,4 @@
-
-export default (lang, ai18n, endpointUrl, query, facets, facetOptions, getResults) => {
+export default (lang, ai18n, endpointUrl, query, facets, facetOptions, fireQueryRequested, fireQueryFinished, fireQueryFailed) => {
     return function MainController($scope, FacetHandler, FacetResultHandler, facetUrlStateHandlerService) {
         const vm = this;
 
@@ -9,10 +8,8 @@ export default (lang, ai18n, endpointUrl, query, facets, facetOptions, getResult
         vm.page = [];
         vm.pageNo = 0;
         vm.getPage = getPage;
-        vm.makeArray = makeArray;
 
         vm.disableFacets = disableFacets;
-        $scope.isArray = angular.isArray;
         // Listen for the facet events
         // This event is triggered when a facet's selection has changed.
         $scope.$on('sf-facet-constraints', updateResults);
@@ -22,10 +19,6 @@ export default (lang, ai18n, endpointUrl, query, facets, facetOptions, getResult
             // Only listen once, then unregister
             initListener();
         });
-
-        $scope.getLabel = (o) =>
-            o.nazev ? o.nazev : o.id;
-
 
         // Facet definitions
         // 'facetId' is a "friendly" identifier for the facet,
@@ -88,45 +81,41 @@ export default (lang, ai18n, endpointUrl, query, facets, facetOptions, getResult
             // This variable is used to disable page selection, and display the
             // spinner animation.
             vm.isLoadingResults = true;
+            fireQueryRequested();
 
             // Update the URL parameters based on facet selections
             facetUrlStateHandlerService.updateUrlParams(facetSelections);
 
-            // The dbpediaService returns a (promise of a) pager object.
-            // This function receives the facet selections from the controller
-            // and gets the results from DBpedia.
-            // Returns a promise.
-            const serviceGetResults = (endpointUrlX, facetSelectionsX) => {
-                // If there are variables used in the constraint option (see above),
-                // you can also give getResults another parameter that is the sort
-                // order of the results (as a valid SPARQL ORDER BY sequence, e.g. "?id").
-                // The results are sorted by URI (?id) by default.
-                const prefixes =
-                    ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
-                    ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
-                    ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>'+
-                    ' PREFIX zs: <https://slovník.gov.cz/základní/pojem/>' +
-                    ' PREFIX a-popis-dat: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>';
+            // If there are variables used in the constraint option (see above),
+            // you can also give getResults another parameter that is the sort
+            // order of the results (as a valid SPARQL ORDER BY sequence, e.g. "?id").
+            // The results are sorted by URI (?id) by default.
+            const prefixes =
+                ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
+                ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
+                ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>' +
+                ' PREFIX zs: <https://slovník.gov.cz/základní/pojem/>' +
+                ' PREFIX a-popis-dat: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>';
 
-                const resultOptions = {
-                    pagesPerQuery: 1, // optional (default is 1)
-                    paging: true, // optional (default is true), if true, enable paging of the results
-                    prefixes: prefixes, // required if the queryTemplate uses prefixes
-                    queryTemplate: query, // required
-                    resultsPerPage: 500, // optional (default is 10)
-                };
+            const resultOptions = {
+                pagesPerQuery: 1, // optional (default is 1)
+                paging: true, // optional (default is true), if true, enable paging of the results
+                prefixes: prefixes, // required if the queryTemplate uses prefixes
+                queryTemplate: query, // required
+                resultsPerPage: 500, // optional (default is 10)
+            };
 
-                return new FacetResultHandler(endpointUrlX, resultOptions)
-                    .getResults(facetSelectionsX)
-                    .then((pager) =>
+            return new FacetResultHandler(endpointUrl, resultOptions)
+                .getResults(facetSelections)
+                .then((pager) =>
                     // We'll also query for the total number of results, and load the
                     // first page of results.
                     pager.getTotalCount()
                         .then((count) => {
-                        pager.totalCount = count;
-                        return pager;
-                    }).then(() => pager ))
-                    .then((pager) => {
+                            pager.totalCount = count;
+                            return pager;
+                        }).then(() => pager))
+                .then((pager) => {
                     if (uid === updateId) {
                         vm.pager = pager;
                         vm.totalCount = pager.totalCount;
@@ -137,9 +126,6 @@ export default (lang, ai18n, endpointUrl, query, facets, facetOptions, getResult
                         });
                     }
                 });
-            }
-
-            return serviceGetResults(endpointUrl, facetSelections)
         }
 
         // Get a page of mapped objects.
@@ -151,19 +137,15 @@ export default (lang, ai18n, endpointUrl, query, facets, facetOptions, getResult
             return vm.pager.getPage(vm.pageNo - 1).then((page) => {
                 // Check if it's ok to change the page
                 if (!vm.lock || (uid === updateId)) {
-                    getResults(page);
+                    fireQueryFinished(page);
                     vm.page = page;
                     vm.isLoadingResults = false;
                 }
             }).catch((error) => {
-                getResults(null);
+                fireQueryFailed(null);
                 vm.error = error;
                 vm.isLoadingResults = false;
             });
-        }
-
-        function makeArray(val) {
-            return angular.isArray(val) ? val : [val];
         }
     }
 }

@@ -83,12 +83,14 @@ export function selectVocabularyTerm(data: VocabularyTermData | null): Selecting
         selectedTerms: data ? new VocabularyTerm(data) : data,
     }
 }
-
-export function setFacetedSearchResults(data: any) {
-    return {
-        type: ActionType.SET_FACETED_SEARCH_RESULT,
-        data
-    };
+export function fireFacetedSearchRequested() {
+    return asyncActionRequest({type: ActionType.FACETED_SEARCH});
+}
+export function fireFacetedSearchFinished(data: any) {
+    return asyncActionSuccessWithPayload({type: ActionType.FACETED_SEARCH},data)
+}
+export function fireFacetedSearchFailed() {
+    return asyncActionFailure({type: ActionType.FACETED_SEARCH},{})
 }
 
 // TODO MB Unused

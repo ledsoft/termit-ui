@@ -3,11 +3,11 @@ import ActionType, {
     AsyncAction,
     AsyncActionSuccess,
     ClearErrorAction,
-    ExecuteQueryAction,
+    ExecuteQueryAction, FacetedSearchAction,
     FailureAction,
     FileSelectingAction,
     MessageAction,
-    SelectingTermsAction, SetFacetedSearchResultAction,
+    SelectingTermsAction,
     SwitchLanguageAction
 } from '../action/ActionType';
 import TermItState from "../model/TermItState";
@@ -173,10 +173,10 @@ function queryResults(state: { [key: string]: QueryResultIF } = {}, action: Exec
     }
 }
 
-function facetedSearchResult(state: object = {}, action: SetFacetedSearchResultAction) {
+function facetedSearchResult(state: object = {}, action: FacetedSearchAction) {
     switch (action.type) {
-        case ActionType.SET_FACETED_SEARCH_RESULT:
-            return action.data;
+        case ActionType.FACETED_SEARCH:
+            return (action.status === AsyncActionStatus.SUCCESS) ? action.payload : state;
         default:
             return state;
     }
