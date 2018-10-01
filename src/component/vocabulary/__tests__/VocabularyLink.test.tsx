@@ -9,7 +9,7 @@ describe('Vocabulary Link links to correct internal asset', () => {
     const fragment = 'localVocabularyFragment';
 
     const vocGen = (namespace: string) => new Vocabulary({
-        name: "Test asset",
+        label: "Test asset",
         iri: namespace + fragment
     })
 

@@ -19,7 +19,7 @@ import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUti
 import AsyncActionStatus from "../action/AsyncActionStatus";
 import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
-import VocabularyTerm from "../model/VocabularyTerm";
+import Term from "../model/Term";
 import Document, {EMPTY_DOCUMENT} from "../model/Document";
 
 /**
@@ -130,7 +130,7 @@ function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: A
     }
 }
 
-function selectedTerm(state: VocabularyTerm | null = null, action: SelectingTermsAction) {
+function selectedTerm(state: Term | null = null, action: SelectingTermsAction) {
     switch (action.type) {
         case ActionType.SELECT_VOCABULARY_TERM:
             return action.selectedTerms;
@@ -148,7 +148,7 @@ function createdTermsCounter(state: number = 0, action: AsyncAction) {
     }
 }
 
-function defaultTerms(state: VocabularyTerm[] = [], action: AsyncActionSuccess<VocabularyTerm[]>): VocabularyTerm[] {
+function defaultTerms(state: Term[] = [], action: AsyncActionSuccess<Term[]>): Term[] {
     switch (action.type) {
         case ActionType.LOAD_DEFAULT_TERMS:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;

@@ -2,7 +2,7 @@ import ErrorInfo from "../model/ErrorInfo";
 import User from "../model/User";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
-import VocabularyTerm from "../model/VocabularyTerm";
+import Term from "../model/Term";
 import {Action} from "redux";
 
 export interface AsyncAction extends Action {
@@ -38,7 +38,7 @@ export interface SwitchLanguageAction extends Action {
 }
 
 export interface SelectingTermsAction extends Action {
-    selectedTerms: VocabularyTerm | null
+    selectedTerms: Term | null
 }
 
 export interface ExecuteQueryAction extends AsyncAction {

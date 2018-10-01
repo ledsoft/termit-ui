@@ -16,7 +16,7 @@ import {ThunkDispatch} from "../../util/Types";
 
 interface VocabularySummaryProps {
     vocabulary: Vocabulary;
-    loadVocabulary: (name: IRI) => void;
+    loadVocabulary: (iri: IRI) => void;
 }
 
 export class VocabularySummary extends React.Component<VocabularySummaryProps & HasI18n & RouteComponentProps<any>> {
@@ -51,7 +51,7 @@ export class VocabularySummary extends React.Component<VocabularySummaryProps & 
         );
         return <div>
             <PanelWithActions
-                title={this.props.formatMessage('vocabulary.summary.title', {name: this.props.vocabulary.name})}
+                title={this.props.formatMessage('vocabulary.summary.title', {name: this.props.vocabulary.label})}
                 actions={actions}
                 component={<VocabularyMetadata vocabulary={this.props.vocabulary}/>}/>
         </div>;

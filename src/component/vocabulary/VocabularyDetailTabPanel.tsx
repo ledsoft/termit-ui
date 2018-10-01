@@ -7,7 +7,7 @@ import VocabularyMetadata from "./VocabularyMetadata";
 import Tabs from "../misc/Tabs";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import VocabularyTerm from "../../model/VocabularyTerm";
+import Term from "../../model/Term";
 import TermMetadata from "../term/TermMetadata";
 import {RouteComponentProps, withRouter} from "react-router";
 import Routes from "../../util/Routes";
@@ -18,9 +18,9 @@ import {ThunkDispatch} from '../../util/Types';
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary
-    selectedTerm: VocabularyTerm | null
+    selectedTerm: Term | null
     getVocabularyTermByName: (termNormalizedName: string, vocabularyNormalizedName: string) => any
-    selectTerm: (term: VocabularyTerm | null) => void
+    selectTerm: (term: Term | null) => void
 
 }
 
@@ -40,7 +40,7 @@ class VocabularyDetailTabPanel extends React.Component<VocabularyDetailProps, Vo
     public componentDidMount() {
         if (this.props.match.path === Routes.vocabularyTermDetail.path && !this.props.selectedTerm) {
             this.props.getVocabularyTermByName(this.props.match.params.termName, this.props.match.params.name)
-                .then((term: VocabularyTerm | null) => {
+                .then((term: Term | null) => {
                     this.props.selectTerm(term)
                 });
         }
@@ -95,6 +95,6 @@ export default withRouter(connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         getVocabularyTermByName: (termNormalizedName: string, vocabularyNormalizedName: string) => dispatch(getVocabularyTermByName(termNormalizedName, vocabularyNormalizedName)),
-        selectTerm: (term: VocabularyTerm | null) => dispatch(selectVocabularyTerm(term)),
+        selectTerm: (term: Term | null) => dispatch(selectVocabularyTerm(term)),
     };
 })(injectIntl(withI18n(VocabularyDetailTabPanel))));

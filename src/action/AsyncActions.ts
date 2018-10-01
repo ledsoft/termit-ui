@@ -13,7 +13,7 @@ import {AxiosResponse} from "axios";
 import * as jsonld from "jsonld";
 import Message, {createFormattedMessage} from "../model/Message";
 import MessageType from "../model/MessageType";
-import VocabularyTerm, {CONTEXT as TERM_CONTEXT, VocabularyTermData} from "../model/VocabularyTerm";
+import Term, {CONTEXT as TERM_CONTEXT, TermData} from "../model/Term";
 import FetchOptionsFunction from "../model/Functions";
 import {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
@@ -103,7 +103,7 @@ export function createVocabulary(vocabulary: Vocabulary) {
     };
 }
 
-export function createVocabularyTerm(term: VocabularyTerm, normalizedName: string) {
+export function createVocabularyTerm(term: Term, normalizedName: string) {
     const action = {
         type: ActionType.CREATE_VOCABULARY_TERM
     };
@@ -168,7 +168,7 @@ export function loadDefaultTerms(normalizedName: string) {
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(fetchVocabularyTerms({limit: 100, offset: 0, searchString: '', optionID: ''}, normalizedName))
-            .then((result: VocabularyTerm[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
+            .then((result: Term[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
     }
 
 }
@@ -189,8 +189,8 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
             .then((data: object[]) =>
                 data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: VocabularyTermData[]) => {
-                    data.forEach((term: VocabularyTerm) => {
+            .then((data: TermData[]) => {
+                    data.forEach((term: Term) => {
                         if (term.subTerms) {
                             // @ts-ignore
                             term.subTerms = Array.isArray(term.subTerms) ? term.subTerms.map(subTerm => subTerm.iri) : [term.subTerms.iri];
@@ -216,7 +216,7 @@ export function fetchVocabularySubTerms(parentTermId: string, normalizedName: st
             params({parent_id: parentTermId}))
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: VocabularyTermData[]) => data)
+            .then((data: TermData[]) => data)
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));

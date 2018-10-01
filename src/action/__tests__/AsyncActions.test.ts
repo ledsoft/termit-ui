@@ -19,7 +19,7 @@ import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary"
 import Vocabulary2 from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
 import ActionType, {AsyncAction, AsyncActionSuccess,} from "../ActionType";
-import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";
+import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
 import SearchResult from "../../model/SearchResult";
 import {ErrorData} from "../../model/ErrorInfo";
 
@@ -71,7 +71,7 @@ describe('Async actions', () => {
     describe('create vocabulary', () => {
         it('adds context definition to vocabulary data and sends it over network', () => {
             const vocabulary = new Vocabulary({
-                name: 'Test',
+                label: 'Test',
                 iri: 'http://test'
             });
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
@@ -89,7 +89,7 @@ describe('Async actions', () => {
 
         it('transitions to vocabulary detail on success', () => {
             const vocabulary = new Vocabulary({
-                name: 'Test',
+                label: 'Test',
                 iri: 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/test'
             });
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({headers: {location: vocabulary.iri}}));
@@ -177,7 +177,7 @@ describe('Async actions', () => {
 
     describe('create term', () => {
         it('create top level term in vocabulary context and send it over the network', () => {
-            const term = new VocabularyTerm(
+            const term = new Term(
                 {
                     label: 'Test term 1',
                     iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
@@ -196,13 +196,13 @@ describe('Async actions', () => {
             });
         });
         it('create child term in vocabulary context and send it over the network', () => {
-            const parentTerm = new VocabularyTerm(
+            const parentTerm = new Term(
                 {
                     label: 'Test term 1',
                     iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
                 },
             );
-            const childTerm = new VocabularyTerm(
+            const childTerm = new Term(
                 {
                     label: 'Test term 2',
                     iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-2',
@@ -230,7 +230,7 @@ describe('Async actions', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(loadDefaultTerms('test-vocabulary'))).then(() => {
-                const loadSuccessAction: AsyncActionSuccess<VocabularyTerm[]> = store.getActions()[1];
+                const loadSuccessAction: AsyncActionSuccess<Term[]> = store.getActions()[1];
                 const result = loadSuccessAction.payload;
                 expect(result.length).toEqual(terms.length);
                 result.sort((a, b) => a.iri.localeCompare(b.iri));
@@ -253,7 +253,7 @@ describe('Async actions', () => {
                 offset: 0,
                 optionID: ""
             }, 'test-vocabulary')))
-                .then((data: VocabularyTerm[]) => {
+                .then((data: Term[]) => {
                     expect(data.length).toEqual(terms.length);
                     data.sort((a, b) => a.iri.localeCompare(b.iri));
                     terms.sort((a: object, b: object) => a['@id'].localeCompare(b['@id']));

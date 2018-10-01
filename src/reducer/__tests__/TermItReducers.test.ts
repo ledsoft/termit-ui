@@ -19,7 +19,7 @@ import Message from "../../model/Message";
 import Constants from "../../util/Constants";
 import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
-import VocabularyTerm, {VocabularyTermData} from "../../model/VocabularyTerm";
+import Term, {TermData} from "../../model/Term";
 
 function stateToPlainObject(state: TermItState) {
     return {
@@ -222,7 +222,7 @@ describe('Reducers', () => {
 
         it('sets vocabulary when it was successfully loaded', () => {
             const vocabularyData: VocabularyData = {
-                name: 'Test vocabulary',
+                label: 'Test vocabulary',
                 iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary'
             };
             expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload(action, new Vocabulary(vocabularyData))))
@@ -241,21 +241,21 @@ describe('Reducers', () => {
 
     describe('select term', () => {
         it('sets selectedTerm when it was successfully selected', () => {
-            const term: VocabularyTermData = {
+            const term: TermData = {
                 label: 'Test term',
                 iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term'
             };
             expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(term)))
-                .toEqual(Object.assign({}, initialState, {selectedTerm: new VocabularyTerm(term)}));
+                .toEqual(Object.assign({}, initialState, {selectedTerm: new Term(term)}));
         });
 
         it('sets selectedTerm when it was successfully selected then deselect it', () => {
-            const term: VocabularyTermData = {
+            const term: TermData = {
                 label: 'Test term',
                 iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term'
             };
             expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(term)))
-                .toEqual(Object.assign({}, initialState, {selectedTerm: new VocabularyTerm(term)}));
+                .toEqual(Object.assign({}, initialState, {selectedTerm: new Term(term)}));
             expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(null)))
                 .toEqual(Object.assign({}, initialState, {selectedTerm: null}));
         });
@@ -263,7 +263,7 @@ describe('Reducers', () => {
 
     describe('load default terms', () => {
         it('sets default terms when it was successfully loaded', () => {
-            const terms: VocabularyTermData[] = [
+            const terms: TermData[] = [
                 {
                     label: 'Test term 1',
                     iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
@@ -273,8 +273,8 @@ describe('Reducers', () => {
                     iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-2'
                 }
             ];
-            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_DEFAULT_TERMS}, terms.map(vt => new VocabularyTerm(vt)))))
-                .toEqual(Object.assign({}, initialState, {defaultTerms: terms.map(t => new VocabularyTerm(t))}));
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_DEFAULT_TERMS}, terms.map(vt => new Term(vt)))))
+                .toEqual(Object.assign({}, initialState, {defaultTerms: terms.map(t => new Term(t))}));
         });
     });
 

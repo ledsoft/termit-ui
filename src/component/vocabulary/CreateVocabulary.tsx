@@ -52,7 +52,7 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
     };
 
     private onCreate = (): void => {
-        this.props.onCreate(new Vocabulary({name: this.state.name, iri: this.state.iri}));
+        this.props.onCreate(new Vocabulary({label: this.state.name, iri: this.state.iri}));
     };
 
     private static onCancel(): void {

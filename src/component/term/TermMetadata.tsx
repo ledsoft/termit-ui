@@ -2,11 +2,11 @@ import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Col, Label, Row} from "reactstrap";
-import VocabularyTerm from "../../model/VocabularyTerm";
+import Term from "../../model/Term";
 import OutgoingLink from "../misc/OutgoingLink";
 
 interface VocabularyMetadataProps extends HasI18n {
-    term: VocabularyTerm,
+    term: Term,
 }
 
 const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: VocabularyMetadataProps) => {

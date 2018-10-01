@@ -30,7 +30,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
     }
 
     public render() {
-        const name = this.props.vocabulary.name;
+        const label = this.props.vocabulary.label;
         const author = this.props.vocabulary.author && this.props.vocabulary.author.fullName;
         const created = new Date(this.props.vocabulary.created as number).toLocaleString();
         const vocabularyDetailTabPanel = () => <VocabularyDetailTabPanel
@@ -42,7 +42,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
         return <div>
             <h2 className='page-header'>
                 <OutgoingLink
-                    label={name}
+                    label={label}
                     iri={this.props.vocabulary.iri as string}
                 />
             </h2>

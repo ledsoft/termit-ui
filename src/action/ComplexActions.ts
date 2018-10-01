@@ -4,7 +4,7 @@ import {userLogout} from './SyncActions';
 import Routes from '../util/Routes';
 import Routing from '../util/Routing';
 import Vocabulary from "../model/Vocabulary";
-import VocabularyTerm from "../model/VocabularyTerm";
+import Term from "../model/Term";
 import FetchOptionsFunction from "../model/Functions";
 import {IRI} from "../util/VocabularyUtils";
 import {ThunkDispatch} from '../util/Types';
@@ -47,7 +47,7 @@ export function createVocabulary(vocabulary: Vocabulary) {
     };
 }
 
-export function createVocabularyTerm(term: VocabularyTerm, normalizedName: string) {
+export function createVocabularyTerm(term: Term, normalizedName: string) {
     return (dispatch: ThunkDispatch) => {
         return dispatch(AsyncActions.createVocabularyTerm(term, normalizedName));
     };

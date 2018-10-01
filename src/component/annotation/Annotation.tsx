@@ -1,7 +1,7 @@
 import * as React from 'react';
-import GlossaryTermSelect from "./GlossaryTermSelect";
+import TermSelect from "./TermSelect";
 import {connect} from "react-redux";
-import VocabularyTerm from "../../model/VocabularyTerm";
+import Term from "../../model/Term";
 import {selectVocabularyTerm} from "../../action/SyncActions";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
@@ -19,10 +19,10 @@ interface AnnotationProps extends HasI18n {
     resource?: string
     typeof: string
     text: string
-    selectedTerm: VocabularyTerm | null
-    defaultTerms: VocabularyTerm[];
+    selectedTerm: Term | null
+    defaultTerms: Term[];
     vocabulary: Vocabulary
-    selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => Promise<object>;
+    selectVocabularyTerm: (selectedTerm: Term | null) => Promise<object>;
 }
 
 interface AnnotationState {
@@ -113,7 +113,7 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
     };
 
     private getEditableComponent = () => <div>
-        <GlossaryTermSelect/>
+        <TermSelect/>
     </div>;
 
     private getComponent = () => {
@@ -174,7 +174,7 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         </span>;
     }
 
-    private findTermByIri(iri: string): VocabularyTerm | null {
+    private findTermByIri(iri: string): Term | null {
         return this.undefinedToNull(this.props.defaultTerms.filter((t, i) => (t.iri === iri)).pop());
     }
 
@@ -195,6 +195,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
+        selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
     };
 })(injectIntl(withI18n(Annotation)));

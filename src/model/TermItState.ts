@@ -5,7 +5,7 @@ import en from '../i18n/en';
 import IntlData from "./IntlData";
 import Vocabulary, {EMPTY_VOCABULARY} from "./Vocabulary";
 import {QueryResultIF} from "./QueryResult";
-import VocabularyTerm from "./VocabularyTerm";
+import Term from "./Term";
 import Document, {EMPTY_DOCUMENT} from "./Document";
 
 /**
@@ -15,7 +15,7 @@ export default class TermItState {
     public loading: boolean;
     public user: User;
     public vocabulary: Vocabulary;
-    public defaultTerms: VocabularyTerm[];
+    public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
     public document: Document;
     public fileIri: string | null;
@@ -23,7 +23,7 @@ export default class TermItState {
     public error: ErrorInfo;
     public messages: Message[];
     public intl: IntlData;
-    public selectedTerm: VocabularyTerm | null;
+    public selectedTerm: Term | null;
     public queryResults: { [key: string]: QueryResultIF };
     public createdTermsCounter: number;
     public facetedSearchResult: object;

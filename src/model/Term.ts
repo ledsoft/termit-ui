@@ -1,4 +1,5 @@
 import OntologicalVocabulary from "../util/VocabularyUtils";
+import {default as Asset, AssetData} from "./Asset";
 
 const ctx = {
     iri: '@id',
@@ -11,26 +12,25 @@ const ctx = {
 
 export const CONTEXT = Object.assign(ctx);
 
-export interface VocabularyTermData {
-    label: string;
+export interface TermData extends AssetData {
+    label : string;
     comment?: string;
-    iri: string;
     subTerms?: string[];
     parent?: string;
     types?: string[];
     sources?: string[];
 }
 
-export default class VocabularyTerm implements VocabularyTermData {
-    public label: string;
+export default class Term extends Asset implements TermData {
+    public label : string;
     public comment?: string;
-    public iri: string;
     public subTerms?: string[];
     public parent?:string;
     public types?: string[];
     public sources?: string[];
 
-    constructor(data: VocabularyTermData) {
+    constructor(data: TermData) {
+        super();
         Object.assign(this, data);
     }
 

@@ -15,7 +15,7 @@ import Routes from "../../util/Routes";
 import {RouteComponentProps, withRouter} from "react-router";
 import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
-import VocabularyTerm from "../../model/VocabularyTerm";
+import Term from "../../model/Term";
 import {fetchVocabularyTerms} from "../../action/ComplexActions";
 import {ThunkDispatch} from '../../util/Types';
 
@@ -23,8 +23,8 @@ import {ThunkDispatch} from '../../util/Types';
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
     counter: number;
-    selectedTerms: VocabularyTerm | null;
-    selectVocabularyTerm: (selectedTerms: VocabularyTerm | null) => void;
+    selectedTerms: Term | null;
+    selectVocabularyTerm: (selectedTerms: Term | null) => void;
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
 }
 
@@ -49,7 +49,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
         this.props.selectVocabularyTerm(null)
     }
 
-    private _valueRenderer(option: VocabularyTerm) {
+    private _valueRenderer(option: Term) {
         return option.label
     }
 
@@ -62,7 +62,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
         Routing.transitionTo(Routes.createVocabularyTerm, {params: new Map([['name', normalizedName]])});
     }
 
-    private _onChange(term: VocabularyTerm | null) {
+    private _onChange(term: Term | null) {
         this.props.selectVocabularyTerm(term);
         if (term) {
             Routing.transitionTo(Routes.vocabularyTermDetail,
@@ -113,7 +113,7 @@ export default withRouter(connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
+        selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
     };
 })(injectIntl(withI18n(Terms))));

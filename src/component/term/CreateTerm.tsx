@@ -28,7 +28,7 @@ import Ajax, {params} from "../../util/Ajax";
 import Constants from "../../util/Constants";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import VocabularyTerm, {CONTEXT as TERM_CONTEXT} from "../../model/VocabularyTerm";
+import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
 import {createVocabularyTerm, fetchVocabularyTerms} from "../../action/ComplexActions";
 import {ThunkDispatch} from "../../util/Types";
 
@@ -91,8 +91,8 @@ const Select = asField(({fieldState, ...props}: any) => {
         return props.fieldApi.setValue(value);
     }
 
-    const valueRenderer = (option: any) => {
-        return option.label
+    const valueRenderer = (option: Term) => {
+        return option.label;
     };
 
     return (
@@ -114,16 +114,26 @@ const Select = asField(({fieldState, ...props}: any) => {
 });
 
 interface CreateVocabularyTermProps extends HasI18n, RouteComponentProps<any> {
-    options?: any[],
+    options?: Term[],
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void,
-    onCreate: (term: VocabularyTerm, normalizedName: string) => void
+    onCreate: (term: Term, normalizedName: string) => void
 }
 
 interface CreateVocabularyTermState {
-    siblings: any[],
+    siblings: Term[],
     modalAdvancedSectionVisible: boolean,
     optionUriValue: string,
     generateUri: boolean
+}
+
+interface NewOptionData {
+    siblings : Term[],
+    optionURI : string,
+    parentOption : Term,
+    childOptions : Term[],
+    optionLabel : string,
+    optionDescription : string,
+    optionSource : string
 }
 
 export class CreateTerm extends React.Component<CreateVocabularyTermProps, CreateVocabularyTermState> {
@@ -159,14 +169,14 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
         Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', normalizedName]])});
     }
 
-    private filterParentOptions(options: VocabularyTerm[], filter: string, currentValues: any[]) {
+    private filterParentOptions(options: Term[], filter: string, currentValues: Term[]) {
         return options.filter(option => {
             const label = option.label;
             return label.toLowerCase().indexOf(filter.toLowerCase()) !== -1
         })
     }
 
-    private filterChildrenOptions(options: VocabularyTerm[], filter: string, currentValues: any[]) {
+    private filterChildrenOptions(options: Term[], filter: string, currentValues: Term[]) {
         return options.filter(option => {
             const label = option.label;
             return (label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) && !option.parent
@@ -177,15 +187,15 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
         return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name)
     }
 
-    private _getIDs(children: VocabularyTerm[]): string[] {
+    private _getIDs(children: Term[]): string[] {
         if (!children) {
             return [];
         }
-        const ids: VocabularyTerm[] = JSON.parse(JSON.stringify(children));
+        const ids: Term[] = JSON.parse(JSON.stringify(children));
         return ids.map(obj => obj.iri)
     }
 
-    private createNewOption(data: any) {
+    private createNewOption(data: NewOptionData) {
 
         let types: string[] = [];
         if (data.siblings) {
@@ -194,11 +204,11 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
 
         const children = this._getIDs(data.childOptions);
         let parent = '';
-        if (data.parentOption as VocabularyTerm) {
+        if (data.parentOption as Term) {
             parent = data.parentOption.iri;
         }
 
-        this.props.onCreate(new VocabularyTerm({
+        this.props.onCreate(new Term({
             iri: data.optionURI as string,
             label: data.optionLabel as string,
             comment: data.optionDescription as string,
@@ -244,7 +254,7 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
     }
 
     private addSibling() {
-        this.setState(prevState => {
+        this.setState((prevState : CreateVocabularyTermState) : CreateVocabularyTermState => {
             // @ts-ignore
             return {siblings: [...prevState.siblings, {key: '', value: ''}]};
         });
@@ -380,7 +390,7 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        onCreate: (term: VocabularyTerm, normalizedName: string) => dispatch(createVocabularyTerm(term, normalizedName)),
+        onCreate: (term: Term, normalizedName: string) => dispatch(createVocabularyTerm(term, normalizedName)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
     };
 })(withRouter(injectIntl(withI18n(CreateTerm))));

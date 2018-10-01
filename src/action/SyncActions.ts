@@ -13,7 +13,7 @@ import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import {saveLanguagePreference} from "../util/IntlUtil";
-import VocabularyTerm, {VocabularyTermData} from "../model/VocabularyTerm";
+import Term, {TermData} from "../model/Term";
 import {FileData} from "../model/File";
 import {Action} from 'redux';
 
@@ -77,10 +77,10 @@ export function executeQuerySuccess(queryString: string, result: object): Execut
     };
 }
 
-export function selectVocabularyTerm(data: VocabularyTermData | null): SelectingTermsAction {
+export function selectVocabularyTerm(data: TermData | null): SelectingTermsAction {
     return {
         type: ActionType.SELECT_VOCABULARY_TERM,
-        selectedTerms: data ? new VocabularyTerm(data) : data,
+        selectedTerms: data ? new Term(data) : data,
     }
 }
 export function fireFacetedSearchRequested() {
