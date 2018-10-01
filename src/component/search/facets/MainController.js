@@ -80,7 +80,10 @@ export default (endpointUrl, resultOptions, facets, facetOptions, fireQueryReque
                         fireQueryRequested();
                         // Get the page.
                         // (The pager uses 0-indexed pages, whereas Angular-UI pagination uses 1-indexed pages).
-                        return vm.pager.getPage(vm.pageNo - 1).then((page) => {
+                        return vm.pager.
+                        // getPage(vm.pageNo - 1).
+                            getAll().
+                        then((page) => {
                             // Check if it's ok to change the page
                             if (!vm.lock || (uid === updateId)) {
                                 vm.page = page;
