@@ -126,7 +126,7 @@ interface CreateVocabularyTermState {
     generateUri: boolean
 }
 
-export class CreateVocabularyTerm extends React.Component<CreateVocabularyTermProps, CreateVocabularyTermState> {
+export class CreateTerm extends React.Component<CreateVocabularyTermProps, CreateVocabularyTermState> {
 
     constructor(props: CreateVocabularyTermProps) {
         super(props);
@@ -383,4 +383,4 @@ export default connect((state: TermItState) => {
         onCreate: (term: VocabularyTerm, normalizedName: string) => dispatch(createVocabularyTerm(term, normalizedName)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
     };
-})(withRouter(injectIntl(withI18n(CreateVocabularyTerm))));
+})(withRouter(injectIntl(withI18n(CreateTerm))));

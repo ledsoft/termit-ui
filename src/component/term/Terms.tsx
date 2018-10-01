@@ -28,7 +28,7 @@ interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
 }
 
-export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
+export class Terms extends React.Component<GlossaryTermsProps> {
 
 
     constructor(props: GlossaryTermsProps) {
@@ -89,11 +89,12 @@ export class GlossaryTerms extends React.Component<GlossaryTermsProps> {
             valueRenderer={this._valueRenderer}
         />;
 
-        actions.push(<Button key='glossary.createTerm'
-                             color='primary'
-                             title={i18n('glossary.createTerm.tooltip')}
-                             size='sm'
-                             onClick={this._onCreateClick}>{i18n('glossary.createTerm')}</Button>);
+        actions.push(
+            <Button key='glossary.createTerm'
+                    color='primary'
+                    title={i18n('glossary.createTerm.tooltip')}
+                    size='sm'
+                    onClick={this._onCreateClick}>+</Button>)
 
         return (<PanelWithActions
             title={i18n('glossary.title')}
@@ -115,4 +116,4 @@ export default withRouter(connect((state: TermItState) => {
         selectVocabularyTerm: (selectedTerm: VocabularyTerm | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
     };
-})(injectIntl(withI18n(GlossaryTerms))));
+})(injectIntl(withI18n(Terms))));

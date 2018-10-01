@@ -3,7 +3,7 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Col, Row} from 'reactstrap';
 import {Route, RouteComponentProps, Switch} from "react-router";
-import GlossaryTerms from "../term/GlossaryTerms";
+import Terms from "../term/Terms";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {loadVocabulary} from "../../action/ComplexActions";
@@ -12,7 +12,7 @@ import './VocabularyDetail.scss';
 import OutgoingLink from "../misc/OutgoingLink";
 import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 import Routes from "../../util/Routes";
-import CreateVocabularyTerm from "../term/CreateVocabularyTerm";
+import CreateTerm from "../term/CreateTerm";
 import {IRI} from "../../util/VocabularyUtils";
 import DocumentTab from "../document/DocumentTab";
 import {ThunkDispatch} from '../../util/Types';
@@ -37,7 +37,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             vocabulary={this.props.vocabulary}
         />;
         // @ts-ignore
-        const createVocabularyTerm = () => <CreateVocabularyTerm/>;
+        const createVocabularyTerm = () => <CreateTerm/>;
 
         return <div>
             <h2 className='page-header'>
@@ -49,7 +49,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             <h6>{this.props.formatMessage('vocabulary.detail.subtitle', {author, created})}</h6>
             <Row className='detail-row'>
                 <Col md={4}>
-                    <GlossaryTerms/>
+                    <Terms/>
                 </Col>
                 <Col md={8}>
                     <Switch>

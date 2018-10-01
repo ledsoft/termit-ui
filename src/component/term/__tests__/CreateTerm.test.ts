@@ -5,7 +5,7 @@
 // import Ajax from "../../../util/Ajax";
 // import VocabularyTerm from "../../../model/VocabularyTerm";
 // import {mountWithIntl} from "../../../__tests__/environment/Environment";
-// import {CreateVocabularyTerm} from "../CreateVocabularyTerm";
+// import {CreateTerm} from "../CreateTerm";
 // import FetchOptionsFunction from "../../../model/Functions";
 //
 // jest.mock('../../../util/Routing');
@@ -27,13 +27,13 @@ describe('Create asset term view', () => {
 //     });
 //
 //     it('returns to Vocabulary Detail on cancel', () => {
-//         const wrapper = mountWithIntl(<CreateVocabularyTerm  i18n = {i18n} onCreate={onCreate} fetchTerms={fetchTerms}/> );
+//         const wrapper = mountWithIntl(<CreateTerm  i18n = {i18n} onCreate={onCreate} fetchTerms={fetchTerms}/> );
 //         wrapper.find(Button).at(1).simulate('click');
 //         expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.vocabularyDetail);
 //     });
 //
 //     it('enables submit button only when name is not empty', () => {
-//         const wrapper = mountWithIntl(<CreateVocabularyTerm i18n = {i18n} onCreate={onCreate} />);
+//         const wrapper = mountWithIntl(<CreateTerm i18n = {i18n} onCreate={onCreate} />);
 //         let submitButton = wrapper.find(Button).first();
 //         expect(submitButton.getElement().props.disabled).toBeTruthy();
 //         const nameInput = wrapper.find('input[name=\"create-asset.name\"]');
