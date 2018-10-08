@@ -13,9 +13,9 @@ interface SearchResultsOverlayProps extends HasI18n {
     onOpenSearch: () => void;
 }
 
-const MAX_RENDERED_RESULTS = 10;
+export const MAX_RENDERED_RESULTS = 10;
 
-const SearchResultsOverlay: React.SFC<SearchResultsOverlayProps> = (props: SearchResultsOverlayProps) => {
+export const SearchResultsOverlay: React.SFC<SearchResultsOverlayProps> = (props: SearchResultsOverlayProps) => {
     let items;
     if (props.searchResults.length === 0) {
         items = [<li key='full-info' className='btn-link search-result-no-results' onClick={props.onOpenSearch}
