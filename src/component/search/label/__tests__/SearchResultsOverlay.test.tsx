@@ -6,6 +6,7 @@ import {formatMessage, i18n} from "../../../../__tests__/environment/IntlUtil";
 import * as React from "react";
 import {MAX_RENDERED_RESULTS, SearchResultsOverlay} from "../SearchResultsOverlay";
 import {Simulate} from 'react-dom/test-utils';
+import {ReactWrapper} from "enzyme";
 
 describe('SearchResultsOverlay', () => {
 
@@ -14,6 +15,7 @@ describe('SearchResultsOverlay', () => {
     let onOpenSearch: () => void;
 
     let element: HTMLDivElement;
+    let wrapper: ReactWrapper;
 
     beforeEach(() => {
         onClose = jest.fn();
@@ -22,6 +24,13 @@ describe('SearchResultsOverlay', () => {
         element = document.createElement('div');
         element.id = 'root';
         document.body.appendChild(element);
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        wrapper.unmount();
+        jest.clearAllTimers();
+        document.body.removeChild(element);
     });
 
     it('shows only first x search results, others can be viewed on dedicated search page', () => {
@@ -33,7 +42,7 @@ describe('SearchResultsOverlay', () => {
                 types: [Vocabulary.TERM]
             }));
         }
-        mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
                                             onClose={onClose} onClick={onClick}
                                             onOpenSearch={onOpenSearch} i18n={i18n}
                                             formatMessage={formatMessage}/>, {attachTo: element});
@@ -42,7 +51,7 @@ describe('SearchResultsOverlay', () => {
     });
 
     it('renders info message about no results when empty results are provided', () => {
-        mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={[]}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={[]}
                                             onClose={onClose} onClick={onClick}
                                             onOpenSearch={onOpenSearch} i18n={i18n}
                                             formatMessage={formatMessage}/>, {attachTo: element});
@@ -60,7 +69,7 @@ describe('SearchResultsOverlay', () => {
                 types: [Vocabulary.TERM]
             }));
         }
-        mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
                                             onClose={onClose} onClick={onClick}
                                             onOpenSearch={onOpenSearch} i18n={i18n}
                                             formatMessage={formatMessage}/>, {attachTo: element});
@@ -77,7 +86,7 @@ describe('SearchResultsOverlay', () => {
                 types: [Vocabulary.TERM]
             }));
         }
-        mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
                                             onClose={onClose} onClick={onClick}
                                             onOpenSearch={onOpenSearch} i18n={i18n}
                                             formatMessage={formatMessage}/>, {attachTo: element});
@@ -89,7 +98,7 @@ describe('SearchResultsOverlay', () => {
     });
 
     it('invokes search open when no results info link is clicked', () => {
-        mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={[]}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={[]}
                                             onClose={onClose} onClick={onClick}
                                             onOpenSearch={onOpenSearch} i18n={i18n}
                                             formatMessage={formatMessage}/>, {attachTo: element});
@@ -107,7 +116,7 @@ describe('SearchResultsOverlay', () => {
                 types: [Vocabulary.TERM]
             }));
         }
-        mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
                                             onClose={onClose} onClick={onClick}
                                             onOpenSearch={onOpenSearch} i18n={i18n}
                                             formatMessage={formatMessage}/>, {attachTo: element});
