@@ -21,7 +21,7 @@ interface SearchState {
     results: SearchResult[] | null;
 }
 
-class Search extends React.Component<SearchProps, SearchState> {
+export class Search extends React.Component<SearchProps, SearchState> {
 
     constructor(props: SearchProps) {
         super(props);
