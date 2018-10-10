@@ -29,7 +29,6 @@ const constants = {
     MESSAGE_DISPLAY_COUNT: 5,
     // For how long should a message be displayed
     MESSAGE_DISPLAY_TIMEOUT: 5000,
-    endpoint_url : "http://onto.fel.cvut.cz/rdf4j-server/repositories/termit-dev", // TODO load from server config.
 };
 
 constants.STORAGE_JWT_KEY = constants.APP_NAME + '-' + constants.AUTHORIZATION_HEADER;

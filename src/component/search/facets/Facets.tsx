@@ -191,7 +191,7 @@ export class Facets extends React.Component<Props, State> {
 export default connect((state: TermItState) => {
     return {
         lang: state.intl.locale,
-        endpointUrl: Constants.endpoint_url
+        endpointUrl: Constants.SERVER_URL+Constants.API_PREFIX+"/query"
     };
 }, (dispatch: ThunkDispatch) => {
     return {
