@@ -17,6 +17,7 @@ import Footer from '../Footer';
 import Ajax, {params} from "../../util/Ajax";
 import Constants from '../../util/Constants';
 import {ThunkDispatch} from "../../util/Types";
+import Authentication from "../../util/Authentication";
 
 interface RegisterProps extends HasI18n {
     loading: boolean,
@@ -45,6 +46,11 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
             passwordConfirm: '',
             usernameExists: false
         };
+    }
+
+    public componentDidMount() {
+        // Clear potentially pre-existing JWT, which would cause issues with username existence check
+        Authentication.clearToken();
     }
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
