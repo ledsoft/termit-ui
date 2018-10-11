@@ -190,6 +190,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(500, {
     //     message: 'Unable to create vocabulary!'
     // });
+    // Mock get vocabulary terms
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/find/).reply(200, require('../rest-mock/terms'), header);
     // Mock vocabulary retrieval endpoint
     mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE

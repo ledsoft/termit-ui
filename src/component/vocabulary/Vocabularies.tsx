@@ -6,6 +6,7 @@ import Routes from "../../util/Routes";
 import Routing from '../../util/Routing';
 import VocabularyList from "./VocabularyList";
 import PanelWithActions from "../misc/PanelWithActions";
+import {GoPlus} from 'react-icons/go';
 
 class Vocabularies extends React.Component<HasI18n> {
 
@@ -20,7 +21,7 @@ class Vocabularies extends React.Component<HasI18n> {
                              color='primary'
                              title={i18n('vocabulary.vocabularies.create.tooltip')}
                              size='sm'
-                             onClick={Vocabularies.onCreateVocabularyClick}>+</Button>);
+                             onClick={Vocabularies.onCreateVocabularyClick}><GoPlus/></Button>);
         return (<PanelWithActions
                     title={i18n('vocabulary.management.vocabularies')}
                     component={<VocabularyList/>}

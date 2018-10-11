@@ -4,6 +4,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Col, Label, Row} from "reactstrap";
 import Term from "../../model/Term";
 import OutgoingLink from "../misc/OutgoingLink";
+import "./TermMetadata.scss";
 
 interface VocabularyMetadataProps extends HasI18n {
     term: Term,
@@ -60,8 +61,8 @@ const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: Vocabular
                 <Label>{i18n('term.metadata.source')}</Label>
             </Col>
             <Col md={10}>
-                <ul>
-                {(term.sources && term.sources.map) ? term.sources.map(st => <li key={st}>{st}</li>) : term.sources}
+                <ul className='term-sources'>
+                    {(term.sources && term.sources.map) ? term.sources.map(st => <li key={st}>{st}</li>) : term.sources}
                 </ul>
             </Col>
         </Row>
