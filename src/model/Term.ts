@@ -7,7 +7,7 @@ const ctx = {
     comment: "http://www.w3.org/2000/01/rdf-schema#comment",
     subTerms: "http://www.w3.org/2004/02/skos/core#narrower",
     sources: "http://purl.org/dc/elements/1.1/source",
-    type: "@type",
+    types: "@type",
 };
 
 export const CONTEXT = Object.assign(ctx);

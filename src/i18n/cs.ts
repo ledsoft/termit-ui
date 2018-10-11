@@ -69,7 +69,7 @@ export default {
         'vocabulary.summary.title': '{name} - přehled',
         'vocabulary.summary.gotodetail.label' : 'Detail',
         'vocabulary.created.message': 'Slovník úspěšně vytvořen.',
-        'vocabulary.detail.subtitle': 'Vytvořen autorem {author} v {created}',
+        'vocabulary.detail.subtitle': 'Vytvořen autorem {author} {created}',
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Detail pojmu',
         'vocabulary.detail.tabs.annotations' : 'Anotace',
@@ -84,7 +84,7 @@ export default {
         'term.metadata.label': 'Popisek',
         'term.metadata.comment': 'Komentář',
         'term.metadata.subTerms': 'Podřazené pojmy',
-        'term.metadata.types': 'Typ/y pojmu',
+        'term.metadata.types': 'Typy pojmu',
         'term.metadata.source': 'Zdroj pojmu',
 
         'glossary.title': 'Pojmy',

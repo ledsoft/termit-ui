@@ -90,8 +90,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                          labelWidth={4} inputWidth={8}/>
 
                         <Row>
-                            <Col xs={4}>&nbsp;</Col>
-                            <Col xs={8}>
+                            <Col xs={{size: 'auto', offset: 4}}>
                                 <ButtonToolbar>
                                     <Button color='success' size='sm' onClick={this.login}
                                             disabled={this.props.loading || !this.isValid()}>{i18n('login.submit')}</Button>
