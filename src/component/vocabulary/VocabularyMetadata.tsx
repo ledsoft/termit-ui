@@ -15,7 +15,7 @@ const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: Vocabular
     return <div className='metadata-panel'>
         <Row>
             <Col md={2}>
-                <Label>{i18n('vocabulary.metadata.identifier')}</Label>
+                <Label className='attribute-label'>{i18n('vocabulary.metadata.identifier')}</Label>
             </Col>
             <Col md={10}>
                 <OutgoingLink iri={vocabulary.iri} label={vocabulary.iri}/>
@@ -23,7 +23,7 @@ const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: Vocabular
         </Row>
         <Row>
             <Col md={2}>
-                <Label>{i18n('vocabulary.metadata.author')}</Label>
+                <Label className='attribute-label'>{i18n('vocabulary.metadata.author')}</Label>
             </Col>
             <Col md={10}>
                 {vocabulary.author && vocabulary.author.fullName}
@@ -31,7 +31,7 @@ const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: Vocabular
         </Row>
         <Row>
             <Col md={2}>
-                <Label>{i18n('vocabulary.metadata.created')}</Label>
+                <Label className='attribute-label'>{i18n('vocabulary.metadata.created')}</Label>
             </Col>
             <Col md={10}>
                 {vocabulary.created && new Date(vocabulary.created).toLocaleString()}

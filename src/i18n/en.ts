@@ -5,8 +5,10 @@ export default {
 
     messages: {
         'please-wait': 'Please wait...',
+        'save': 'Save',
         'cancel': 'Cancel',
         'not-implemented': 'Not implemented, yet!',
+        'edit': 'Edit',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',

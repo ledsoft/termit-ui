@@ -1,20 +1,54 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {Col, Label, Row} from "reactstrap";
+import {Button, ButtonToolbar, Col, Label, Row} from "reactstrap";
 import Term from "../../model/Term";
 import OutgoingLink from "../misc/OutgoingLink";
 import "./TermMetadata.scss";
+import TermMetadataEdit from "./TermMetadataEdit";
+import {GoPencil} from "react-icons/go";
 
-interface VocabularyMetadataProps extends HasI18n {
-    term: Term,
+interface TermMetadataProps extends HasI18n {
+    term: Term;
 }
 
-class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
+interface TermMetadataState {
+    edit: boolean;
+}
+
+export class TermMetadata extends React.Component<TermMetadataProps, TermMetadataState> {
+
+    constructor(props: TermMetadataProps) {
+        super(props);
+        this.state = {
+            edit: false
+        };
+    }
+
+    private onEdit = () => {
+        this.setState({edit: true});
+    };
+
+    private onSave = (term: Term) => {
+        // Do nothing
+    };
+
+    private onCloseEdit = () => {
+        this.setState({edit: false});
+    };
+
     public render() {
+        return this.state.edit ? <TermMetadataEdit save={this.onSave} term={this.props.term}
+                                                   cancel={this.onCloseEdit}/> : this.renderMetadata();
+    }
+
+    private renderMetadata() {
         const i18n = this.props.i18n;
         const term = this.props.term;
         return <div className='metadata-panel'>
+            <ButtonToolbar className='pull-right clearfix'>
+                <Button size='sm' color='info' onClick={this.onEdit} title={i18n('edit')}><GoPencil/></Button>
+            </ButtonToolbar>
             <Row>
                 <Col md={2}>
                     <Label className='attribute-label'>{i18n('term.metadata.identifier')}</Label>
@@ -76,4 +110,4 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
     }
 }
 
-export default injectIntl(withI18n(VocabularyMetadata));
+export default injectIntl(withI18n(TermMetadata));

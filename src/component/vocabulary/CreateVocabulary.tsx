@@ -68,21 +68,21 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
             <CardBody>
                 <Form>
                     <Row>
-                        <Col md={6}>
+                        <Col md={6} sm={12}>
                             <CustomInput name='create-vocabulary.name' label={i18n('vocabulary.name')}
                                          value={this.state.name}
                                          onChange={this.onNameChange}/>
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={6}>
+                        <Col md={6} sm={12}>
                             <CustomInput name='create-vocabulary.iri' label={i18n('vocabulary.iri')}
                                          value={this.state.iri}
                                          onChange={this.onIriChange} help={i18n('vocabulary.create.iri.help')}/>
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={6}>
+                        <Col md={6} sm={12}>
                             <ButtonToolbar className='pull-right'>
                                 <Button onClick={this.onCreate} color='success' size='sm'
                                         disabled={this.state.name.trim().length === 0}>{i18n('vocabulary.create.submit')}</Button>
