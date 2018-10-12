@@ -13,7 +13,7 @@ interface TermMetadataEditProps extends HasI18n {
     cancel: () => void;
 }
 
-class TermMetadataEdit extends React.Component<TermMetadataEditProps, TermData> {
+export class TermMetadataEdit extends React.Component<TermMetadataEditProps, TermData> {
     constructor(props: TermMetadataEditProps) {
         super(props);
         this.state = Object.assign({}, props.term);
@@ -24,6 +24,15 @@ class TermMetadataEdit extends React.Component<TermMetadataEditProps, TermData> 
         change[e.currentTarget.name] = e.currentTarget.value;
         this.setState(change);
     };
+
+    private onSave = () => {
+        const t = new Term(this.state);
+        this.props.save(t);
+    };
+
+    private isValid(): boolean {
+        return this.state.iri!.length > 0 && this.state.label.length > 0;
+    }
 
     public render() {
         const i18n = this.props.i18n;
@@ -68,7 +77,8 @@ class TermMetadataEdit extends React.Component<TermMetadataEditProps, TermData> 
                 <Row>
                     <Col xs={12} md={6}>
                         <ButtonToolbar className='pull-right'>
-                            <Button size='sm' color='success'>{i18n('save')}</Button>
+                            <Button size='sm' color='success' disabled={!this.isValid()}
+                                    onClick={this.onSave}>{i18n('save')}</Button>
                             <Button size='sm' color='link' onClick={this.props.cancel}>{i18n('cancel')}</Button>
                         </ButtonToolbar>
                     </Col>
