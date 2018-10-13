@@ -4,7 +4,7 @@ import {
     createVocabularyTerm,
     fetchUser,
     fetchVocabularyTerms,
-    loadDefaultTerms,
+    loadDefaultTerms, loadTypes,
     loadVocabularies,
     loadVocabulary,
     login,
@@ -259,6 +259,25 @@ describe('Async actions', () => {
                     terms.sort((a: object, b: object) => a['@id'].localeCompare(b['@id']));
                     for (let i = 0; i < terms.length; i++) {
                         expect(data[i].iri).toEqual(terms[i]['@id']);
+                    }
+                });
+        });
+    });
+    describe('load types', () => {
+        it('loads types from the incoming JSON-LD', () => {
+            const types = require('../../rest-mock/types');
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(types));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch<object, undefined, Action>)(
+                loadTypes("en")))
+                .then(() => {
+                    const loadSuccessAction: AsyncActionSuccess<Vocabulary[]> = store.getActions()[1];
+                    const data = loadSuccessAction.payload;
+                    expect(data.length).toEqual(types.length);
+                    data.sort((a, b) => a.iri.localeCompare(b.iri));
+                    types.sort((a: object, b: object) => a['@id'].localeCompare(b['@id']));
+                    for (let i = 0; i < types.length; i++) {
+                        expect(data[i].iri).toEqual(types[i]['@id']);
                     }
                 });
         });

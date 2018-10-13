@@ -97,6 +97,7 @@ export default {
         'glossary.form.field.description': 'Popisek',
         'glossary.form.field.selectParent': 'Vybrat předchůdce ...',
         'glossary.form.field.selectChildren': 'Vybrat potomky ...',
+        'glossary.form.field.selectType': 'Vyber typy',
         'glossary.form.field.source': 'Zdroj pojmu',
         'glossary.form.field.type': 'Typ pojmu',
         'glossary.form.button.addType': 'Přidat typ',

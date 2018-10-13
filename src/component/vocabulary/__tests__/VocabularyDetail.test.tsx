@@ -27,13 +27,17 @@ describe('VocabularyDetail', () => {
     };
 
     let loadVocabulary: (vocabulary: IRI) => void;
+    let loadTypes: (lang: string) => void;
 
     beforeEach(() => {
         loadVocabulary = jest.fn();
+        loadTypes = jest.fn();
     });
 
     it('loads vocabulary on mount', () => {
-        shallow(<VocabularyDetail vocabulary={EMPTY_VOCABULARY} loadVocabulary={loadVocabulary} i18n={i18n}
+        shallow(<VocabularyDetail vocabulary={EMPTY_VOCABULARY} loadVocabulary={loadVocabulary}
+                                  loadTypes={loadTypes} i18n={i18n}
+                                  lang={"en"}
                                   formatMessage={formatMessage}
                                   history={history} location={location} match={match} {...intlDataForShallow()}/>);
         expect(loadVocabulary).toHaveBeenCalledWith({fragment:'metropolitan-plan'});

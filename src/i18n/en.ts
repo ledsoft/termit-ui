@@ -99,6 +99,7 @@ export default {
         'glossary.form.field.selectChildren': 'Select children ...',
         'glossary.form.field.source': 'Term source',
         'glossary.form.field.type': 'Term type',
+        'glossary.form.field.selectType': 'Select types',
         'glossary.form.button.addType': 'Add term type',
         'glossary.form.button.removeType': 'Remove term type',
         'glossary.form.button.showAdvancedSection': 'Show advanced options',

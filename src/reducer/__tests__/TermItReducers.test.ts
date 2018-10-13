@@ -37,7 +37,8 @@ function stateToPlainObject(state: TermItState) {
         document: state.document,
         fileIri: state.fileIri,
         fileContent: state.fileContent,
-        facetedSearchResult : state.facetedSearchResult
+        facetedSearchResult : state.facetedSearchResult,
+        types : state.types
     };
 }
 
@@ -275,6 +276,29 @@ describe('Reducers', () => {
             ];
             expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_DEFAULT_TERMS}, terms.map(vt => new Term(vt)))))
                 .toEqual(Object.assign({}, initialState, {defaultTerms: terms.map(t => new Term(t))}));
+        });
+    });
+
+    describe('load types', () => {
+        it('sets default terms when it was successfully loaded', () => {
+            const terms: TermData[] = [
+                {
+                    label: 'Test type 1',
+                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-type-1'
+                },
+                {
+                    label: 'Test type 2',
+                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-type-2'
+                }
+            ];
+
+            const map = {};
+            terms.forEach((v : TermData) =>
+                map[(v.iri || "")] = new Term(v)
+            );
+
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_TYPES}, terms.map(vt => new Term(vt)))))
+                .toEqual(Object.assign({}, initialState, {types: map}));
         });
     });
 

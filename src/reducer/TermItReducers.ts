@@ -209,6 +209,23 @@ function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<D
     }
 }
 
+function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuccess<Term[]>): {[key: string]: Term } {
+    switch (action.type) {
+        case ActionType.LOAD_TYPES:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const map = {};
+                action.payload.forEach(v =>
+                    map[v.iri] = v
+                );
+                return map;
+            } else {
+                return state;
+            }
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers<TermItState>({
     user,
     loading,
@@ -224,7 +241,8 @@ const rootReducer = combineReducers<TermItState>({
     document,
     fileIri,
     fileContent,
-    facetedSearchResult
+    facetedSearchResult,
+    types
 });
 
 export default rootReducer;

@@ -116,7 +116,9 @@ const Select = asField(({fieldState, ...props}: any) => {
 interface CreateVocabularyTermProps extends HasI18n, RouteComponentProps<any> {
     options?: Term[],
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void,
-    onCreate: (term: Term, normalizedName: string) => void
+    onCreate: (term: Term, normalizedName: string) => void,
+    types: {[key:string] : Term},
+    lang: string
 }
 
 interface CreateVocabularyTermState {
@@ -127,7 +129,8 @@ interface CreateVocabularyTermState {
 }
 
 interface NewOptionData {
-    siblings : Term[],
+    // siblings : Term[],
+    typeOption: Term,
     optionURI : string,
     parentOption : Term,
     childOptions : Term[],
@@ -197,10 +200,10 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
 
     private createNewOption(data: NewOptionData) {
 
-        let types: string[] = [];
-        if (data.siblings) {
-            types = data.siblings.map((o: any) => o.type)
-        }
+        // let types: string[] = [];
+        // if (data.siblings) {
+        //     types = data.siblings.map((o: any) => o.type)
+        // }
 
         const children = this._getIDs(data.childOptions);
         let parent = '';
@@ -214,7 +217,7 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
             comment: data.optionDescription as string,
             subTerms: children as string[],
             parent: parent as string,
-            types: types as string[],
+            types: [data.typeOption.iri as string],
             sources: [data.optionSource as string],
         }), this.props.match.params.name);
     }
@@ -276,6 +279,10 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
         const i18n = this.props.i18n;
         // @ts-ignore
         const styles: CSSProperties = {pointer: 'cursor', margin: '8px'};
+
+        const types = this.props.types ?
+            Object.keys(this.props.types).map(k => this.props.types[k]) : [];
+
         return (<Card>
             <CardHeader color='info'>
                 <CardTitle>{i18n('glossary.form.header')}</CardTitle>
@@ -295,9 +302,24 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
                                onChange={this.handleOnChange}
                                value={this.state.optionUriValue}
                     />
-                    <TextInput field="optionDescription" id="optionDescription"
+                    <TextInput field="optionDescription"
+                               id="optionDescription"
                                label={i18n('glossary.form.field.description')}/>
 
+                    <Select field={"typeOption"}
+                            name={"types-" + this.props.match.params.name}
+                            options={types}
+                            multi={false}
+                            placeholder={i18n('glossary.form.field.selectType')}
+                            valueKey={"iri"}
+                            labelKey={"label"}
+                            childrenKey={"subTerms"}
+                            filterOptions={this.filterParentOptions}
+                        // fetchOptions={this.fetchOptions}
+                            displayInfoOnHover={true}
+                            expanded={true}
+                            renderAsTree={true}
+                    />
 
                     <Button color="link"
                             onClick={this.toggleAdvancedSection}>
@@ -340,36 +362,6 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
 
                         <TextInput field="optionSource" id="optionSource"
                                    label={i18n('glossary.form.field.source')}/>
-
-                        <FormGroup>
-                            <FormGroup>
-                                <Button type="button"
-                                        onClick={this.addSibling}
-                                        color={'primary'} size="sm">
-                                    {i18n('glossary.form.button.addType')}
-                                </Button>
-                            </FormGroup>
-                            {this.state.siblings.map((member, index) => (
-                                <FormGroup key={index}>
-                                    <TextInput field="type" key={`type-${index}`}
-                                               label={i18n('glossary.form.field.type')}
-                                               className={"d-flex justify-content-between align-items-center m-1"}
-                                               children={
-                                                   <span onClick={this.removeSibling} style={styles}
-                                                         data-index={index}
-                                                         className="Select-clear-zone"
-                                                         title={i18n('glossary.form.button.removeType')}
-                                                         aria-label={i18n('glossary.form.button.removeType')}>
-                                                    <span className="Select-clear"
-                                                          style={{fontSize: 24 + 'px'}}>×</span>
-                                                    </span>
-                                               }
-                                    />
-                                </FormGroup>
-                            ))}
-
-                        </FormGroup>
-
                     </Collapse>
                     <ButtonToolbar className={'d-flex justify-content-end'}>
                         <Button color="primary" type="submit"
@@ -386,7 +378,8 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
 
 export default connect((state: TermItState) => {
     return {
-        vocabulary: state.vocabulary
+        types: state.types,
+        lang: state.intl.locale
     };
 }, (dispatch: ThunkDispatch) => {
     return {

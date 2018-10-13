@@ -7,8 +7,7 @@ import {connect} from "react-redux";
 import {
     fireFacetedSearchFailed,
     fireFacetedSearchFinished,
-    fireFacetedSearchRequested,
-    selectVocabularyTerm
+    fireFacetedSearchRequested
 } from "../../../action/SyncActions";
 import Constants from "../../../util/Constants";
 import "./semantic-faceted-search/semantic-faceted-search";
@@ -195,7 +194,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        selectVocabularyTerm: (selectedTerm: any) => dispatch(selectVocabularyTerm(selectedTerm)),
         fireFacetedSearchRequested: () => dispatch(fireFacetedSearchRequested()),
         fireFacetedSearchFinished: (data: any) => dispatch(fireFacetedSearchFinished(data)),
         fireFacetedSearchFailed: (error : any) => dispatch(fireFacetedSearchFailed(error))

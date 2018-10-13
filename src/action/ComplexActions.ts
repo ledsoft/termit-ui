@@ -77,6 +77,12 @@ export function loadDefaultTerms(normalizedName: string) {
     };
 }
 
+export function loadTypes(language: string) {
+    return (dispatch: ThunkDispatch) => {
+        return dispatch(AsyncActions.loadTypes(language));
+    };
+}
+
 export function fetchVocabularySubTerms(parentTermID: string, normalizedName: string) {
     return (dispatch: ThunkDispatch) => {
         return dispatch(AsyncActions.fetchVocabularySubTerms(parentTermID, normalizedName));

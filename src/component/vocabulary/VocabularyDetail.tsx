@@ -6,20 +6,22 @@ import {Route, RouteComponentProps, Switch} from "react-router";
 import Terms from "../term/Terms";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadVocabulary} from "../../action/ComplexActions";
+import {loadTypes, loadVocabulary} from "../../action/ComplexActions";
 import Vocabulary from "../../model/Vocabulary";
 import './VocabularyDetail.scss';
 import OutgoingLink from "../misc/OutgoingLink";
 import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 import Routes from "../../util/Routes";
-import CreateTerm from "../term/CreateTerm";
 import {IRI} from "../../util/VocabularyUtils";
 import DocumentTab from "../document/DocumentTab";
 import {ThunkDispatch} from '../../util/Types';
+import CreateTerm from "../term/CreateTerm";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
-    loadVocabulary: (iri: IRI) => void
+    loadVocabulary: (iri: IRI) => void,
+    loadTypes: (language: string) => void,
+    lang : string
 }
 
 export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
@@ -27,6 +29,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
     public componentDidMount(): void {
         const normalizedName: string = this.props.match.params.name;
         this.props.loadVocabulary({fragment: normalizedName});
+        this.props.loadTypes(this.props.lang);
     }
 
     public render() {
@@ -37,7 +40,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             vocabulary={this.props.vocabulary}
         />;
         // @ts-ignore
-        const createVocabularyTerm = () => <CreateTerm/>;
+        const createVocabularyTerm = () => <CreateTerm types={this.props.types}/>;
 
         return <div>
             <h2 className='page-header'>
@@ -66,10 +69,13 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 
 export default connect((state: TermItState) => {
     return {
-        vocabulary: state.vocabulary
+        vocabulary: state.vocabulary,
+        types: state.types,
+        lang: state.intl.locale,
     };
 }, (dispatch: ThunkDispatch) => {
     return {
         loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri)),
+        loadTypes: (lang: string) => dispatch(loadTypes(lang)),
     };
 })(injectIntl(withI18n(VocabularyDetail)));

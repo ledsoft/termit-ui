@@ -27,6 +27,7 @@ export default class TermItState {
     public queryResults: { [key: string]: QueryResultIF };
     public createdTermsCounter: number;
     public facetedSearchResult: object;
+    public types: { [key: string]: Term };
 
     constructor() {
         this.loading = false;
@@ -44,5 +45,6 @@ export default class TermItState {
         this.queryResults = {};
         this.createdTermsCounter = 0;
         this.facetedSearchResult = {};
+        this.types = {};
     }
 }

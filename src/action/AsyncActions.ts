@@ -259,7 +259,6 @@ export function getVocabularyTermByName(termNormalizedName: string, vocabularyNo
     };
 }
 
-
 export function executeQuery(queryString: string) {
     const action = {
         type: ActionType.EXECUTE_QUERY
@@ -267,11 +266,39 @@ export function executeQuery(queryString: string) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            .get(Constants.API_PREFIX + '/query', params({query : queryString}))
+            .get(Constants.API_PREFIX + '/query', params({query: queryString}))
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((data: object) =>
                 dispatch(SyncActions.executeQuerySuccess(queryString, data)))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function loadTypes(language: string) {
+    const action = {
+        type: ActionType.LOAD_TYPES
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax
+            .get(Constants.API_PREFIX + '/language/types', params({language}))
+            .then((data: object[]) =>
+                data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: TermData[]) => {
+                data.forEach((term: Term) => {
+                    if (term.subTerms) {
+                        // @ts-ignore
+                        term.subTerms = Array.isArray(term.subTerms) ? term.subTerms.map(subTerm => subTerm.iri) : [term.subTerms.iri];
+                    }
+                });
+                return data
+            })
+            .then((result: Term[]) => dispatch(asyncActionSuccessWithPayload(action, result)))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));

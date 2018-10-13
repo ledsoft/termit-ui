@@ -52,7 +52,7 @@ const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: Vocabular
                 <Label>{i18n('term.metadata.types')}</Label>
             </Col>
             <Col md={10}>
-                {term.types && term.types.toString()}
+                {(term.types && term.types.map) ? term.types.map(st => <li key={st}><OutgoingLink iri={st} label={st}/></li>) : ""}
             </Col>
         </Row>
         <Row>
