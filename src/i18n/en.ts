@@ -5,8 +5,10 @@ export default {
 
     messages: {
         'please-wait': 'Please wait...',
+        'save': 'Save',
         'cancel': 'Cancel',
         'not-implemented': 'Not implemented, yet!',
+        'edit': 'Edit',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
@@ -69,7 +71,7 @@ export default {
         'vocabulary.summary.title': '{name} - Summary',
         'vocabulary.summary.gotodetail.label': 'Detail',
         'vocabulary.created.message': 'Vocabulary successfully created.',
-        'vocabulary.detail.subtitle': 'Created by {author} at {created}',
+        'vocabulary.detail.subtitle': 'Created by {author} on {created}',
         'vocabulary.detail.tabs.metadata': 'Metadata',
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
         'vocabulary.detail.tabs.annotations' : 'Document annotations',
@@ -84,7 +86,7 @@ export default {
         'term.metadata.label': 'Label',
         'term.metadata.comment': 'Comment',
         'term.metadata.subTerms': 'Sub terms',
-        'term.metadata.types': 'Type/s',
+        'term.metadata.types': 'Types',
         'term.metadata.source': 'Source',
 
         'glossary.title': 'Terms',

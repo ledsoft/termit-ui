@@ -18,7 +18,11 @@
     "@type": [
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
     ],
-    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 3"
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 3",
+    "http://purl.org/dc/elements/1.1/source": [
+      "mpp/3.3/ca-1/h-II/cl-6/c-1/b-s"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#comment": "Comment to term 3"
   },
   {
     "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4",

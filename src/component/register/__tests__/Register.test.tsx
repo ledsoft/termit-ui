@@ -10,9 +10,11 @@ import {ReactWrapper} from "enzyme";
 import ActionType from "../../../action/ActionType";
 import Ajax, {params} from "../../../util/Ajax";
 import Constants from '../../../util/Constants';
+import Authentication from "../../../util/Authentication";
 
 jest.mock('../../../util/Routing');
 jest.mock('../../../util/Ajax');
+jest.mock('../../../util/Authentication');
 
 describe('Registration', () => {
 
@@ -135,5 +137,11 @@ describe('Registration', () => {
         (usernameInput.getDOMNode() as HTMLInputElement).value = userInfo.username;
         usernameInput.simulate('change', usernameInput);
         expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + '/users/username', params({username: userInfo.username}));
+    });
+
+    it('clears potentially existing JWT on mount', () => {
+        mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={EMPTY_ERROR}
+                                formatMessage={formatMessage} register={register}/>);
+        expect(Authentication.clearToken).toHaveBeenCalled();
     });
 });

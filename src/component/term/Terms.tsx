@@ -18,6 +18,7 @@ import FetchOptionsFunction from "../../model/Functions";
 import Term from "../../model/Term";
 import {fetchVocabularyTerms} from "../../action/ComplexActions";
 import {ThunkDispatch} from '../../util/Types';
+import {GoPlus} from "react-icons/go";
 
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
@@ -94,7 +95,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                     color='primary'
                     title={i18n('glossary.createTerm.tooltip')}
                     size='sm'
-                    onClick={this._onCreateClick}>+</Button>)
+                    onClick={this._onCreateClick}><GoPlus/></Button>);
 
         return (<PanelWithActions
             title={i18n('glossary.title')}

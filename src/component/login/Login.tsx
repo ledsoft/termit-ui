@@ -83,15 +83,14 @@ export class Login extends React.Component<LoginProps, LoginState> {
                         {this.renderAlert()}
                         <HorizontalInput name='username' label={i18n('login.username')} value={this.state.username}
                                          onKeyPress={this.onKeyPress} onChange={this.onChange} autoFocus={true}
-                                         labelWidth={3} inputWidth={9}/>
+                                         labelWidth={4} inputWidth={8}/>
                         <HorizontalInput type='password' name='password' label={i18n('login.password')}
                                          value={this.state.password}
                                          onKeyPress={this.onKeyPress} onChange={this.onChange}
-                                         labelWidth={3} inputWidth={9}/>
+                                         labelWidth={4} inputWidth={8}/>
 
                         <Row>
-                            <Col xs={3}>&nbsp;</Col>
-                            <Col xs={9}>
+                            <Col xs={{size: 'auto', offset: 4}}>
                                 <ButtonToolbar>
                                     <Button color='success' size='sm' onClick={this.login}
                                             disabled={this.props.loading || !this.isValid()}>{i18n('login.submit')}</Button>

@@ -3,7 +3,8 @@ import {FormFeedback, FormGroup, Input} from 'reactstrap';
 import AbstractInput, {AbstractInputProps} from "./AbstractInput";
 
 export interface TextAreaProps extends AbstractInputProps {
-    onKeyPress?: (e: object) => void
+    onKeyPress?: (e: object) => void;
+    rows?: number;
 }
 
 export default class TextArea extends AbstractInput<TextAreaProps> {
@@ -11,9 +12,9 @@ export default class TextArea extends AbstractInput<TextAreaProps> {
     private input: Input;
 
     public render() {
-        return <FormGroup bsSize='small'>
+        return <FormGroup>
             {this.renderLabel()}
-            <Input type='textarea' style={{height: 'auto'}}
+            <Input type='textarea' style={{height: 'auto'}} bsSize='sm'
                    ref={(c: Input) => this.input = c} {...this.inputProps()}/>
             <FormFeedback>{this.props.invalidMessage}</FormFeedback>
             {this.renderHelp()}
