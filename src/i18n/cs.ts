@@ -89,6 +89,7 @@ export default {
         'term.metadata.types': 'Typy pojmu',
         'term.metadata.source': 'Zdroj pojmu',
         'term.updated.message': 'Pojem úspěšně aktualizován.',
+        'term.metadata.labelExists.message': 'Pojem s názvem \'{label}\' již v tomto slovníku existuje',
 
         'glossary.title': 'Pojmy',
         'glossary.createTerm': 'Vytvořit nový pojem',

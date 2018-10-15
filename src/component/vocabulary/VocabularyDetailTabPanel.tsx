@@ -46,8 +46,6 @@ class VocabularyDetailTabPanel extends React.Component<VocabularyDetailProps, Vo
 
     public componentDidUpdate(prevProps: VocabularyDetailProps) {
         if (this.props.selectedTerm === null && this.props.match.path === Routes.vocabularyTermDetail.path) {
-            // Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name',
-            // this.props.match.params.name]])});
             this.props.getVocabularyTermByName(this.props.match.params.termName, this.props.match.params.name)
                 .then((term: Term) => this.props.selectTerm(term));
         }

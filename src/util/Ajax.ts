@@ -192,6 +192,14 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // });
     // Mock get vocabulary terms
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/find/).reply(200, require('../rest-mock/terms'), header);
+    // Mock term label uniqueness in vocabulary check
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/label/).reply((config: AxiosRequestConfig) => {
+        if (config.params.label === 'test') {
+            return [200, true];
+        } else {
+            return [200, false];
+        }
+    });
     // Mock vocabulary retrieval endpoint
     mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE
@@ -209,6 +217,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock get document
     mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'), header);
 
+    // Mock term update
     mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
 }
 

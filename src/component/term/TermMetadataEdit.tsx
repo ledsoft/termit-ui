@@ -6,17 +6,26 @@ import Term, {TermData} from "../../model/Term";
 import "./TermMetadata.scss";
 import CustomInput from "../misc/CustomInput";
 import TextArea from "../misc/TextArea";
+import Vocabulary from "../../model/Vocabulary";
+import Ajax, {params} from "../../util/Ajax";
+import Constants from '../../util/Constants';
+import VocabularyUtils from "../../util/VocabularyUtils";
 
 interface TermMetadataEditProps extends HasI18n {
+    vocabulary: Vocabulary,
     term: Term,
     save: (term: Term) => void;
     cancel: () => void;
 }
 
-export class TermMetadataEdit extends React.Component<TermMetadataEditProps, TermData> {
+interface TermMetadataEditState extends TermData {
+    labelExists: boolean;
+}
+
+export class TermMetadataEdit extends React.Component<TermMetadataEditProps, TermMetadataEditState> {
     constructor(props: TermMetadataEditProps) {
         super(props);
-        this.state = Object.assign({}, props.term);
+        this.state = Object.assign({labelExists: false}, props.term);
     }
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,13 +34,27 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.setState(change);
     };
 
+    private onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.onChange(e);
+        this.setState({labelExists: false});
+        const label = e.currentTarget.value;
+        if (label === this.props.term.label) {
+            return;
+        }
+        const vocabIri = VocabularyUtils.create(this.props.vocabulary.iri);
+        const url = Constants.API_PREFIX + '/vocabularies/' + vocabIri.fragment + '/terms/label';
+        Ajax.get(url, params({namespace: vocabIri.namespace, label})).then((data) => {
+            this.setState({labelExists: data === true});
+        });
+    };
+
     private onSave = () => {
         const t = new Term(this.state);
         this.props.save(t);
     };
 
     private isValid(): boolean {
-        return this.state.iri!.length > 0 && this.state.label.length > 0;
+        return this.state.iri!.length > 0 && this.state.label.length > 0 && !this.state.labelExists;
     }
 
     public render() {
@@ -46,8 +69,9 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 </Row>
                 <Row>
                     <Col sm={12} md={6}>
-                        <CustomInput name='label' value={this.state.label} onChange={this.onChange}
-                                     label={i18n('term.metadata.label')}/>
+                        <CustomInput name='label' value={this.state.label} onChange={this.onLabelChange}
+                                     label={i18n('term.metadata.label')} invalid={this.state.labelExists}
+                                     invalidMessage={this.state.labelExists ? this.props.formatMessage('term.metadata.labelExists.message', {label: this.state.label}) : undefined}/>
                     </Col>
                 </Row>
                 <Row>

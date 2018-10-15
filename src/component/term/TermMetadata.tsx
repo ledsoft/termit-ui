@@ -49,8 +49,9 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     };
 
     public render() {
-        return this.state.edit ? <TermMetadataEdit save={this.onSave} term={this.props.term}
-                                                   cancel={this.onCloseEdit}/> : this.renderMetadata();
+        return this.state.edit ?
+            <TermMetadataEdit save={this.onSave} term={this.props.term} vocabulary={this.props.vocabulary}
+                              cancel={this.onCloseEdit}/> : this.renderMetadata();
     }
 
     private renderMetadata() {
