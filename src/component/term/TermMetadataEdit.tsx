@@ -10,6 +10,7 @@ import Vocabulary from "../../model/Vocabulary";
 import Ajax, {params} from "../../util/Ajax";
 import Constants from '../../util/Constants';
 import VocabularyUtils from "../../util/VocabularyUtils";
+import TermSourcesEdit from "./TermSourcesEdit";
 
 interface TermMetadataEditProps extends HasI18n {
     vocabulary: Vocabulary,
@@ -46,6 +47,10 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         Ajax.get(url, params({namespace: vocabIri.namespace, label})).then((data) => {
             this.setState({labelExists: data === true});
         });
+    };
+
+    private onSourcesChange = (newSources: string[]) => {
+        this.setState({sources: newSources});
     };
 
     private onSave = () => {
@@ -94,13 +99,12 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 </Row>
                 <Row>
                     <Col sm={12} md={6}>
-                        <Label>{i18n('term.metadata.source')}</Label>
-                        &nbsp;
+                        <TermSourcesEdit onChange={this.onSourcesChange} sources={this.state.sources}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12} md={6}>
-                        <ButtonToolbar className='pull-right'>
+                        <ButtonToolbar className='pull-right term-edit-buttons'>
                             <Button size='sm' color='success' disabled={!this.isValid()}
                                     onClick={this.onSave}>{i18n('save')}</Button>
                             <Button size='sm' color='link' onClick={this.props.cancel}>{i18n('cancel')}</Button>

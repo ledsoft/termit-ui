@@ -90,6 +90,7 @@ export default {
         'term.metadata.source': 'Zdroj pojmu',
         'term.updated.message': 'Pojem úspěšně aktualizován.',
         'term.metadata.labelExists.message': 'Pojem s názvem \'{label}\' již v tomto slovníku existuje',
+        'term.metadata.source.add.placeholder': 'Nový zdroj pojmu',
 
         'glossary.title': 'Pojmy',
         'glossary.createTerm': 'Vytvořit nový pojem',
