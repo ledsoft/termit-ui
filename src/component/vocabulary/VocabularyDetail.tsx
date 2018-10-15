@@ -36,11 +36,6 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
         const label = this.props.vocabulary.label;
         const author = this.props.vocabulary.author && this.props.vocabulary.author.fullName;
         const created = new Date(this.props.vocabulary.created as number).toLocaleString();
-        const vocabularyDetailTabPanel = () => <VocabularyDetailTabPanel
-            vocabulary={this.props.vocabulary}
-        />;
-        // @ts-ignore
-        const createVocabularyTerm = () => <CreateTerm types={this.props.types}/>;
 
         return <div>
             <h2 className='page-header'>
@@ -56,9 +51,9 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
                 </Col>
                 <Col md={8}>
                     <Switch>
-                        <Route path={Routes.vocabularyDetail.path} component={vocabularyDetailTabPanel}/>
-                        <Route path={Routes.vocabularyTermDetail.path} component={vocabularyDetailTabPanel}/>
-                        <Route path={Routes.createVocabularyTerm.path} component={createVocabularyTerm}/>
+                        <Route path={Routes.vocabularyDetail.path} component={VocabularyDetailTabPanel}/>
+                        <Route path={Routes.vocabularyTermDetail.path} component={VocabularyDetailTabPanel}/>
+                        <Route path={Routes.createVocabularyTerm.path} component={CreateTerm}/>
                     </Switch>
                     <DocumentTab/>
                 </Col>
@@ -70,7 +65,6 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary,
-        types: state.types,
         lang: state.intl.locale,
     };
 }, (dispatch: ThunkDispatch) => {

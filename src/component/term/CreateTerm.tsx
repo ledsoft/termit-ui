@@ -315,7 +315,6 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
                             labelKey={"label"}
                             childrenKey={"subTerms"}
                             filterOptions={this.filterParentOptions}
-                        // fetchOptions={this.fetchOptions}
                             displayInfoOnHover={true}
                             expanded={true}
                             renderAsTree={true}
@@ -338,27 +337,9 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
                                 labelKey={"label"}
                                 childrenKey={"subTerms"}
                                 filterOptions={this.filterParentOptions}
-                            // fetchOptions={this.fetchOptions}
                                 expanded={true}
                                 renderAsTree={false}
                         />
-
-                        {/*<Select field={"childOptions"}*/}
-                        {/*options={this.props.options}*/}
-                        {/*name={"glossary-"+this.props.match.params.name}*/}
-                        {/*placeholder={i18n('glossary.form.field.selectChildren')}*/}
-                        {/*multi={true}*/}
-                        {/*valueKey={"iri"}*/}
-                        {/*labelKey={"label"}*/}
-                        {/*childrenKey={"subTerms"}*/}
-                        {/*filterOptions={this.filterChildrenOptions}*/}
-                        {/*expanded={true}*/}
-                        {/*// fetchOptions={this.fetchOptions}*/}
-                        {/*renderAsTree={false}*/}
-                        {/*validate={this.validateNotSameAsParent}*/}
-                        {/*validateOnChange={true}*/}
-                        {/*validateOnBlur={true}*/}
-                        {/*/>*/}
 
                         <TextInput field="optionSource" id="optionSource"
                                    label={i18n('glossary.form.field.source')}/>

@@ -7,14 +7,25 @@ import OutgoingLink from "../misc/OutgoingLink";
 import "./TermMetadata.scss";
 import TermMetadataEdit from "./TermMetadataEdit";
 import {GoPencil} from "react-icons/go";
+import {connect} from 'react-redux';
+import {ThunkDispatch} from "../../util/Types";
+import {updateTerm} from "../../action/AsyncActions";
+import Vocabulary from "../../model/Vocabulary";
 
-interface TermMetadataProps extends HasI18n {
+interface TermMetadataOwnProps {
+    vocabulary: Vocabulary;
     term: Term;
+}
+
+interface TermMetadataDispatchProps {
+    updateTerm: (term: Term, vocabulary: Vocabulary) => Promise<any>;
 }
 
 interface TermMetadataState {
     edit: boolean;
 }
+
+type TermMetadataProps = TermMetadataOwnProps & TermMetadataDispatchProps & HasI18n;
 
 export class TermMetadata extends React.Component<TermMetadataProps, TermMetadataState> {
 
@@ -29,11 +40,11 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         this.setState({edit: true});
     };
 
-    private onSave = (term: Term) => {
-        // Do nothing
+    public onSave = (term: Term) => {
+        this.props.updateTerm(term, this.props.vocabulary).then(() => this.onCloseEdit());
     };
 
-    private onCloseEdit = () => {
+    public onCloseEdit = () => {
         this.setState({edit: false});
     };
 
@@ -110,4 +121,10 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     }
 }
 
-export default injectIntl(withI18n(TermMetadata));
+export default connect<{}, TermMetadataDispatchProps, TermMetadataOwnProps>((state: {}, ownProps: TermMetadataOwnProps): {} => {
+    return {...ownProps};
+}, (dispatch: ThunkDispatch): TermMetadataDispatchProps => {
+    return {
+        updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary))
+    };
+})(injectIntl(withI18n(TermMetadata)));

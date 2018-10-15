@@ -88,6 +88,7 @@ export default {
         'term.metadata.subTerms': 'Podřazené pojmy',
         'term.metadata.types': 'Typy pojmu',
         'term.metadata.source': 'Zdroj pojmu',
+        'term.updated.message': 'Pojem úspěšně aktualizován.',
 
         'glossary.title': 'Pojmy',
         'glossary.createTerm': 'Vytvořit nový pojem',

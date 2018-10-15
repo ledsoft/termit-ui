@@ -1,5 +1,11 @@
 import * as SyncActions from './SyncActions';
-import {asyncActionFailure, asyncActionRequest, asyncActionSuccess, asyncActionSuccessWithPayload} from './SyncActions';
+import {
+    asyncActionFailure,
+    asyncActionRequest,
+    asyncActionSuccess,
+    asyncActionSuccessWithPayload,
+    publishMessage
+} from './SyncActions';
 import Ajax, {content, params} from '../util/Ajax';
 import {ThunkDispatch} from '../util/Types';
 import Routing from '../util/Routing';
@@ -15,7 +21,7 @@ import Message, {createFormattedMessage} from "../model/Message";
 import MessageType from "../model/MessageType";
 import Term, {CONTEXT as TERM_CONTEXT, TermData} from "../model/Term";
 import FetchOptionsFunction from "../model/Functions";
-import {IRI} from "../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
 import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
@@ -364,6 +370,28 @@ export function loadDocument(iri: IRI) {
                 jsonld.compact(data, DOCUMENT_CONTEXT))
             .then((data: DocumentData) =>
                 dispatch(asyncActionSuccessWithPayload(action, new Document(data))))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function updateTerm(term: Term, vocabulary: Vocabulary) {
+    const action = {
+        type: ActionType.UPDATE_TERM
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        const termIri = VocabularyUtils.create(term.iri);
+        const vocabularyIri = VocabularyUtils.create(vocabulary.iri);
+        const reqUrl = Constants.API_PREFIX + '/vocabularies/' + vocabularyIri.fragment + '/terms/' + termIri.fragment;
+        // Vocabulary namespace defines also term namespace
+        return Ajax.put(reqUrl, content(term.toJsonLd()).params({namespace: vocabularyIri.namespace}))
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                return dispatch(publishMessage(new Message({messageId: 'term.updated.message'}, MessageType.SUCCESS)));
+            })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));

@@ -8,13 +8,12 @@ import Tabs from "../misc/Tabs";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Term from "../../model/Term";
-import TermMetadata from "../term/TermMetadata";
 import {RouteComponentProps, withRouter} from "react-router";
 import Routes from "../../util/Routes";
 import {selectVocabularyTerm} from "../../action/SyncActions";
 import {getVocabularyTermByName} from "../../action/ComplexActions";
-import Routing from "../../util/Routing";
 import {ThunkDispatch} from '../../util/Types';
+import TermMetadata from '../term/TermMetadata';
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary
@@ -40,16 +39,20 @@ class VocabularyDetailTabPanel extends React.Component<VocabularyDetailProps, Vo
     public componentDidMount() {
         if (this.props.match.path === Routes.vocabularyTermDetail.path && !this.props.selectedTerm) {
             this.props.getVocabularyTermByName(this.props.match.params.termName, this.props.match.params.name)
-                .then((term: Term | null) => {
-                    this.props.selectTerm(term)
-                });
+                .then((term: Term) => this.props.selectTerm(term));
         }
         this.setState({activeTabID: this.getActiveTab()});
     }
 
     public componentDidUpdate(prevProps: VocabularyDetailProps) {
         if (this.props.selectedTerm === null && this.props.match.path === Routes.vocabularyTermDetail.path) {
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', this.props.match.params.name]])});
+            // Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name',
+            // this.props.match.params.name]])});
+            this.props.getVocabularyTermByName(this.props.match.params.termName, this.props.match.params.name)
+                .then((term: Term) => this.props.selectTerm(term));
+        }
+        if (this.props.selectedTerm != null && prevProps.selectedTerm === null) {
+            this.setState({activeTabID: this.getActiveTab()});
         }
     }
 
@@ -70,26 +73,19 @@ class VocabularyDetailTabPanel extends React.Component<VocabularyDetailProps, Vo
             this.toggle(id);
         };
         const tabs = {};
-        tabs['vocabulary.detail.tabs.metadata'] = () => <VocabularyMetadata vocabulary={this.props.vocabulary}/>;
+        tabs['vocabulary.detail.tabs.metadata'] = <VocabularyMetadata vocabulary={this.props.vocabulary}/>;
         if (this.isTermSelected()) {
-            tabs['vocabulary.detail.tabs.termdetail'] = () => {
-                if (this.props.selectedTerm) {
-                    return <TermMetadata term={this.props.selectedTerm}/>;
-                }
-                return <div/>
-            }
+            tabs['vocabulary.detail.tabs.termdetail'] =
+                <TermMetadata term={this.props.selectedTerm!} vocabulary={this.props.vocabulary}/>
         }
 
-        return <Tabs
-            activeTabLabelKey={this.state.activeTabID}
-            tabs={tabs}
-            changeTab={select}
-        />
+        return <Tabs activeTabLabelKey={this.state.activeTabID} tabs={tabs} changeTab={select}/>;
     }
 }
 
 export default withRouter(connect((state: TermItState) => {
     return {
+        vocabulary: state.vocabulary,
         selectedTerm: state.selectedTerm
     };
 }, (dispatch: ThunkDispatch) => {

@@ -25,7 +25,7 @@ export class Tabs extends React.Component<TabsProps> {
     }
 
     public render() {
-        const navlinks: any[] = [];
+        const navLinks: any[] = [];
         const tabs: any[] = [];
         const activeKey = this.props.activeTabLabelKey;
         const propsChangeTab = this.props.changeTab;
@@ -35,8 +35,8 @@ export class Tabs extends React.Component<TabsProps> {
                 if (id !== activeKey) {
                     propsChangeTab(id);
                 }
-            }
-            navlinks.push(
+            };
+            navLinks.push(
                 <NavItem key={id}>
                     <NavLink
                         className={(id === this.props.activeTabLabelKey) ? 'active' : ''}
@@ -45,7 +45,7 @@ export class Tabs extends React.Component<TabsProps> {
                     </NavLink>
                 </NavItem>
             );
-            const tabComponent = this.props.tabs[id]({});
+            const tabComponent = this.props.tabs[id];
             tabs.push(
                 <TabPane tabId={id} key={id}>
                     {tabComponent}
@@ -54,7 +54,7 @@ export class Tabs extends React.Component<TabsProps> {
         });
 
         return <div><Nav tabs={true}>
-            {navlinks}
+            {navLinks}
         </Nav>
             <TabContent activeTab={this.props.activeTabLabelKey}>
                 {tabs}

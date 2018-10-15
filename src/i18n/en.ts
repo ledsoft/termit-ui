@@ -88,6 +88,7 @@ export default {
         'term.metadata.subTerms': 'Sub terms',
         'term.metadata.types': 'Types',
         'term.metadata.source': 'Source',
+        'term.updated.message': 'Term successfully updated.',
 
         'glossary.title': 'Terms',
         'glossary.createTerm': 'Create new term',

@@ -208,6 +208,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
 
     // Mock get document
     mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'), header);
+
+    mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
 }
 
 const instance = new Ajax();
