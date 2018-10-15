@@ -10,7 +10,6 @@ import TermItState from "../../model/TermItState";
 import Term from "../../model/Term";
 import {RouteComponentProps, withRouter} from "react-router";
 import Routes from "../../util/Routes";
-import {selectVocabularyTerm} from "../../action/SyncActions";
 import {getVocabularyTermByName} from "../../action/ComplexActions";
 import {ThunkDispatch} from '../../util/Types';
 import TermMetadata from '../term/TermMetadata';
@@ -19,7 +18,6 @@ interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary
     selectedTerm: Term | null
     getVocabularyTermByName: (termNormalizedName: string, vocabularyNormalizedName: string) => any
-    selectTerm: (term: Term | null) => void
 
 }
 
@@ -38,16 +36,14 @@ class VocabularyDetailTabPanel extends React.Component<VocabularyDetailProps, Vo
 
     public componentDidMount() {
         if (this.props.match.path === Routes.vocabularyTermDetail.path && !this.props.selectedTerm) {
-            this.props.getVocabularyTermByName(this.props.match.params.termName, this.props.match.params.name)
-                .then((term: Term) => this.props.selectTerm(term));
+            this.props.getVocabularyTermByName(this.props.match.params.termName, this.props.match.params.name);
         }
         this.setState({activeTabID: this.getActiveTab()});
     }
 
     public componentDidUpdate(prevProps: VocabularyDetailProps) {
         if (this.props.selectedTerm === null && this.props.match.path === Routes.vocabularyTermDetail.path) {
-            this.props.getVocabularyTermByName(this.props.match.params.termName, this.props.match.params.name)
-                .then((term: Term) => this.props.selectTerm(term));
+            this.props.getVocabularyTermByName(this.props.match.params.termName, this.props.match.params.name);
         }
         if (this.props.selectedTerm != null && prevProps.selectedTerm === null) {
             this.setState({activeTabID: this.getActiveTab()});
@@ -88,7 +84,6 @@ export default withRouter(connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        getVocabularyTermByName: (termNormalizedName: string, vocabularyNormalizedName: string) => dispatch(getVocabularyTermByName(termNormalizedName, vocabularyNormalizedName)),
-        selectTerm: (term: Term | null) => dispatch(selectVocabularyTerm(term)),
+        getVocabularyTermByName: (termNormalizedName: string, vocabularyNormalizedName: string) => dispatch(getVocabularyTermByName(termNormalizedName, vocabularyNormalizedName))
     };
 })(injectIntl(withI18n(VocabularyDetailTabPanel))));

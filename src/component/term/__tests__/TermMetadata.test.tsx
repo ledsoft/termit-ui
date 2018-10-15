@@ -17,6 +17,7 @@ describe('TermMetadata', () => {
     });
     let term: Term;
     let updateTerm: (term: Term) => Promise<any>;
+    let loadTerm: (term: Term, vocabulary: Vocabulary) => void;
 
     beforeEach(() => {
         term = new Term({
@@ -25,37 +26,47 @@ describe('TermMetadata', () => {
             comment: 'test'
         });
         updateTerm = jest.fn().mockImplementation(() => Promise.resolve());
+        loadTerm = jest.fn();
     });
 
     it('renders term metadata by default', () => {
         const wrapper = mountWithIntl(<TermMetadata vocabulary={vocabulary} term={term} updateTerm={updateTerm}
-                                                    i18n={i18n} formatMessage={formatMessage}/>);
+                                                    loadTerm={loadTerm} i18n={i18n} formatMessage={formatMessage}/>);
         expect(wrapper.find('.attribute-label').length).toBeGreaterThan(1);
     });
 
     it('renders term editor after clicking edit button', () => {
         const wrapper = mountWithIntl(<TermMetadata vocabulary={vocabulary} term={term} updateTerm={updateTerm}
-                                                    i18n={i18n} formatMessage={formatMessage}/>);
+                                                    loadTerm={loadTerm} i18n={i18n} formatMessage={formatMessage}/>);
         wrapper.find(Button).simulate('click');
         expect(wrapper.find(TermMetadataEdit).exists()).toBeTruthy();
     });
 
     it('invokes termUpdate action on save', () => {
-        const wrapper = shallow(<TermMetadata vocabulary={vocabulary} term={term} updateTerm={updateTerm} i18n={i18n}
-                                              formatMessage={formatMessage} {...intlDataForShallow()}/>);
+        const wrapper = shallow(<TermMetadata vocabulary={vocabulary} term={term} updateTerm={updateTerm}
+                                              loadTerm={loadTerm} i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
         (wrapper.instance() as TermMetadata).onSave(term);
         expect(updateTerm).toHaveBeenCalledWith(term, vocabulary);
     });
 
     it('closes term metadata edit on save success', () => {
-        const wrapper = shallow(<TermMetadata vocabulary={vocabulary} term={term} updateTerm={updateTerm} i18n={i18n}
-                                              formatMessage={formatMessage} {...intlDataForShallow()}/>);
+        const wrapper = shallow(<TermMetadata vocabulary={vocabulary} term={term} updateTerm={updateTerm}
+                                              loadTerm={loadTerm} i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
         wrapper.find(Button).simulate('click');
         expect(wrapper.find(TermMetadataEdit).exists()).toBeTruthy();
         (wrapper.instance() as TermMetadata).onSave(term);
         return Promise.resolve().then(() => {
             wrapper.update();
             expect(wrapper.find(TermMetadataEdit).exists()).toBeFalsy();
+        });
+    });
+
+    it('reloads term on successful save', () => {
+        const wrapper = shallow(<TermMetadata vocabulary={vocabulary} term={term} updateTerm={updateTerm}
+                                              loadTerm={loadTerm} i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
+        (wrapper.instance() as TermMetadata).onSave(term);
+        return Promise.resolve().then(() => {
+            expect(loadTerm).toHaveBeenCalledWith(term, vocabulary);
         });
     });
 });

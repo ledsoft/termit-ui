@@ -11,6 +11,8 @@ import {connect} from 'react-redux';
 import {ThunkDispatch} from "../../util/Types";
 import {updateTerm} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
+import {getVocabularyTermByName} from "../../action/ComplexActions";
+import VocabularyUtils from "../../util/VocabularyUtils";
 
 interface TermMetadataOwnProps {
     vocabulary: Vocabulary;
@@ -19,6 +21,7 @@ interface TermMetadataOwnProps {
 
 interface TermMetadataDispatchProps {
     updateTerm: (term: Term, vocabulary: Vocabulary) => Promise<any>;
+    loadTerm: (term: Term, vocabulary: Vocabulary) => void;
 }
 
 interface TermMetadataState {
@@ -41,7 +44,10 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     };
 
     public onSave = (term: Term) => {
-        this.props.updateTerm(term, this.props.vocabulary).then(() => this.onCloseEdit());
+        this.props.updateTerm(term, this.props.vocabulary).then(() => {
+            this.props.loadTerm(term, this.props.vocabulary);
+            this.onCloseEdit();
+        });
     };
 
     public onCloseEdit = () => {
@@ -126,6 +132,7 @@ export default connect<{}, TermMetadataDispatchProps, TermMetadataOwnProps>((sta
     return {...ownProps};
 }, (dispatch: ThunkDispatch): TermMetadataDispatchProps => {
     return {
-        updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary))
+        updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary)),
+        loadTerm: (term: Term, vocabulary: Vocabulary) => dispatch(getVocabularyTermByName(VocabularyUtils.getFragment(term.iri), VocabularyUtils.getFragment(vocabulary.iri)))
     };
 })(injectIntl(withI18n(TermMetadata)));
