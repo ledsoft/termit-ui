@@ -11,6 +11,8 @@ import Ajax, {params} from "../../util/Ajax";
 import Constants from '../../util/Constants';
 import VocabularyUtils from "../../util/VocabularyUtils";
 import TermSourcesEdit from "./TermSourcesEdit";
+import TermTypesEdit from "./TermTypesEdit";
+import Utils from "../../util/Utils";
 
 interface TermMetadataEditProps extends HasI18n {
     vocabulary: Vocabulary,
@@ -53,6 +55,10 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.setState({sources: newSources});
     };
 
+    private onTypesChange = (newTypes: string[]) => {
+        this.setState({types: newTypes});
+    };
+
     private onSave = () => {
         const t = new Term(this.state);
         this.props.save(t);
@@ -93,13 +99,12 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <Label>{i18n('term.metadata.types')}</Label>
-                        &nbsp;
+                        <TermTypesEdit termTypes={Utils.sanitizeArray(this.state.types)} onChange={this.onTypesChange}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TermSourcesEdit onChange={this.onSourcesChange} sources={this.state.sources}/>
+                        <TermSourcesEdit onChange={this.onSourcesChange} sources={Utils.sanitizeArray(this.state.sources)}/>
                     </Col>
                 </Row>
                 <Row>

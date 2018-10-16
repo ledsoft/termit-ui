@@ -14,3 +14,27 @@ ul.term-items {
   margin-left: 0.5rem;
   cursor: pointer;
 }
+
+.term-edit-source-add-button {
+  z-index: 0 !important;
+}
+
+.term-edit-types .Select-control {
+  height: calc(1.8125rem + 2px);
+}
+
+.term-edit-types .Select-placeholder {
+  line-height: 1.5;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.term-edit-types .Select-input {
+  height: calc(1.8125rem + 2px);
+  line-height: 1.5;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  margin-left: 0;
+}

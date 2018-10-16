@@ -192,17 +192,17 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
                 limit: fetchOptions.limit,
                 offset: fetchOptions.offset
             }))
-            .then((data: object[]) =>
-                data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
+            .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: TermData[]) => {
-                    data.forEach((term: Term) => {
+                const terms = data.map(d => new Term(d));
+                    terms.forEach((term: Term) => {
                         if (term.subTerms) {
                             // @ts-ignore
                             term.subTerms = Array.isArray(term.subTerms) ? term.subTerms.map(subTerm => subTerm.iri) : [term.subTerms.iri];
                         }
                     });
-                    return data;
+                    return terms;
                 }
             )
             .catch((error: ErrorData) => {
@@ -222,7 +222,7 @@ export function fetchVocabularySubTerms(parentTermId: string, normalizedName: st
             params({parent_id: parentTermId}))
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: TermData[]) => data)
+            .then((data: TermData[]) => data.map(d => new Term(d)))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
@@ -240,7 +240,7 @@ export function getVocabularyTermByID(termID: string, normalizedName: string) {
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/id',
             params({term_id: termID}))
             .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
-            .then((term: TermData) => dispatch(selectVocabularyTerm(new Term(term))))
+            .then((data: TermData) => dispatch(selectVocabularyTerm(new Term(data))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
@@ -259,6 +259,7 @@ export function getVocabularyTermByName(termNormalizedName: string, vocabularyNo
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedName)
             .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
+            .then((data: TermData) => dispatch(selectVocabularyTerm(new Term(data))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));

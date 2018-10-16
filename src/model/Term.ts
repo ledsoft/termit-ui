@@ -1,5 +1,6 @@
 import OntologicalVocabulary from "../util/VocabularyUtils";
-import {default as Asset, AssetData} from "./Asset";
+import {AssetData, default as Asset} from "./Asset";
+import Utils from "../util/Utils";
 
 const ctx = {
     iri: '@id',
@@ -13,7 +14,7 @@ const ctx = {
 export const CONTEXT = Object.assign(ctx);
 
 export interface TermData extends AssetData {
-    label : string;
+    label: string;
     comment?: string;
     subTerms?: string[];
     sources?: string[];
@@ -31,23 +32,19 @@ export default class Term extends Asset implements TermData {
     constructor(termData: TermData) {
         super();
         Object.assign(this, termData);
-        if (Array.isArray(termData.types)) {
-            const current : string[] = [];
-            termData.types.filter(td=> td !== OntologicalVocabulary.TERM)
-                .forEach( td => current.push(td) )
-            this.types = current;
-        }
+        const dataTypes = Utils.sanitizeArray(termData.types);
+        this.types = dataTypes.filter(t => t !== OntologicalVocabulary.TERM);
     }
 
     public toTermData(): TermData {
-        const result : any = {};
+        const result: any = {};
         Object.assign(result, this, {
             types: [...this.types || [], OntologicalVocabulary.TERM]
         });
         return result;
     }
 
-    public toJsonLd(): {} {
+    public toJsonLd(): TermData {
         const termData = this.toTermData();
         Object.assign(termData, {"@context": CONTEXT});
         return termData;
