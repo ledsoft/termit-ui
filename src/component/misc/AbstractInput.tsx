@@ -3,17 +3,18 @@ import {Label, FormText} from "reactstrap";
 import {InputType} from "reactstrap/lib/Input";
 
 export interface AbstractInputProps {
-    name?: string,
-    label?: string,
-    placeholder?: string,
-    title?: string,
-    value?: string,
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    help?: string,
-    invalid?: boolean,
-    invalidMessage?: string,
-    autoFocus?: boolean
-    type?: InputType,
+    name?: string;
+    label?: string;
+    placeholder?: string;
+    title?: string;
+    value?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    help?: string;
+    invalid?: boolean;
+    invalidMessage?: string;
+    autoFocus?: boolean;
+    type?: InputType;
+    disabled?: boolean;
 }
 
 export default class AbstractInput<T extends AbstractInputProps> extends React.Component<T> {

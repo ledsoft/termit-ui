@@ -70,15 +70,15 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         const i18n = this.props.i18n;
         const term = this.props.term;
         return <div className='metadata-panel'>
-            <ButtonToolbar className='pull-right clearfix'>
-                <Button size='sm' color='info' onClick={this.onEdit} title={i18n('edit')}><GoPencil/></Button>
-            </ButtonToolbar>
             <Row>
                 <Col md={2}>
                     <Label className='attribute-label'>{i18n('term.metadata.identifier')}</Label>
                 </Col>
                 <Col md={10}>
                     <OutgoingLink iri={term.iri} label={term.iri}/>
+                    <ButtonToolbar className='pull-right clearfix'>
+                        <Button size='sm' color='info' onClick={this.onEdit} title={i18n('edit')}><GoPencil/></Button>
+                    </ButtonToolbar>
                 </Col>
             </Row>
             <Row>

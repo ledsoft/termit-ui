@@ -16,9 +16,6 @@ interface TermTypesEditProps extends HasI18n {
 }
 
 export class TermTypesEdit extends React.Component<TermTypesEditProps> {
-    constructor(props: TermTypesEditProps) {
-        super(props);
-    }
 
     private onChange = (val: Term[]) => {
         const newTypes = val.map(v => v.iri);
@@ -46,9 +43,8 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
         const selected = this.resolveSelectedTypes(types);
         return <FormGroup>
             <Label size='sm'>{this.props.i18n('term.metadata.types')}</Label>
-            <IntelligentTreeSelect className='term-edit-types'
+            <IntelligentTreeSelect className='term-edit'
                                    name='term-edit-types'
-                                   selectValue={this.onChange}
                                    onChange={this.onChange}
                                    value={selected}
                                    options={types}

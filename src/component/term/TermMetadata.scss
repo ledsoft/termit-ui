@@ -19,11 +19,11 @@ ul.term-items {
   z-index: 0 !important;
 }
 
-.term-edit-types .Select-control {
+.term-edit .Select-control {
   height: calc(1.8125rem + 2px);
 }
 
-.term-edit-types .Select-placeholder {
+.term-edit .Select-placeholder {
   line-height: 1.5;
   font-size: 0.875rem;
   padding: 0.25rem 0.5rem;
@@ -31,7 +31,7 @@ ul.term-items {
   align-items: center;
 }
 
-.term-edit-types .Select-input {
+.term-edit .Select-input {
   height: calc(1.8125rem + 2px);
   line-height: 1.5;
   font-size: 0.875rem;

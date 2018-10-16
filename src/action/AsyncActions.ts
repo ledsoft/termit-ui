@@ -168,6 +168,7 @@ export function loadVocabularies() {
     };
 }
 
+// TODO Add support for namespace
 export function loadDefaultTerms(normalizedName: string) {
     const action = {
         type: ActionType.LOAD_DEFAULT_TERMS
@@ -179,6 +180,7 @@ export function loadDefaultTerms(normalizedName: string) {
 
 }
 
+// TODO Add support for namespace
 export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
@@ -212,6 +214,7 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
     };
 }
 
+// TODO Add support for namespace
 export function fetchVocabularySubTerms(parentTermId: string, normalizedName: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
@@ -231,6 +234,7 @@ export function fetchVocabularySubTerms(parentTermId: string, normalizedName: st
     };
 }
 
+// TODO Remove this, it does the same as the getVocabularyTermByname
 export function getVocabularyTermByID(termID: string, normalizedName: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS

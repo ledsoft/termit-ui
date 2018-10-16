@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {Button, ButtonToolbar, Col, Form, Label, Row} from "reactstrap";
+import {Button, ButtonToolbar, Col, Form, Row} from "reactstrap";
 import Term, {TermData} from "../../model/Term";
 import "./TermMetadata.scss";
 import CustomInput from "../misc/CustomInput";
@@ -13,6 +13,7 @@ import VocabularyUtils from "../../util/VocabularyUtils";
 import TermSourcesEdit from "./TermSourcesEdit";
 import TermTypesEdit from "./TermTypesEdit";
 import Utils from "../../util/Utils";
+import TermSubTermsEdit from "./TermSubTermsEdit";
 
 interface TermMetadataEditProps extends HasI18n {
     vocabulary: Vocabulary,
@@ -59,6 +60,10 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.setState({types: newTypes});
     };
 
+    private onSubTermsChange = (newChildren: string[]) => {
+        this.setState({subTerms: newChildren});
+    };
+
     private onSave = () => {
         const t = new Term(this.state);
         this.props.save(t);
@@ -74,7 +79,7 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name='iri' onChange={this.onChange} value={this.state.iri}
+                        <CustomInput name='iri' onChange={this.onChange} value={this.state.iri} disabled={true}
                                      label={i18n('term.metadata.identifier')}/>
                     </Col>
                 </Row>
@@ -93,8 +98,9 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <Label>{i18n('term.metadata.subTerms')}</Label>
-                        &nbsp;
+                        <TermSubTermsEdit subTerms={Utils.sanitizeArray(this.state.subTerms)}
+                                          termIri={this.props.term.iri}
+                                          vocabulary={this.props.vocabulary} onChange={this.onSubTermsChange}/>
                     </Col>
                 </Row>
                 <Row>
@@ -104,7 +110,8 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TermSourcesEdit onChange={this.onSourcesChange} sources={Utils.sanitizeArray(this.state.sources)}/>
+                        <TermSourcesEdit onChange={this.onSourcesChange}
+                                         sources={Utils.sanitizeArray(this.state.sources)}/>
                     </Col>
                 </Row>
                 <Row>
