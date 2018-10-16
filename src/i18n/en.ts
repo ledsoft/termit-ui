@@ -91,6 +91,7 @@ export default {
         'term.updated.message': 'Term successfully updated.',
         'term.metadata.labelExists.message': 'Term with label \'{label}\' already exists in this vocabulary',
         'term.metadata.source.add.placeholder': 'Add source',
+        'term.metadata.source.remove.title': 'Remove source',
 
         'glossary.title': 'Terms',
         'glossary.createTerm': 'Create new term',

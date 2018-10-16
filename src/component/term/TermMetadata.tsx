@@ -39,6 +39,12 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         };
     }
 
+    public componentDidUpdate(prevProps: TermMetadataProps) {
+        if (this.props.term !== prevProps.term) {
+            this.onCloseEdit();
+        }
+    }
+
     private onEdit = () => {
         this.setState({edit: true});
     };

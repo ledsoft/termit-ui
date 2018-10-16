@@ -67,43 +67,43 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         return <div className='term-edit-panel'>
             <Form>
                 <Row>
-                    <Col sm={12} md={6}>
+                    <Col xl={6} md={12}>
                         <CustomInput name='iri' onChange={this.onChange} value={this.state.iri}
                                      label={i18n('term.metadata.identifier')}/>
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12} md={6}>
+                    <Col xl={6} md={12}>
                         <CustomInput name='label' value={this.state.label} onChange={this.onLabelChange}
                                      label={i18n('term.metadata.label')} invalid={this.state.labelExists}
                                      invalidMessage={this.state.labelExists ? this.props.formatMessage('term.metadata.labelExists.message', {label: this.state.label}) : undefined}/>
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12} md={6}>
+                    <Col xl={6} md={12}>
                         <TextArea name='comment' value={this.state.comment}
                                   onChange={this.onChange} rows={3} label={i18n('term.metadata.comment')}/>
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12} md={6}>
+                    <Col xl={6} md={12}>
                         <Label>{i18n('term.metadata.subTerms')}</Label>
                         &nbsp;
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12} md={6}>
+                    <Col xl={6} md={12}>
                         <Label>{i18n('term.metadata.types')}</Label>
                         &nbsp;
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm={12} md={6}>
+                    <Col xl={6} md={12}>
                         <TermSourcesEdit onChange={this.onSourcesChange} sources={this.state.sources}/>
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12} md={6}>
+                    <Col xl={6} md={12}>
                         <ButtonToolbar className='pull-right term-edit-buttons'>
                             <Button size='sm' color='success' disabled={!this.isValid()}
                                     onClick={this.onSave}>{i18n('save')}</Button>

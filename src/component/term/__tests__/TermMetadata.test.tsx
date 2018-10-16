@@ -69,4 +69,18 @@ describe('TermMetadata', () => {
             expect(loadTerm).toHaveBeenCalledWith(term, vocabulary);
         });
     });
+
+    it('closes edit when different term is selected', () => {
+        const wrapper = shallow(<TermMetadata vocabulary={vocabulary} term={term} updateTerm={updateTerm}
+                                              loadTerm={loadTerm} i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
+        wrapper.find(Button).simulate('click');
+        expect(wrapper.find(TermMetadataEdit).exists()).toBeTruthy();
+        const otherTerm = new Term({
+            iri: Generator.generateUri(),
+            label: 'Different term'
+        });
+        wrapper.setProps({term: otherTerm});
+        wrapper.update();
+        expect(wrapper.find(TermMetadataEdit).exists()).toBeFalsy();
+    });
 });

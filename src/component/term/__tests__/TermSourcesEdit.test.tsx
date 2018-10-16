@@ -44,4 +44,22 @@ describe('TermSourcesEdit', () => {
         input.simulate('keyPress', {key: 'Enter'});
         expect(onChange).toHaveBeenCalledWith([value]);
     });
+
+    it('does nothing on add when input is empty', () => {
+        const wrapper = mountWithIntl(<TermSourcesEdit i18n={i18n} onChange={onChange} sources={[]}
+                                                       formatMessage={formatMessage}/>);
+        const input = wrapper.find('input');
+        (input.getDOMNode() as HTMLInputElement).value = '';
+        input.simulate('change', input);
+        wrapper.find(Button).simulate('click');
+        expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it('removes source and calls onChange with updated sources when source remove button is clicked', () => {
+        const sources = ['first', 'second'];
+        const wrapper = mountWithIntl(<TermSourcesEdit i18n={i18n} onChange={onChange} sources={sources}
+                                                       formatMessage={formatMessage}/>);
+        wrapper.find('[color="danger"]').at(0).simulate('click');
+        expect(onChange).toHaveBeenCalledWith([sources[1]]);
+    });
 });
