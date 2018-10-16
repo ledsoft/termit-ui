@@ -173,7 +173,7 @@ export class Facets extends React.Component<Props, State> {
         const html = `
    <div ng-controller="MainController as vm">
     <div class="row">
-      <div class="col-md-20">
+      <div style="width:100%;">
         <seco-text-facet data-options="vm.facets.pojem"></seco-text-facet>
         <seco-basic-facet data-options="vm.facets.slovnik"></seco-basic-facet>
         <seco-basic-facet data-options="vm.facets.typ"></seco-basic-facet>
