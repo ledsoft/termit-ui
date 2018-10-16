@@ -13,6 +13,7 @@ import {updateTerm} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import {getVocabularyTermByName} from "../../action/ComplexActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import Utils from "../../util/Utils";
 
 interface TermMetadataOwnProps {
     vocabulary: Vocabulary;
@@ -102,7 +103,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     <Label className='attribute-label'>{i18n('term.metadata.subTerms')}</Label>
                 </Col>
                 <Col md={10}>
-                    {this.renderItems(term.subTerms, true)}
+                    {this.renderItems(term.subTerms)}
                 </Col>
             </Row>
             <Row>
@@ -110,7 +111,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     <Label className='attribute-label'>{i18n('term.metadata.types')}</Label>
                 </Col>
                 <Col md={10}>
-                    {this.renderItems(term.types, true)}
+                    {this.renderItems(term.types)}
                 </Col>
             </Row>
             <Row>
@@ -124,12 +125,12 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         </div>;
     }
 
-    private renderItems(items: string[] | string | undefined, withLink: boolean = false) {
+    private renderItems(items: string[] | string | undefined) {
         if (!items) {
             return null;
         }
         const source = Array.isArray(items) ? items : [items];
-        return <ul className='term-items'>{source.map((item: string) => <li key={item}>{withLink ?
+        return <ul className='term-items'>{source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
             <OutgoingLink iri={item} label={item}/> : item}</li>)}</ul>;
     }
 }

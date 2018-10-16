@@ -36,7 +36,10 @@
     "@type": [
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
     ],
-    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 5"
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 5",
+    "http://purl.org/dc/elements/1.1/source": [
+      "https://kbss.felk.cvut.cz/web/kbss/dataset-descriptor-ontology"
+    ]
   },
   {
     "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6",

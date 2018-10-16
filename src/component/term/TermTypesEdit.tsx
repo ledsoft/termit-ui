@@ -17,9 +17,8 @@ interface TermTypesEditProps extends HasI18n {
 
 export class TermTypesEdit extends React.Component<TermTypesEditProps> {
 
-    private onChange = (val: Term[]) => {
-        const newTypes = val.map(v => v.iri);
-        this.props.onChange(newTypes);
+    private onChange = (val: Term) => {
+        this.props.onChange([val.iri]);
     };
 
     private filterParentOptions = (options: Term[], filter: string) => {
@@ -33,8 +32,9 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
         return option.label;
     };
 
-    private resolveSelectedTypes(types: Term[]): Term[] {
-        return types.filter(t => this.props.termTypes.indexOf(t.iri) !== -1);
+    private resolveSelectedTypes(types: Term[]): Term | undefined {
+        const matching = types.filter(t => this.props.termTypes.indexOf(t.iri) !== -1);
+        return matching.length > 0 ? matching[0] : undefined;
     }
 
     public render() {
@@ -54,7 +54,7 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
                                    filterOptions={this.filterParentOptions}
                                    showSettings={false}
                                    maxHeight={150}
-                                   multi={true}
+                                   multi={false}
                                    displayInfoOnHover={true}
                                    expanded={true}
                                    renderAsTree={true}
