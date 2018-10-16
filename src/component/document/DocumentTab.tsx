@@ -4,11 +4,7 @@ import {injectIntl} from "react-intl";
 import Tabs from "../misc/Tabs";
 import Vocabulary from "../../model/Vocabulary";
 import DocumentDetail from "./DocumentDetail";
-import {connect} from "react-redux";
-import TermItState from "../../model/TermItState";
-import IRIFactory, {IRI} from "../../util/VocabularyUtils";
-import {loadVocabulary} from "../../action/ComplexActions";
-import {ThunkDispatch} from "../../util/Types";
+import IRIFactory from "../../util/VocabularyUtils";
 
 interface DocumentTabProps extends HasI18n {
     vocabulary: Vocabulary
@@ -44,12 +40,4 @@ class DocumentTab extends React.Component<DocumentTabProps> {
     }
 }
 
-export default connect((state: TermItState) => {
-    return {
-        vocabulary: state.vocabulary
-    };
-}, (dispatch: ThunkDispatch) => {
-    return {
-        loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri))
-    };
-})(injectIntl(withI18n(DocumentTab)));
+export default injectIntl(withI18n(DocumentTab));

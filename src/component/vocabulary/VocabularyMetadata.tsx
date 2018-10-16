@@ -4,6 +4,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
 import {Col, Label, Row} from "reactstrap";
 import OutgoingLink from "../misc/OutgoingLink";
+import DocumentTab from "../document/DocumentTab";
 
 interface VocabularyMetadataProps extends HasI18n {
     vocabulary: Vocabulary
@@ -37,6 +38,7 @@ const VocabularyMetadata: React.SFC<VocabularyMetadataProps> = (props: Vocabular
                 {vocabulary.created && new Date(vocabulary.created).toLocaleString()}
             </Col>
         </Row>
+        <DocumentTab vocabulary={vocabulary}/>
     </div>;
 };
 

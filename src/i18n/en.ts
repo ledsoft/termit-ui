@@ -74,7 +74,7 @@ export default {
         'vocabulary.detail.subtitle': 'Created by {author} on {created}',
         'vocabulary.detail.tabs.metadata': 'Metadata',
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
-        'vocabulary.detail.tabs.annotations' : 'Document annotations',
+        'vocabulary.detail.tabs.annotations' : 'Documents',
 
         'vocabulary.term.created.message': 'Term successfully created.',
 

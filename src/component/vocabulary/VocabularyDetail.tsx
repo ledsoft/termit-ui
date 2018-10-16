@@ -13,7 +13,6 @@ import OutgoingLink from "../misc/OutgoingLink";
 import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 import Routes from "../../util/Routes";
 import {IRI} from "../../util/VocabularyUtils";
-import DocumentTab from "../document/DocumentTab";
 import {ThunkDispatch} from '../../util/Types';
 import CreateTerm from "../term/CreateTerm";
 
@@ -55,7 +54,6 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
                         <Route path={Routes.vocabularyTermDetail.path} component={VocabularyDetailTabPanel}/>
                         <Route path={Routes.createVocabularyTerm.path} component={CreateTerm}/>
                     </Switch>
-                    <DocumentTab/>
                 </Col>
             </Row>
         </div>;
