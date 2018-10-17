@@ -28,9 +28,7 @@ export class DocumentDetail extends React.Component<DocumentDetailProps> {
     }
 
     public render() {
-        return <div>
-            {(this.props.document.files.length > 0) ? <FileList files={this.props.document.files}/> : (null)}
-        </div>
+        return <FileList files={this.props.document.files}/>;
     }
 }
 

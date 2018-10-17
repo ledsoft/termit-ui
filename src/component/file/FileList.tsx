@@ -9,26 +9,30 @@ interface FileListProps extends HasI18n {
     files: File[]
 }
 
-class FileList extends React.Component<FileListProps> {
+export class FileList extends React.Component<FileListProps> {
 
     public render() {
-        const rows = this.props.files.map(v =>
-            <tr key={v.iri}>
-                <td>
-                    <FileLink file={v}/>
-                </td>
-                <td>
-                    {v.comment}
-                </td>
-            </tr>
-        );
-        return <div>
-            <Table borderless={true}>
-                <tbody>
-                {rows}
-                </tbody>
-            </Table>
-        </div>
+        if (this.props.files.length > 0) {
+            const rows = this.props.files.map(v =>
+                <tr key={v.iri}>
+                    <td>
+                        <FileLink file={v}/>
+                    </td>
+                    <td>
+                        {v.comment}
+                    </td>
+                </tr>
+            );
+            return <div>
+                <Table borderless={true}>
+                    <tbody>
+                    {rows}
+                    </tbody>
+                </Table>
+            </div>
+        } else {
+           return (null);
+        }
     }
 }
 
