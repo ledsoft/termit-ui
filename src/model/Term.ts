@@ -16,24 +16,30 @@ export const CONTEXT = Object.assign(ctx);
 export interface TermData extends AssetData {
     label: string;
     comment?: string;
-    subTerms?: string[];
+    subTerms?: AssetData[];
     sources?: string[];
     types?: string[];
     parent?: string;
+    plainSubTerms?: string[];
 }
 
 export default class Term extends Asset implements TermData {
     public comment?: string;
-    public subTerms?: string[];
+    public subTerms?: AssetData[];
     public parent?: string;
     public types?: string[];
     public sources?: string[];
+    public plainSubTerms?: string[];
 
     constructor(termData: TermData) {
         super();
         Object.assign(this, termData);
         const dataTypes = Utils.sanitizeArray(termData.types);
         this.types = dataTypes.filter(t => t !== OntologicalVocabulary.TERM);
+        if (this.subTerms) {
+            this.subTerms = Utils.sanitizeArray(this.subTerms);
+            this.plainSubTerms = Utils.sanitizeArray(this.subTerms).map(st => st.iri!);
+        }
     }
 
     public toTermData(): TermData {
@@ -41,6 +47,7 @@ export default class Term extends Asset implements TermData {
         Object.assign(result, this, {
             types: [...this.types || [], OntologicalVocabulary.TERM]
         });
+        delete result.plainSubTerms;
         return result;
     }
 

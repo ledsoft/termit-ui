@@ -191,7 +191,16 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     //     message: 'Unable to create vocabulary!'
     // });
     // Mock get vocabulary terms
-    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/find/).reply(200, require('../rest-mock/terms'), header);
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/find/).reply((config) => {
+        if (!config.params.parentTerm) {
+            return [200, require('../rest-mock/terms'), header];
+        } else if (config.params.parentTerm === 'http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4') {
+            return [200, require('../rest-mock/subterms'), header];
+        } else {
+            return [200, [], header];
+        }
+    });
+
     // Mock term label uniqueness in vocabulary check
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/name/).reply((config: AxiosRequestConfig) => {
         if (config.params.value === 'test') {

@@ -196,17 +196,7 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
             }))
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: TermData[]) => {
-                    const terms = data.map(d => new Term(d));
-                    terms.forEach((term: Term) => {
-                        if (term.subTerms) {
-                            // @ts-ignore
-                            term.subTerms = Array.isArray(term.subTerms) ? term.subTerms.map(subTerm => subTerm.iri) : [term.subTerms.iri];
-                        }
-                    });
-                    return terms;
-                }
-            )
+            .then((data: TermData[]) => data.map(d => new Term(d)))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return [];

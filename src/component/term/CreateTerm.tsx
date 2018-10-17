@@ -4,7 +4,7 @@ import {IntelligentTreeSelect} from "intelligent-tree-select";
 import {asField, BasicText, Form, Scope} from 'informed';
 
 import * as React from "react";
-import {ChangeEvent, CSSProperties} from "react";
+import {ChangeEvent} from "react";
 import {
     Button,
     ButtonToolbar,
@@ -31,6 +31,7 @@ import TermItState from "../../model/TermItState";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
 import {createVocabularyTerm, fetchVocabularyTerms} from "../../action/ComplexActions";
 import {ThunkDispatch} from "../../util/Types";
+import {AssetData} from "../../model/Asset";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -117,7 +118,7 @@ interface CreateVocabularyTermProps extends HasI18n, RouteComponentProps<any> {
     options?: Term[],
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void,
     onCreate: (term: Term, normalizedName: string) => void,
-    types: {[key:string] : Term},
+    types: { [key: string]: Term },
     lang: string
 }
 
@@ -131,12 +132,12 @@ interface CreateVocabularyTermState {
 interface NewOptionData {
     // siblings : Term[],
     typeOption: Term,
-    optionURI : string,
-    parentOption : Term,
-    childOptions : Term[],
-    optionLabel : string,
-    optionDescription : string,
-    optionSource : string
+    optionURI: string,
+    parentOption: Term,
+    childOptions: Term[],
+    optionLabel: string,
+    optionDescription: string,
+    optionSource: string
 }
 
 export class CreateTerm extends React.Component<CreateVocabularyTermProps, CreateVocabularyTermState> {
@@ -190,12 +191,12 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
         return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name)
     }
 
-    private _getIDs(children: Term[]): string[] {
+    private _getIDs(children: Term[]): AssetData[] {
         if (!children) {
             return [];
         }
         const ids: Term[] = JSON.parse(JSON.stringify(children));
-        return ids.map(obj => obj.iri)
+        return ids.map(obj => Object.assign({}, obj.iri));
     }
 
     private createNewOption(data: NewOptionData) {
@@ -215,7 +216,7 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
             iri: data.optionURI as string,
             label: data.optionLabel as string,
             comment: data.optionDescription as string,
-            subTerms: children as string[],
+            subTerms: children,
             parent: parent as string,
             types: [data.typeOption.iri as string],
             sources: [data.optionSource as string],
@@ -257,7 +258,7 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
     }
 
     private addSibling() {
-        this.setState((prevState : CreateVocabularyTermState) : CreateVocabularyTermState => {
+        this.setState((prevState: CreateVocabularyTermState): CreateVocabularyTermState => {
             // @ts-ignore
             return {siblings: [...prevState.siblings, {key: '', value: ''}]};
         });
@@ -277,11 +278,7 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
 
     public render() {
         const i18n = this.props.i18n;
-        // @ts-ignore
-        const styles: CSSProperties = {pointer: 'cursor', margin: '8px'};
-
-        const types = this.props.types ?
-            Object.keys(this.props.types).map(k => this.props.types[k]) : [];
+        const types = this.props.types ? Object.keys(this.props.types).map(k => this.props.types[k]) : [];
 
         return (<Card>
             <CardHeader color='info'>
@@ -313,7 +310,7 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
                             placeholder={i18n('glossary.form.field.selectType')}
                             valueKey={"iri"}
                             labelKey={"label"}
-                            childrenKey={"subTerms"}
+                            childrenKey="plainSubTerms"
                             filterOptions={this.filterParentOptions}
                             displayInfoOnHover={true}
                             expanded={true}
@@ -335,7 +332,7 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
                                 placeholder={i18n('glossary.form.field.selectParent')}
                                 valueKey={"iri"}
                                 labelKey={"label"}
-                                childrenKey={"subTerms"}
+                                childrenKey="plainSubTerms"
                                 filterOptions={this.filterParentOptions}
                                 expanded={true}
                                 renderAsTree={false}

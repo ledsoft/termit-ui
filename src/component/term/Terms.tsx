@@ -26,7 +26,7 @@ interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     counter: number;
     selectedTerms: Term | null;
     selectVocabularyTerm: (selectedTerms: Term | null) => void;
-    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
+    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
 }
 
 export class Terms extends React.Component<GlossaryTermsProps> {
@@ -55,7 +55,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
     }
 
     private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name)
+        return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name);
     }
 
     private _onCreateClick() {
@@ -82,7 +82,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
             fetchOptions={this.fetchOptions}
             valueKey={"iri"}
             labelKey={"label"}
-            childrenKey={"subTerms"}
+            childrenKey={"plainSubTerms"}
             simpleTreeData={true}
             isMenuOpen={true}
             multi={false}

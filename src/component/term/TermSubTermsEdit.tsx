@@ -13,13 +13,14 @@ import {ThunkDispatch} from "../../util/Types";
 import {loadDefaultTerms} from "../../action/AsyncActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from '../../util/Utils';
+import {AssetData} from '../../model/Asset';
 
 interface TermSubTermsEditProps extends HasI18n {
     vocabulary: Vocabulary;
-    subTerms: string[];
+    subTerms: AssetData[];
     termIri: string;
     vocabularyTerms: Term[];
-    onChange: (subTerms: string[]) => void;
+    onChange: (subTerms: AssetData[]) => void;
     loadVocabularyTerms: (vocabulary: Vocabulary) => void;
 }
 
@@ -30,7 +31,7 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
     }
 
     private onChange = (val: Term[]) => {
-        const newSubTerms = val.map(v => v.iri);
+        const newSubTerms: AssetData[] = val.map(v => Object.assign({}, v.iri));
         this.props.onChange(newSubTerms);
     };
 
@@ -46,7 +47,7 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
     };
 
     private resolveSelectedSubTerms(subTerms: Term[]): Term[] {
-        return subTerms.filter(t => this.props.subTerms.indexOf(t.iri) !== -1);
+        return subTerms.filter(t => this.props.subTerms.find(s => s.iri === t.iri) !== undefined);
     }
 
     public render() {
@@ -61,7 +62,8 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
                                                           options={options}
                                                           valueKey='iri'
                                                           labelKey='label'
-                                                          childrenKey='subTerms'
+                                                          childrenKey='plainSubTerms'
+                                                          simpleTreeData={true}
                                                           filterOptions={this.filterParentOptions}
                                                           showSettings={false}
                                                           maxHeight={150}

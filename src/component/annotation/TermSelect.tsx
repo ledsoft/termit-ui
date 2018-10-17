@@ -56,13 +56,12 @@ export class TermSelect extends React.Component<TermSelectProps> {
         const i18n = this.props.i18n;
         const actions = [];
         const component = <IntelligentTreeSelect
-            name={"glossary-" + this.props.match.params.name}
             onChange={this.props.selectVocabularyTerm}
             value={this.props.selectedTerm}
             fetchOptions={this.fetchOptions}
             valueKey={"iri"}
             labelKey={"label"}
-            childrenKey={"subTerms"}
+            childrenKey="plainSubTerms"
             simpleTreeData={true}
             isMenuOpen={true}
             multi={false}

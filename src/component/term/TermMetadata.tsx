@@ -9,11 +9,13 @@ import TermMetadataEdit from "./TermMetadataEdit";
 import {GoPencil} from "react-icons/go";
 import {connect} from 'react-redux';
 import {ThunkDispatch} from "../../util/Types";
-import {updateTerm} from "../../action/AsyncActions";
+import {loadDefaultTerms, updateTerm} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import {getVocabularyTermByName} from "../../action/ComplexActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
+import Routes from "../../util/Routes";
+import Routing from '../../util/Routing';
 
 interface TermMetadataOwnProps {
     vocabulary: Vocabulary;
@@ -23,6 +25,7 @@ interface TermMetadataOwnProps {
 interface TermMetadataDispatchProps {
     updateTerm: (term: Term, vocabulary: Vocabulary) => Promise<any>;
     loadTerm: (term: Term, vocabulary: Vocabulary) => void;
+    reloadVocabularyTerms: (vocabulary: Vocabulary) => void;
 }
 
 interface TermMetadataState {
@@ -53,12 +56,19 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     public onSave = (term: Term) => {
         this.props.updateTerm(term, this.props.vocabulary).then(() => {
             this.props.loadTerm(term, this.props.vocabulary);
+            this.props.reloadVocabularyTerms(this.props.vocabulary);
             this.onCloseEdit();
         });
     };
 
     public onCloseEdit = () => {
         this.setState({edit: false});
+    };
+
+    public openSubTerm = (term: Term) => {
+        Routing.transitionTo(Routes.vocabularyTermDetail, {
+            params: new Map([['name', VocabularyUtils.getFragment(this.props.vocabulary.iri)], ['termName', VocabularyUtils.getFragment(term.iri)]])
+        });
     };
 
     public render() {
@@ -103,7 +113,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     <Label className='attribute-label'>{i18n('term.metadata.subTerms')}</Label>
                 </Col>
                 <Col md={10}>
-                    {this.renderItems(term.subTerms)}
+                    {this.renderSubTerms()}
                 </Col>
             </Row>
             <Row>
@@ -125,11 +135,23 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         </div>;
     }
 
+    private renderSubTerms() {
+        const source = Utils.sanitizeArray(this.props.term.subTerms);
+        if (source.length === 0) {
+            return null;
+        }
+        return <ul className='term-items'>{source.map(item => <li key={item.iri}>
+            <OutgoingLink iri={item.iri!}
+                          label={<Button color='link' onClick={this.openSubTerm.bind(null, item)}>{item.iri}</Button>}/>
+        </li>)}
+        </ul>;
+    }
+
     private renderItems(items: string[] | string | undefined) {
         if (!items) {
             return null;
         }
-        const source = Array.isArray(items) ? items : [items];
+        const source = Utils.sanitizeArray(items);
         return <ul className='term-items'>{source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
             <OutgoingLink iri={item} label={item}/> : item}</li>)}</ul>;
     }
@@ -140,6 +162,7 @@ export default connect<{}, TermMetadataDispatchProps, TermMetadataOwnProps>((sta
 }, (dispatch: ThunkDispatch): TermMetadataDispatchProps => {
     return {
         updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary)),
-        loadTerm: (term: Term, vocabulary: Vocabulary) => dispatch(getVocabularyTermByName(VocabularyUtils.getFragment(term.iri), VocabularyUtils.getFragment(vocabulary.iri)))
+        loadTerm: (term: Term, vocabulary: Vocabulary) => dispatch(getVocabularyTermByName(VocabularyUtils.getFragment(term.iri), VocabularyUtils.getFragment(vocabulary.iri))),
+        reloadVocabularyTerms: (vocabulary: Vocabulary) => dispatch(loadDefaultTerms(VocabularyUtils.getFragment(vocabulary.iri)))
     };
 })(injectIntl(withI18n(TermMetadata)));

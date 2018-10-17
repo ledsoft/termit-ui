@@ -44,7 +44,6 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
         return <FormGroup>
             <Label size='sm'>{this.props.i18n('term.metadata.types')}</Label>
             <IntelligentTreeSelect className='term-edit'
-                                   name='term-edit-types'
                                    onChange={this.onChange}
                                    value={selected}
                                    options={types}

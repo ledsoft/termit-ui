@@ -14,6 +14,7 @@ import TermSourcesEdit from "./TermSourcesEdit";
 import TermTypesEdit from "./TermTypesEdit";
 import Utils from "../../util/Utils";
 import TermSubTermsEdit from "./TermSubTermsEdit";
+import {AssetData} from "../../model/Asset";
 
 interface TermMetadataEditProps extends HasI18n {
     vocabulary: Vocabulary,
@@ -60,8 +61,8 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.setState({types: newTypes});
     };
 
-    private onSubTermsChange = (newChildren: string[]) => {
-        this.setState({subTerms: newChildren});
+    private onSubTermsChange = (newChildren: AssetData[]) => {
+        this.setState({subTerms: newChildren, plainSubTerms: newChildren.map(t => t.iri!)});
     };
 
     private onSave = () => {
