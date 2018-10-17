@@ -83,18 +83,6 @@ export function loadTypes(language: string) {
     };
 }
 
-export function fetchVocabularySubTerms(parentTermID: string, normalizedName: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.fetchVocabularySubTerms(parentTermID, normalizedName));
-    };
-}
-
-export function getVocabularyTermByID(termID: string, normalizedName: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.getVocabularyTermByID(termID, normalizedName));
-    };
-}
-
 export function getVocabularyTermByName(termNormalizedName: string, vocabularyNormalizedName: string) {
     return (dispatch: ThunkDispatch) => {
         return dispatch(AsyncActions.getVocabularyTermByName(termNormalizedName, vocabularyNormalizedName));

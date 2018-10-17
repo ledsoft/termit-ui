@@ -197,7 +197,7 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: TermData[]) => {
-                const terms = data.map(d => new Term(d));
+                    const terms = data.map(d => new Term(d));
                     terms.forEach((term: Term) => {
                         if (term.subTerms) {
                             // @ts-ignore
@@ -214,15 +214,14 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
     };
 }
 
-// TODO Add support for namespace
-export function fetchVocabularySubTerms(parentTermId: string, normalizedName: string) {
+// TODO Add support for namespace, unused?
+export function fetchVocabularySubTerms(termNormalizedNamed: string, vocabularyNormalizedName: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/subterms',
-            params({parent_id: parentTermId}))
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedNamed + '/subterms')
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: TermData[]) => data.map(d => new Term(d)))
@@ -230,25 +229,6 @@ export function fetchVocabularySubTerms(parentTermId: string, normalizedName: st
                 dispatch(asyncActionFailure(action, error));
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
                 return []
-            });
-    };
-}
-
-// TODO Remove this, it does the same as the getVocabularyTermByname
-export function getVocabularyTermByID(termID: string, normalizedName: string) {
-    const action = {
-        type: ActionType.FETCH_VOCABULARY_TERMS
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/id',
-            params({term_id: termID}))
-            .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
-            .then((data: TermData) => dispatch(selectVocabularyTerm(new Term(data))))
-            .catch((error: ErrorData) => {
-                dispatch(asyncActionFailure(action, error));
-                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-                return null
             });
     };
 }

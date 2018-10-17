@@ -193,8 +193,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock get vocabulary terms
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/find/).reply(200, require('../rest-mock/terms'), header);
     // Mock term label uniqueness in vocabulary check
-    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/label/).reply((config: AxiosRequestConfig) => {
-        if (config.params.label === 'test') {
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/name/).reply((config: AxiosRequestConfig) => {
+        if (config.params.value === 'test') {
             return [200, true];
         } else {
             return [200, false];

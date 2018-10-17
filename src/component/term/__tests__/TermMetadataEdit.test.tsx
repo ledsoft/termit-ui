@@ -73,7 +73,7 @@ describe('Term edit', () => {
         labelInput.simulate('change', labelInput);
         return Promise.resolve().then(() => {
             expect(Ajax.get).toHaveBeenCalled();
-            expect(mock.mock.calls[0][1].getParams().label).toEqual(newLabel);
+            expect(mock.mock.calls[0][1].getParams().value).toEqual(newLabel);
         });
     });
 
