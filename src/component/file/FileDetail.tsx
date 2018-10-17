@@ -9,7 +9,7 @@ import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from '
 import Annotation from "../annotation/Annotation";
 import * as ReactDOM from 'react-dom';
 import {RouteComponentProps} from "react-router";
-import Vocabulary2, {IRI} from "../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import Vocabulary from "../../model/Vocabulary";
 import TermItStore from "../../store/TermItStore";
 import IntlData from "../../model/IntlData";
@@ -30,7 +30,7 @@ class FileDetail extends React.Component<FileDetailProps> {
 
     public componentDidMount(): void {
         const normalizedFileName = this.props.match.params.name;
-        this.props.loadContentFile(Vocabulary2.create(this.props.document.iri), normalizedFileName);
+        this.props.loadContentFile(VocabularyUtils.create(this.props.document.iri), normalizedFileName);
     }
 
     private getProcessingInstructions(): Instruction[] {

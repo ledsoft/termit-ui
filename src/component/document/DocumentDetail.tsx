@@ -2,21 +2,26 @@ import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import FileList from "../file/FileList";
-import TermItState from "../../model/TermItState";
 import {connect} from "react-redux";
 import {loadDocument} from "../../action/ComplexActions";
 import {IRI} from "../../util/VocabularyUtils";
 import Document from "../../model/Document";
 import {ThunkDispatch} from '../../util/Types';
+import TermItState from "../../model/TermItState";
 
 
-interface DocumentDetailProps extends HasI18n {
-    iri: IRI, // TODO remove
+interface DocumentDetailOwnProps {
     document: Document,
+    iri: IRI, // TODO remove
+}
+
+interface DocumentDetailDispatchProps {
     loadDocument: (iri: IRI) => void
 }
 
-class DocumentDetail extends React.Component<DocumentDetailProps> {
+type DocumentDetailProps = DocumentDetailOwnProps & DocumentDetailDispatchProps & HasI18n;
+
+export class DocumentDetail extends React.Component<DocumentDetailProps> {
 
     public componentDidMount() {
         this.props.loadDocument(this.props.iri);
