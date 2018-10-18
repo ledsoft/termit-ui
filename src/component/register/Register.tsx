@@ -144,7 +144,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
                         <ButtonToolbar className='register-buttons'>
                             <Button color='success' size='sm' disabled={!this.isValid() || this.props.loading}
                                     onClick={this.onRegister}>{i18n('register.submit')}</Button>
-                            <Button size='sm' className='register-cancel'
+                            <Button size='sm' className='register-cancel' color='secondary'
                                     onClick={this.onCancel}>{i18n('cancel')}</Button>
                         </ButtonToolbar>
                     </Form>

@@ -86,7 +86,8 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
                             <ButtonToolbar className='pull-right'>
                                 <Button onClick={this.onCreate} color='success' size='sm'
                                         disabled={this.state.name.trim().length === 0}>{i18n('vocabulary.create.submit')}</Button>
-                                <Button onClick={CreateVocabulary.onCancel} size='sm'>{i18n('cancel')}</Button>
+                                <Button onClick={CreateVocabulary.onCancel} color='secondary'
+                                        size='sm'>{i18n('cancel')}</Button>
                             </ButtonToolbar>
                         </Col>
                     </Row>

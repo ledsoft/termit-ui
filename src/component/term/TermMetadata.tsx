@@ -16,6 +16,7 @@ import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import Routes from "../../util/Routes";
 import Routing from '../../util/Routing';
+import EditableComponent from "../misc/EditableComponent";
 
 interface TermMetadataOwnProps {
     vocabulary: Vocabulary;
@@ -28,13 +29,9 @@ interface TermMetadataDispatchProps {
     reloadVocabularyTerms: (vocabulary: Vocabulary) => void;
 }
 
-interface TermMetadataState {
-    edit: boolean;
-}
-
 type TermMetadataProps = TermMetadataOwnProps & TermMetadataDispatchProps & HasI18n;
 
-export class TermMetadata extends React.Component<TermMetadataProps, TermMetadataState> {
+export class TermMetadata extends EditableComponent<TermMetadataProps> {
 
     constructor(props: TermMetadataProps) {
         super(props);
@@ -49,20 +46,12 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         }
     }
 
-    private onEdit = () => {
-        this.setState({edit: true});
-    };
-
     public onSave = (term: Term) => {
         this.props.updateTerm(term, this.props.vocabulary).then(() => {
             this.props.loadTerm(term, this.props.vocabulary);
             this.props.reloadVocabularyTerms(this.props.vocabulary);
             this.onCloseEdit();
         });
-    };
-
-    public onCloseEdit = () => {
-        this.setState({edit: false});
     };
 
     public openSubTerm = (term: Term) => {
