@@ -10,10 +10,10 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Vocabulary from "../../model/Vocabulary";
 import {ThunkDispatch} from "../../util/Types";
-import {loadDefaultTerms} from "../../action/AsyncActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
-import Utils from '../../util/Utils';
 import {AssetData} from '../../model/Asset';
+import FetchOptionsFunction from "../../model/Functions";
+import {fetchVocabularyTerms} from "../../action/ComplexActions";
 
 interface TermSubTermsEditProps extends HasI18n {
     vocabulary: Vocabulary;
@@ -21,57 +21,52 @@ interface TermSubTermsEditProps extends HasI18n {
     termIri: string;
     vocabularyTerms: Term[];
     onChange: (subTerms: AssetData[]) => void;
-    loadVocabularyTerms: (vocabulary: Vocabulary) => void;
+    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
 }
 
 export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
 
-    public componentDidMount() {
-        this.props.loadVocabularyTerms(this.props.vocabulary);
-    }
-
     private onChange = (val: Term[]) => {
-        const newSubTerms: AssetData[] = val.map(v => Object.assign({}, v.iri));
+        const newSubTerms: AssetData[] = val.map(v => Object.assign({}, {iri: v.iri})).filter(v => this.props.termIri !== v.iri);
         this.props.onChange(newSubTerms);
     };
 
-    private filterParentOptions = (options: Term[], filter: string) => {
-        return options.filter(option => {
-            const label = option.label;
-            return label.toLowerCase().indexOf(filter.toLowerCase()) !== -1
-        });
+    private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
+        return this.props.fetchTerms({
+            searchString,
+            optionID,
+            limit,
+            offset
+        }, VocabularyUtils.getFragment(this.props.vocabulary.iri));
     };
 
     private valueRenderer = (option: Term) => {
         return option.label;
     };
 
-    private resolveSelectedSubTerms(subTerms: Term[]): Term[] {
-        return subTerms.filter(t => this.props.subTerms.find(s => s.iri === t.iri) !== undefined);
+    private resolveSelectedSubTerms(): string[] {
+        return this.props.subTerms.map(t => t.iri!);
     }
 
     public render() {
-        const options = Utils.sanitizeArray(this.props.vocabularyTerms).filter(t => t.iri !== this.props.termIri);
-        const selected = this.resolveSelectedSubTerms(options);
+        const selected = this.resolveSelectedSubTerms();
         return <FormGroup>
             <Label size='sm'>{this.props.i18n('term.metadata.subTerms')}</Label>
-            {options.length > 0 && <IntelligentTreeSelect className='term-edit'
-                                                          name='term-edit-subterms'
-                                                          onChange={this.onChange}
-                                                          value={selected}
-                                                          options={options}
-                                                          valueKey='iri'
-                                                          labelKey='label'
-                                                          childrenKey='plainSubTerms'
-                                                          simpleTreeData={true}
-                                                          filterOptions={this.filterParentOptions}
-                                                          showSettings={false}
-                                                          maxHeight={150}
-                                                          multi={true}
-                                                          displayInfoOnHover={true}
-                                                          expanded={true}
-                                                          renderAsTree={true}
-                                                          valueRenderer={this.valueRenderer}/>}
+            <IntelligentTreeSelect className='term-edit'
+                                   onChange={this.onChange}
+                                   value={selected}
+                                   fetchOptions={this.fetchOptions}
+                                   valueKey='iri'
+                                   labelKey='label'
+                                   childrenKey='plainSubTerms'
+                                   simpleTreeData={true}
+                                   showSettings={false}
+                                   maxHeight={150}
+                                   multi={true}
+                                   displayInfoOnHover={true}
+                                   expanded={true}
+                                   renderAsTree={true}
+                                   valueRenderer={this.valueRenderer}/>
         </FormGroup>;
     }
 }
@@ -82,6 +77,6 @@ export default connect((state: TermItState) => {
     };
 }, ((dispatch: ThunkDispatch) => {
     return {
-        loadVocabularyTerms: (vocabulary: Vocabulary) => dispatch(loadDefaultTerms(VocabularyUtils.getFragment(vocabulary.iri)))
+        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
     }
 }))(injectIntl(withI18n(TermSubTermsEdit)));

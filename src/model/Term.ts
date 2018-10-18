@@ -20,7 +20,7 @@ export interface TermData extends AssetData {
     sources?: string[];
     types?: string[];
     parent?: string;
-    plainSubTerms?: string[];
+    plainSubTerms?: string[];   // Introduced in order to support the Intelligent Tree Select component
 }
 
 export default class Term extends Asset implements TermData {
