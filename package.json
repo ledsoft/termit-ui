@@ -2,6 +2,7 @@
   "name": "termit-ui",
   "version": "0.2.0",
   "private": true,
+  "homepage": "https://kbss.felk.cvut.cz/termit-dev/",
   "dependencies": {
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
