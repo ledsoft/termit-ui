@@ -18,6 +18,7 @@ interface AnnotationProps extends HasI18n {
     property: string
     resource?: string
     typeof: string
+    score: string
     text: string
     selectedTerm: Term | null
     defaultTerms: Term[];
@@ -80,6 +81,18 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
     private getReadOnlyComponent = () => {
         const i18n = this.props.i18n;
         const term = (this.props.resource) ? this.findTermByIri(this.props.resource) : null;
+        const score = this.props.score;
+        // TODO i18n
+        const scoreRow = (score) ? <tr>
+            <td>{'score:'}</td>
+            <td>{score}</td>
+        </tr> : "";
+        const labelRow = (term) ? <tr>
+            <td>{i18n('annotation.term.assignedterm.termLabel')}</td>
+            <td><OutgoingLink
+                label={term!.label}
+                iri={term!.iri}/></td>
+        </tr> : "";
         let outputComponent = <div/>;
         switch (this.getTermState()) {
             case TermState.ASSIGNED:
@@ -87,14 +100,9 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
                     <td>{i18n('annotation.form.assignedterm.termInfoLabel')}</td>
                     <td>{term!.comment}</td>
                 </tr> : "";
-
                 outputComponent = <table>
-                    <tr>
-                        <td>{i18n('annotation.term.assignedterm.termLabel')}</td>
-                        <td><OutgoingLink
-                            label={term!.label}
-                            iri={term!.iri}/></td>
-                    </tr>
+                    {labelRow}
+                    {scoreRow}
                     {termCommentRow}
                 </table>;
                 break;
@@ -104,9 +112,17 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
                     </span>
                 break;
             case TermState.INVALID:
-                outputComponent = <span className={'an-error'}>
-                    {i18n('annotation.form.invalidterm.message').replace('%', this.props.resource!)}
+                const errorLine = i18n('annotation.form.invalidterm.message').replace('%', this.props.resource!)
+
+                outputComponent = <div>
+                    <span className={'an-error'}>
+                        {errorLine}
                     </span>
+                    <table>
+                        {labelRow}
+                        {scoreRow}
+                    </table>
+                </div>;
                 break;
         }
         return outputComponent;

@@ -1,378 +1,115 @@
 // TODO content of "file.html" should be manually set here, see comments in "file.html"
 
 export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/\">\n" +
-"<head></head>\n" +
-"<body>\n" +
-"<div class=\"cast\" id=\"tcz_cast_prvni\">\n" +
-"    <h1>Část první:\n" +
-"\n" +
-"        <br>Úvodní ustanovení\n" +
-"\n" +
-"    </h1>\n" +
-"    <div class=\"hlava\" id=\"tcz_cast_prvni_hlava_I\">\n" +
-"        <h2>01/ Hlava I\n" +
-"\n" +
-"            <span about=\"_:1716840807\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                  resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                  typeof=\"ddo:vyskyt-termu\">(</span>II\n" +
-"\n" +
-"            <span about=\"_:1895323707\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                  resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                  typeof=\"ddo:vyskyt-termu\">)</span>\n" +
-"            <br>Smysl a účel plánování Prahy\n" +
-"\n" +
-"        </h2>\n" +
-"        <div class=\"clanek\" id=\"tcz_cl_1\">\n" +
-"            <h4>Článek 1\n" +
-"\n" +
-"                <br><span about=\"_:2126723403\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan\" typeof=\"ddo:vyskyt-termu\">Metropolitní plán</span>\n" +
-"\n" +
-"            </h4>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_1_odst_1\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:503864250\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>1\n" +
-"\n" +
-"                    <span about=\"_:464152225\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán jako Územní plán hlavního\n" +
-"\n" +
-"                    <span about=\"_:694019650\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto\" typeof=\"ddo:vyskyt-termu\">města </span>Prahy\n" +
-"\n" +
-"                    <span about=\"_:1946889818\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>dále též hl. m. Prahy\n" +
-"\n" +
-"                    <span about=\"_:671248106\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/struktura-%28krajiny%2C-mesta%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">, </span>nebo Prahy\n" +
-"\n" +
-"                    <sup>\n" +
-"                        <a href=\"#tcz-footnote-2\" id=\"tcz-footnote-ref-2\">[1]</a>\n" +
-"                    </sup>\n" +
-"                    <span about=\"_:187206896\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>tvoří základ uceleného\n" +
-"\n" +
-"                    <span about=\"_:812045889\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/struktura-%28krajiny%2C-mesta%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">, </span>logického a vzájemně provázaného systému územně plánovací\n" +
-"                    dokumentace\n" +
-"\n" +
-"                    <span about=\"_:2091808474\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto\" typeof=\"ddo:vyskyt-termu\">města</span>.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_1_odst_2\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:1969814066\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>2\n" +
-"\n" +
-"                    <span about=\"_:1933245952\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán je pořízen pro\n" +
-"\n" +
-"                    <span about=\"_:55503675\" property=\"ddo:je-vyskytem-termu\" resource=\"\" typeof=\"ddo:vyskyt-termu\">stanovení koncepce </span>celého\n" +
-"                    správního\n" +
-"\n" +
-"                    <span about=\"_:835008522\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">území </span>Prahy\n" +
-"\n" +
-"                    <span about=\"_:355142348\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/struktura-%28krajiny%2C-mesta%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">, </span>a to v měřítku 1:10.000 odpovídajícím rozsahu řešeného\n" +
-"\n" +
-"                    <span about=\"_:56644596\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">území</span>.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_1_odst_3\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:1864242194\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>3\n" +
-"\n" +
-"                    <span about=\"_:573447767\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán vytváří podmínky pro účelnou správu a\n" +
-"\n" +
-"                    <span about=\"_:1334041096\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">rozvoj území </span>a stanovuje základní rámce pro všechny\n" +
-"                    navazující podrobnější úrovně plánování.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_1_odst_4\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:36477339\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>4\n" +
-"\n" +
-"                    <span about=\"_:569333605\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán je koncepčním\n" +
-"\n" +
-"                    <span about=\"_:1886227146\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/dokument\" typeof=\"ddo:vyskyt-termu\">dokumentem</span>.Prostřednictvím\n" +
-"                    stanovených regulací umožňuje rozhodovat ve správních řízeních.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"        </div>\n" +
-"        <div class=\"clanek\" id=\"tcz_cl_2\">\n" +
-"            <h4>\n" +
-"                <span about=\"_:1371886354\" property=\"ddo:je-vyskytem-termu\" resource=\"\"\n" +
-"                      typeof=\"ddo:vyskyt-termu\">Článek </span>2\n" +
-"\n" +
-"                <br>Strukturální plán\n" +
-"\n" +
-"            </h4>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_2_odst_1\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:1051133536\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>1\n" +
-"\n" +
-"                    <span about=\"_:1157730149\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán je koncipován především jako plán\n" +
-"\n" +
-"                    <span about=\"_:1711769908\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">struktury území </span>a jeho rozpoznatelného a zapamatovatelného\n" +
-"                    obrazu\n" +
-"\n" +
-"                    <span about=\"_:1611995026\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/struktura-%28krajiny%2C-mesta%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">, </span>se\n" +
-"\n" +
-"                    <span about=\"_:690411090\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/plocha-rozdilneho-vyuziti-pro-stanoveni-vyskove-regulace\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">stanovením </span>z toho plynoucích podmínek\n" +
-"\n" +
-"                    <span about=\"_:1992606816\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">využití území</span>.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_2_odst_2\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:556675453\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>2\n" +
-"\n" +
-"                    <span about=\"_:140565553\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Strukturální pojetí\n" +
-"\n" +
-"                    <span about=\"_:1482161817\" property=\"ddo:je-vyskytem-termu\" resource=\"\" typeof=\"ddo:vyskyt-termu\">plánu </span>rozvíjí\n" +
-"                    a doplňuje\n" +
-"\n" +
-"                    <span about=\"_:1229388194\" property=\"ddo:je-vyskytem-termu\" resource=\"\" typeof=\"ddo:vyskyt-termu\">koncepci </span>Pražských\n" +
-"\n" +
-"                    <span about=\"_:431197230\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/stavebni-blok\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">stavebních </span>předpisů a standardního urbanistického\n" +
-"                    pojmosloví.Důraz klade na vztahy\n" +
-"\n" +
-"                    <span about=\"_:389831293\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">zástavby </span>a\n" +
-"\n" +
-"                    <span about=\"_:2118173398\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">veřejných prostranství, zástavby </span>a\n" +
-"\n" +
-"                    <span about=\"_:1214724430\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/transtormacni-plocha-otevrene-krajiny\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">krajiny </span>ve městě i\n" +
-"\n" +
-"                    <span about=\"_:1953803654\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/transtormacni-plocha-otevrene-krajiny\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">otevřené krajiny</span>.\n" +
-"\n" +
-"                    <span about=\"_:207263660\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/typ-struktury-v-nezastavitelnych-lokalitach\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">Struktura </span>je zároveň hlavním určujícím\n" +
-"\n" +
-"                    <span about=\"_:2097570336\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/navrhovy-prvek-infrastruktury\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">prvkem </span>pro uspořádání jednotlivých systémů a subsystémů\n" +
-"\n" +
-"                    <span about=\"_:1120390357\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/infrastruktura\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">infrastruktury</span>.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_2_odst_3\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:1261523900\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>3\n" +
-"\n" +
-"                    <span about=\"_:90718104\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán stabilizuje\n" +
-"\n" +
-"                    <span about=\"_:416679637\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto\" typeof=\"ddo:vyskyt-termu\">charakter města</span>.Chrání\n" +
-"                    jeho kulturní a civilizační hodnoty\n" +
-"\n" +
-"                    <span about=\"_:1497041600\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/struktura-%28krajiny%2C-mesta%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">, </span>stejně jako hodnoty\n" +
-"\n" +
-"                    <span about=\"_:493582976\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/nezastavitelne-prirodni-lokality-a-plochy\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">přírodní</span>.Zároveň definuje potenciál\n" +
-"\n" +
-"                    <span about=\"_:1272762979\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto\" typeof=\"ddo:vyskyt-termu\">města </span>k\n" +
-"\n" +
-"                    <span about=\"_:1652096715\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">rozvoji zástavby </span>a celkového kompozičního uspořádání.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"        </div>\n" +
-"        <div class=\"clanek\" id=\"tcz_cl_3\">\n" +
-"            <h4>\n" +
-"                <span about=\"_:165918279\" property=\"ddo:je-vyskytem-termu\" resource=\"\"\n" +
-"                      typeof=\"ddo:vyskyt-termu\">Článek </span>3\n" +
-"\n" +
-"                <br>Digitální plán\n" +
-"\n" +
-"            </h4>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_3_odst_1\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:1176978676\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>1\n" +
-"\n" +
-"                    <span about=\"_:1390580729\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán je zpracován elektronicky a veškeré\n" +
-"                    informace i\n" +
-"\n" +
-"                    <span about=\"_:1145246477\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/regulace\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">regulace </span>v něm obsažené jsou\n" +
-"\n" +
-"                    <span about=\"_:783840850\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>souběžně s tištěnou autorizovanou verzí\n" +
-"\n" +
-"                    <span about=\"_:1388611477\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>obsaženy v datovém\n" +
-"\n" +
-"                    <span about=\"_:343915375\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/model\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">modelu </span>tak\n" +
-"\n" +
-"                    <span about=\"_:1215830422\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/struktura-%28krajiny%2C-mesta%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">, </span>aby byly kdykoli v souhrnu a synergicky využitelné pro\n" +
-"                    rozhodování o\n" +
-"\n" +
-"                    <span about=\"_:622849069\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">využití </span>a uspořádání\n" +
-"\n" +
-"                    <span about=\"_:1393635124\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">území </span>a o změnách v\n" +
-"\n" +
-"                    <span about=\"_:979124986\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">území</span>.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_3_odst_2\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:1757717627\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>2\n" +
-"\n" +
-"                    <span about=\"_:846618328\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán je především strukturovaným systémem dat\n" +
-"\n" +
-"                    <span about=\"_:1785037310\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>a informací\n" +
-"\n" +
-"                    <span about=\"_:1517359108\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>o\n" +
-"\n" +
-"                    <span about=\"_:391876685\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">území</span>.Data Metropolitního plánu v kombinaci s daty průběžně\n" +
-"                    aktualizovaného systému dat o stavu a limitech\n" +
-"\n" +
-"                    <span about=\"_:1366787460\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">území (</span>územně analytické podklady\n" +
-"\n" +
-"                    <span about=\"_:64249502\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>jsou podkladem pro navrhování a vytváření aplikací anebo\n" +
-"                    informačních systémů na míru potřeb jednotlivých uživatelů.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_3_odst_3\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:61986341\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>3\n" +
-"\n" +
-"                    <span about=\"_:1854351474\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Datový\n" +
-"\n" +
-"                    <span about=\"_:1334225810\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/model\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">model </span>je také podkladem a součástí vyhodnocování naplňování\n" +
-"                    Metropolitního\n" +
-"\n" +
-"                    <span about=\"_:876739028\" property=\"ddo:je-vyskytem-termu\" resource=\"\" typeof=\"ddo:vyskyt-termu\">plánu </span>a\n" +
-"                    pro vyhodnocení vlivů na udržitelný\n" +
-"\n" +
-"                    <span about=\"_:1851746932\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">rozvoj území</span>.\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"            <div class=\"odstavec\" id=\"tcz_cl_3_odst_4\">\n" +
-"                <p>\n" +
-"                    <span about=\"_:793465348\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">(</span>4\n" +
-"\n" +
-"                    <span about=\"_:1985134163\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">) </span>Digitálně je Metropolitní plán vydán ve formě… a digitálně\n" +
-"                    podepsán…\n" +
-"\n" +
-"                </p>\n" +
-"            </div>\n" +
-"        </div>\n" +
-"    </div>\n" +
-"</div>\n" +
-"</body>\n" +
-"</html>"
+"    <head></head>\n" +
+"    <body>\n" +
+"        <div class=\"cast\" id=\"tcz_cast_prvni\">\n" +
+"            <h1>Část první:\n" +
+"                <br>Úvodní ustanovení\n" +
+"                </h1>\n" +
+"                <div class=\"hlava\" id=\"tcz_cast_prvni_hlava_I\">\n" +
+"                    <h2>01/ Hlava I (II)\n" +
+"                        <br>Smysl a účel plánování Prahy\n" +
+"                        </h2>\n" +
+"                        <div class=\"clanek\" id=\"tcz_cl_1\">\n" +
+"                            <h4>Článek 1\n" +
+"                                <br>Metropolitní plán\n" +
+"                                </h4>\n" +
+"                                <div class=\"odstavec\" id=\"tcz_cl_1_odst_1\">\n" +
+"                                    <p>(1) Metropolitní plán jako Územní plán hlavního \n" +
+"                                        <span about=\"_:-421713841\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto\" typeof=\"ddo:vyskyt-termu\" score=\"1.0\">města </span>Prahy (dále též hl. m. Prahy, nebo Prahy\n" +
+"                                        <sup>\n" +
+"                                            <a href=\"#tcz-footnote-2\" id=\"tcz-footnote-ref-2\">[1]</a>\n" +
+"                                        </sup>) tvoří základ uceleného, logického a vzájemně provázaného systému územně plánovací dokumentace\n" +
+"                                        <span about=\"_:-421713841\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto\" typeof=\"ddo:vyskyt-termu\" score=\"1.0\">města</span>.\n" +
+"                                    </p>\n" +
+"                                </div>\n" +
+"                                <div class=\"odstavec\" id=\"tcz_cl_1_odst_2\">\n" +
+"                                    <p>(2) Metropolitní plán je pořízen pro \n" +
+"                                        <span about=\"_:54950055\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/plocha-rozdilneho-vyuziti-pro-stanoveni-vyskove-regulace\" typeof=\"ddo:vyskyt-termu\" score=\"0.14285714285714285\">stanovení </span>koncepce celého správního\n" +
+"                                        <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území </span>Prahy, a to v měřítku 1:10.000 odpovídajícím rozsahu řešeného\n" +
+"                                        <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území</span>.\n" +
+"                                    </p>\n" +
+"                                </div>\n" +
+"                                <div class=\"odstavec\" id=\"tcz_cl_1_odst_3\">\n" +
+"                                    <p>(3) Metropolitní plán vytváří podmínky pro účelnou správu a \n" +
+"                                        <span about=\"_:569477601\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/formalni-rozvoj-krajiny\" typeof=\"ddo:vyskyt-termu\" score=\"0.3333333333333333\">rozvoj </span>\n" +
+"                                        <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území </span>a stanovuje základní rámce pro všechny navazující podrobnější úrovně plánování.\n" +
+"                                    </p>\n" +
+"                                </div>\n" +
+"                                <div class=\"odstavec\" id=\"tcz_cl_1_odst_4\">\n" +
+"                                    <p>(4) Metropolitní plán je koncepčním \n" +
+"                                        <span about=\"_:1066316418\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/dokument\" typeof=\"ddo:vyskyt-termu\" score=\"0.2\">dokumentem</span>.Prostřednictvím stanovených regulací umožňuje rozhodovat ve správních řízeních.\n" +
+"                                    </p>\n" +
+"                                </div>\n" +
+"                            </div>\n" +
+"                            <div class=\"clanek\" id=\"tcz_cl_2\">\n" +
+"                                <h4>Článek 2\n" +
+"                                    <br>Strukturální plán\n" +
+"                                    </h4>\n" +
+"                                    <div class=\"odstavec\" id=\"tcz_cl_2_odst_1\">\n" +
+"                                        <p>(1) Metropolitní plán je koncipován především jako plán \n" +
+"                                            <span about=\"_:1197765179\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/typ-struktury-v-nezastavitelnych-lokalitach\" typeof=\"ddo:vyskyt-termu\" score=\"0.2\">struktury </span>\n" +
+"                                            <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území </span>a jeho rozpoznatelného a zapamatovatelného obrazu, se\n" +
+"                                            <span about=\"_:54950055\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/plocha-rozdilneho-vyuziti-pro-stanoveni-vyskove-regulace\" typeof=\"ddo:vyskyt-termu\" score=\"0.14285714285714285\">stanovením </span>z toho plynoucích podmínek\n" +
+"                                            <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"1.0\">využití území</span>.\n" +
+"                                        </p>\n" +
+"                                    </div>\n" +
+"                                    <div class=\"odstavec\" id=\"tcz_cl_2_odst_2\">\n" +
+"                                        <p>(2) Strukturální pojetí plánu rozvíjí a doplňuje koncepci Pražských \n" +
+"                                            <span about=\"_:-1477814440\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/stavebni-blok\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">stavebních </span>předpisů a standardního urbanistického pojmosloví.Důraz klade na vztahy\n" +
+"                                            <span about=\"_:-491149288\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\" typeof=\"ddo:vyskyt-termu\" score=\"0.3333333333333333\">zástavby </span>a\n" +
+"                                            <span about=\"_:-1759213818\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/kostra-verejnych-prostranstvi\" typeof=\"ddo:vyskyt-termu\" score=\"0.6666666666666666\">veřejných prostranství</span>,\n" +
+"                                            <span about=\"_:-491149288\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\" typeof=\"ddo:vyskyt-termu\" score=\"0.3333333333333333\">zástavby </span>a\n" +
+"                                            <span about=\"_:-736965572\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/transtormacni-plocha-otevrene-krajiny\" typeof=\"ddo:vyskyt-termu\" score=\"0.25\">krajiny </span>ve městě i\n" +
+"                                            <span about=\"_:-736965572\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/transtormacni-plocha-otevrene-krajiny\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">otevřené krajiny</span>.\n" +
+"                                            <span about=\"_:1197765179\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/typ-struktury-v-nezastavitelnych-lokalitach\" typeof=\"ddo:vyskyt-termu\" score=\"0.2\">Struktura </span>je zároveň hlavním určujícím\n" +
+"                                            <span about=\"_:376676377\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/navrhovy-prvek-infrastruktury\" typeof=\"ddo:vyskyt-termu\" score=\"0.3333333333333333\">prvkem </span>pro uspořádání jednotlivých systémů a subsystémů\n" +
+"                                            <span about=\"_:-274139464\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/infrastruktura\" typeof=\"ddo:vyskyt-termu\" score=\"1.0\">infrastruktury</span>.\n" +
+"                                        </p>\n" +
+"                                    </div>\n" +
+"                                    <div class=\"odstavec\" id=\"tcz_cl_2_odst_3\">\n" +
+"                                        <p>(3) Metropolitní plán stabilizuje \n" +
+"                                            <span about=\"_:597246971\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/cilovy-charakter-lokality\" typeof=\"ddo:vyskyt-termu\" score=\"0.3333333333333333\">charakter </span>\n" +
+"                                            <span about=\"_:-421713841\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto\" typeof=\"ddo:vyskyt-termu\" score=\"1.0\">města</span>.Chrání jeho kulturní a civilizační hodnoty, stejně jako hodnoty\n" +
+"                                            <span about=\"_:-1201774096\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/nezastavitelne-prirodni-lokality-a-plochy\" typeof=\"ddo:vyskyt-termu\" score=\"0.2\">přírodní</span>.Zároveň definuje potenciál\n" +
+"                                            <span about=\"_:-421713841\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto\" typeof=\"ddo:vyskyt-termu\" score=\"1.0\">města </span>k\n" +
+"                                            <span about=\"_:569477601\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/formalni-rozvoj-krajiny\" typeof=\"ddo:vyskyt-termu\" score=\"0.3333333333333333\">rozvoji </span>\n" +
+"                                            <span about=\"_:-491149288\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\" typeof=\"ddo:vyskyt-termu\" score=\"0.3333333333333333\">zástavby </span>a celkového kompozičního uspořádání.\n" +
+"                                        </p>\n" +
+"                                    </div>\n" +
+"                                </div>\n" +
+"                                <div class=\"clanek\" id=\"tcz_cl_3\">\n" +
+"                                    <h4>Článek 3\n" +
+"                                        <br>Digitální plán\n" +
+"                                        </h4>\n" +
+"                                        <div class=\"odstavec\" id=\"tcz_cl_3_odst_1\">\n" +
+"                                            <p>(1) Metropolitní plán je zpracován elektronicky a veškeré informace i \n" +
+"                                                <span about=\"_:-2086047671\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/regulace\" typeof=\"ddo:vyskyt-termu\" score=\"1.0\">regulace </span>v něm obsažené jsou (souběžně s tištěnou autorizovanou verzí) obsaženy v datovém\n" +
+"                                                <span about=\"_:1959578552\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/model\" typeof=\"ddo:vyskyt-termu\" score=\"0.2\">modelu </span>tak, aby byly kdykoli v souhrnu a synergicky využitelné pro rozhodování o\n" +
+"                                                <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">využití </span>a uspořádání\n" +
+"                                                <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území </span>a o změnách v\n" +
+"                                                <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území</span>.\n" +
+"                                            </p>\n" +
+"                                        </div>\n" +
+"                                        <div class=\"odstavec\" id=\"tcz_cl_3_odst_2\">\n" +
+"                                            <p>(2) Metropolitní plán je především strukturovaným systémem dat (a informací) o \n" +
+"                                                <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území</span>.Data Metropolitního plánu v kombinaci s daty průběžně aktualizovaného systému dat o stavu a limitech\n" +
+"                                                <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území </span>(územně analytické podklady) jsou podkladem pro navrhování a vytváření aplikací anebo informačních systémů na míru potřeb jednotlivých uživatelů.\n" +
+"                                            </p>\n" +
+"                                        </div>\n" +
+"                                        <div class=\"odstavec\" id=\"tcz_cl_3_odst_3\">\n" +
+"                                            <p>(3) Datový \n" +
+"                                                <span about=\"_:1959578552\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/model\" typeof=\"ddo:vyskyt-termu\" score=\"0.2\">model </span>je také podkladem a součástí vyhodnocování naplňování Metropolitního plánu a pro vyhodnocení vlivů na udržitelný\n" +
+"                                                <span about=\"_:569477601\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/formalni-rozvoj-krajiny\" typeof=\"ddo:vyskyt-termu\" score=\"0.3333333333333333\">rozvoj </span>\n" +
+"                                                <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území</span>.\n" +
+"                                            </p>\n" +
+"                                        </div>\n" +
+"                                        <div class=\"odstavec\" id=\"tcz_cl_3_odst_4\">\n" +
+"                                            <p>(4) Digitálně je Metropolitní plán vydán ve formě… a digitálně podepsán…</p>\n" +
+"                                        </div>\n" +
+"                                    </div>\n" +
+"                                </div>\n" +
+"                            </div>\n" +
+"                        </body>\n" +
+"                    </html>"
