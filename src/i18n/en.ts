@@ -137,10 +137,11 @@ export default {
         'search.pojem': 'Term',
         'search.typ': 'Type',
 
-        'annotation.form.suggestedterm.message': 'Phrase is not assigned to a vocabulary term.',
-        'annotation.form.invalidterm.message': 'Term "%" not found in vocabulary.',
-        'annotation.form.assignedterm.termInfoLabel': 'Term info : ',
-        'annotation.term.assignedterm.termLabel': 'Assigned term : ',
+        'annotation.form.suggested-occurrence.message': 'Phrase is not assigned to a vocabulary term.',
+        'annotation.form.invalid-occurrence.message': 'Term "%" not found in vocabulary.',
+        'annotation.form.assigned-occurrence.termInfoLabel': 'Term info : ',
+        'annotation.term.assigned-occurrence.termLabel': 'Assigned term : ',
+        'annotation.term.occurrence.scoreLabel': 'Score:',
 
         'message.welcome': 'Welcome to TermIt!',
 

@@ -18,6 +18,7 @@ interface AnnotationProps extends HasI18n {
     property: string
     resource?: string
     typeof: string
+    score: string
     text: string
     selectedTerm: Term | null
     defaultTerms: Term[];
@@ -80,33 +81,47 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
     private getReadOnlyComponent = () => {
         const i18n = this.props.i18n;
         const term = (this.props.resource) ? this.findTermByIri(this.props.resource) : null;
+        const score = this.props.score;
+        const scoreRow = (score) ? <tr>
+            <td>{i18n('annotation.term.occurrence.scoreLabel')}</td>
+            <td>{score}</td>
+        </tr> : "";
+        const labelRow = (term) ? <tr>
+            <td>{i18n('annotation.term.assigned-occurrence.termLabel')}</td>
+            <td><OutgoingLink
+                label={term!.label}
+                iri={term!.iri}/></td>
+        </tr> : "";
         let outputComponent = <div/>;
         switch (this.getTermState()) {
             case TermState.ASSIGNED:
                 const termCommentRow = (term!.comment) ? <tr>
-                    <td>{i18n('annotation.form.assignedterm.termInfoLabel')}</td>
+                    <td>{i18n('annotation.form.assigned-occurrence.termInfoLabel')}</td>
                     <td>{term!.comment}</td>
                 </tr> : "";
-
                 outputComponent = <table>
-                    <tr>
-                        <td>{i18n('annotation.term.assignedterm.termLabel')}</td>
-                        <td><OutgoingLink
-                            label={term!.label}
-                            iri={term!.iri}/></td>
-                    </tr>
+                    {labelRow}
+                    {scoreRow}
                     {termCommentRow}
                 </table>;
                 break;
             case TermState.SUGGESTED:
                 outputComponent = <span className={'an-warning'}>
-                    {i18n('annotation.form.suggestedterm.message')}
+                    {i18n('annotation.form.suggested-occurrence.message')}
                     </span>
                 break;
             case TermState.INVALID:
-                outputComponent = <span className={'an-error'}>
-                    {i18n('annotation.form.invalidterm.message').replace('%', this.props.resource!)}
+                const errorLine = i18n('annotation.form.invalid-occurrence.message').replace('%', this.props.resource!)
+
+                outputComponent = <div>
+                    <span className={'an-error'}>
+                        {errorLine}
                     </span>
+                    <table>
+                        {labelRow}
+                        {scoreRow}
+                    </table>
+                </div>;
                 break;
         }
         return outputComponent;
