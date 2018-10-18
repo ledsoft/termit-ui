@@ -19,13 +19,16 @@ import {ThunkDispatch} from "../../util/Types";
 interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
     document: Document,
-    fileIri: string | null,
     fileContent: string | null
     loadContentFile: (documentIri: IRI, fileName: string) => void
     intl: IntlData
 }
 
-class FileDetail extends React.Component<FileDetailProps> {
+// TODO move html rendering,selection to separate components
+// TODO component contains intl as well as i18n property
+// TODO "file detail" --> "file content detail"
+// TODO html is rendered which gives error => put into a frame
+export class FileDetail extends React.Component<FileDetailProps> {
     private containerElement: HTMLDivElement | null;
 
     public componentDidMount(): void {
@@ -152,7 +155,6 @@ export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary,
         document: state.document,
-        fileIri: state.fileIri,
         fileContent: state.fileContent,
         intl: state.intl
     };
