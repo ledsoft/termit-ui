@@ -137,10 +137,11 @@ export default {
         'search.pojem' : 'Pojem',
         'search.typ' : 'Typ',
 
-        'annotation.form.suggestedterm.message': 'Fráze není přiřazena žádnemu termínu.',
-        'annotation.form.invalidterm.message': 'Termín "%" nebyl nalezen v slovníku. ',
-        'annotation.form.assignedterm.termInfoLabel': 'Informace o termínu:',
-        'annotation.term.assignedterm.termLabel': 'Přiřazený termín:',
+        'annotation.form.suggested-occurrence.message': 'Fráze není přiřazena žádnemu termínu.',
+        'annotation.form.invalid-occurrence.message': 'Termín "%" nebyl nalezen v slovníku. ',
+        'annotation.form.assigned-occurrence.termInfoLabel': 'Informace o termínu:',
+        'annotation.term.assigned-occurrence.termLabel': 'Přiřazený termín:',
+        'annotation.term.occurrence.scoreLabel': 'Skóre:',
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',
 
