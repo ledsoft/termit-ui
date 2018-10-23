@@ -251,7 +251,7 @@ export function executeQuery(queryString: string) {
         return Ajax
             .get(Constants.API_PREFIX + '/query', params({query: queryString}))
             .then((data: object) =>
-                jsonld.compact(data, VOCABULARY_CONTEXT))
+                jsonld.expand(data))
             .then((data: object) =>
                 dispatch(SyncActions.executeQuerySuccess(queryString, data)))
             .catch((error: ErrorData) => {

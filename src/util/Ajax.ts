@@ -213,7 +213,16 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE
     }));
-    mock.onGet(/\/rest\/query/).reply(200, require('../rest-mock/queryResult'), header);
+    mock.onGet(/\/rest\/query/).reply((config) => {
+        if (config.params.query.includes("?asset")) {
+            return [200, require('../rest-mock/assetCount'), header]
+        } else if (config.params.query.includes("?typ")) {
+            return [200, require('../rest-mock/termTypeFrequency'), header]
+        } else {
+            return [200, [], header];
+        }
+    });
+
     // Mock label search results
     mock.onGet('rest/search/label').reply(200, require('../rest-mock/searchResults'), header);
 
