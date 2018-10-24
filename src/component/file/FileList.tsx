@@ -1,15 +1,28 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
-import {Table} from "reactstrap";
+import {Button, ButtonToolbar, Table} from "reactstrap";
 import FileLink from "./FileLink";
 import File from "../../model/File";
+import {connect} from "react-redux";
+import TermItState from "../../model/TermItState";
+import {ThunkDispatch} from "../../util/Types";
+import {IRI} from "../../util/VocabularyUtils";
+import {startFileTextAnalysis} from "../../action/ComplexActions";
+import {GoClippy} from "react-icons/go";
+
 
 interface FileListProps extends HasI18n {
-    files: File[]
+    documentIri: IRI,
+    files: File[],
+    startFileTextAnalysis: (documentIri: IRI, fileName: string) => void
 }
 
 export class FileList extends React.Component<FileListProps> {
+
+    private fileTextAnalysisCallback = (fileName: string) => {
+        return () => this.props.startFileTextAnalysis(this.props.documentIri, fileName);
+    }
 
     public render() {
         if (this.props.files.length > 0) {
@@ -21,6 +34,12 @@ export class FileList extends React.Component<FileListProps> {
                     <td>
                         {v.comment}
                     </td>
+                    <td>
+                        <ButtonToolbar className='pull-right clearfix'>
+                            <Button size='sm' color='info' title={this.props.i18n('file.metadata.startTextAnalysis')}
+                                    onClick={this.fileTextAnalysisCallback(v.fileName)}><GoClippy/></Button>
+                        </ButtonToolbar>
+                    </td>
                 </tr>
             );
             return <div>
@@ -31,9 +50,15 @@ export class FileList extends React.Component<FileListProps> {
                 </Table>
             </div>
         } else {
-           return (null);
+            return (null);
         }
     }
 }
 
-export default injectIntl(withI18n(FileList));
+export default connect((state: TermItState) => {
+    return {};
+}, (dispatch: ThunkDispatch) => {
+    return {
+        startFileTextAnalysis: (documentIri: IRI, fileName: string) => dispatch(startFileTextAnalysis(documentIri, fileName))
+    };
+})(injectIntl(withI18n(FileList)));

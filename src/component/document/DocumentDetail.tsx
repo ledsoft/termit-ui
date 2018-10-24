@@ -28,7 +28,7 @@ export class DocumentDetail extends React.Component<DocumentDetailProps> {
     }
 
     public render() {
-        return <FileList files={this.props.document.files}/>;
+        return <FileList documentIri={this.props.iri} files={this.props.document.files}/>;
     }
 }
 
