@@ -322,7 +322,7 @@ export function startFileTextAnalysis(documentIri: IRI, fileName: string) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            .get(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/text-analysis", params({
+            .put(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/text-analysis", params({
                 file: fileName,
                 namespace: documentIri.namespace
             }))
