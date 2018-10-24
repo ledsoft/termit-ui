@@ -229,6 +229,9 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock get document
     mock.onGet(/\/rest\/language\/types/).reply(200, require('../rest-mock/types'), header);
 
+    // Mock document
+    mock.onPut(/\/rest\/documents\/.+\/text-analysis/).reply(202, null, header);
+
     // Mock get file content
     mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
 
