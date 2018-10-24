@@ -1,19 +1,16 @@
 import * as React from 'react';
-import {injectIntl, IntlProvider} from 'react-intl';
+import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
-import {connect, Provider} from "react-redux";
+import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {loadFileContent} from "../../action/ComplexActions";
 import Document from "../../model/Document";
-import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from 'html-to-react';
-import Annotation from "../annotation/Annotation";
-import * as ReactDOM from 'react-dom';
 import {RouteComponentProps} from "react-router";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import Vocabulary from "../../model/Vocabulary";
-import TermItStore from "../../store/TermItStore";
 import IntlData from "../../model/IntlData";
 import {ThunkDispatch} from "../../util/Types";
+import {Annotator} from "../annotator/Annotator";
 
 
 interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
@@ -24,95 +21,13 @@ interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
     intl: IntlData
 }
 
-// TODO move html rendering,selection to separate components
-// TODO component contains intl as well as i18n property
 // TODO "file detail" --> "file content detail"
-// TODO html is rendered which gives error => put into a frame
 export class FileDetail extends React.Component<FileDetailProps> {
-    private containerElement: HTMLDivElement | null;
 
     public componentDidMount(): void {
         const normalizedFileName = this.props.match.params.name;
         this.props.loadContentFile(VocabularyUtils.create(this.props.document.iri), normalizedFileName);
     }
-
-    private getProcessingInstructions(): Instruction[] {
-        // Order matters. Instructions are processed in the order they're defined
-        const processNodeDefinitions = new ProcessNodeDefinitions(React);
-        return [
-            {
-                // Custom annotated <span> processing
-                shouldProcessNode: (node: any): boolean => {
-                    // return node.parent && node.parent.name && node.parent.name === 'span';
-                    return node.name && (node.name === 'span') && (node.attribs.typeof === "ddo:vyskyt-termu")
-                },
-                processNode: (node: any, children: any) => {
-                    // node.attribs = Object.assign(node.attribs, { style:'background-color: rgb(132, 210, 255);
-                    // padding: 0px 4px;'})
-                    return <Annotation text={node.children[0].data} {...node.attribs} />
-                    // return node.data.toUpperCase();
-                }
-            }, {
-                // Anything else
-                shouldProcessNode: (node: any): boolean => {
-                    return true;
-                },
-                processNode: processNodeDefinitions.processDefaultNode
-            }];
-    }
-
-    private surroundSelection = (element: any, document: any) => {
-
-        const selection = window.getSelection();
-
-        if (!selection.isCollapsed) {
-
-
-            if (selection) {
-                const sel = window.getSelection();
-                if (sel.rangeCount) {
-                    const range = sel.getRangeAt(0).cloneRange();
-
-                    const fragment = range.cloneContents();
-                    if ((fragment.childNodes.length === 1) && (fragment.childNodes[0].nodeType === Node.TEXT_NODE)) {
-                        const span = document.createElement("span");
-                        const text = fragment.childNodes[0].nodeValue!;
-
-                        range.extractContents();
-                        range.surroundContents(span);
-                        sel.removeAllRanges();
-                        sel.addRange(range);
-
-                        ReactDOM.render(
-                            this.getAnnotation(text),
-                            span);
-                    }
-
-
-                }
-            }
-        }
-    }
-
-
-    private getAnnotation = (text: string) => {
-        return <Provider store={TermItStore}>
-            <IntlProvider {...this.props.intl}>
-                <Annotation about={this.getRDFNodeId()} property={"ddo:je-vyskytem-termu"} typeof={"ddo:vyskyt-termu"}
-                            text={text}/>
-            </IntlProvider>
-        </Provider>
-    }
-
-    private getRDFNodeId(): string {
-        return '_:' + Math.random().toString(36).substring(8);
-    }
-
-    private handleMouseLeave = () => {
-        if (this.containerElement) {
-            this.surroundSelection(this.containerElement, this.containerElement.ownerDocument)
-        }
-    };
 
     // private onAnnotate = () => {
     // };
@@ -132,23 +47,8 @@ export class FileDetail extends React.Component<FileDetailProps> {
         //                          title={"save"}
         //                          size='sm'
         //                          onClick={this.onSave}>{"✓"}</Button>);
-
-        const isValidNode = () => {
-            return true;
-        };
-        const htmlToReactParser = new HtmlToReactParser();
-        const reactComponent = htmlToReactParser.parseWithInstructions(this.props.fileContent, isValidNode,
-            this.getProcessingInstructions());
-
-        return <div
-            ref={r => {
-                this.containerElement = r
-            }}
-            onMouseUp={this.handleMouseLeave}>
-            {reactComponent}
-        </div>
+        return (this.props.fileContent) ? <Annotator html={this.props.fileContent} intl={this.props.intl}/> : null;
     }
-
 }
 
 export default connect((state: TermItState) => {

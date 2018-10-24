@@ -7,8 +7,8 @@ import {formatMessage, i18n, intl} from "../../../__tests__/environment/IntlUtil
 import createMemoryHistory from "history/createMemoryHistory";
 import {shallow} from "enzyme";
 import {match} from "react-router";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import Generator from "../../../__tests__/environment/Generator";
+import {Annotator} from "../../annotator/Annotator";
 
 describe('FileDetail', () => {
 
@@ -29,8 +29,6 @@ describe('FileDetail', () => {
         hash: '',
         state: {}
     };
-
-
     beforeEach(() => {
         document = new Document({
             iri: Generator.generateUri(),
@@ -41,14 +39,7 @@ describe('FileDetail', () => {
             iri: Generator.generateUri(),
             label: 'Test vocabulary'
         });
-        fileContent = "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/\">\n" +
-            "<head></head>\n" +
-            "<body class=\"cast\" id=\"tcz_cast_prvni\">\n" +
-            "    <h1>Část první:</h1>\n" +
-            "    <div class=\"hlava\" id=\"tcz_cast_prvni_hlava_I\">\n" +
-            "    </div>\n" +
-            "</body>\n" +
-            "</html>\n";
+        fileContent = "<html><body>Test content</body></html>"
         loadContentFile = jest.fn();
     });
 
@@ -67,9 +58,9 @@ describe('FileDetail', () => {
     });
 
 
-    it('renders html from file content', () => {
+    it('renders annotator of file content', () => {
 
-        const wrapper = mountWithIntl(<FileDetail
+        const wrapper = shallow(<FileDetail
             vocabulary={vocabulary}
             document={document}
             fileContent={fileContent}
@@ -79,8 +70,6 @@ describe('FileDetail', () => {
             history={history} location={location} match={routeMatch}
         />);
 
-        expect(wrapper.html().includes(fileContent)).toBe(true);
+        expect(wrapper.find(Annotator).exists()).toBeTruthy()
     });
-
-
 });

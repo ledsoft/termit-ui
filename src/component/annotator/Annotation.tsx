@@ -13,12 +13,20 @@ import Vocabulary from "../../model/Vocabulary";
 import OutgoingLink from "../misc/OutgoingLink";
 import {ThunkDispatch} from "../../util/Types";
 
-interface AnnotationProps extends HasI18n {
+export interface AnnotationSpanProps {
+    about?: string
+    property?: string
+    resource?: string
+    typeof?: string
+    score?: string
+}
+
+interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     about: string
     property: string
     resource?: string
     typeof: string
-    score: string
+    score?: string
     text: string
     selectedTerm: Term | null
     defaultTerms: Term[];
@@ -37,7 +45,7 @@ const TermState = {
     SUGGESTED: 'suggested-term',
 };
 
-class Annotation extends React.Component<AnnotationProps, AnnotationState> {
+export class Annotation extends React.Component<AnnotationProps, AnnotationState> {
 
     constructor(props: any) {
         super(props);
@@ -85,24 +93,26 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
         const scoreRow = (score) ? <tr>
             <td>{i18n('annotation.term.occurrence.scoreLabel')}</td>
             <td>{score}</td>
-        </tr> : "";
+        </tr> : null;
         const labelRow = (term) ? <tr>
             <td>{i18n('annotation.term.assigned-occurrence.termLabel')}</td>
             <td><OutgoingLink
                 label={term!.label}
                 iri={term!.iri}/></td>
-        </tr> : "";
+        </tr> : null;
         let outputComponent = <div/>;
         switch (this.getTermState()) {
             case TermState.ASSIGNED:
                 const termCommentRow = (term!.comment) ? <tr>
                     <td>{i18n('annotation.form.assigned-occurrence.termInfoLabel')}</td>
                     <td>{term!.comment}</td>
-                </tr> : "";
+                </tr> : null;
                 outputComponent = <table>
+                    <tbody>
                     {labelRow}
                     {scoreRow}
                     {termCommentRow}
+                    </tbody>
                 </table>;
                 break;
             case TermState.SUGGESTED:
@@ -118,8 +128,10 @@ class Annotation extends React.Component<AnnotationProps, AnnotationState> {
                         {errorLine}
                     </span>
                     <table>
+                        <tbody>
                         {labelRow}
                         {scoreRow}
+                        </tbody>
                     </table>
                 </div>;
                 break;
