@@ -44,7 +44,9 @@ const Statistics = (props: HasI18n) => {
                 typeIri={Vocabulary.USER}/>
             </div>
             <div key="centerleft"><TermTypeFrequency
-                title={props.i18n('statistics.types.frequency')}/>
+                title={props.i18n('statistics.types.frequency')}
+                notFilled={props.i18n('statistics.notFilled')}
+                lang={props.locale}/>
             </div>
         </ResponsiveReactGridLayout>
     </div>);

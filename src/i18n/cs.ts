@@ -120,6 +120,8 @@ export default {
         'statistics.vocabulary.count' : 'Počet slovníků',
         'statistics.term.count' : 'Počet pojmů',
         'statistics.user.count' : 'Počet uživatelů',
+        'statistics.notFilled' : "Nevyplněno",
+        'statistics.types.frequency' : "Typy pojmů",
 
         'fullscreen.exit' : 'Vrátit zobrazení do okna',
         'fullscreen.enter' : 'Zobrazit na celou obrazovku',

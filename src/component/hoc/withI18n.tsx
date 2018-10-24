@@ -6,6 +6,8 @@ export interface HasI18n {
     i18n(id: string): string;
 
     formatMessage(msgId: string, values: {} | undefined): string;
+
+    locale: string;
 }
 
 // type HOC<PWrapped> = React.ComponentClass<PWrapped> | React.SFC<PWrapped>;
@@ -21,7 +23,7 @@ export default function withI18n<P extends HasI18n>(Component: React.ComponentTy
         };
 
         public render() {
-            return <Component i18n={this.i18n} formatMessage={this.formatMessage} {...this.props}/>;
+            return <Component i18n={this.i18n} formatMessage={this.formatMessage} locale={this.props.intl.locale} {...this.props}/>;
         }
     }
 

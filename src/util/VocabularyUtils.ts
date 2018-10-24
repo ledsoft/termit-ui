@@ -7,11 +7,15 @@ export interface IRI {
     fragment : string,
 }
 
+const _PREFIX = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/";
+
 export default {
-    VOCABULARY: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik",
-    TERM: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
-    FILE: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor",
-    DOCUMENT: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/document",
+    PREFIX: _PREFIX,
+    VOCABULARY: _PREFIX+"slovnik",
+    TERM: _PREFIX+"term",
+    FILE: _PREFIX+"soubor",
+    DOCUMENT: _PREFIX+"document",
+    JE_POJMEM_ZE_SLOVNIKU: _PREFIX+"je-pojmem-ze-slovniku",
     USER: "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu",
 
     getFragment(iri : string) :string {
