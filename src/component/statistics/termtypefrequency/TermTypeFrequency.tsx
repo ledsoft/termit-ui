@@ -24,7 +24,7 @@ const defaultChartOptions = {
     },
 };
 
-export default class extends React.Component<Props> {
+export default class TermTypeFrequency extends React.Component<Props> {
 
     private cx = LD({"p": VocabularyUtils.PREFIX, "rdfs": "http://www.w3.org/2000/01/rdf-schema#"});
 
@@ -32,12 +32,19 @@ export default class extends React.Component<Props> {
         if ((VocabularyUtils.PREFIX + "not-filled") === iri) {
             return this.props.notFilled;
         }
+        const labels=this.cx(res).queryAll("[@id=" + iri + "] rdfs:label")
+        for(const label of labels) {
+            const q = label.query("@language");
+            if (q && (q.json() === this.props.lang)) {
+                return label.query("@value")
+            }
+        }
         return this.cx(res).query("[@id=" + iri + "] rdfs:label @value");
     }
 
     public render() {
         const TermTypeFrequencyI = this;
-        const query = queryTemplate.split('?lang').join('"' + TermTypeFrequencyI.props.lang + '"');
+        const query = queryTemplate;
         const componentFunction = (queryResult: QueryResultIF) => {
             if (!queryResult || !queryResult.result) {
                 return <div/>
@@ -90,11 +97,9 @@ export default class extends React.Component<Props> {
                           height="auto"/>
         }
 
-        return (<div>
-            <SparqlWidget
-                title={this.props.title}
-                componentFunction={componentFunction}
-                sparqlQuery={query}/>
-        </div>);
+        return <SparqlWidget
+            title={this.props.title}
+            componentFunction={componentFunction}
+            sparqlQuery={query}/>;
     }
 }

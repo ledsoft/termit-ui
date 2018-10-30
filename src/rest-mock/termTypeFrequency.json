@@ -83,27 +83,30 @@
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
-  "@id" : "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled",
-  "http://www.w3.org/2000/01/rdf-schema#label" : [ {
-    "@language" : "cs",
-    "@value" : "Not Filled"
-  } ]
-}, {
   "@id" : "http://onto.fel.cvut.cz/ontologies/ufo/event",
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@language" : "cs",
     "@value" : "Událost"
+  },{
+    "@language" : "en",
+    "@value" : "Event"
   } ]
 }, {
   "@id" : "http://onto.fel.cvut.cz/ontologies/ufo/object",
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@language" : "cs",
     "@value" : "Objekt"
+  },{
+    "@language" : "en",
+    "@value" : "Object"
   } ]
 }, {
   "@id" : "http://onto.fel.cvut.cz/ontologies/ufo/object-type",
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@language" : "cs",
     "@value" : "Typ objektu"
+  },{
+    "@language" : "en",
+    "@value" : "Object Type"
   } ]
 } ]

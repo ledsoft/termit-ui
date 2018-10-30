@@ -12,14 +12,12 @@ CONSTRUCT {
        	a-popis-dat-pojem:je-pojmem-ze-slovniku ?slovnik .
     OPTIONAL {
    	    ?slovnik rdfs:label ?labelS .
-      	FILTER(lang(?labelS) = ?lang)
    	}
     OPTIONAL {
         ?pojem a ?t .
     	FILTER(!(?t IN (a-popis-dat-pojem:term,skos:Concept)))
       	SERVICE silent <http://onto.fel.cvut.cz/rdf4j-server/repositories/ufo-current> {
         	?t rdfs:label ?lT .
-    	    FILTER(lang(?lT) = ?lang)
   	    }
     	BIND(COALESCE(?lT,str(?t)) as ?labelTypu)
     }
