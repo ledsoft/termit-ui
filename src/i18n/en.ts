@@ -117,6 +117,9 @@ export default {
         'glossary.form.validation.validateLengthMin3': 'Field must be at least 3 characters',
         'glossary.form.validation.validateNotSameAsParent': 'Child option cannot be same as parent option',
 
+        'file.text-analysis.started.message': 'File \'{fileName}\' successfully queued for text analysis',
+        'file.metadata.startTextAnalysis': 'Start text analysis',
+
         'statistics.vocabulary.count': 'Vocabulary Count',
         'statistics.term.count': 'Term Count',
         'statistics.user.count': 'User Count',
@@ -140,7 +143,7 @@ export default {
         'search.typ': 'Type',
 
         'annotation.form.suggested-occurrence.message': 'Phrase is not assigned to a vocabulary term.',
-        'annotation.form.invalid-occurrence.message': 'Term "%" not found in vocabulary.',
+        'annotation.form.invalid-occurrence.message': 'Term \'%\' not found in vocabulary.',
         'annotation.form.assigned-occurrence.termInfoLabel': 'Term info : ',
         'annotation.term.assigned-occurrence.termLabel': 'Assigned term : ',
         'annotation.term.occurrence.scoreLabel': 'Score:',

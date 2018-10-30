@@ -95,9 +95,15 @@ export function executeQuery(queryString: string) {
     };
 }
 
-export function loadFileContent(iri: IRI, fileName: string) {
+export function loadFileContent(documentIri: IRI, fileName: string) {
     return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.loadFileContent(iri, fileName));
+        return dispatch(AsyncActions.loadFileContent(documentIri, fileName));
+    };
+}
+
+export function startFileTextAnalysis(documentIri: IRI, fileName: string) {
+    return (dispatch: ThunkDispatch) => {
+        return dispatch(AsyncActions.startFileTextAnalysis(documentIri, fileName));
     };
 }
 
@@ -105,5 +111,6 @@ export function loadDocument(iri: IRI) {
     return (dispatch: ThunkDispatch) => {
         return dispatch(AsyncActions.loadDocument(iri));
     };
+
 }
 

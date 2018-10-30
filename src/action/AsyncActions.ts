@@ -315,6 +315,28 @@ function loadArrayFromCompactedGraph(compacted: object): object[] {
     return compacted.hasOwnProperty('@graph') ? Object.keys(compacted['@graph']).map(k => compacted['@graph'][k]) : [compacted]
 }
 
+export function startFileTextAnalysis(documentIri: IRI, fileName: string) {
+    const action = {
+        type: ActionType.START_FILE_TEXT_ANALYSIS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax
+            .put(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/text-analysis", params({
+                file: fileName,
+                namespace: documentIri.namespace
+            }))
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                return dispatch(publishMessage(new Message({messageId: 'file.text-analysis.started.message', values: {fileName}}, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function loadFileContent(documentIri: IRI, fileName: string) {
     const action = {
         type: ActionType.LOAD_FILE_CONTENT
