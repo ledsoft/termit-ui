@@ -4,11 +4,14 @@ import {
     createVocabularyTerm,
     fetchUser,
     fetchVocabularyTerms,
-    loadDefaultTerms, loadTypes,
+    loadDefaultTerms,
+    loadTypes,
     loadVocabularies,
     loadVocabulary,
     login,
-    search, updateTerm
+    search,
+    updateTerm,
+    updateVocabulary
 } from '../AsyncActions';
 import Constants from '../../util/Constants';
 import Ajax from '../../util/Ajax';
@@ -18,7 +21,7 @@ import Routing from '../../util/Routing';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
 import Vocabulary2 from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
-import ActionType, {AsyncAction, AsyncActionSuccess,} from "../ActionType";
+import ActionType, {AsyncAction, AsyncActionSuccess, MessageAction,} from "../ActionType";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
 import SearchResult from "../../model/SearchResult";
 import {ErrorData} from "../../model/ErrorInfo";
@@ -328,6 +331,58 @@ describe('Async actions', () => {
                 expect(Ajax.put).toHaveBeenCalled();
                 const data = mock.mock.calls[0][1].getContent();
                 expect(data).toEqual(term.toJsonLd());
+            });
+        });
+    });
+
+    describe('update vocabulary', () => {
+        it('sends put request to correct endpoint using vocabulary IRI', () => {
+            const namespace = 'http://onto.fel.cvut.cz/ontologies/termit/vocabularies/';
+            const normalizedVocabularyName = 'test-vocabulary';
+            const vocabulary = new Vocabulary({
+                iri: namespace + normalizedVocabularyName,
+                label: 'Test vocabulary'
+            });
+            const mock = jest.fn().mockImplementation(() => Promise.resolve());
+            Ajax.put = mock;
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(updateVocabulary(vocabulary))).then(() => {
+                expect(Ajax.put).toHaveBeenCalled();
+                const requestUri = mock.mock.calls[0][0];
+                expect(requestUri).toEqual(Constants.API_PREFIX + '/vocabularies/' + normalizedVocabularyName);
+                const params = mock.mock.calls[0][1].getParams();
+                expect(params.namespace).toBeDefined();
+                expect(params.namespace).toEqual(namespace);
+            });
+        });
+
+        it('sends JSON-LD of vocabulary argument to REST endpoint', () => {
+            const vocabulary = new Vocabulary({
+                iri: Generator.generateUri(),
+                label: 'Test vocabulary'
+            });
+            const mock = jest.fn().mockImplementation(() => Promise.resolve());
+            Ajax.put = mock;
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(updateVocabulary(vocabulary))).then(() => {
+                expect(Ajax.put).toHaveBeenCalled();
+                const data = mock.mock.calls[0][1].getContent();
+                expect(data).toEqual(vocabulary.toJsonLd());
+            });
+        });
+
+        it('dispatches success message on successful update', () => {
+            const vocabulary = new Vocabulary({
+                iri: Generator.generateUri(),
+                label: 'Test vocabulary'
+            });
+            Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(updateVocabulary(vocabulary))).then(() => {
+                // 0 - async request, 1 - async success, 2 - publish message
+                const action: MessageAction = store.getActions()[2];
+                expect(action).toBeDefined();
+                expect(action.message.messageId).toEqual('vocabulary.updated.message');
             });
         });
     });

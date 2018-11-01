@@ -81,6 +81,7 @@ export default {
         'vocabulary.metadata.identifier': 'Identifier',
         'vocabulary.metadata.author': 'Author',
         'vocabulary.metadata.created': 'Created',
+        'vocabulary.updated.message': 'Vocabulary successfully updated.',
 
         'term.metadata.identifier': 'Identifier',
         'term.metadata.label': 'Label',

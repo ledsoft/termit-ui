@@ -240,6 +240,9 @@ function mockRestApi(axiosInst: AxiosInstance): void {
 
     // Mock term update
     mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
+
+    // Mock vocabulary update
+    mock.onPut(/\/rest\/vocabularies\/.+/).reply(204, null, header);
 }
 
 const instance = new Ajax();

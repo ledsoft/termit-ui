@@ -7,12 +7,17 @@ import OutgoingLink from "../misc/OutgoingLink";
 import DocumentTab from "../document/DocumentTab";
 import {GoPencil} from "react-icons/go";
 import EditableComponent from "../misc/EditableComponent";
+import EditVocabulary from "./EditVocabulary";
+import {connect} from "react-redux";
+import {ThunkDispatch} from "../../util/Types";
+import {updateVocabulary} from "../../action/AsyncActions";
 
 interface VocabularyMetadataProps extends HasI18n {
-    vocabulary: Vocabulary
+    vocabulary: Vocabulary;
+    update: (vocabulary: Vocabulary) => Promise<any>;
 }
 
-class VocabularyMetadata extends EditableComponent<VocabularyMetadataProps> {
+export class VocabularyMetadata extends EditableComponent<VocabularyMetadataProps> {
     constructor(props: VocabularyMetadataProps) {
         super(props);
         this.state = {
@@ -21,10 +26,15 @@ class VocabularyMetadata extends EditableComponent<VocabularyMetadataProps> {
     }
 
     public onSave = (vocabulary: Vocabulary) => {
-        // TODO
+        this.props.update(vocabulary).then(() => this.onCloseEdit());
     };
 
     public render() {
+        return this.state.edit ? <EditVocabulary vocabulary={this.props.vocabulary} save={this.onSave}
+                                                 cancel={this.onCloseEdit}/> : this.renderMetadata();
+    }
+
+    private renderMetadata() {
         const i18n = this.props.i18n;
         const vocabulary = this.props.vocabulary;
         return <div className='metadata-panel'>
@@ -60,4 +70,8 @@ class VocabularyMetadata extends EditableComponent<VocabularyMetadataProps> {
     }
 }
 
-export default injectIntl(withI18n(VocabularyMetadata));
+export default connect(undefined, (dispatch: ThunkDispatch) => {
+    return {
+        update: (vocabulary: Vocabulary) => dispatch(updateVocabulary(vocabulary))
+    };
+})(injectIntl(withI18n(VocabularyMetadata)));

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {VocabularyEdit} from "../VocabularyEdit";
+import {EditVocabulary} from "../EditVocabulary";
 import Vocabulary from "../../../model/Vocabulary";
 import Generator from "../../../__tests__/environment/Generator";
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
@@ -21,7 +21,7 @@ describe('VocabularyEdit', () => {
     });
 
     it('passes updated vocabulary to onSave', () => {
-        const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
+        const wrapper = mountWithIntl(<EditVocabulary vocabulary={vocabulary} save={onSave} cancel={onCancel}
                                                       i18n={i18n} formatMessage={formatMessage}/>);
         const nameInput = wrapper.find('input[name="vocabulary-edit-name"]');
         const newName = 'Metropolitan plan';
@@ -36,7 +36,7 @@ describe('VocabularyEdit', () => {
     });
 
     it('closes editing view on when clicking on cancel', () => {
-        const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
+        const wrapper = mountWithIntl(<EditVocabulary vocabulary={vocabulary} save={onSave} cancel={onCancel}
                                                       i18n={i18n} formatMessage={formatMessage}/>);
         wrapper.find('.btn-secondary').simulate('click');
         expect(onCancel).toHaveBeenCalled();

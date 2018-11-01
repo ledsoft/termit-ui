@@ -81,6 +81,7 @@ export default {
         'vocabulary.metadata.identifier': 'Identifikátor',
         'vocabulary.metadata.author': 'Autor',
         'vocabulary.metadata.created': 'Datum vytvoření',
+        'vocabulary.updated.message': 'Slovník uspěšně uložen.',
 
         'term.metadata.identifier': 'Identifikátor',
         'term.metadata.label': 'Popisek',
@@ -88,7 +89,7 @@ export default {
         'term.metadata.subTerms': 'Podřazené pojmy',
         'term.metadata.types': 'Typy pojmu',
         'term.metadata.source': 'Zdroj pojmu',
-        'term.updated.message': 'Pojem úspěšně aktualizován.',
+        'term.updated.message': 'Pojem úspěšně uložen.',
         'term.metadata.labelExists.message': 'Pojem s názvem \'{label}\' již v tomto slovníku existuje',
         'term.metadata.source.add.placeholder': 'Nový zdroj pojmu',
         'term.metadata.source.remove.title': 'Odebrat zdroj',
