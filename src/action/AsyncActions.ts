@@ -328,7 +328,10 @@ export function startFileTextAnalysis(documentIri: IRI, fileName: string) {
             }))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
-                return dispatch(publishMessage(new Message({messageId: 'file.text-analysis.started.message', values: {fileName}}, MessageType.SUCCESS)));
+                return dispatch(publishMessage(new Message({
+                    messageId: 'file.text-analysis.started.message',
+                    values: {fileName}
+                }, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
@@ -409,6 +412,7 @@ export function updateVocabulary(vocabulary: Vocabulary) {
         return Ajax.put(reqUrl, content(vocabulary.toJsonLd()).params({namespace: vocabularyIri.namespace}))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
+                dispatch(loadVocabulary(vocabularyIri));
                 return dispatch(publishMessage(new Message({messageId: 'vocabulary.updated.message'}, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {

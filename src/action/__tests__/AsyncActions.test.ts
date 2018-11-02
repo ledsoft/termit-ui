@@ -371,7 +371,7 @@ describe('Async actions', () => {
             });
         });
 
-        it('dispatches success message on successful update', () => {
+        it('reloads vocabulary on successful update', () => {
             const vocabulary = new Vocabulary({
                 iri: Generator.generateUri(),
                 label: 'Test vocabulary'
@@ -379,8 +379,24 @@ describe('Async actions', () => {
             Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch)(updateVocabulary(vocabulary))).then(() => {
-                // 0 - async request, 1 - async success, 2 - publish message
-                const action: MessageAction = store.getActions()[2];
+                // 0 - async request, 1 - async success, 2 - load vocabulary
+                const action: AsyncAction = store.getActions()[2];
+                expect(action).toBeDefined();
+                expect(action.type).toEqual(ActionType.LOAD_VOCABULARY);
+            });
+        });
+
+        it('dispatches success message on successful update', () => {
+            const vocabulary = new Vocabulary({
+                iri: Generator.generateUri(),
+                label: 'Test vocabulary'
+            });
+            Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve());
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(updateVocabulary(vocabulary))).then(() => {
+                // 0 - async request, 1 - async success, 2 - load vocabulary, 3 - publish message
+                const action: MessageAction = store.getActions()[3];
                 expect(action).toBeDefined();
                 expect(action.message.messageId).toEqual('vocabulary.updated.message');
             });
