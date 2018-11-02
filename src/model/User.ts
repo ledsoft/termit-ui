@@ -13,42 +13,22 @@ export interface UserData {
     username: string,
     types?: string[]
 }
+
 /**
  * System user account.
  */
 export default class User implements UserData {
-    private readonly mIri: string;
-    private readonly mFirstName: string;
-    private readonly mLastName: string;
-    private readonly mUsername: string;
-    private readonly mTypes: string[];
+    public readonly iri: string;
+    public readonly firstName: string;
+    public readonly lastName: string;
+    public readonly username: string;
+    public readonly types: string[];
 
     constructor(data: UserData) {
-        this.mIri = data.iri;
-        this.mFirstName = data.firstName;
-        this.mLastName = data.lastName;
-        this.mUsername = data.username;
-        this.mTypes = data.types ? data.types : []
-    }
-
-    get iri(): string {
-        return this.mIri;
-    }
-
-    get firstName(): string {
-        return this.mFirstName;
-    }
-
-    get lastName(): string {
-        return this.mLastName;
-    }
-
-    get username(): string {
-        return this.mUsername;
-    }
-
-    get types(): string[] {
-        return this.mTypes;
+        Object.assign(this, data);
+        if (!this.types) {
+            this.types = [];
+        }
     }
 
     get fullName(): string {

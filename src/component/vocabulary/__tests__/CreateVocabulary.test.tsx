@@ -8,6 +8,7 @@ import Routes from "../../../util/Routes";
 import Ajax, {params} from "../../../util/Ajax";
 import Constants from "../../../util/Constants";
 import Vocabulary from "../../../model/Vocabulary";
+import VocabularyUtils from "../../../util/VocabularyUtils";
 
 jest.mock('../../../util/Routing');
 jest.mock('../../../util/Ajax');
@@ -52,7 +53,7 @@ describe('Create vocabulary view', () => {
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier').then(() => {
             const submitButton = wrapper.find(Button).first();
             submitButton.simulate('click');
-            expect(onCreate).toHaveBeenCalledWith({label:name, iri});
+            expect(onCreate).toHaveBeenCalledWith({label:name, iri, types: [VocabularyUtils.VOCABULARY]});
         });
     });
 
