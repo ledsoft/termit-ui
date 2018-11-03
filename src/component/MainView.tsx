@@ -71,6 +71,10 @@ export class MainView extends React.Component<MainViewProps> {
                     <NavbarBrand>{Constants.APP_NAME}</NavbarBrand>
 
                     <Nav navbar={true} className={"flex-grow-1"}>
+                        <NavbarSearch/>
+                    </Nav>
+
+                    <Nav navbar={true}>
                         <NavItem active={path === Routes.dashboard.path}>
                             <NavLink
                                 href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>
@@ -87,9 +91,6 @@ export class MainView extends React.Component<MainViewProps> {
                             <NavLink
                                 href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
                         </NavItem>
-                    </Nav>
-                    <Nav navbar={true}>
-                        <NavbarSearch/>
                     </Nav>
                     <Nav navbar={true}>
                         <LanguageSelector/>
