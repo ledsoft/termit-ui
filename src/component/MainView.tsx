@@ -5,6 +5,7 @@ import withLoading from './hoc/withLoading';
 import {connect} from 'react-redux';
 import TermItState from '../model/TermItState';
 import {
+    Collapse,
     Container,
     DropdownItem,
     DropdownMenu,
@@ -13,6 +14,7 @@ import {
     Nav,
     Navbar,
     NavbarBrand,
+    NavbarToggler,
     NavItem,
     NavLink,
     UncontrolledDropdown
@@ -42,10 +44,17 @@ interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     logout: () => void
 }
 
-export class MainView extends React.Component<MainViewProps> {
+interface MainViewState {
+    isMainMenuOpen: boolean;
+}
+
+export class MainView extends React.Component<MainViewProps, MainViewState> {
 
     constructor(props: MainViewProps) {
         super(props);
+        this.state = {
+            isMainMenuOpen: false
+        };
     }
 
     public componentDidMount() {
@@ -53,6 +62,12 @@ export class MainView extends React.Component<MainViewProps> {
             this.props.loadUser();
         }
     }
+
+    public toggle = () => {
+        this.setState({
+            isMainMenuOpen: !this.state.isMainMenuOpen
+        });
+    };
 
     private onUserProfileClick = () => {
         alert('Not implemented, yet!');
@@ -67,48 +82,53 @@ export class MainView extends React.Component<MainViewProps> {
         return <div className='wrapper'>
             <header>
                 <Navbar color="light" light={true} expand={"md"} className={"d-flex"}>
+                    <NavbarBrand>
+                        <a className="navbar-brand" href={MainView.hashPath(Routes.dashboard.path)}>
+                            {Constants.APP_NAME}
+                        </a>
+                    </NavbarBrand>
 
-                    <NavbarBrand>{Constants.APP_NAME}</NavbarBrand>
-
-                    <Nav navbar={true} className={"flex-grow-1"}>
-                        <NavbarSearch/>
-                    </Nav>
-
-                    <Nav navbar={true}>
-                        <NavItem active={path === Routes.dashboard.path}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>
-                        </NavItem>
-                        <NavItem active={path.startsWith(Routes.vocabularies.path)}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
-                        </NavItem>
-                        <NavItem active={path === Routes.statistics.path}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
-                        </NavItem>
-                        <NavItem active={path === Routes.facetedSearch.path}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
-                        </NavItem>
-                    </Nav>
-                    <Nav navbar={true}>
-                        <LanguageSelector/>
-                    </Nav>
-                    <Nav navbar={true}>
-                        <UncontrolledDropdown id='logout' nav={true} inNavbar={true}>
-                            <DropdownToggle nav={true} caret={true}>
-                                {user.abbreviatedName}
-                            </DropdownToggle>
-                            <DropdownMenu right={true}>
-                                <DropdownItem disabled={true}
-                                              title={i18n('not-implemented')}
-                                              onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
-                                <DropdownItem divider={true}/>
-                                <DropdownItem onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </Nav>
+                    <NavbarToggler onClick={this.toggle}/>
+                    <Collapse isOpen={this.state.isMainMenuOpen} navbar={true}>
+                        <Nav navbar={true} className={"flex-grow-1"}>
+                            <NavbarSearch/>
+                        </Nav>
+                        <Nav navbar={true}>
+                            <NavItem active={path === Routes.dashboard.path}>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>
+                            </NavItem>
+                            <NavItem active={path.startsWith(Routes.vocabularies.path)}>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
+                            </NavItem>
+                            <NavItem active={path === Routes.statistics.path}>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
+                            </NavItem>
+                            <NavItem active={path === Routes.facetedSearch.path}>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
+                            </NavItem>
+                        </Nav>
+                        <Nav navbar={true}>
+                            <LanguageSelector/>
+                        </Nav>
+                        <Nav navbar={true}>
+                            <UncontrolledDropdown id='logout' nav={true} inNavbar={true}>
+                                <DropdownToggle nav={true} caret={true}>
+                                    {user.abbreviatedName}
+                                </DropdownToggle>
+                                <DropdownMenu right={true}>
+                                    <DropdownItem disabled={true}
+                                                  title={i18n('not-implemented')}
+                                                  onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
+                                    <DropdownItem divider={true}/>
+                                    <DropdownItem onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+                        </Nav>
+                    </Collapse>
                 </Navbar>
             </header>
             <Messages/>
