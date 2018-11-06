@@ -5,24 +5,13 @@ import Chart from 'react-apexcharts'
 import {QueryResultIF} from "../../../model/QueryResult";
 import LD from "ld-query";
 import VocabularyUtils from "../../../util/VocabularyUtils";
+import defaultChartOptions from "../DefaultTermCharacteristicsFrequencyChartOptions";
 
 interface Props {
     title: string,
     notFilled: string,
     lang: string
 }
-
-const defaultChartOptions = {
-    chart: {
-        id: 'types',
-        stacked: true,
-    },
-    plotOptions: {
-        bar: {
-            horizontal: true,
-        },
-    },
-};
 
 export default class TermTypeFrequency extends React.Component<Props> {
 
