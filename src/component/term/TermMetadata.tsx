@@ -122,7 +122,7 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
                     {this.renderItems(term.sources)}
                 </Col>
             </Row>
-            <UnmappedProperties properties={term.getUnmappedProperties()}/>
+            <UnmappedProperties properties={term.unmappedProperties}/>
         </div>;
     }
 

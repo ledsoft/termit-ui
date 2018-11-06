@@ -116,7 +116,7 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                                          sources={Utils.sanitizeArray(this.state.sources)}/>
                     </Col>
                 </Row>
-                <UnmappedPropertiesEdit properties={this.props.term.getUnmappedProperties()}/>
+                <UnmappedPropertiesEdit properties={this.props.term.unmappedProperties}/>
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className='pull-right term-edit-buttons'>

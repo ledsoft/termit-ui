@@ -53,7 +53,7 @@ export default class Term extends Asset implements TermData {
         return result;
     }
 
-    public getUnmappedProperties(): Map<string, string[]> {
+    public get unmappedProperties(): Map<string, string[]> {
         const map = new Map<string, string[]>();
         Object.getOwnPropertyNames(this).filter(p => MAPPED_PROPERTIES.indexOf(p) === -1)
             .forEach(prop => {
@@ -61,6 +61,10 @@ export default class Term extends Asset implements TermData {
                 map.set(prop, values);
             });
         return map;
+    }
+
+    public set unmappedProperties(properties: Map<string, string[]>) {
+        properties.forEach((value, key) => this[key] = value);
     }
 
     public toJsonLd(): TermData {
