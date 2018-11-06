@@ -2,9 +2,8 @@ import configureMockStore from 'redux-mock-store';
 import {
     createVocabulary,
     createVocabularyTerm,
-    fetchUser,
     fetchVocabularyTerms,
-    loadDefaultTerms, loadTypes,
+    loadDefaultTerms, loadTypes, loadUser,
     loadVocabularies,
     loadVocabulary,
     login,
@@ -45,7 +44,7 @@ describe('Async actions', () => {
             };
             Ajax.get = jest.fn().mockImplementation(() => Promise.reject(error));
             const store = mockStore({});
-            return Promise.resolve((store.dispatch as ThunkDispatch)(fetchUser())).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadUser())).then(() => {
                 const actions: Action[] = store.getActions();
                 const found = actions.find(a => a.type === ActionType.PUBLISH_MESSAGE);
                 return expect(found).not.toBeDefined();

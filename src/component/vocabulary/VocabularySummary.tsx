@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Vocabulary from "../../model/Vocabulary";
-import {loadVocabulary} from "../../action/ComplexActions";
+import {loadVocabulary} from "../../action/AsyncActions";
 import VocabularyMetadata from "./VocabularyMetadata";
 import {Button} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";

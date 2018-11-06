@@ -31,7 +31,7 @@ import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Docu
  * of several synchronous sub-actions which inform the application of initiation of the request and its result.
  */
 
-export function fetchUser() {
+export function loadUser() {
     const action = {
         type: ActionType.FETCH_USER
     };

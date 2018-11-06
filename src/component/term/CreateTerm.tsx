@@ -29,7 +29,7 @@ import Constants from "../../util/Constants";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
-import {createVocabularyTerm, fetchVocabularyTerms} from "../../action/ComplexActions";
+import {createVocabularyTerm, fetchVocabularyTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from "../../util/Types";
 import {AssetData} from "../../model/Asset";
 

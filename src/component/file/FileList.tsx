@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
 import {IRI} from "../../util/VocabularyUtils";
-import {startFileTextAnalysis} from "../../action/ComplexActions";
+import {startFileTextAnalysis} from "../../action/AsyncActions";
 import {GoClippy} from "react-icons/go";
 
 

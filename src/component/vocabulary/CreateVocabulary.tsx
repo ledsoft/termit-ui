@@ -10,7 +10,7 @@ import Routing from '../../util/Routing';
 import Ajax, {params} from "../../util/Ajax";
 import Constants from '../../util/Constants';
 import withLoading from "../hoc/withLoading";
-import {createVocabulary} from "../../action/ComplexActions";
+import {createVocabulary} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import {ThunkDispatch} from "../../util/Types";
 

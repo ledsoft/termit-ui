@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 import TermItState from '../../model/TermItState';
 import {clearError} from '../../action/SyncActions';
 import ActionType from '../../action/ActionType';
-import {register} from '../../action/ComplexActions';
+import {register} from '../../action/AsyncActions';
 import Footer from '../Footer';
 import Ajax, {params} from "../../util/Ajax";
 import Constants from '../../util/Constants';

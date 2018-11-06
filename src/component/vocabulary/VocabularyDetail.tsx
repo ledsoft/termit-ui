@@ -6,7 +6,7 @@ import {Route, RouteComponentProps, Switch} from "react-router";
 import Terms from "../term/Terms";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadTypes, loadVocabulary} from "../../action/ComplexActions";
+import {loadTypes, loadVocabulary} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import './VocabularyDetail.scss';
 import OutgoingLink from "../misc/OutgoingLink";

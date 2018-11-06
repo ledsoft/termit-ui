@@ -10,7 +10,7 @@ import TermItState from "../../model/TermItState";
 import Term from "../../model/Term";
 import {RouteComponentProps, withRouter} from "react-router";
 import Routes from "../../util/Routes";
-import {getVocabularyTermByName} from "../../action/ComplexActions";
+import {getVocabularyTermByName} from "../../action/AsyncActions";
 import {ThunkDispatch} from '../../util/Types';
 import TermMetadata from '../term/TermMetadata';
 

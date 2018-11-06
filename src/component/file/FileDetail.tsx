@@ -3,7 +3,7 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadFileContent} from "../../action/ComplexActions";
+import {loadFileContent} from "../../action/AsyncActions";
 import Document from "../../model/Document";
 import {RouteComponentProps} from "react-router";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";

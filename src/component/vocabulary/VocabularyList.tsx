@@ -3,7 +3,7 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadVocabularies} from "../../action/ComplexActions";
+import {loadVocabularies} from "../../action/AsyncActions";
 import VocabularyLink from "./VocabularyLink";
 import Vocabulary from "../../model/Vocabulary";
 import {Table} from "reactstrap";
