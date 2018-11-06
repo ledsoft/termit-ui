@@ -151,6 +151,9 @@ export default {
 
         'message.welcome': 'Welcome to TermIt!',
 
+        'unmapped.properties.property': 'Property',
+        'unmapped.properties.value': 'Value',
+
         'type.term': 'Term',
         'type.vocabulary': 'Vocabulary'
     }

@@ -15,6 +15,7 @@ import TermTypesEdit from "./TermTypesEdit";
 import Utils from "../../util/Utils";
 import TermSubTermsEdit from "./TermSubTermsEdit";
 import {AssetData} from "../../model/Asset";
+import UnmappedPropertiesEdit from "../genericmetadata/UnmappedPropertiesEdit";
 
 interface TermMetadataEditProps extends HasI18n {
     vocabulary: Vocabulary,
@@ -115,6 +116,7 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                                          sources={Utils.sanitizeArray(this.state.sources)}/>
                     </Col>
                 </Row>
+                <UnmappedPropertiesEdit properties={this.props.term.getUnmappedProperties()}/>
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className='pull-right term-edit-buttons'>

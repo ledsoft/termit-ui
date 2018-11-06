@@ -23,6 +23,8 @@ export interface TermData extends AssetData {
     plainSubTerms?: string[];   // Introduced in order to support the Intelligent Tree Select component
 }
 
+const MAPPED_PROPERTIES = ['@context', 'iri', 'label', 'comment', 'subTerms', 'sources', 'types', 'parent', 'plainSubTerms'];
+
 export default class Term extends Asset implements TermData {
     public comment?: string;
     public subTerms?: AssetData[];
@@ -49,6 +51,16 @@ export default class Term extends Asset implements TermData {
         });
         delete result.plainSubTerms;
         return result;
+    }
+
+    public getUnmappedProperties(): Map<string, string[]> {
+        const map = new Map<string, string[]>();
+        Object.getOwnPropertyNames(this).filter(p => MAPPED_PROPERTIES.indexOf(p) === -1)
+            .forEach(prop => {
+                const values: string[] = Utils.sanitizeArray(this[prop]);
+                map.set(prop, values);
+            });
+        return map;
     }
 
     public toJsonLd(): TermData {

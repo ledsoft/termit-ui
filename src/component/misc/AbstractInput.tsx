@@ -8,6 +8,7 @@ export interface AbstractInputProps {
     placeholder?: string;
     title?: string;
     value?: string;
+    defaultValue?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     help?: string;
     invalid?: boolean;

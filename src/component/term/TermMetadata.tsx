@@ -17,6 +17,7 @@ import Utils from "../../util/Utils";
 import Routes from "../../util/Routes";
 import Routing from '../../util/Routing';
 import EditableComponent from "../misc/EditableComponent";
+import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 
 interface TermMetadataOwnProps {
     vocabulary: Vocabulary;
@@ -86,7 +87,7 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
                     <Label className='attribute-label'>{i18n('term.metadata.label')}</Label>
                 </Col>
                 <Col md={10}>
-                    {term.label}
+                    <Label>{term.label}</Label>
                 </Col>
             </Row>
             <Row>
@@ -94,7 +95,7 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
                     <Label className='attribute-label'>{i18n('term.metadata.comment')}</Label>
                 </Col>
                 <Col md={10}>
-                    {term.comment}
+                    <Label>{term.comment}</Label>
                 </Col>
             </Row>
             <Row>
@@ -121,6 +122,7 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
                     {this.renderItems(term.sources)}
                 </Col>
             </Row>
+            <UnmappedProperties properties={term.getUnmappedProperties()}/>
         </div>;
     }
 
@@ -142,7 +144,7 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
         }
         const source = Utils.sanitizeArray(items);
         return <ul className='term-items'>{source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
-            <OutgoingLink iri={item} label={item}/> : item}</li>)}</ul>;
+            <OutgoingLink iri={item} label={item}/> : <Label>{item}</Label>}</li>)}</ul>;
     }
 }
 

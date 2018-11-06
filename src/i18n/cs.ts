@@ -151,6 +151,9 @@ export default {
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',
 
+        'unmapped.properties.property': 'Atribut',
+        'unmapped.properties.value': 'Hodnota',
+
         'type.term': 'Pojem',
         'type.vocabulary': 'Slovník'
     }

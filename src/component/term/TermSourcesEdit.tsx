@@ -49,7 +49,7 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
 
     public render() {
         const i18n = this.props.i18n;
-        return <div>
+        return <div className='form-group'>
             <Label className='col-form-label-sm'>{i18n('term.metadata.source')}</Label>
             {this.renderSources()}
             <InputGroup>

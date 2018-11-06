@@ -45,4 +45,41 @@ describe('Term tests', () => {
         expect(result.types!.length).toEqual(1);
         expect(result.types!.indexOf(OntologicalVocabulary.TERM)).not.toEqual(-1);
     });
+
+    describe('getUnmappedProperties', () => {
+        it('returns map of unmapped properties with values in term', () => {
+            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
+            const data:TermData = {
+                "iri": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-5",
+                "label": "pojem 5",
+                "sources": [
+                    "https://kbss.felk.cvut.cz/web/kbss/dataset-descriptor-ontology"
+                ]
+            };
+            const value = 'value]';
+            data[extraProperty] = value;
+            const testTerm = new Term(data);
+            const result = testTerm.getUnmappedProperties();
+            expect(result.has(extraProperty)).toBeTruthy();
+            expect(result.get(extraProperty)).toEqual([value]);
+            expect(result.size).toEqual(1);
+        });
+
+        it('returns map of unmapped properties with values containing multiple values per property', () => {
+            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
+            const data:TermData = {
+                "iri": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-5",
+                "label": "pojem 5",
+                "sources": [
+                    "https://kbss.felk.cvut.cz/web/kbss/dataset-descriptor-ontology"
+                ]
+            };
+            const values = ['v1', 'v2', 'v3'];
+            data[extraProperty] = values;
+            const testTerm = new Term(data);
+            const result = testTerm.getUnmappedProperties();
+            expect(result.has(extraProperty)).toBeTruthy();
+            expect(result.get(extraProperty)).toEqual(values);
+        });
+    });
 });
