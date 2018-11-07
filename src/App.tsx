@@ -4,7 +4,7 @@ import TermItStore from './store/TermItStore';
 import IntlApp from "./IntlApp";
 
 const App: React.SFC = () => {
-    return <div className='app-container container-fluid'>
+    return <div className='app-container'>
         <Provider store={TermItStore}>
             <IntlApp/>
         </Provider>

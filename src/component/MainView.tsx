@@ -41,7 +41,9 @@ import {ThunkDispatch} from "../util/Types";
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
     loadUser: () => void,
-    logout: () => void
+    logout: () => void,
+    backgroundColor: string,
+    backgroundIsLight: boolean,
 }
 
 interface MainViewState {
@@ -49,6 +51,11 @@ interface MainViewState {
 }
 
 export class MainView extends React.Component<MainViewProps, MainViewState> {
+
+    public static defaultProps: Partial<MainViewProps> = {
+        backgroundColor: "#777",
+        backgroundIsLight: false,
+    };
 
     constructor(props: MainViewProps) {
         super(props);
@@ -81,11 +88,9 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         }
         return <div className='wrapper'>
             <header>
-                <Navbar color="light" light={true} expand={"md"} className={"d-flex"}>
-                    <NavbarBrand>
-                        <a className="navbar-brand" href={MainView.hashPath(Routes.dashboard.path)}>
-                            {Constants.APP_NAME}
-                        </a>
+                <Navbar light={this.props.backgroundIsLight} expand={"md"} className={"navbar-dark d-flex"} style={{background: this.props.backgroundColor}}>
+                    <NavbarBrand href={MainView.hashPath(Routes.dashboard.path)}>
+                        {Constants.APP_NAME}
                     </NavbarBrand>
 
                     <NavbarToggler onClick={this.toggle}/>
@@ -93,7 +98,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         <Nav navbar={true} className={"flex-grow-1"}>
                             <NavbarSearch/>
                         </Nav>
-                        <Nav navbar={true}>
+                        <Nav navbar={true} className={"flex-grow-1 justify-content-end"}>
                             <NavItem active={path === Routes.dashboard.path}>
                                 <NavLink
                                     href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>

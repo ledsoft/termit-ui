@@ -1,11 +1,11 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
 import Constants from '../../util/Constants';
 import './LanguageSelector.scss';
 import {connect} from 'react-redux';
 import TermItState from '../../model/TermItState';
 import {switchLanguage} from '../../action/SyncActions';
 import {ThunkDispatch} from '../../util/Types';
+import {Nav, NavItem, NavLink} from "reactstrap";
 
 interface LanguageSelectorProps {
     language: string,
@@ -29,15 +29,13 @@ export class LanguageSelector extends React.Component<LanguageSelectorProps> {
     };
 
     public render() {
-        const csCls = classNames('lang', {'selected': this.props.language === Constants.LANG.CS});
-        const enCls = classNames('lang', {'selected': this.props.language === Constants.LANG.EN});
-        return <li>
-            <div className='language-selector'>
-                <span className={csCls} onClick={this.onSelectCzech}>{Constants.LANG.CS.toUpperCase()}</span>
-                &nbsp;/&nbsp;
-                <span className={enCls} onClick={this.onSelectEnglish}>{Constants.LANG.EN.toUpperCase()}</span>
-            </div>
-        </li>;
+        return <NavItem className="language-selector">
+            <Nav>
+                <NavLink href="#" active={this.props.language === Constants.LANG.CS} onClick={this.onSelectCzech}>{Constants.LANG.CS.toUpperCase()}</NavLink>
+                <span className="navbar-text">&nbsp;/&nbsp;</span>
+                <NavLink href="#" active={this.props.language === Constants.LANG.EN} onClick={this.onSelectEnglish}>{Constants.LANG.EN.toUpperCase()}</NavLink>
+            </Nav>
+        </NavItem>;
     }
 }
 

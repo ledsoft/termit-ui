@@ -76,9 +76,9 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
 
     public render() {
         const i18n = this.props.i18n;
-        return <div className='search'>
+        return <div className='search flex-grow-1'>
             <InputGroup>
-                <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')} bsSize='sm'
+                <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')}
                        value={this.state.searchString} onChange={this.onChange}/>
                 <InputGroupAddon addonType='append' className='search-icon' title={i18n('main.search.tooltip')}>
                     <InputGroupText>
