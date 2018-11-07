@@ -27,8 +27,10 @@ export default class TermItState {
     public queryResults: { [key: string]: QueryResultIF };
     public createdTermsCounter: number;
     public facetedSearchResult: object;
+    public searchQuery: string;
     public types: { [key: string]: Term };
 
+    // FIXME: WTF: This constructor is never called?
     constructor() {
         this.loading = false;
         this.user = EMPTY_USER;
@@ -45,6 +47,7 @@ export default class TermItState {
         this.queryResults = {};
         this.createdTermsCounter = 0;
         this.facetedSearchResult = {};
+        this.searchQuery = '';
         this.types = {};
     }
 }

@@ -6,19 +6,21 @@ import {GoSearch} from "react-icons/go";
 import './NavbarSearch.scss';
 import SearchResult from "../../../model/SearchResult";
 import {connect} from "react-redux";
-import {search} from "../../../action/AsyncActions";
+import {search, updateSearchFilter} from "../../../action/AsyncActions";
 import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
 import Routing from '../../../util/Routing';
 import Vocabulary from "../../../util/VocabularyUtils";
 import {ThunkDispatch} from '../../../util/Types';
+import TermItState from "../../../model/TermItState";
 
 interface NavbarSearchProps extends HasI18n {
     search: (searchString: string) => Promise<object>;
+    updateSearchFilter: (searchString: string) => any;
+    searchString: string;
 }
 
 interface NavbarSearchState {
-    searchString: string;
     showResults: boolean;
     results: SearchResult[] | null;
 }
@@ -28,7 +30,6 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     constructor(props: NavbarSearchProps) {
         super(props);
         this.state = {
-            searchString: '',
             showResults: false,
             results: null
         };
@@ -36,14 +37,16 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
-        this.setState({searchString: value, showResults: value.length > 0});
-        this.search(value);
+        this.props.updateSearchFilter(value);
+        this.setState({showResults: value.length > 0});
+        if (value.length > 0) {
+            this.props.search(value).then((data: SearchResult[]) => this.setState({results: data}));
+        }
     };
 
-    public search = (str?: string) => {
-        const searchVal = str ? str : this.state.searchString;
-        if (searchVal.trim().length > 0) {
-            this.props.search(searchVal).then((data: SearchResult[]) => this.setState({results: data}));
+    private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            this.openSearchView();
         }
     };
 
@@ -52,7 +55,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     };
 
     private clear = () => {
-        this.setState({searchString: '', results: null});
+        this.setState({results: null});
     };
 
     public openResult = (result: SearchResult) => {
@@ -67,8 +70,9 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
 
     private openSearchView = () => {
         const query = new Map();
-        if (this.state.searchString.trim().length > 0) {
-            query.set('searchString', encodeURI(this.state.searchString));
+        const searchString = this.props.searchString.trim();
+        if (searchString.length > 0) {
+            query.set('searchString', encodeURI(searchString));
         }
         Routing.transitionTo(Routes.search, {query});
         this.clear();
@@ -79,7 +83,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         return <div className='search flex-grow-1'>
             <InputGroup>
                 <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')}
-                       value={this.state.searchString} onChange={this.onChange}/>
+                       value={this.props.searchString} onChange={this.onChange} onKeyPress={this.onKeyPress}/>
                 <InputGroupAddon addonType='append' className='search-icon' title={i18n('main.search.tooltip')}>
                     <InputGroupText>
                         <GoSearch onClick={this.openSearchView}/>
@@ -101,8 +105,13 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     }
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch) => {
+export default connect((state: TermItState) => {
     return {
-        search: (searchString: string) => dispatch(search(searchString, true))
+        searchString: state.searchQuery
+    };
+}, (dispatch: ThunkDispatch) => {
+    return {
+        search: (searchString: string) => dispatch(search(searchString, true)),
+        updateSearchFilter: (searchString: string) => dispatch(updateSearchFilter(searchString)),
     };
 })(injectIntl(withI18n(NavbarSearch)));

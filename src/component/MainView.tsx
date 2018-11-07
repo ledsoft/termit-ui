@@ -100,20 +100,16 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         </Nav>
                         <Nav navbar={true} className={"flex-grow-1 justify-content-end"}>
                             <NavItem active={path === Routes.dashboard.path}>
-                                <NavLink
-                                    href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>
+                                <NavLink href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>
                             </NavItem>
                             <NavItem active={path.startsWith(Routes.vocabularies.path)}>
-                                <NavLink
-                                    href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
+                                <NavLink href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
                             </NavItem>
                             <NavItem active={path === Routes.statistics.path}>
-                                <NavLink
-                                    href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
+                                <NavLink href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
                             </NavItem>
                             <NavItem active={path === Routes.facetedSearch.path}>
-                                <NavLink
-                                    href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
+                                <NavLink href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
                             </NavItem>
                         </Nav>
                         <Nav navbar={true}>

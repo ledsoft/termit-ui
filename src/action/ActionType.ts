@@ -49,6 +49,10 @@ export interface FileSelectingAction extends Action {
     fileIri: string | null
 }
 
+export interface SearchAction extends Action {
+    searchString: string
+}
+
 export default {
     FETCH_USER: 'FETCH_USER',
     LOGIN: 'LOGIN',
@@ -76,6 +80,7 @@ export default {
     EXECUTE_QUERY: 'EXECUTE_QUERY',
     FACETED_SEARCH: 'FACETED_SEARCH',
     SEARCH: 'SEARCH',
+    UPDATE_SEARCH_FILTER: 'UPDATE_SEARCH_FILTER',
 
     LOAD_DOCUMENT: 'LOAD_DOCUMENT',
     SELECT_FILE: 'SELECT_FILE',

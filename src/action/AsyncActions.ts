@@ -22,7 +22,7 @@ import MessageType from "../model/MessageType";
 import Term, {CONTEXT as TERM_CONTEXT, TermData} from "../model/Term";
 import FetchOptionsFunction from "../model/Functions";
 import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
-import ActionType from "./ActionType";
+import ActionType, {SearchAction} from "./ActionType";
 import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 
@@ -287,6 +287,13 @@ export function loadTypes(language: string) {
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
+}
+
+export function updateSearchFilter(searchString: string): SearchAction {
+    return {
+        type: ActionType.UPDATE_SEARCH_FILTER,
+        searchString,
+    }
 }
 
 export function search(searchString: string, disableLoading: boolean = false) {

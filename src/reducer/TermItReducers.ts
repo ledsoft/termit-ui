@@ -6,7 +6,7 @@ import ActionType, {
     ExecuteQueryAction, FacetedSearchAction,
     FailureAction,
     FileSelectingAction,
-    MessageAction,
+    MessageAction, SearchAction,
     SelectingTermsAction,
     SwitchLanguageAction
 } from '../action/ActionType';
@@ -209,6 +209,16 @@ function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<D
     }
 }
 
+function searchQuery(state: string = '', action: SearchAction): string
+{
+    switch (action.type) {
+        case ActionType.UPDATE_SEARCH_FILTER:
+            return action.searchString;
+        default:
+            return state;
+    }
+}
+
 function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuccess<Term[]>): {[key: string]: Term } {
     switch (action.type) {
         case ActionType.LOAD_TYPES:
@@ -242,6 +252,7 @@ const rootReducer = combineReducers<TermItState>({
     fileIri,
     fileContent,
     facetedSearchResult,
+    searchQuery,
     types
 });
 

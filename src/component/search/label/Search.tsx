@@ -3,7 +3,7 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../../hoc/withI18n";
 import {RouteComponentProps, withRouter} from "react-router";
 import {connect} from "react-redux";
-import {Button, Card, CardBody, CardHeader, Col, Form, FormGroup, Input, Row} from "reactstrap";
+import {Card, CardBody, CardHeader, Col, Row} from "reactstrap";
 import SearchResult from "../../../model/SearchResult";
 import './Search.scss';
 import {search} from "../../../action/AsyncActions";
@@ -11,13 +11,14 @@ import Vocabulary from "../../../util/VocabularyUtils";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
 import {ThunkDispatch} from '../../../util/Types';
+import TermItState from "../../../model/TermItState";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     search: (searchString: string) => Promise<object>;
+    searchString: string;
 }
 
 interface SearchState {
-    searchString: string;
     results: SearchResult[] | null;
 }
 
@@ -26,35 +27,32 @@ export class Search extends React.Component<SearchProps, SearchState> {
     constructor(props: SearchProps) {
         super(props);
         this.state = {
-            searchString: '',
             results: null
         };
     }
 
+    public componentDidUpdate(prevProps: SearchProps, prevState: SearchState) {
+        if (this.props.searchString !== prevProps.searchString) {
+            window.console.log('Search:', prevProps.searchString, ' -> ', this.props.searchString);
+            this.search(this.props.searchString);
+        }
+    }
+
+    public componentDidMount() {
+        this.search(this.props.searchString);
+    }
+
+    /*
+    // TODO: Parse URL on page load (or some time like that)
     public componentDidMount() {
         const query = this.props.location.search;
         const match = query.match(/searchString=(.+)/);
         if (match) {
             const searchString = match[1];
-            this.setState({searchString});
             this.search(searchString);
         }
     }
-
-    private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.currentTarget.value;
-        this.setState({searchString: value});
-    };
-
-    private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            this.search(this.state.searchString);
-        }
-    };
-
-    private onClick = () => {
-        this.search(this.state.searchString);
-    };
+    */
 
     public search = (searchString: string) => {
         if (searchString.trim().length > 0) {
@@ -73,26 +71,13 @@ export class Search extends React.Component<SearchProps, SearchState> {
     };
 
     private clear = () => {
-        this.setState({searchString: '', results: null});
+        this.setState({results: null});
     };
 
     public render() {
         const i18n = this.props.i18n;
         return <div>
             <h2 className='page-header'>{i18n('search.title')}</h2>
-            <Row>
-                <Col md={4}>
-                    <Form inline={true}>
-                        <FormGroup className='mb-2 mr-sm-2 search-input-container'>
-                            <Input type='search' bsSize='sm' className='search-input' value={this.state.searchString}
-                                   onChange={this.onChange} onKeyPress={this.onKeyPress}/>
-                        </FormGroup>
-                        <div className='mb-2'>
-                            <Button size='sm' color='primary' onClick={this.onClick}>{i18n('search.title')}</Button>
-                        </div>
-                    </Form>
-                </Col>
-            </Row>
             <Row>
                 {this.renderResults()}
             </Row>
@@ -103,8 +88,7 @@ export class Search extends React.Component<SearchProps, SearchState> {
         if (this.state.results === null) {
             return null;
         }
-        const title =
-            <h5>{this.props.formatMessage('search.results.title', {searchString: this.state.searchString})}</h5>;
+        const title = this.props.formatMessage('search.results.title', {searchString: this.props.searchString});
         let content;
         if (this.state.results.length === 0) {
             content = <Row><Col md={6}>
@@ -118,7 +102,7 @@ export class Search extends React.Component<SearchProps, SearchState> {
         }
         return <div className='container-fluid'>
             <hr/>
-            {title}
+            <h3>{title}</h3>
             {content}
         </div>;
     }
@@ -150,7 +134,11 @@ export class Search extends React.Component<SearchProps, SearchState> {
     }
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch) => {
+export default connect((state: TermItState) => {
+    return {
+        searchString: state.searchQuery,
+    };
+}, (dispatch: ThunkDispatch) => {
     return {
         search: (searchString: string) => dispatch(search(searchString))
     };
