@@ -190,6 +190,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(500, {
     //     message: 'Unable to create vocabulary!'
     // });
+    // Mock vocabulary IRI generator
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/identifier/).reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test/term-one', header);
     // Mock get vocabulary terms
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/find/).reply((config) => {
         if (!config.params.parentTerm) {
