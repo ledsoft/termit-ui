@@ -27,6 +27,7 @@ import SearchResult from "../../model/SearchResult";
 import {ErrorData} from "../../model/ErrorInfo";
 import Generator from "../../__tests__/environment/Generator";
 import {ThunkDispatch} from "../../util/Types";
+import FetchOptionsFunction from "../../model/Functions";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -266,6 +267,49 @@ describe('Async actions', () => {
                         expect(data[i].iri).toEqual(terms[i]['@id']);
                     }
                 });
+        });
+
+        it('provides parameters with request', () => {
+            const terms = require('../../rest-mock/terms');
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
+            const store = mockStore({});
+            const params:FetchOptionsFunction = {
+                searchString: 'test'
+            };
+            return Promise.resolve((store.dispatch as ThunkDispatch)(fetchVocabularyTerms(params, 'test-vocabulary'))).then(() => {
+                const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
+                expect(callConfig.getParams()).toEqual(params);
+            });
+        });
+
+        it('gets all terms when parent option is not specified', () => {
+            const terms = require('../../rest-mock/terms');
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
+            const store = mockStore({});
+            const vocabName = 'test-vocabulary';
+            return Promise.resolve((store.dispatch as ThunkDispatch)(fetchVocabularyTerms({}, vocabName))).then(() => {
+                const targetUri = (Ajax.get as jest.Mock).mock.calls[0][0];
+                expect(targetUri).toEqual(Constants.API_PREFIX + '/vocabularies/' + vocabName + '/terms');
+                const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
+                expect(callConfig.getParams()).toEqual({});
+            });
+        });
+
+        it('gets subterms when parent option is specified', () => {
+            const terms = require('../../rest-mock/terms');
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
+            const parentUri = 'http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-3';
+            const store = mockStore({});
+            const params:FetchOptionsFunction = {
+                optionID: parentUri
+            };
+            const vocabName = 'test-vocabulary';
+            return Promise.resolve((store.dispatch as ThunkDispatch)(fetchVocabularyTerms(params, vocabName))).then(() => {
+                const targetUri = (Ajax.get as jest.Mock).mock.calls[0][0];
+                expect(targetUri).toEqual(Constants.API_PREFIX + '/vocabularies/' + vocabName + '/terms/pojem-3/subterms');
+                const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
+                expect(callConfig.getParams()).toEqual({});
+            });
         });
     });
     describe('load types', () => {

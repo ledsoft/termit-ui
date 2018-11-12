@@ -168,57 +168,41 @@ export function loadVocabularies() {
     };
 }
 
-// TODO Add support for namespace
-export function loadDefaultTerms(normalizedName: string) {
+export function loadDefaultTerms(normalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.LOAD_DEFAULT_TERMS
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(fetchVocabularyTerms({limit: 100, offset: 0, searchString: '', optionID: ''}, normalizedName))
+        dispatch(fetchVocabularyTerms({}, normalizedName, namespace))
             .then((result: Term[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
     }
 
 }
 
-// TODO Add support for namespace
-export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
+export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
+        let url: string;
+        if (fetchOptions.optionID) {
+            url = Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/' + VocabularyUtils.getFragment(fetchOptions.optionID) + '/subterms'
+        } else {
+            url = Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms';
+        }
+        return Ajax.get(url,
             params({
-                label: fetchOptions.searchString,
-                parentTerm: fetchOptions.optionID,
+                searchString: fetchOptions.searchString,
                 limit: fetchOptions.limit,
                 offset: fetchOptions.offset
-            }))
+            }).param('namespace', namespace))
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: TermData[]) => data.map(d => new Term(d)))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return [];
-            });
-    };
-}
-
-// TODO Add support for namespace, unused?
-export function fetchVocabularySubTerms(termNormalizedNamed: string, vocabularyNormalizedName: string) {
-    const action = {
-        type: ActionType.FETCH_VOCABULARY_TERMS
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedNamed + '/subterms')
-            .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: TermData[]) => data.map(d => new Term(d)))
-            .catch((error: ErrorData) => {
-                dispatch(asyncActionFailure(action, error));
-                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-                return []
             });
     };
 }

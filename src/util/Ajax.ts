@@ -32,6 +32,13 @@ class RequestConfigBuilder {
         return this;
     }
 
+    public param(paramName: string, paramValue?: string): RequestConfigBuilder {
+        const p = {};
+        p[paramName] = paramValue;
+        this.mParams = Object.assign({}, this.mParams, p);
+        return this;
+    }
+
     public accept(value: string): RequestConfigBuilder {
         this.mAccept = value;
         return this;
@@ -64,6 +71,10 @@ export function params(value: {}): RequestConfigBuilder {
 
 export function accept(value: string): RequestConfigBuilder {
     return new RequestConfigBuilder().accept(value);
+}
+
+export function param(paramName: string, value: string) {
+    return new RequestConfigBuilder().param(paramName, value);
 }
 
 export class Ajax {
@@ -192,15 +203,18 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // });
     // Mock vocabulary IRI generator
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/identifier/).reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test/term-one', header);
-    // Mock get vocabulary terms
-    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/find/).reply((config) => {
-        if (!config.params.parentTerm) {
-            return [200, require('../rest-mock/terms'), header];
-        } else if (config.params.parentTerm === 'http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4') {
+    // Mock getting subterms of a vocabulary term
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+\/subterms/).reply((config) => {
+        const url: string = config.url!;
+        if (url.indexOf('pojem-4')) {
             return [200, require('../rest-mock/subterms'), header];
         } else {
             return [200, [], header];
         }
+    });
+    // Mock get vocabulary terms
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply((config) => {
+        return [200, require('../rest-mock/terms'), header];
     });
 
     // Mock term label uniqueness in vocabulary check
