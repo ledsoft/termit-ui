@@ -1,58 +1,27 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {Button, ButtonToolbar, Col, Label, Row} from "reactstrap";
+import {Button, Col, Label, Row} from "reactstrap";
 import Term from "../../model/Term";
 import OutgoingLink from "../misc/OutgoingLink";
 import "./TermMetadata.scss";
-import TermMetadataEdit from "./TermMetadataEdit";
-import {GoPencil} from "react-icons/go";
-import {connect} from 'react-redux';
-import {ThunkDispatch} from "../../util/Types";
-import {loadDefaultTerms, loadVocabularyTerm, updateTerm} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import Routes from "../../util/Routes";
 import Routing from '../../util/Routing';
-import EditableComponent from "../misc/EditableComponent";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 
-interface TermMetadataOwnProps {
+interface TermMetadataProps extends HasI18n {
     vocabulary: Vocabulary;
     term: Term;
 }
 
-interface TermMetadataDispatchProps {
-    updateTerm: (term: Term, vocabulary: Vocabulary) => Promise<any>;
-    loadTerm: (term: Term, vocabulary: Vocabulary) => void;
-    reloadVocabularyTerms: (vocabulary: Vocabulary) => void;
-}
-
-type TermMetadataProps = TermMetadataOwnProps & TermMetadataDispatchProps & HasI18n;
-
-export class TermMetadata extends EditableComponent<TermMetadataProps> {
+export class TermMetadata extends React.Component<TermMetadataProps> {
 
     constructor(props: TermMetadataProps) {
         super(props);
-        this.state = {
-            edit: false
-        };
     }
-
-    public componentDidUpdate(prevProps: TermMetadataProps) {
-        if (this.props.term !== prevProps.term) {
-            this.onCloseEdit();
-        }
-    }
-
-    public onSave = (term: Term) => {
-        this.props.updateTerm(term, this.props.vocabulary).then(() => {
-            this.props.loadTerm(term, this.props.vocabulary);
-            this.props.reloadVocabularyTerms(this.props.vocabulary);
-            this.onCloseEdit();
-        });
-    };
 
     public openSubTerm = (term: Term) => {
         Routing.transitionTo(Routes.vocabularyTermDetail, {
@@ -61,12 +30,6 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
     };
 
     public render() {
-        return this.state.edit ?
-            <TermMetadataEdit save={this.onSave} term={this.props.term} vocabulary={this.props.vocabulary}
-                              cancel={this.onCloseEdit}/> : this.renderMetadata();
-    }
-
-    private renderMetadata() {
         const i18n = this.props.i18n;
         const term = this.props.term;
         return <div className='metadata-panel'>
@@ -76,9 +39,6 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
                 </Col>
                 <Col md={10}>
                     <OutgoingLink iri={term.iri} label={term.iri}/>
-                    <ButtonToolbar className='pull-right clearfix'>
-                        <Button size='sm' color='info' onClick={this.onEdit} title={i18n('edit')}><GoPencil/></Button>
-                    </ButtonToolbar>
                 </Col>
             </Row>
             <Row>
@@ -147,12 +107,4 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
     }
 }
 
-export default connect<{}, TermMetadataDispatchProps, TermMetadataOwnProps>((state: {}, ownProps: TermMetadataOwnProps): {} => {
-    return {...ownProps};
-}, (dispatch: ThunkDispatch): TermMetadataDispatchProps => {
-    return {
-        updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary)),
-        loadTerm: (term: Term, vocabulary: Vocabulary) => dispatch(loadVocabularyTerm(VocabularyUtils.getFragment(term.iri), VocabularyUtils.getFragment(vocabulary.iri))),
-        reloadVocabularyTerms: (vocabulary: Vocabulary) => dispatch(loadDefaultTerms(VocabularyUtils.getFragment(vocabulary.iri)))
-    };
-})(injectIntl(withI18n(TermMetadata)));
+export default injectIntl(withI18n(TermMetadata));

@@ -13,6 +13,8 @@ const ctx = {
 
 export const CONTEXT = Object.assign(ctx);
 
+const MAPPED_PROPERTIES = ['@context', 'iri', 'label', 'comment', 'subTerms', 'sources', 'types', 'parent', 'plainSubTerms'];
+
 export interface TermData extends AssetData {
     label: string;
     comment?: string;
@@ -49,6 +51,20 @@ export default class Term extends Asset implements TermData {
         });
         delete result.plainSubTerms;
         return result;
+    }
+
+    public get unmappedProperties(): Map<string, string[]> {
+        const map = new Map<string, string[]>();
+        Object.getOwnPropertyNames(this).filter(p => MAPPED_PROPERTIES.indexOf(p) === -1)
+            .forEach(prop => {
+                const values: string[] = Utils.sanitizeArray(this[prop]);
+                map.set(prop, values);
+            });
+        return map;
+    }
+
+    public set unmappedProperties(properties: Map<string, string[]>) {
+        properties.forEach((value, key) => this[key] = value);
     }
 
     public toJsonLd(): TermData {

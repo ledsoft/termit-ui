@@ -378,3 +378,24 @@ export function updateTerm(term: Term, vocabulary: Vocabulary) {
             });
     };
 }
+
+export function updateVocabulary(vocabulary: Vocabulary) {
+    const action = {
+        type: ActionType.UPDATE_VOCABULARY
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        const vocabularyIri = VocabularyUtils.create(vocabulary.iri);
+        const reqUrl = Constants.API_PREFIX + '/vocabularies/' + vocabularyIri.fragment;
+        return Ajax.put(reqUrl, content(vocabulary.toJsonLd()).params({namespace: vocabularyIri.namespace}))
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                dispatch(loadVocabulary(vocabularyIri));
+                return dispatch(publishMessage(new Message({messageId: 'vocabulary.updated.message'}, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}

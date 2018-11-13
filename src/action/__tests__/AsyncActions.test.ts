@@ -3,12 +3,16 @@ import {
     createVocabulary,
     createVocabularyTerm,
     fetchVocabularyTerms,
-    loadDefaultTerms, loadTypes, loadUser,
+    loadDefaultTerms,
+    loadTypes,
+    loadUser,
     loadVocabularies,
     loadVocabulary,
     loadVocabularyTerm,
     login,
-    search, updateTerm
+    search,
+    updateTerm,
+    updateVocabulary
 } from '../AsyncActions';
 import Constants from '../../util/Constants';
 import Ajax from '../../util/Ajax';
@@ -18,7 +22,7 @@ import Routing from '../../util/Routing';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
 import Vocabulary2 from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
-import ActionType, {AsyncAction, AsyncActionSuccess,} from "../ActionType";
+import ActionType, {AsyncAction, AsyncActionSuccess, MessageAction,} from "../ActionType";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
 import SearchResult from "../../model/SearchResult";
 import {ErrorData} from "../../model/ErrorInfo";
