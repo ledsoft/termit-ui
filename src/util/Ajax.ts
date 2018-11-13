@@ -213,7 +213,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         }
     });
     // Mock get vocabulary terms
-    mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply((config) => {
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply(() => {
         return [200, require('../rest-mock/terms'), header];
     });
 
