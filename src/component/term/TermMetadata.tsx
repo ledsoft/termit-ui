@@ -9,13 +9,14 @@ import TermMetadataEdit from "./TermMetadataEdit";
 import {GoPencil} from "react-icons/go";
 import {connect} from 'react-redux';
 import {ThunkDispatch} from "../../util/Types";
-import {getVocabularyTermByName, loadDefaultTerms, updateTerm} from "../../action/AsyncActions";
+import {loadDefaultTerms, loadVocabularyTerm, updateTerm} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import Routes from "../../util/Routes";
 import Routing from '../../util/Routing';
 import EditableComponent from "../misc/EditableComponent";
+import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 
 interface TermMetadataOwnProps {
     vocabulary: Vocabulary;
@@ -85,7 +86,7 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
                     <Label className='attribute-label'>{i18n('term.metadata.label')}</Label>
                 </Col>
                 <Col md={10}>
-                    {term.label}
+                    <Label>{term.label}</Label>
                 </Col>
             </Row>
             <Row>
@@ -93,7 +94,7 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
                     <Label className='attribute-label'>{i18n('term.metadata.comment')}</Label>
                 </Col>
                 <Col md={10}>
-                    {term.comment}
+                    <Label>{term.comment}</Label>
                 </Col>
             </Row>
             <Row>
@@ -120,6 +121,7 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
                     {this.renderItems(term.sources)}
                 </Col>
             </Row>
+            <UnmappedProperties properties={term.unmappedProperties}/>
         </div>;
     }
 
@@ -141,7 +143,7 @@ export class TermMetadata extends EditableComponent<TermMetadataProps> {
         }
         const source = Utils.sanitizeArray(items);
         return <ul className='term-items'>{source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
-            <OutgoingLink iri={item} label={item}/> : item}</li>)}</ul>;
+            <OutgoingLink iri={item} label={item}/> : <Label>{item}</Label>}</li>)}</ul>;
     }
 }
 
@@ -150,7 +152,7 @@ export default connect<{}, TermMetadataDispatchProps, TermMetadataOwnProps>((sta
 }, (dispatch: ThunkDispatch): TermMetadataDispatchProps => {
     return {
         updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary)),
-        loadTerm: (term: Term, vocabulary: Vocabulary) => dispatch(getVocabularyTermByName(VocabularyUtils.getFragment(term.iri), VocabularyUtils.getFragment(vocabulary.iri))),
+        loadTerm: (term: Term, vocabulary: Vocabulary) => dispatch(loadVocabularyTerm(VocabularyUtils.getFragment(term.iri), VocabularyUtils.getFragment(vocabulary.iri))),
         reloadVocabularyTerms: (vocabulary: Vocabulary) => dispatch(loadDefaultTerms(VocabularyUtils.getFragment(vocabulary.iri)))
     };
 })(injectIntl(withI18n(TermMetadata)));

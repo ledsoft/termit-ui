@@ -73,7 +73,7 @@ export function accept(value: string): RequestConfigBuilder {
     return new RequestConfigBuilder().accept(value);
 }
 
-export function param(paramName: string, value: string) {
+export function param(paramName: string, value?: string) {
     return new RequestConfigBuilder().param(paramName, value);
 }
 

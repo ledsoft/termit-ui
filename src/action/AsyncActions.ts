@@ -4,9 +4,10 @@ import {
     asyncActionRequest,
     asyncActionSuccess,
     asyncActionSuccessWithPayload,
-    publishMessage, selectVocabularyTerm
+    publishMessage,
+    selectVocabularyTerm
 } from './SyncActions';
-import Ajax, {content, params} from '../util/Ajax';
+import Ajax, {content, param, params} from '../util/Ajax';
 import {ThunkDispatch} from '../util/Types';
 import Routing from '../util/Routing';
 import Constants from '../util/Constants';
@@ -207,15 +208,13 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
     };
 }
 
-// TODO server return http code 406
-// TODO We need to support custom namespace as well
-export function getVocabularyTermByName(termNormalizedName: string, vocabularyNormalizedName: string) {
+export function loadVocabularyTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
     const action = {
-        type: ActionType.FETCH_VOCABULARY_TERMS
+        type: ActionType.LOAD_TERM
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedName)
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedName, param('namespace', namespace))
             .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
             .then((data: TermData) => dispatch(selectVocabularyTerm(new Term(data))))
             .catch((error: ErrorData) => {
