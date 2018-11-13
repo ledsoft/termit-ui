@@ -218,8 +218,8 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
             comment: data.optionDescription as string,
             subTerms: children,
             parent: parent as string,
-            types: [data.typeOption.iri as string],
-            sources: [data.optionSource as string],
+            types: data.typeOption ? [data.typeOption.iri] : [],
+            sources: [data.optionSource],
         }), this.props.match.params.name);
     }
 
