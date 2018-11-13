@@ -10,7 +10,7 @@ import TermItState from "../../model/TermItState";
 import Term from "../../model/Term";
 import {RouteComponentProps, withRouter} from "react-router";
 import Routes from "../../util/Routes";
-import {getVocabularyTermByName} from "../../action/AsyncActions";
+import {loadVocabularyTerm} from "../../action/AsyncActions";
 import {ThunkDispatch} from '../../util/Types';
 import TermMetadata from '../term/TermMetadata';
 
@@ -84,6 +84,6 @@ export default withRouter(connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        getVocabularyTermByName: (termNormalizedName: string, vocabularyNormalizedName: string) => dispatch(getVocabularyTermByName(termNormalizedName, vocabularyNormalizedName))
+        getVocabularyTermByName: (termNormalizedName: string, vocabularyNormalizedName: string) => dispatch(loadVocabularyTerm(termNormalizedName, vocabularyNormalizedName))
     };
 })(injectIntl(withI18n(VocabularyDetailTabPanel))));
