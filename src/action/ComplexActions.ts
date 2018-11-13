@@ -2,6 +2,8 @@ import Authentication from '../util/Authentication';
 import {userLogout} from './SyncActions';
 import Routes from '../util/Routes';
 import Routing from '../util/Routing';
+import Vocabulary from "../model/Vocabulary";
+import {IRI} from "../util/VocabularyUtils";
 import {ThunkDispatch} from '../util/Types';
 
 /*
