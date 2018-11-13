@@ -3,7 +3,8 @@ import ActionType, {
     AsyncAction,
     AsyncActionSuccess,
     ClearErrorAction,
-    ExecuteQueryAction, FacetedSearchAction,
+    ExecuteQueryAction,
+    FacetedSearchAction,
     FailureAction,
     FileSelectingAction,
     MessageAction,
@@ -130,10 +131,13 @@ function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: A
     }
 }
 
-function selectedTerm(state: Term | null = null, action: SelectingTermsAction) {
+function selectedTerm(state: Term | null = null, action: SelectingTermsAction | AsyncActionSuccess<Term>) {
     switch (action.type) {
         case ActionType.SELECT_VOCABULARY_TERM:
-            return action.selectedTerms;
+            return (action as SelectingTermsAction).selectedTerms;
+        case ActionType.LOAD_TERM:
+            const aa = action as AsyncActionSuccess<Term>;
+            return aa.status === AsyncActionStatus.SUCCESS ? aa.payload : state;
         default:
             return state;
     }
@@ -209,7 +213,7 @@ function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<D
     }
 }
 
-function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuccess<Term[]>): {[key: string]: Term } {
+function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuccess<Term[]>): { [key: string]: Term } {
     switch (action.type) {
         case ActionType.LOAD_TYPES:
             if (action.status === AsyncActionStatus.SUCCESS) {

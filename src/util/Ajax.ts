@@ -203,6 +203,18 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // });
     // Mock vocabulary IRI generator
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/identifier/).reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test/term-one', header);
+    // Mock getting vocabulary term
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+/).reply((config) => {
+        const url: string = config.url!;
+        const termId = url.substring(url.lastIndexOf('/') + 1);
+        const terms = require('../rest-mock/terms');
+        for (const t of terms) {
+            if (t['@id'].indexOf(termId) !== -1) {
+                return [200, t, header];
+            }
+        }
+        return [404, undefined, header];
+    });
     // Mock getting subterms of a vocabulary term
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+\/subterms/).reply((config) => {
         const url: string = config.url!;

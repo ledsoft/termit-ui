@@ -4,8 +4,7 @@ import {
     asyncActionRequest,
     asyncActionSuccess,
     asyncActionSuccessWithPayload,
-    publishMessage,
-    selectVocabularyTerm
+    publishMessage
 } from './SyncActions';
 import Ajax, {content, param, params} from '../util/Ajax';
 import {ThunkDispatch} from '../util/Types';
@@ -213,14 +212,13 @@ export function loadVocabularyTerm(termNormalizedName: string, vocabularyNormali
         type: ActionType.LOAD_TERM
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action, true));
+        dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedName, param('namespace', namespace))
             .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
-            .then((data: TermData) => dispatch(selectVocabularyTerm(new Term(data))))
+            .then((data: TermData) => dispatch(asyncActionSuccessWithPayload(action, new Term(data))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
-                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-                return null
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
 }

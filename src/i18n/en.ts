@@ -149,6 +149,7 @@ export default {
         'annotation.term.occurrence.scoreLabel': 'Score:',
 
         'message.welcome': 'Welcome to TermIt!',
+        'link.external.title': 'Open as link in a new browser tab',
 
         'type.term': 'Term',
         'type.vocabulary': 'Vocabulary'

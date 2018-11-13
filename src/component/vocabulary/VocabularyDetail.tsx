@@ -15,6 +15,7 @@ import Routes from "../../util/Routes";
 import {IRI} from "../../util/VocabularyUtils";
 import {ThunkDispatch} from '../../util/Types';
 import CreateTerm from "../term/CreateTerm";
+import TermDetail from "../term/TermDetail";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
@@ -51,7 +52,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
                 <Col md={8}>
                     <Switch>
                         <Route path={Routes.vocabularyDetail.path} component={VocabularyDetailTabPanel}/>
-                        <Route path={Routes.vocabularyTermDetail.path} component={VocabularyDetailTabPanel}/>
+                        <Route path={Routes.vocabularyTermDetail.path} component={TermDetail}/>
                         <Route path={Routes.createVocabularyTerm.path} component={CreateTerm}/>
                     </Switch>
                 </Col>
