@@ -26,7 +26,12 @@ export class TermDetail extends React.Component<TermDetailProps> {
     private loadTerm(): void {
         const vocabularyName: string = this.props.match.params.name;
         const termName: string = this.props.match.params.termName;
-        this.props.loadTerm(termName, vocabularyName);
+        const match = this.props.location.search.match(/namespace=(.+)/);
+        let namespace: string | undefined;
+        if (match) {
+            namespace = match[1];
+        }
+        this.props.loadTerm(termName, vocabularyName, namespace);
     }
 
     public componentDidUpdate(prevProps: TermDetailProps) {
@@ -47,7 +52,6 @@ export class TermDetail extends React.Component<TermDetailProps> {
             <CardBody>
                 <TermMetadata term={this.props.term!} vocabulary={this.props.vocabulary!}/>
             </CardBody>
-
         </Card>
     }
 }
