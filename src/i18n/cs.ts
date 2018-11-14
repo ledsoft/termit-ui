@@ -75,7 +75,7 @@ export default {
         'vocabulary.detail.subtitle': 'Vytvořen autorem {author} {created}',
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Detail pojmu',
-        'vocabulary.detail.tabs.annotations' : 'Dokumenty',
+        'vocabulary.detail.files' : 'Soubory',
         'vocabulary.detail.noTermSelected': 'Vyberte pojem ve stromečku vlevo.',
 
         'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',

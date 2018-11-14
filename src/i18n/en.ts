@@ -75,7 +75,7 @@ export default {
         'vocabulary.detail.subtitle': 'Created by {author} on {created}',
         'vocabulary.detail.tabs.metadata': 'Metadata',
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
-        'vocabulary.detail.tabs.annotations' : 'Documents',
+        'vocabulary.detail.files' : 'Files',
         'vocabulary.detail.noTermSelected': 'Start by selecting a term in the tree on the left.',
 
         'vocabulary.term.created.message': 'Term successfully created.',

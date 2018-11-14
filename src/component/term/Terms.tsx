@@ -34,7 +34,6 @@ export class Terms extends React.Component<GlossaryTermsProps> {
 
     constructor(props: GlossaryTermsProps) {
         super(props);
-        this._valueRenderer = this._valueRenderer.bind(this);
         this._onCreateClick = this._onCreateClick.bind(this);
         this._onChange = this._onChange.bind(this);
         this.fetchOptions = this.fetchOptions.bind(this);
@@ -50,7 +49,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
         this.props.selectVocabularyTerm(null)
     }
 
-    private _valueRenderer(option: Term) {
+    private static _valueRenderer(option: Term) {
         return option.label
     }
 
@@ -86,7 +85,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
             isMenuOpen={true}
             multi={false}
             showSettings={false}
-            valueRenderer={this._valueRenderer}
+            valueRenderer={Terms._valueRenderer}
         />;
 
         actions.push(
