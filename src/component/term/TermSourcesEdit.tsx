@@ -50,7 +50,7 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
     public render() {
         const i18n = this.props.i18n;
         return <div>
-            <Label className='col-form-label-sm'>{i18n('term.metadata.source')}</Label>
+            <Label className='attribute-label'>{i18n('term.metadata.source')}</Label>
             {this.renderSources()}
             <InputGroup>
                 <Input bsSize='sm' value={this.state.inputValue} onChange={this.onChange} onKeyPress={this.onKeyPress}

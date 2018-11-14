@@ -51,7 +51,7 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
     public render() {
         const selected = this.resolveSelectedSubTerms();
         return <FormGroup>
-            <Label size='sm'>{this.props.i18n('term.metadata.subTerms')}</Label>
+            <Label className='attribute-label'>{this.props.i18n('term.metadata.subTerms')}</Label>
             <IntelligentTreeSelect className='term-edit'
                                    onChange={this.onChange}
                                    value={selected}

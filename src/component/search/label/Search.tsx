@@ -104,7 +104,7 @@ export class Search extends AbstractSearch<SearchProps> {
 
     private renderVocabularies() {
         return <Card className='search-result-container'>
-            <CardHeader tag='h5' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
+            <CardHeader tag='h4' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
             <CardBody>
                 {this.state.results!.filter(r => r.hasType(Vocabulary.VOCABULARY)).map(r => {
                     return <span key={r.iri} className='search-result-item search-result-link btn-link'
@@ -117,7 +117,7 @@ export class Search extends AbstractSearch<SearchProps> {
 
     private renderTerms() {
         return <Card className='search-result-container'>
-            <CardHeader tag='h5' color='info'>{this.props.i18n('search.pojem')}</CardHeader>
+            <CardHeader tag='h4' color='info'>{this.props.i18n('search.pojem')}</CardHeader>
             <CardBody>
                 {this.state.results!.filter(r => r.hasType(Vocabulary.TERM)).map(r => {
                     return <span key={r.iri} className='search-result-item search-result-link btn-link'

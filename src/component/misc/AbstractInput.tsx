@@ -20,7 +20,7 @@ export interface AbstractInputProps {
 export default class AbstractInput<T extends AbstractInputProps> extends React.Component<T> {
 
     protected renderLabel() {
-        return this.props.label ? <Label size='sm'>{this.props.label}</Label> : null;
+        return this.props.label ? <Label className='attribute-label'>{this.props.label}</Label> : null;
     }
 
     protected renderHelp() {
