@@ -14,6 +14,7 @@ import PanelWithActions from "../misc/PanelWithActions";
 import {GoPencil} from "react-icons/go";
 import EditableComponent from "../misc/EditableComponent";
 import TermMetadataEdit from "./TermMetadataEdit";
+import Utils from "../../util/Utils";
 
 interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
@@ -39,11 +40,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
     private loadTerm(): void {
         const vocabularyName: string = this.props.match.params.name;
         const termName: string = this.props.match.params.termName;
-        const match = this.props.location.search.match(/namespace=(.+)/);
-        let namespace: string | undefined;
-        if (match) {
-            namespace = match[1];
-        }
+        const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
         this.props.loadTerm(termName, vocabularyName, namespace);
     }
 

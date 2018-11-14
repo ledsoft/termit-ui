@@ -28,7 +28,7 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
     };
 
     private onSave = () => {
-        const newVocabulary = Object.assign({}, this.props.vocabulary, {label: this.state.label});
+        const newVocabulary = new Vocabulary(Object.assign({}, this.props.vocabulary, {label: this.state.label}));
         this.props.save(newVocabulary);
     };
 
@@ -37,12 +37,12 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
         return <div className='metadata-panel'>
             <Form>
                 <Row>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <CustomInput label={i18n('vocabulary.iri')} value={this.props.vocabulary.iri}
-                                         disabled={true}/>
-                        </Col>
-                    </Row>
+                    <Col xl={6} md={12}>
+                        <CustomInput label={i18n('vocabulary.iri')} value={this.props.vocabulary.iri}
+                                     disabled={true}/>
+                    </Col>
+                </Row>
+                <Row>
                     <Col xl={6} md={12}>
                         <CustomInput name='vocabulary-edit-name' label={i18n('vocabulary.name')}
                                      value={this.state.label} onChange={this.onChange}/>

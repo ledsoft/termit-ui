@@ -201,7 +201,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // mock.onPost(Constants.API_PREFIX + '/vocabularies').reply(500, {
     //     message: 'Unable to create vocabulary!'
     // });
-    // Mock vocabulary IRI generator
+    // Mock term IRI generator
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/identifier/).reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test/term-one', header);
     // Mock getting vocabulary term
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+/).reply((config) => {
@@ -241,6 +241,9 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE
     }));
+    // Mock vocabulary update endpoint
+    mock.onPut(/\/rest\/vocabularies\/.+/).reply(204, undefined, header);
+
     mock.onGet(/\/rest\/query/).reply((config) => {
         if (config.params.query.includes("?asset")) {
             return [200, require('../rest-mock/assetCount'), header]

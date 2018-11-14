@@ -2,27 +2,18 @@ import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
-import {Button, ButtonToolbar, Col, Label, Row} from "reactstrap";
+import {Col, Label, Row} from "reactstrap";
 import OutgoingLink from "../misc/OutgoingLink";
 import DocumentTab from "../document/DocumentTab";
-import {GoPencil} from "react-icons/go";
-import EditableComponent from "../misc/EditableComponent";
 
 interface VocabularyMetadataProps extends HasI18n {
     vocabulary: Vocabulary
 }
 
-class VocabularyMetadata extends EditableComponent<VocabularyMetadataProps> {
+class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
     constructor(props: VocabularyMetadataProps) {
         super(props);
-        this.state = {
-            edit: false
-        };
     }
-
-    public onSave = (vocabulary: Vocabulary) => {
-        // TODO
-    };
 
     public render() {
         const i18n = this.props.i18n;
@@ -34,9 +25,6 @@ class VocabularyMetadata extends EditableComponent<VocabularyMetadataProps> {
                 </Col>
                 <Col md={10}>
                     <OutgoingLink iri={vocabulary.iri} label={vocabulary.iri}/>
-                    <ButtonToolbar className='pull-right clearfix'>
-                        <Button size='sm' color='info' title={i18n('edit')} onClick={this.onEdit}><GoPencil/></Button>
-                    </ButtonToolbar>
                 </Col>
             </Row>
             <Row>
