@@ -5,7 +5,7 @@ import createMemoryHistory from "history/createMemoryHistory";
 import {shallow} from "enzyme";
 import {TermDetail} from "../TermDetail";
 import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
-import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import TermMetadata from "../TermMetadata";
 import {Button} from "reactstrap";
 import TermMetadataEdit from "../TermMetadataEdit";
@@ -62,7 +62,7 @@ describe('TermDetail', () => {
         shallow(<TermDetail term={null} vocabulary={null} loadTerm={onLoad} updateTerm={onUpdate}
                             reloadVocabularyTerms={onLoadTerms}
                             history={history} location={location} match={match}
-                            i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
+                            {...intlFunctions()} {...intlDataForShallow()}/>);
         expect(onLoad).toHaveBeenCalledWith(normalizedTermName, normalizedVocabName, undefined);
     });
 
@@ -72,7 +72,7 @@ describe('TermDetail', () => {
         shallow(<TermDetail term={null} vocabulary={null} loadTerm={onLoad} updateTerm={onUpdate}
                             reloadVocabularyTerms={onLoadTerms} history={history}
                             location={location} match={match}
-                            i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
+                            {...intlFunctions()} {...intlDataForShallow()}/>);
         expect(onLoad).toHaveBeenCalledWith(normalizedTermName, normalizedVocabName, namespace);
     });
 
@@ -81,7 +81,7 @@ describe('TermDetail', () => {
                                                   updateTerm={onUpdate}
                                                   reloadVocabularyTerms={onLoadTerms} history={history}
                                                   location={location} match={match}
-                                                  i18n={i18n} formatMessage={formatMessage}/>);
+                                                  {...intlFunctions()}/>);
         expect(wrapper.find(TermMetadata).exists()).toBeTruthy();
     });
 
@@ -90,7 +90,7 @@ describe('TermDetail', () => {
                                                   updateTerm={onUpdate}
                                                   reloadVocabularyTerms={onLoadTerms} history={history}
                                                   location={location} match={match}
-                                                  i18n={i18n} formatMessage={formatMessage}/>);
+                                                  {...intlFunctions()}/>);
         wrapper.find(Button).simulate('click');
         expect(wrapper.find(TermMetadataEdit).exists()).toBeTruthy();
     });
@@ -99,7 +99,7 @@ describe('TermDetail', () => {
         const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
-                                            i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
+                                            {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as TermDetail).onSave(term);
         expect(onUpdate).toHaveBeenCalledWith(term, vocabulary);
     });
@@ -109,7 +109,7 @@ describe('TermDetail', () => {
                                             updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
-                                            i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
+                                            {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as TermDetail).onEdit();
         (wrapper.instance() as TermDetail).onSave(term);
         return Promise.resolve().then(() => {
@@ -122,7 +122,7 @@ describe('TermDetail', () => {
         const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
-                                            i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
+                                            {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as TermDetail).onSave(term);
         return Promise.resolve().then(() => {
             expect(onLoad).toHaveBeenCalledWith(normalizedTermName, normalizedVocabName, undefined);
@@ -133,7 +133,7 @@ describe('TermDetail', () => {
         const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
-                                            i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
+                                            {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as TermDetail).onEdit();
         wrapper.update();
         expect((wrapper.instance() as TermDetail).state.edit).toBeTruthy();
@@ -155,22 +155,23 @@ describe('TermDetail', () => {
         const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
-                                            i18n={i18n} formatMessage={formatMessage} {...intlDataForShallow()}/>);
+                                            {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as TermDetail).onSave(term);
         return Promise.resolve().then(() => {
             expect(onLoadTerms).toHaveBeenCalledWith(normalizedVocabName, undefined);
         });
     });
 
-    it.skip('does not render edit button when editing', () => {
+    it('does not render edit button when editing', () => {
         const wrapper = mountWithIntl(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad}
                                                   updateTerm={onUpdate}
                                                   reloadVocabularyTerms={onLoadTerms} history={history}
                                                   location={location} match={match}
-                                                  i18n={i18n} formatMessage={formatMessage}/>);
-        wrapper.find(Button).simulate('click');
-        wrapper.update();
-        expect(wrapper.find(Button).exists()).toBeFalsy();
-        // TODO
+                                                  {...intlFunctions()}/>);
+        const editButton = wrapper.find(Button).findWhere(w => w.key() === 'term-detail-edit');
+        expect(editButton.exists()).toBeTruthy();
+        editButton.simulate('click');
+        const editButtonAgain = wrapper.find(Button).findWhere(w => w.key() === 'term-detail-edit');
+        expect(editButtonAgain.exists()).toBeFalsy();
     });
 });

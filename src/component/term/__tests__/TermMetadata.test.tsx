@@ -3,7 +3,7 @@ import Term from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {TermMetadata} from "../TermMetadata";
-import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Vocabulary from "../../../model/Vocabulary";
 import OutgoingLink from "../../misc/OutgoingLink";
 
@@ -28,8 +28,7 @@ describe('TermMetadata', () => {
     it('renders sub terms as internal and external links', () => {
         const iri = Generator.generateUri();
         term.subTerms = [{iri}];
-        const wrapper = mountWithIntl(<TermMetadata vocabulary={vocabulary} term={term} i18n={i18n}
-                                                    formatMessage={formatMessage}/>);
+        const wrapper = mountWithIntl(<TermMetadata vocabulary={vocabulary} term={term} {...intlFunctions()}/>);
         expect(wrapper.find('button[children="' + iri + '"]').length).toEqual(1);
         expect(wrapper.find(OutgoingLink).filterWhere(x => x.text().indexOf(iri) !== -1).length).toEqual(1);
     });

@@ -1,21 +1,21 @@
 import * as React from 'react';
+import {ReactElement} from 'react';
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
-import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {Tabs} from "../Tabs";
-import {ReactElement} from "react";
+
+const Component:React.SFC = () => <div>Test</div>;
 
 describe('Tabs Test', () => {
     let change : () => void;
     let tabs : ReactElement<any>;
 
     beforeEach(() => {
-        change = jest.fn()
+        change = jest.fn();
         tabs = <Tabs
-            activeTabLabelKey={"k1"}
-            tabs={ {"k1" : ()=><div>K1</div>, "k2" : ()=><div>K2</div> }}
-            changeTab={change}
-            i18n={i18n}
-            formatMessage={formatMessage}
+            activeTabLabelKey='edit'
+            tabs={ {'edit' : <Component/>, 'save' : <Component/> }}
+            changeTab={change} {...intlFunctions()}
         />
     });
 
