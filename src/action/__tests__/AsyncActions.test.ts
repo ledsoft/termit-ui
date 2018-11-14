@@ -3,7 +3,6 @@ import {
     createVocabulary,
     createVocabularyTerm,
     fetchVocabularyTerms,
-    loadDefaultTerms,
     loadTypes,
     loadUser,
     loadVocabularies,
@@ -227,25 +226,6 @@ describe('Async actions', () => {
                 const data = config.getContent();
                 expect(data['@context']).toBeDefined();
                 expect(data['@context']).toEqual(TERM_CONTEXT);
-            });
-        });
-    });
-
-    describe.skip('load default terms', () => {
-
-        it('extracts terms from incoming JSON-LD', () => {
-            const terms = require('../../rest-mock/terms');
-            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
-            const store = mockStore({});
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadDefaultTerms('test-vocabulary'))).then(() => {
-                const loadSuccessAction: AsyncActionSuccess<Term[]> = store.getActions()[1];
-                const result = loadSuccessAction.payload;
-                expect(result.length).toEqual(terms.length);
-                result.sort((a, b) => a.iri.localeCompare(b.iri));
-                terms.sort((a: object, b: object) => a['@id'].localeCompare(b['@id']));
-                for (let i = 0; i < terms.length; i++) {
-                    expect(result[i].iri).toEqual(terms[i]['@id']);
-                }
             });
         });
     });
