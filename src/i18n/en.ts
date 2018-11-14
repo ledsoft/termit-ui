@@ -94,6 +94,7 @@ export default {
         'term.metadata.labelExists.message': 'Term with label \'{label}\' already exists in this vocabulary',
         'term.metadata.source.add.placeholder': 'Add source',
         'term.metadata.source.remove.title': 'Remove source',
+        'term.metadata.subterm.link': 'View detail of this term',
 
         'glossary.title': 'Terms',
         'glossary.createTerm': 'Create new term',

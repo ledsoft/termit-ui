@@ -92,7 +92,8 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
         }
         return <ul className='term-items'>{source.map(item => <li key={item.iri}>
             <OutgoingLink iri={item.iri!}
-                          label={<Button color='link' onClick={this.openSubTerm.bind(null, item)}>{item.iri}</Button>}/>
+                          label={<Button color='link' onClick={this.openSubTerm.bind(null, item)}
+                                         title={this.props.i18n('term.metadata.subterm.link')}>{item.iri}</Button>}/>
         </li>)}
         </ul>;
     }

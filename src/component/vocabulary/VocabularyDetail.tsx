@@ -11,7 +11,7 @@ import Vocabulary from "../../model/Vocabulary";
 import './VocabularyDetail.scss';
 import OutgoingLink from "../misc/OutgoingLink";
 import Routes from "../../util/Routes";
-import {IRI} from "../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {ThunkDispatch} from '../../util/Types';
 import CreateTerm from "../term/CreateTerm";
 import TermDetail from "../term/TermDetail";
@@ -28,7 +28,9 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 
     public componentDidMount(): void {
         const normalizedName: string = this.props.match.params.name;
-        this.props.loadVocabulary({fragment: normalizedName});
+        if (!this.props.vocabulary || VocabularyUtils.getFragment(this.props.vocabulary.iri) !== normalizedName) {
+            this.props.loadVocabulary({fragment: normalizedName});
+        }
         this.props.loadTypes(this.props.lang);
     }
 

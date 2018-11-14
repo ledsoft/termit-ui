@@ -53,7 +53,7 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
     private openTerms = () => {
         const iri = VocabularyUtils.create(this.props.vocabulary.iri);
         Routing.transitionTo(Routes.vocabularyDetail, {
-            params: new Map([[name, iri.fragment]]),
+            params: new Map([['name', iri.fragment]]),
             query: new Map([['namespace', iri.namespace!]])
         });
     };
