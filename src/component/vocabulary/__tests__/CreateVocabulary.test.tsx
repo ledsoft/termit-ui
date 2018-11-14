@@ -3,7 +3,7 @@ import {Button} from "reactstrap";
 import Routing from '../../../util/Routing';
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {CreateVocabulary} from "../CreateVocabulary";
-import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Routes from "../../../util/Routes";
 import Ajax, {params} from "../../../util/Ajax";
 import Constants from "../../../util/Constants";
@@ -24,15 +24,13 @@ describe('Create vocabulary view', () => {
     });
 
     it('returns to Vocabulary Management on cancel', () => {
-        const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} i18n={i18n}
-                                                        formatMessage={formatMessage}/>);
+        const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} {...intlFunctions()}/>);
         wrapper.find(Button).at(1).simulate('click');
         expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.vocabularies);
     });
 
     it('enables submit button only when name is not empty', () => {
-        const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} i18n={i18n}
-                                                        formatMessage={formatMessage}/>);
+        const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate}  {...intlFunctions()}/>);
         let submitButton = wrapper.find(Button).first();
         expect(submitButton.getElement().props.disabled).toBeTruthy();
         const nameInput = wrapper.find('input[name=\"create-vocabulary.name\"]');
@@ -43,8 +41,7 @@ describe('Create vocabulary view', () => {
     });
 
     it('calls onCreate on submit click', () => {
-        const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} i18n={i18n}
-                                                        formatMessage={formatMessage}/>);
+        const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate}  {...intlFunctions()}/>);
         const nameInput = wrapper.find('input[name=\"create-vocabulary.name\"]');
         const name = 'Metropolitan Plan';
         (nameInput.getDOMNode() as HTMLInputElement).value = name;
@@ -52,14 +49,13 @@ describe('Create vocabulary view', () => {
         return Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier').then(() => {
             const submitButton = wrapper.find(Button).first();
             submitButton.simulate('click');
-            expect(onCreate).toHaveBeenCalledWith({label:name, iri});
+            expect(onCreate).toHaveBeenCalledWith({label: name, iri});
         });
     });
 
     describe('IRI generation', () => {
         it('requests IRI generation when name changes', () => {
-            const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} i18n={i18n}
-                                                            formatMessage={formatMessage}/>);
+            const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate}  {...intlFunctions()}/>);
             const nameInput = wrapper.find('input[name=\"create-vocabulary.name\"]');
             const name = 'Metropolitan Plan';
             (nameInput.getDOMNode() as HTMLInputElement).value = name;
@@ -68,8 +64,7 @@ describe('Create vocabulary view', () => {
         });
 
         it('does not request IRI generation when IRI value had been changed manually before', () => {
-            const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} i18n={i18n}
-                                                            formatMessage={formatMessage}/>);
+            const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate}  {...intlFunctions()}/>);
             const iriInput = wrapper.find('input[name=\"create-vocabulary.iri\"]');
             (iriInput.getDOMNode() as HTMLInputElement).value = 'http://test';
             iriInput.simulate('change', iriInput);
@@ -80,8 +75,7 @@ describe('Create vocabulary view', () => {
         });
 
         it('displays IRI generated and returned by the server', () => {
-            const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} i18n={i18n}
-                                                            formatMessage={formatMessage}/>);
+            const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate}  {...intlFunctions()}/>);
             const nameInput = wrapper.find('input[name=\"create-vocabulary.name\"]');
             (nameInput.getDOMNode() as HTMLInputElement).value = 'Metropolitan Plan';
             nameInput.simulate('change', nameInput);

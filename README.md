@@ -23,13 +23,35 @@ tested file (see for example `TermItReducers.ts` and the corresponding `TermItRe
 
 General testing utilities should be put in `src/__tests__/environment`.
 
+### Internationalization in Tests
+
+Since most of the components are localized, they expect intl-related functions like `i18n`, `formatMessage` (specified in `HasI18n`). To be able to render such components
+in tests, there are two things that need to be done:
+1. Render the component using `mountWithIntl` instead of Enzyme's default `mount`. This wraps the component in an `IntlProvider`, which sets up the intl context.
+2. Pass the intl-related functions to the component. This can be done by invoking the `intlFunctions` function, which returns an object with all the necessary functions/objects.
+
+So mounting the component in tests can look for example as follows:
+```jsx harmony
+const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} {...intlFunctions()}/>);
+```
+
+Note that this means that `wrapper` is not the actual tested component but an instance of `IntlProvider` wrapping the component. `mountWithIntl` also provides a default Redux store
+mock which is required by some components.
+
+If shallow rendering is used, use the regular Enzyme `shallow` method to mount the component, but set up the intl context using the `intlDataForShallow` function.
+
+For example:
+```jsx harmony
+const wrapper = shallow(<CreateVocabulary onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+```
+
+Do not forget to import the core component into tests not the wrapped component!
+
 ## Developer Notes
 
 - Action are currently split into `SyncAction`, `AsyncActions` and `ComplexActions`, where `SyncActions` are simple synchronous actions represented by objects,
 whereas `AsyncActions` and `ComplexActions` exploit `redux-thunk` and return functions. `ComplexActions` represent actions which involve both synchronous and
-asynchronous actions. This division might change as the number of actions grows.
-- The main purpose of `ComplexActions` is to provide a clear and simple name for the complex action which usually involves asynchronous data-fetching actions and
-synchronous actions demarcating these events.
+asynchronous actions.
 - Navigation is handled separately from Redux, although the Redux documentation contains a section on setting up routing with react-router and redux. Currently, I
 believe it is not necessary to interconnect the two.
 - Localization is now handled by Redux state, so that page refreshes are not necessary when switching language.
