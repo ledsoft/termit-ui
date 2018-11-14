@@ -10,20 +10,18 @@ import {search} from "../../../action/AsyncActions";
 import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
 import Routing from '../../../util/Routing';
-import Vocabulary from "../../../util/VocabularyUtils";
 import {ThunkDispatch} from '../../../util/Types';
+import {AbstractSearch, SearchState} from "./AbstractSearch";
 
 interface NavbarSearchProps extends HasI18n {
     search: (searchString: string) => Promise<object>;
 }
 
-interface NavbarSearchState {
-    searchString: string;
+interface NavbarSearchState extends SearchState {
     showResults: boolean;
-    results: SearchResult[] | null;
 }
 
-export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearchState> {
+export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearchState> {
 
     constructor(props: NavbarSearchProps) {
         super(props);
@@ -49,20 +47,6 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
 
     private closeResults = () => {
         this.setState({showResults: false});
-    };
-
-    private clear = () => {
-        this.setState({searchString: '', results: null});
-    };
-
-    public openResult = (result: SearchResult) => {
-        this.clear();
-        if (result.types.indexOf(Vocabulary.VOCABULARY) !== -1) {
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
-        } else {
-            // TODO Transition to term otherwise (once term detail is implemented)
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.vocabularyIri!)]])});
-        }
     };
 
     private openSearchView = () => {

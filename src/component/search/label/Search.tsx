@@ -8,20 +8,15 @@ import SearchResult from "../../../model/SearchResult";
 import './Search.scss';
 import {search} from "../../../action/AsyncActions";
 import Vocabulary from "../../../util/VocabularyUtils";
-import Routing from "../../../util/Routing";
-import Routes from "../../../util/Routes";
 import {ThunkDispatch} from '../../../util/Types';
+import {AbstractSearch} from "./AbstractSearch";
+import Utils from "../../../util/Utils";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     search: (searchString: string) => Promise<object>;
 }
 
-interface SearchState {
-    searchString: string;
-    results: SearchResult[] | null;
-}
-
-export class Search extends React.Component<SearchProps, SearchState> {
+export class Search extends AbstractSearch<SearchProps> {
 
     constructor(props: SearchProps) {
         super(props);
@@ -32,10 +27,8 @@ export class Search extends React.Component<SearchProps, SearchState> {
     }
 
     public componentDidMount() {
-        const query = this.props.location.search;
-        const match = query.match(/searchString=(.+)/);
-        if (match) {
-            const searchString = match[1];
+        const searchString = Utils.extractQueryParam(this.props.location.search, 'searchString');
+        if (searchString) {
             this.setState({searchString});
             this.search(searchString);
         }
@@ -60,20 +53,6 @@ export class Search extends React.Component<SearchProps, SearchState> {
         if (searchString.trim().length > 0) {
             this.props.search(searchString).then((data: SearchResult[]) => this.setState({results: data}));
         }
-    };
-
-    private openResult = (result: SearchResult) => {
-        this.clear();
-        if (result.types.indexOf(Vocabulary.VOCABULARY) !== -1) {
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
-        } else {
-            // TODO Transition to term (once term detail is implemented)
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.vocabularyIri!)]])});
-        }
-    };
-
-    private clear = () => {
-        this.setState({searchString: '', results: null});
     };
 
     public render() {
