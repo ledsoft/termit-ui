@@ -271,6 +271,11 @@ function mockRestApi(axiosInst: AxiosInstance): void {
 
     // Mock term update
     mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
+    // Mock get label
+    mock.onGet(Constants.API_PREFIX + '/data/label').reply(config => {
+        const iri: string = config.params.iri;
+        return [200, iri.substring(iri.lastIndexOf('/')), header];
+    });
 }
 
 const instance = new Ajax();

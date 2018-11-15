@@ -3,6 +3,7 @@ import {
     createVocabulary,
     createVocabularyTerm,
     fetchVocabularyTerms,
+    getLabel,
     loadTypes,
     loadUser,
     loadVocabularies,
@@ -453,6 +454,41 @@ describe('Async actions', () => {
                 const config = (Ajax.get as jest.Mock).mock.calls[0][1];
                 expect(config).toBeDefined();
                 expect(config.getParams().namespace).toEqual(namespace);
+            });
+        });
+    });
+
+    describe('get label', () => {
+        it('sends request with identifier as query param', () => {
+            const iri = Generator.generateUri();
+            const label = 'test';
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(label));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then(() => {
+                const url = (Ajax.get as jest.Mock).mock.calls[0][0];
+                expect(url).toEqual(Constants.API_PREFIX + '/data/label');
+                const config = (Ajax.get as jest.Mock).mock.calls[0][1];
+                expect(config).toBeDefined();
+                expect(config.getParams().iri).toEqual(iri);
+            });
+        });
+
+        it('returns retrieved label on success', () => {
+            const iri = Generator.generateUri();
+            const label = 'test';
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(label));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then((result) => {
+                expect(result).toEqual(label);
+            });
+        });
+
+        it('returns undefined if label is not found', () => {
+            const iri = Generator.generateUri();
+            Ajax.get = jest.fn().mockImplementation(() => Promise.reject({status: 404}));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then((result) => {
+                expect(result).not.toBeDefined();
             });
         });
     });

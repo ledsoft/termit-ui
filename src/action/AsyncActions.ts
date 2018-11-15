@@ -309,7 +309,10 @@ export function startFileTextAnalysis(documentIri: IRI, fileName: string) {
             }))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
-                return dispatch(publishMessage(new Message({messageId: 'file.text-analysis.started.message', values: {fileName}}, MessageType.SUCCESS)));
+                return dispatch(publishMessage(new Message({
+                    messageId: 'file.text-analysis.started.message',
+                    values: {fileName}
+                }, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
@@ -397,5 +400,25 @@ export function updateVocabulary(vocabulary: Vocabulary) {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
+    };
+}
+
+/**
+ * Fetches RDFS:label of a resource with the specified identifier.
+ * @param iri Resource identifier
+ */
+export function getLabel(iri: string) {
+    const action = {
+        type: ActionType.GET_LABEL
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.get(Constants.API_PREFIX + '/data/label', param('iri', iri)).then(data => {
+            dispatch(asyncActionSuccess(action));
+            return data;
+        }).catch((error: ErrorData) => {
+            dispatch(asyncActionFailure(action, error));
+            return undefined;
+        });
     };
 }
