@@ -6,6 +6,7 @@ import {TermMetadata} from "../TermMetadata";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Vocabulary from "../../../model/Vocabulary";
 import OutgoingLink from "../../misc/OutgoingLink";
+import {Button} from "reactstrap";
 
 jest.mock('../../../util/Routing');
 
@@ -29,7 +30,9 @@ describe('TermMetadata', () => {
         const iri = Generator.generateUri();
         term.subTerms = [{iri}];
         const wrapper = mountWithIntl(<TermMetadata vocabulary={vocabulary} term={term} {...intlFunctions()}/>);
-        expect(wrapper.find('button[children="' + iri + '"]').length).toEqual(1);
+        const linkButton = wrapper.find(Button);
+        expect(linkButton.length).toEqual(1);
+        expect(linkButton.text()).toEqual(iri);
         expect(wrapper.find(OutgoingLink).filterWhere(x => x.text().indexOf(iri) !== -1).length).toEqual(1);
     });
 });

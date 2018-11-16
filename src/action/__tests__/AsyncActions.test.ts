@@ -491,5 +491,16 @@ describe('Async actions', () => {
                 expect(result).not.toBeDefined();
             });
         });
+
+        it('disables loading when sending label request', () => {
+            const iri = Generator.generateUri();
+            const label = 'test';
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(label));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then(() => {
+                const action:AsyncAction = store.getActions()[0];
+                expect(action.ignoreLoading).toBeTruthy();
+            });
+        });
     });
 });

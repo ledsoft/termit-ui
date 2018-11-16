@@ -33,6 +33,8 @@
     "http://www.w3.org/2004/02/skos/core#narrower": [
       {
         "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6"
+      }, {
+        "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-7"
       }
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "pojem 4"

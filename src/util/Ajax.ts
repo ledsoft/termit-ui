@@ -203,6 +203,15 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // });
     // Mock term IRI generator
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/identifier/).reply(200, 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test/term-one', header);
+    // Mock getting subterms of a vocabulary term
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+\/subterms/).reply((config) => {
+        const url: string = config.url!;
+        if (url.indexOf('pojem-4')) {
+            return [200, require('../rest-mock/subterms'), header];
+        } else {
+            return [200, [], header];
+        }
+    });
     // Mock getting vocabulary term
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+/).reply((config) => {
         const url: string = config.url!;
@@ -214,15 +223,6 @@ function mockRestApi(axiosInst: AxiosInstance): void {
             }
         }
         return [404, undefined, header];
-    });
-    // Mock getting subterms of a vocabulary term
-    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+\/subterms/).reply((config) => {
-        const url: string = config.url!;
-        if (url.indexOf('pojem-4')) {
-            return [200, require('../rest-mock/subterms'), header];
-        } else {
-            return [200, [], header];
-        }
     });
     // Mock get vocabulary terms
     mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply(() => {
@@ -274,7 +274,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock get label
     mock.onGet(Constants.API_PREFIX + '/data/label').reply(config => {
         const iri: string = config.params.iri;
-        return [200, iri.substring(iri.lastIndexOf('/')), header];
+        return [200, iri.substring(iri.lastIndexOf('/') + 1), header];
     });
 }
 

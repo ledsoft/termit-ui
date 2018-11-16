@@ -11,6 +11,7 @@ import Utils from "../../util/Utils";
 import Routes from "../../util/Routes";
 import Routing from '../../util/Routing';
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
+import AssetLabel from "../misc/AssetLabel";
 
 interface TermMetadataProps extends HasI18n {
     vocabulary: Vocabulary;
@@ -93,7 +94,8 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
         return <ul className='term-items'>{source.map(item => <li key={item.iri}>
             <OutgoingLink iri={item.iri!}
                           label={<Button color='link' onClick={this.openSubTerm.bind(null, item)}
-                                         title={this.props.i18n('term.metadata.subterm.link')}>{item.iri}</Button>}/>
+                                         title={this.props.i18n('term.metadata.subterm.link')}><AssetLabel
+                              iri={item.iri!}/></Button>}/>
         </li>)}
         </ul>;
     }

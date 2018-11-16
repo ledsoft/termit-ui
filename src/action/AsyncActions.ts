@@ -412,7 +412,7 @@ export function getLabel(iri: string) {
         type: ActionType.GET_LABEL
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
+        dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + '/data/label', param('iri', iri)).then(data => {
             dispatch(asyncActionSuccess(action));
             return data;
