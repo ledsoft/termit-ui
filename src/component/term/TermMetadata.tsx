@@ -106,7 +106,7 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
         }
         const source = Utils.sanitizeArray(items);
         return <ul className='term-items'>{source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
-            <OutgoingLink iri={item} label={item}/> : <Label>{item}</Label>}</li>)}</ul>;
+            <OutgoingLink iri={item} label={<AssetLabel iri={item}/>}/> : <Label>{item}</Label>}</li>)}</ul>;
     }
 }
 

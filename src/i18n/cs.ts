@@ -152,7 +152,7 @@ export default {
         'annotation.term.occurrence.scoreLabel': 'Skóre:',
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',
-        'link.external.title': 'Otevřít jako stránku v nové záložce',
+        'link.external.title': '{url} - otevřít v nové záložce',
 
         'type.term': 'Pojem',
         'type.vocabulary': 'Slovník'

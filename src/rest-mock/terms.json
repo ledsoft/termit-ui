@@ -2,7 +2,8 @@
   {
     "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-1",
     "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
+      "http://www.w3.org/2004/02/skos/core#Concept"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "pojem 1"
   },
@@ -33,7 +34,8 @@
     "http://www.w3.org/2004/02/skos/core#narrower": [
       {
         "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6"
-      }, {
+      },
+      {
         "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-7"
       }
     ],
@@ -42,7 +44,8 @@
   {
     "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-5",
     "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
+      "http://onto.fel.cvut.cz/ontologies/ufo/intrinsic-trope"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "pojem 5",
     "http://purl.org/dc/elements/1.1/source": [
