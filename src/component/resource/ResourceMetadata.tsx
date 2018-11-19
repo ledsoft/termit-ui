@@ -12,7 +12,6 @@ interface ResourceMetadataProps extends HasI18n {
 class ResourceMetadata extends React.Component<ResourceMetadataProps> {
     constructor(props: ResourceMetadataProps) {
         super(props);
-        console.log("hiii  " + this.props)
     }
 
     public render() {
