@@ -35,50 +35,50 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
         const term = this.props.term;
         return <div className='metadata-panel'>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className='attribute-label'>{i18n('term.metadata.identifier')}</Label>
                 </Col>
-                <Col md={10}>
+                <Col xl={10} md={8}>
                     <OutgoingLink iri={term.iri} label={term.iri}/>
                 </Col>
             </Row>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className='attribute-label'>{i18n('term.metadata.label')}</Label>
                 </Col>
-                <Col md={10}>
+                <Col xl={10} md={8}>
                     <Label>{term.label}</Label>
                 </Col>
             </Row>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className='attribute-label'>{i18n('term.metadata.comment')}</Label>
                 </Col>
-                <Col md={10}>
+                <Col xl={10} md={8}>
                     <Label>{term.comment}</Label>
                 </Col>
             </Row>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className='attribute-label'>{i18n('term.metadata.subTerms')}</Label>
                 </Col>
-                <Col md={10}>
+                <Col xl={10} md={8}>
                     {this.renderSubTerms()}
                 </Col>
             </Row>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className='attribute-label'>{i18n('term.metadata.types')}</Label>
                 </Col>
-                <Col md={10}>
+                <Col xl={10} md={8}>
                     {this.renderItems(term.types)}
                 </Col>
             </Row>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className='attribute-label'>{i18n('term.metadata.source')}</Label>
                 </Col>
-                <Col md={10}>
+                <Col xl={10} md={8}>
                     {this.renderItems(term.sources)}
                 </Col>
             </Row>
