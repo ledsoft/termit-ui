@@ -37,8 +37,9 @@ function stateToPlainObject(state: TermItState) {
         document: state.document,
         fileIri: state.fileIri,
         fileContent: state.fileContent,
-        facetedSearchResult : state.facetedSearchResult,
-        types : state.types
+        facetedSearchResult: state.facetedSearchResult,
+        types: state.types,
+        resource: state.resource
     };
 }
 
@@ -293,7 +294,7 @@ describe('Reducers', () => {
             ];
 
             const map = {};
-            terms.forEach((v : TermData) =>
+            terms.forEach((v: TermData) =>
                 map[(v.iri || "")] = new Term(v)
             );
 
