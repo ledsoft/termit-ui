@@ -15,6 +15,7 @@ import TermTypesEdit from "./TermTypesEdit";
 import Utils from "../../util/Utils";
 import TermSubTermsEdit from "./TermSubTermsEdit";
 import {AssetData} from "../../model/Asset";
+import UnmappedPropertiesEdit from "../genericmetadata/UnmappedPropertiesEdit";
 
 interface TermMetadataEditProps extends HasI18n {
     vocabulary: Vocabulary,
@@ -65,6 +66,10 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.setState({subTerms: newChildren, plainSubTerms: newChildren.map(t => t.iri!)});
     };
 
+    private onPropertiesChange = (update: Map<string, string[]>) => {
+        // TODO
+    };
+
     private onSave = () => {
         const t = new Term(this.state);
         this.props.save(t);
@@ -113,6 +118,17 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                     <Col xl={6} md={12}>
                         <TermSourcesEdit onChange={this.onSourcesChange}
                                          sources={Utils.sanitizeArray(this.state.sources)}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xl={6} md={12}>
+                        <hr/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12}>
+                        <UnmappedPropertiesEdit properties={this.props.term.unmappedProperties}
+                                                onChange={this.onPropertiesChange}/>
                     </Col>
                 </Row>
                 <Row>

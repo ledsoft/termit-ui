@@ -160,6 +160,8 @@ export default {
 
         'message.welcome': 'Welcome to TermIt!',
         'link.external.title': '{url} - open in a new browser tab',
+        'properties.edit.title': 'Additional properties',
+        'properties.edit.remove': 'Remove this property value',
 
         'type.term': 'Term',
         'type.vocabulary': 'Vocabulary'

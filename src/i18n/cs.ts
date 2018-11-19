@@ -153,6 +153,8 @@ export default {
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',
         'link.external.title': '{url} - otevřít v nové záložce',
+        'properties.edit.title': 'Další atributy',
+        'properties.edit.remove': 'Odebrat tuto hodnotu',
 
         'type.term': 'Pojem',
         'type.vocabulary': 'Slovník'
