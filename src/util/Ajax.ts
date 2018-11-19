@@ -278,6 +278,9 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock get label
     mock.onGet(Constants.API_PREFIX + '/data/label').reply(config => {
         const iri: string = config.params.iri;
+        if (iri.indexOf('#') !== -1) {
+            return [404, undefined, header];
+        }
         return [200, iri.substring(iri.lastIndexOf('/') + 1), header];
     });
 }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {getLabel} from "../../action/AsyncActions";
+import Namespaces from "../../util/Namespaces";
 
 interface AssetLabelProps {
     iri: string;
@@ -33,7 +34,7 @@ export class AssetLabel extends React.Component<AssetLabelProps, AssetLabelState
     }
 
     public render() {
-        return this.state.label ? this.state.label : this.props.iri;
+        return this.state.label ? this.state.label : Namespaces.getPrefixedOrDefault(this.props.iri);
     }
 }
 

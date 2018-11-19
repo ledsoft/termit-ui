@@ -2,9 +2,10 @@ import * as React from "react";
 import Generator from "../../../__tests__/environment/Generator";
 import {mount} from "enzyme";
 import {AssetLabel} from "../AssetLabel";
+import {SKOS} from "../../../util/Namespaces";
 
 describe("AssetLabel", () => {
-    let getLabel: (iri:string) => Promise<string>;
+    let getLabel: (iri: string) => Promise<string>;
 
     it('loads label using specified IRI on mount', () => {
         const iri = Generator.generateUri();
@@ -30,6 +31,15 @@ describe("AssetLabel", () => {
         const wrapper = mount(<AssetLabel iri={iri} getLabel={getLabel}/>);
         return Promise.resolve().then(() => {
             expect(wrapper.text()).toEqual(iri);
+        });
+    });
+
+    it("renders prefixed IRI if label cannot be loaded", () => {
+        const iri = "http://www.w3.org/2004/02/skos/core#narrower";
+        getLabel = jest.fn().mockImplementation(() => Promise.resolve(undefined));
+        const wrapper = mount(<AssetLabel iri={iri} getLabel={getLabel}/>);
+        return Promise.resolve().then(() => {
+            expect(wrapper.text()).toEqual(SKOS.prefix + ":narrower");
         });
     });
 });

@@ -1,5 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 import {Col, Label, Row} from "reactstrap";
+import AssetLabel from "../misc/AssetLabel";
 
 interface UnmappedPropertiesProps {
     properties: Map<string, string[]>;
@@ -7,8 +8,8 @@ interface UnmappedPropertiesProps {
 
 const UnmappedProperties: React.SFC<UnmappedPropertiesProps> = (props: UnmappedPropertiesProps) => {
     const result: JSX.Element[] = [];
-    props.properties.forEach((values, k) => values.forEach(value => result.push(<Row key={k + '-' + value}>
-        <Col md={6}><Label className='attribute-label'>{k}</Label></Col>
+    props.properties.forEach((values, k) => values.forEach(value => result.push(<Row key={k + "-" + value}>
+        <Col md={6}><Label className="attribute-label"><AssetLabel iri={k}/></Label></Col>
         <Col md={6}><Label>{value}</Label></Col>
     </Row>)));
 
