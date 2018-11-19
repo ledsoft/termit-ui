@@ -25,6 +25,7 @@ import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
 import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
+import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -146,6 +147,26 @@ export function loadVocabulary(iri: IRI) {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
+    };
+}
+
+export function loadResource(iri: IRI) {
+    const action = {
+      type: ActionType.LOAD_RESOURCE
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax
+            .get(Constants.API_PREFIX + '/resources/' + iri.fragment + (iri.namespace ? "?query=" + iri.namespace : ""))
+            .then((data: object) =>
+                jsonld.compact(data, RESOURCE_CONTEXT))
+            .then((data: ResourceData) =>
+                dispatch(asyncActionSuccessWithPayload(action, new Resource(data))))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)))
+            })
+
     };
 }
 

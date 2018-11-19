@@ -19,6 +19,7 @@ import IntlData from "../model/IntlData";
 import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
 import AsyncActionStatus from "../action/AsyncActionStatus";
 import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
+import Resource, {EMPTY_RESOURCE} from "../model/Resource";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import Term from "../model/Term";
 import Document, {EMPTY_DOCUMENT} from "../model/Document";
@@ -108,6 +109,15 @@ function intl(state: IntlData = loadInitialLocalizationData(), action: SwitchLan
 function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary>): Vocabulary {
     switch (action.type) {
         case ActionType.LOAD_VOCABULARY:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        default:
+            return state;
+    }
+}
+
+function resource(state: Resource = EMPTY_RESOURCE, action: AsyncActionSuccess<Resource>): Vocabulary {
+    switch (action.type) {
+        case ActionType.LOAD_RESOURCE:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         default:
             return state;
@@ -235,6 +245,7 @@ const rootReducer = combineReducers<TermItState>({
     loading,
     vocabulary,
     vocabularies,
+    resource,
     error,
     messages,
     intl,

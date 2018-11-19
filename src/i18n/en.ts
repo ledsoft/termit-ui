@@ -44,6 +44,7 @@ export default {
         'main.nav.statistics': 'Statistics',
         'main.nav.search': 'Search',
         'main.nav.facetedSearch': 'Faceted Search',
+        'main.nav.resourceDetail': 'Resource Detail',
         'main.nav.admin': 'Administration',
         'main.user-profile': 'User profile',
         'main.logout': 'Log out',
@@ -55,9 +56,10 @@ export default {
         'dashboard.vocabulary.tile': 'Vocabulary Management',
         'dashboard.document.tile': 'Document Management',
         'dashboard.statistics.tile': 'Statistics',
-        'dashboard.search.tile': 'Search',
+        'dashboard.search.tile': 'Open Resource',
         'dashboard.create-vocabulary.tile': 'Create Vocabulary',
         'dashboard.add-document.tile': 'Add Document',
+        'dashboard.resource.test' : 'Open resource',
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
@@ -83,6 +85,11 @@ export default {
         'vocabulary.metadata.identifier': 'Identifier',
         'vocabulary.metadata.author': 'Author',
         'vocabulary.metadata.created': 'Created',
+
+        'resource.metadata.identifier' : 'Identifier',
+        'resource.metadata.label' : 'Label',
+        'resource.metadata.comment' : 'Comment',
+
 
         'term.metadata.identifier': 'Identifier',
         'term.metadata.label': 'Label',

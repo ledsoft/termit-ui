@@ -7,6 +7,7 @@ import Vocabulary, {EMPTY_VOCABULARY} from "./Vocabulary";
 import {QueryResultIF} from "./QueryResult";
 import Term from "./Term";
 import Document, {EMPTY_DOCUMENT} from "./Document";
+import Resource, {EMPTY_RESOURCE} from "./Resource";
 
 /**
  * This is the basic shape of the application's state managed by Redux.
@@ -15,6 +16,7 @@ export default class TermItState {
     public loading: boolean;
     public user: User;
     public vocabulary: Vocabulary;
+    public resource: Resource;
     public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
     public document: Document;
@@ -33,6 +35,7 @@ export default class TermItState {
         this.loading = false;
         this.user = EMPTY_USER;
         this.vocabulary = EMPTY_VOCABULARY;
+        this.resource = EMPTY_RESOURCE;
         this.defaultTerms = [];
         this.vocabularies = {};
         this.document = EMPTY_DOCUMENT;

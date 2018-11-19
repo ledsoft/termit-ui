@@ -20,6 +20,7 @@ export default {
     vocabularies: new Route('vocabulary', '/vocabulary'),
     createVocabulary: new Route('createVocabulary', '/vocabulary/create'),
     vocabularySummary: new Route('vocabularySummary', '/vocabulary/:name'),
+    resourceDetail: new Route('resourceDetail', '/resource/:name'),
     vocabularyDetail: new Route('vocabularyDetail', '/vocabulary/:name/term'),
     createVocabularyTerm: new Route('createVocabularyTerm', '/vocabulary/:name/new-term'),
     vocabularyTermDetail: new Route('vocabularyTermDetail', '/vocabulary/:name/term/:termName'),
