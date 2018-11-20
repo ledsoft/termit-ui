@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../../hoc/withI18n";
-import {Input, InputGroup, InputGroupAddon, InputGroupText} from "reactstrap";
+import {Input, InputGroup, InputGroupAddon, Button} from "reactstrap";
 import {GoSearch} from "react-icons/go";
 import './NavbarSearch.scss';
 import SearchResult from "../../../model/SearchResult";
@@ -85,9 +85,9 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
                 <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')}
                        value={this.props.searchString} onChange={this.onChange} onKeyPress={this.onKeyPress}/>
                 <InputGroupAddon addonType='append' className='search-icon' title={i18n('main.search.tooltip')}>
-                    <InputGroupText>
-                        <GoSearch onClick={this.openSearchView}/>
-                    </InputGroupText>
+                    <Button color="grey" onClick={this.openSearchView}>
+                        <GoSearch/>
+                    </Button>
                 </InputGroupAddon>
             </InputGroup>
             {this.renderResultsOverlay()}
