@@ -219,6 +219,18 @@ function searchQuery(state: string = '', action: SearchAction): string
     }
 }
 
+function searchListenerCount(state: number = 0, action: Action): number
+{
+    switch (action.type) {
+        case ActionType.ADD_SEARCH_LISTENER:
+            return state + 1;
+        case ActionType.REMOVE_SEARCH_LISTENER:
+            return state - 1;
+        default:
+            return state;
+    }
+}
+
 function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuccess<Term[]>): {[key: string]: Term } {
     switch (action.type) {
         case ActionType.LOAD_TYPES:
@@ -253,6 +265,7 @@ const rootReducer = combineReducers<TermItState>({
     fileContent,
     facetedSearchResult,
     searchQuery,
+    searchListenerCount,
     types
 });
 

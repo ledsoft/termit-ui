@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import {Card, CardBody, CardHeader, Col, Row} from "reactstrap";
 import SearchResult from "../../../model/SearchResult";
 import './Search.scss';
-import {search} from "../../../action/AsyncActions";
+import * as SearchActions from "../../../action/SearchActions";
 import Vocabulary from "../../../util/VocabularyUtils";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
@@ -15,6 +15,8 @@ import TermItState from "../../../model/TermItState";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     search: (searchString: string) => Promise<object>;
+    addSearchListener: () => void;
+    removeSearchListener: () => void;
     searchString: string;
 }
 
@@ -34,12 +36,17 @@ export class Search extends React.Component<SearchProps, SearchState> {
     public componentDidUpdate(prevProps: SearchProps, prevState: SearchState) {
         if (this.props.searchString !== prevProps.searchString) {
             window.console.log('Search:', prevProps.searchString, ' -> ', this.props.searchString);
-            this.search(this.props.searchString);
+            // this.search(this.props.searchString);
         }
     }
 
     public componentDidMount() {
-        this.search(this.props.searchString);
+        this.props.addSearchListener();
+        // this.search(this.props.searchString);
+    }
+
+    public componentWillUnmount() {
+        this.props.removeSearchListener();
     }
 
     /*
@@ -140,6 +147,8 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        search: (searchString: string) => dispatch(search(searchString))
+        search: (searchString: string) => dispatch(SearchActions.search(searchString)),
+        addSearchListener: () => dispatch(SearchActions.addSearchListener()),
+        removeSearchListener: () => dispatch(SearchActions.removeSearchListener()),
     };
 })(withRouter(injectIntl(withI18n(Search))));

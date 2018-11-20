@@ -6,7 +6,7 @@ import {GoSearch} from "react-icons/go";
 import './NavbarSearch.scss';
 import SearchResult from "../../../model/SearchResult";
 import {connect} from "react-redux";
-import {search, updateSearchFilter} from "../../../action/AsyncActions";
+import {search, updateSearchFilter} from "../../../action/SearchActions";
 import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
 import Routing from '../../../util/Routing';
@@ -38,10 +38,12 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         this.props.updateSearchFilter(value);
+        /*
         this.setState({showResults: value.length > 0});
         if (value.length > 0) {
             this.props.search(value).then((data: SearchResult[]) => this.setState({results: data}));
         }
+        */
     };
 
     private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
