@@ -25,8 +25,9 @@ export class Dashboard extends React.Component<HasI18n> {
     private static onCreateVocabularyClick(): void {
         Routing.transitionTo(Routes.createVocabulary);
     };
+
     private static onOpenResourceClick(): void {
-       Routing.transitionTo(Routes.resourceDetail, {
+        Routing.transitionTo(Routes.resourceDetail, {
             params: new Map([['name', 'randomInstance-1529066498']]),
             query: new Map([['namespace', 'http://onto.fel.cvut.cz/ontologies/application/termit/']])
         });
@@ -78,7 +79,7 @@ export class Dashboard extends React.Component<HasI18n> {
                     <DashboardQuickAccessTile text={i18n('dashboard.search.tile')} onClick={Dashboard.onSearchClick}/>
                 </Col>
                 <Col xs={4} className='dashboard-sector'>
-                    <DashboardQuickAccessTile text={i18n('dashboard.search.tile')} onClick={Dashboard.onOpenResourceClick}/>
+                    <DashboardQuickAccessTile text='Open resource' onClick={Dashboard.onOpenResourceClick}/>
                 </Col>
             </Row>
         </Container>;

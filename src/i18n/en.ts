@@ -56,7 +56,7 @@ export default {
         'dashboard.vocabulary.tile': 'Vocabulary Management',
         'dashboard.document.tile': 'Document Management',
         'dashboard.statistics.tile': 'Statistics',
-        'dashboard.search.tile': 'Open Resource',
+        'dashboard.search.tile': 'Search',
         'dashboard.create-vocabulary.tile': 'Create Vocabulary',
         'dashboard.add-document.tile': 'Add Document',
         'dashboard.resource.test' : 'Open resource',
