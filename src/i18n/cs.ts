@@ -155,6 +155,9 @@ export default {
         'link.external.title': '{url} - otevřít v nové záložce',
         'properties.edit.title': 'Další atributy',
         'properties.edit.remove': 'Odebrat tuto hodnotu',
+        'properties.edit.property': 'Atribut',
+        'properties.edit.value': 'Hodnota',
+        'properties.edit.add.title': 'Přidat hodnotu atributu',
 
         'type.term': 'Pojem',
         'type.vocabulary': 'Slovník'
