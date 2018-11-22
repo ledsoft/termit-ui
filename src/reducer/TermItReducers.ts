@@ -23,6 +23,7 @@ import Resource, {EMPTY_RESOURCE} from "../model/Resource";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import Term from "../model/Term";
 import Document, {EMPTY_DOCUMENT} from "../model/Document";
+import RdfsResource from "../model/RdfsResource";
 
 /**
  * Handles changes to the currently logged in user.
@@ -249,6 +250,15 @@ function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuc
     }
 }
 
+function properties(state: RdfsResource[] = [], action: AsyncActionSuccess<RdfsResource[]>): RdfsResource[] {
+    switch (action.type) {
+        case ActionType.GET_PROPERTIES:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers<TermItState>({
     user,
     loading,
@@ -267,7 +277,8 @@ const rootReducer = combineReducers<TermItState>({
     fileIri,
     fileContent,
     facetedSearchResult,
-    types
+    types,
+    properties
 });
 
 export default rootReducer;

@@ -20,6 +20,7 @@ import Constants from "../../util/Constants";
 import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import Term, {TermData} from "../../model/Term";
+import RdfsResource from "../../model/RdfsResource";
 
 function stateToPlainObject(state: TermItState) {
     return {
@@ -40,7 +41,8 @@ function stateToPlainObject(state: TermItState) {
         facetedSearchResult: state.facetedSearchResult,
         types: state.types,
         resource: state.resource,
-        resourceTerms: state.resourceTerms
+        resourceTerms: state.resourceTerms,
+        properties: state.properties
     };
 }
 
@@ -311,5 +313,17 @@ describe('Reducers', () => {
             ignoreLoading: true
         };
         expect(reducers(stateToPlainObject(initialState), action)).toEqual(initialState);
+    });
+
+    describe("properties", () => {
+        it("sets properties when they were successfully loaded", () => {
+            const properties: RdfsResource[] = [{
+                iri: "http://www.w3.org/2000/01/rdf-schema#label",
+                label: "Label",
+                comment: "RDFS label property"
+            }];
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.GET_PROPERTIES}, properties)))
+                .toEqual(Object.assign({}, initialState, {properties}));
+        });
     });
 });

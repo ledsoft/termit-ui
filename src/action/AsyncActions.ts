@@ -26,6 +26,8 @@ import ActionType from "./ActionType";
 import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
+import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT} from "../model/RdfsResource";
+import TermItState from "../model/TermItState";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -152,7 +154,7 @@ export function loadVocabulary(iri: IRI) {
 
 export function loadResource(iri: IRI) {
     const action = {
-      type: ActionType.LOAD_RESOURCE
+        type: ActionType.LOAD_RESOURCE
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
@@ -177,13 +179,13 @@ export function loadResourceTerms(iri: IRI) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            // , params({query: queryString})
-             .get(Constants.API_PREFIX + '/resources/resource/terms', param('iri', iri.namespace + iri.fragment))
+        // , params({query: queryString})
+            .get(Constants.API_PREFIX + '/resources/resource/terms', param('iri', iri.namespace + iri.fragment))
             // .get(Constants.API_PREFIX + '/resources/resource/terms', params({iri}))
             .then((data: object[]) => data.length > 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: TermData[]) => {
-                const terms =  data.map(d => new Term(d));
+                const terms = data.map(d => new Term(d));
                 return dispatch(asyncActionSuccessWithPayload(action, terms));
             }).catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
@@ -463,5 +465,25 @@ export function getLabel(iri: string) {
             dispatch(asyncActionFailure(action, error));
             return undefined;
         });
+    };
+}
+
+/**
+ * Fetches properties existing in the server repository.
+ */
+export function getProperties() {
+    const action = {
+        type: ActionType.GET_PROPERTIES
+    };
+    return (dispatch: ThunkDispatch, getState: () => TermItState) => {
+        if (getState().properties.length > 0) {
+            return;
+        }
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(Constants.API_PREFIX + '/data/properties')
+            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, RDFS_RESOURCE_CONTEXT) : [])
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: RdfsResource[]) => dispatch(asyncActionSuccessWithPayload(action, data)))
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
     };
 }

@@ -3,7 +3,7 @@ import {
     createVocabulary,
     createVocabularyTerm,
     fetchVocabularyTerms,
-    getLabel,
+    getLabel, getProperties,
     loadTypes,
     loadUser,
     loadVocabularies,
@@ -29,6 +29,7 @@ import {ErrorData} from "../../model/ErrorInfo";
 import Generator from "../../__tests__/environment/Generator";
 import {ThunkDispatch} from "../../util/Types";
 import FetchOptionsFunction from "../../model/Functions";
+import RdfsResource from "../../model/RdfsResource";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -498,8 +499,49 @@ describe('Async actions', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(label));
             const store = mockStore({});
             return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then(() => {
-                const action:AsyncAction = store.getActions()[0];
+                const action: AsyncAction = store.getActions()[0];
                 expect(action.ignoreLoading).toBeTruthy();
+            });
+        });
+    });
+
+    describe("getProperties", () => {
+        it("sends request to load properties from server", () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getProperties())).then(() => {
+                const url = (Ajax.get as jest.Mock).mock.calls[0][0];
+                expect(url).toEqual(Constants.API_PREFIX + '/data/properties');
+            });
+        });
+
+        it("loads data from response and passes them to store", () => {
+            const result = [{
+                "@id": "http://www.w3.org/2000/01/rdf-schema#label",
+                "http://www.w3.org/2000/01/rdf-schema#label": "Label",
+                "http://www.w3.org/2000/01/rdf-schema#comment": "Comment"
+            }];
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(result));
+            const store = mockStore({});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getProperties())).then(() => {
+                const action: AsyncActionSuccess<RdfsResource[]> = store.getActions()[1];
+                expect(action.payload.length).toEqual(1);
+                expect(action.payload[0].iri).toEqual(result[0]["@id"]);
+                expect(action.payload[0].label).toEqual(result[0]["http://www.w3.org/2000/01/rdf-schema#label"]);
+                expect(action.payload[0].comment).toEqual(result[0]["http://www.w3.org/2000/01/rdf-schema#comment"]);
+            });
+        });
+
+        it("does not send request if data are already present in store", () => {
+            const data = [{
+                "@id": "http://www.w3.org/2000/01/rdf-schema#label",
+                "http://www.w3.org/2000/01/rdf-schema#label": "Label",
+                "http://www.w3.org/2000/01/rdf-schema#comment": "Comment"
+            }];
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
+            const store = mockStore({properties: data});
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getProperties())).then(() => {
+                expect(store.getActions().length).toEqual(0);
             });
         });
     });
