@@ -26,12 +26,13 @@ interface TermMetadataEditProps extends HasI18n {
 
 interface TermMetadataEditState extends TermData {
     labelExists: boolean;
+    unmappedProperties: Map<string, string[]>;
 }
 
 export class TermMetadataEdit extends React.Component<TermMetadataEditProps, TermMetadataEditState> {
     constructor(props: TermMetadataEditProps) {
         super(props);
-        this.state = Object.assign({labelExists: false}, props.term);
+        this.state = Object.assign({labelExists: false, unmappedProperties: props.term.unmappedProperties}, props.term);
     }
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,11 +68,13 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
     };
 
     private onPropertiesChange = (update: Map<string, string[]>) => {
-        // TODO
+        this.setState({unmappedProperties: update});
     };
 
-    private onSave = () => {
-        const t = new Term(this.state);
+    public onSave = () => {
+        const {labelExists, unmappedProperties, ...data} = this.state;
+        const t = new Term(data);
+        t.unmappedProperties = this.state.unmappedProperties;
         this.props.save(t);
     };
 
@@ -127,7 +130,7 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <UnmappedPropertiesEdit properties={this.props.term.unmappedProperties}
+                        <UnmappedPropertiesEdit properties={this.state.unmappedProperties}
                                                 onChange={this.onPropertiesChange}/>
                     </Col>
                 </Row>

@@ -1,11 +1,12 @@
 import * as React from 'react';
 import Term from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {TermMetadataEdit} from "../TermMetadataEdit";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Vocabulary from "../../../model/Vocabulary";
 import Ajax from "../../../util/Ajax";
+import {shallow} from "enzyme";
 
 jest.mock('../TermSubTermsEdit');
 
@@ -102,5 +103,19 @@ describe('Term edit', () => {
             const saveButton = wrapper.find('[color="success"]').last();
             expect(saveButton.getElement().props.disabled).toBeTruthy();
         });
+    });
+
+    it("correctly sets unmapped properties on save", () => {
+        const property = Generator.generateUri();
+        term.unmappedProperties = new Map([[property, ["test"]]]);
+        const wrapper = shallow(<TermMetadataEdit vocabulary={vocabulary} term={term} save={onSave}
+                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const updatedProperties = new Map([[property, ["test1", "test2"]]]);
+        wrapper.instance().setState({unmappedProperties: updatedProperties});
+        (wrapper.instance() as TermMetadataEdit).onSave();
+        const result: Term = (onSave as jest.Mock).mock.calls[0][0];
+        expect(result.unmappedProperties).toEqual(updatedProperties);
+        expect(result[property]).toBeDefined();
+        expect(result[property]).toEqual(updatedProperties.get(property));
     });
 });

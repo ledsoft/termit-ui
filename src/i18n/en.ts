@@ -163,6 +163,9 @@ export default {
         'link.external.title': '{url} - open in a new browser tab',
         'properties.edit.title': 'Additional properties',
         'properties.edit.remove': 'Remove this property value',
+        'properties.edit.property': 'Property',
+        'properties.edit.value': 'Value',
+        'properties.edit.add.title': 'Add property value',
 
         'type.term': 'Term',
         'type.vocabulary': 'Vocabulary'
