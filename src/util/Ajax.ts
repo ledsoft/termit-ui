@@ -287,6 +287,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         }
         return [200, iri.substring(iri.lastIndexOf('/') + 1), header];
     });
+    // Mock getting known properties
+    mock.onGet(Constants.API_PREFIX + "/data/properties").reply(200, require("../rest-mock/properties"), Object.assign({}, header, {
+        'content-type': Constants.JSON_LD_MIME_TYPE
+    }));
 }
 
 const instance = new Ajax();

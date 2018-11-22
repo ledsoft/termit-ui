@@ -10,6 +10,7 @@ export const CONTEXT = {
  * Represents a generic RDFS resource.
  */
 export default interface RdfsResource extends AssetData {
+    readonly iri: string;
     readonly label?: string;
     readonly comment?: string;
 }
