@@ -15,7 +15,7 @@ import Routes from "../../util/Routes";
 import {RouteComponentProps, withRouter} from "react-router";
 import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
-import Term from "../../model/Term";
+import Term, {TermData} from "../../model/Term";
 import {fetchVocabularyTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from '../../util/Types';
 import {GoPlus} from "react-icons/go";
@@ -62,11 +62,24 @@ export class Terms extends React.Component<GlossaryTermsProps> {
         Routing.transitionTo(Routes.createVocabularyTerm, {params: new Map([['name', normalizedName]])});
     }
 
-    private _onChange(term: Term | null) {
-        this.props.selectVocabularyTerm(term);
-        if (term) {
+    private _onChange(term: TermData | null) {
+        if (term === null) {
+            this.props.selectVocabularyTerm(term);
+        } else {
+            // The tree component adds depth and expanded attributes to the options when rendering,
+            // We need to get rid of them before working with the term
+            // We are creating a defensive copy of the term so that the rest of the application and the tree component have their own versions
+            const cloneData = Object.assign({}, term);
+            // @ts-ignore
+            delete cloneData.expanded;
+            // @ts-ignore
+            delete cloneData.depth;
+            const clone = new Term(cloneData);
+            this.props.selectVocabularyTerm(clone);
             Routing.transitionTo(Routes.vocabularyTermDetail,
-                {params: new Map([['name', this.props.match.params.name], ['termName', VocabularyUtils.getFragment(term.iri)]])});
+                {
+                    params: new Map([['name', this.props.match.params.name], ['termName', VocabularyUtils.getFragment(clone.iri)]])
+                });
         }
     }
 
