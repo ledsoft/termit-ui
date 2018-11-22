@@ -17,6 +17,7 @@ export default class TermItState {
     public user: User;
     public vocabulary: Vocabulary;
     public resource: Resource;
+    public resourceTerms: Term[];
     public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
     public document: Document;
@@ -36,6 +37,7 @@ export default class TermItState {
         this.user = EMPTY_USER;
         this.vocabulary = EMPTY_VOCABULARY;
         this.resource = EMPTY_RESOURCE;
+        this.resourceTerms = [];
         this.defaultTerms = [];
         this.vocabularies = {};
         this.document = EMPTY_DOCUMENT;

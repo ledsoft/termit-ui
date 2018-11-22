@@ -39,7 +39,8 @@ function stateToPlainObject(state: TermItState) {
         fileContent: state.fileContent,
         facetedSearchResult: state.facetedSearchResult,
         types: state.types,
-        resource: state.resource
+        resource: state.resource,
+        resourceTerms: state.resourceTerms
     };
 }
 

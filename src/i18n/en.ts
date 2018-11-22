@@ -89,6 +89,7 @@ export default {
         'resource.metadata.identifier' : 'Identifier',
         'resource.metadata.label' : 'Label',
         'resource.metadata.comment' : 'Comment',
+        'resource.metadata.terms' : 'Related Terms',
 
 
         'term.metadata.identifier': 'Identifier',

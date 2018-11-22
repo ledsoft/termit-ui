@@ -241,6 +241,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE
     }));
+    // Mock resource terms retrieval endpoint
+    mock.onGet(Constants.API_PREFIX + '/resources/resource/terms').reply(200, require('../rest-mock/resourceTerms'), Object.assign({}, header, {
+        'content-type': Constants.JSON_LD_MIME_TYPE
+    }));
     // Mock resource retrieval endpoint
     mock.onGet(/\/rest\/resources\/.+/).reply(200, require('../rest-mock/resource'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE

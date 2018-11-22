@@ -11,11 +11,14 @@ import EditableComponent from "../misc/EditableComponent";
 import Utils from "../../util/Utils";
 import Resource from "../../model/Resource";
 import ResourceMetadata from "./ResourceMetadata";
-import {loadResource} from "../../action/AsyncActions";
+import {loadResource, loadResourceTerms} from "../../action/AsyncActions";
+import Term from "../../model/Term";
 
 interface ResourceDetailProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
+    resourceTerms: Term[];
     loadResource: (iri: IRI) => void;
+    loadResourceTerms: (iri: IRI) => void;
     updateResource: (resource: Resource) => Promise<any>;
 }
 
@@ -42,6 +45,7 @@ export class ResourceDetail extends EditableComponent<ResourceDetailProps> {
         const iri = VocabularyUtils.create(this.props.resource.iri);
         if (iri.fragment !== normalizedName || iri.namespace !== namespace) {
             this.props.loadResource({fragment: normalizedName, namespace});
+            this.props.loadResourceTerms({fragment: normalizedName, namespace});
         }
     }
 
@@ -52,7 +56,7 @@ export class ResourceDetail extends EditableComponent<ResourceDetailProps> {
         //     buttons.push(<Button key='vocabulary.summary.edit' size='sm' color='info'><GoPencil/></Button>);
         // }
         // const actions = [<ButtonToolbar key='resource.detail.actions'>{buttons}</ButtonToolbar>];
-        const component = <ResourceMetadata resource={this.props.resource}/>;
+        const component = <ResourceMetadata resource={this.props.resource} resourceTerms={this.props.resourceTerms}/>
         return <div>
             <PanelWithActions
                 title={this.props.resource.label}
@@ -64,10 +68,12 @@ export class ResourceDetail extends EditableComponent<ResourceDetailProps> {
 
 export default connect((state: TermItState) => {
     return {
-        resource: state.resource
+        resource: state.resource,
+        resourceTerms: state.resourceTerms,
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        loadResource: (iri: IRI) => dispatch(loadResource(iri))
+        loadResource: (iri: IRI) => dispatch(loadResource(iri)),
+        loadResourceTerms: (iri: IRI) => dispatch(loadResourceTerms(iri))
     };
 })(injectIntl(withI18n(ResourceDetail)));

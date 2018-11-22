@@ -170,6 +170,28 @@ export function loadResource(iri: IRI) {
     };
 }
 
+export function loadResourceTerms(iri: IRI) {
+    const action = {
+        type: ActionType.LOAD_RESOURCE_TERMS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax
+            // , params({query: queryString})
+             .get(Constants.API_PREFIX + '/resources/resource/terms', param('iri', iri.namespace + iri.fragment))
+            // .get(Constants.API_PREFIX + '/resources/resource/terms', params({iri}))
+            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: TermData[]) => {
+                const terms =  data.map(d => new Term(d));
+                return dispatch(asyncActionSuccessWithPayload(action, terms));
+            }).catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function loadVocabularies() {
     const action = {
         type: ActionType.LOAD_VOCABULARIES
