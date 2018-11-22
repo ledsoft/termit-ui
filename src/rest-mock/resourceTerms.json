@@ -4,6 +4,8 @@
     "http://www.w3.org/2000/01/rdf-schema#label": "Okrsková volební komise",
     "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
     "http://www.w3.org/2000/01/rdf-schema#comment" : "Volební orgán, který dbá o pořádek ve volební místnosti.",
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
+      "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"},
     "http://purl.org/dc/elements/1.1/source": [
       "– Zákon č. 491/2001 Sb., o volbách do zastupitelstev obcí"
     ]
@@ -13,6 +15,8 @@
     "http://www.w3.org/2000/01/rdf-schema#label": "Registr územní identifikace, adres a nemovitostí (RUIAN)",
     "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
     "http://www.w3.org/2000/01/rdf-schema#comment": "V tomto registru jsou vedeny referenční údaje o územní identifikaci a katastru nemovitostí.",
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
+      "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"},
     "http://purl.org/dc/elements/1.1/source": [
       "– Strategie Efektivní\nveřejná správa a přátelské veřejné služby"
     ]
