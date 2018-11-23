@@ -9,6 +9,7 @@ export default {
         'cancel': 'Cancel',
         'not-implemented': 'Not implemented, yet!',
         'edit': 'Edit',
+        'optional': 'Optional',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
@@ -166,6 +167,10 @@ export default {
         'properties.edit.property': 'Property',
         'properties.edit.value': 'Value',
         'properties.edit.add.title': 'Add property value',
+        'properties.edit.new': 'Create property',
+        'properties.edit.new.iri': 'Identifier',
+        'properties.edit.new.label': 'Label',
+        'properties.edit.new.comment': 'Comment',
 
         'type.term': 'Term',
         'type.vocabulary': 'Vocabulary'

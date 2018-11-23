@@ -1,19 +1,29 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {Badge, Button, Col, Label, Row} from "reactstrap";
+import {Badge, Button, Col, FormGroup, Label, Row} from "reactstrap";
 import {GoPlus, GoX} from "react-icons/go";
+// @ts-ignore
+import {IntelligentTreeSelect} from "intelligent-tree-select";
 import OutgoingLink from "../misc/OutgoingLink";
 import AssetLabel from "../misc/AssetLabel";
 import CustomInput from "../misc/CustomInput";
+import {connect} from "react-redux";
+import TermItState from "../../model/TermItState";
+import {ThunkDispatch} from "../../util/Types";
+import {getProperties} from "../../action/AsyncActions";
+import RdfsResource from "../../model/RdfsResource";
+import CreatePropertyForm from "./CreatePropertyForm";
 
 interface UnmappedPropertiesEditProps extends HasI18n {
     properties: Map<string, string[]>;
     onChange: (properties: Map<string, string[]>) => void;
+    loadKnownProperties: () => void;
+    knownProperties: RdfsResource[];
 }
 
 interface UnmappedPropertiesEditState {
-    property: string;
+    property: RdfsResource | null;
     value: string;
 }
 
@@ -21,9 +31,13 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
     constructor(props: UnmappedPropertiesEditProps) {
         super(props);
         this.state = {
-            property: "",
+            property: null,
             value: ""
         };
+    }
+
+    public componentDidMount() {
+        this.props.loadKnownProperties();
     }
 
     private onRemove = (property: string, value: string) => {
@@ -49,20 +63,32 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
         }
     };
 
+    private onPropertySelect = (property: RdfsResource | null) => {
+        this.setState({property});
+    };
+
     private onAdd = () => {
         const newProperties = new Map(this.props.properties);
-        if (newProperties.has(this.state.property)) {
-            newProperties.get(this.state.property)!.push(this.state.value);
+        if (newProperties.has(this.state.property!.iri)) {
+            newProperties.get(this.state.property!.iri)!.push(this.state.value);
         } else {
-            newProperties.set(this.state.property, [this.state.value]);
+            newProperties.set(this.state.property!.iri, [this.state.value]);
         }
         this.props.onChange(newProperties);
-        this.setState({property: '', value: ''});
+        this.setState({property: null, value: ''});
     };
 
     private isValid() {
-        return this.state.property.length > 0 && this.state.value.length > 0;
+        return this.state.property && this.state.value.length > 0;
     }
+
+    private static valueRenderer(option: RdfsResource) {
+        return option.label ? option.label : option.iri;
+    }
+
+    private onCreateProperty = (newProperty: RdfsResource) => {
+        this.setState({property: newProperty});
+    };
 
     public render() {
         const i18n = this.props.i18n;
@@ -70,10 +96,9 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
             {this.renderExisting()}
             <Row>
                 <Col xl={6} md={12}>
-                    <CustomInput name="property" label={i18n("properties.edit.property")} value={this.state.property}
-                                 onChange={this.onChange}/>
+                    {this.renderPropertyInput()}
                 </Col>
-                <Col xl={5} md={11}>
+                <Col xl={5} md={11} className="align-self-end">
                     <CustomInput name="value" label={i18n("properties.edit.value")} value={this.state.value}
                                  onChange={this.onChange} onKeyPress={this.onKeyPress}/>
                 </Col>
@@ -107,6 +132,39 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
         });
         return result;
     }
+
+    private renderPropertyInput() {
+        const options = this.props.knownProperties.map(p => p.label ? p : Object.assign(p, {label: p.iri}));
+        return <FormGroup>
+            <Label className='attribute-label'>{this.props.i18n("properties.edit.property")}</Label>
+            {this.props.knownProperties.length > 0 ? <IntelligentTreeSelect className='term-edit'
+                                                                            value={this.state.property}
+                                                                            onChange={this.onPropertySelect}
+                                                                            childrenKey="children"
+                                                                            valueKey='iri'
+                                                                            labelKey='label'
+                                                                            showSettings={true}
+                                                                            maxHeight={150}
+                                                                            multi={false}
+                                                                            renderAsTree={false}
+                                                                            simpleTreeData={true}
+                                                                            options={options}
+                                                                            onOptionCreate={this.onCreateProperty}
+                                                                            openButtonLabel={this.props.i18n("properties.edit.new")}
+                                                                            openButtonTooltipLabel={this.props.i18n("properties.edit.new")}
+                                                                            formComponent={CreatePropertyForm}
+                                                                            valueRenderer={UnmappedPropertiesEdit.valueRenderer}/> :
+                <CustomInput disabled={true}/>}
+        </FormGroup>
+    }
 }
 
-export default injectIntl(withI18n(UnmappedPropertiesEdit));
+export default connect((state: TermItState) => {
+    return {
+        knownProperties: state.properties
+    };
+}, (dispatch: ThunkDispatch) => {
+    return {
+        loadKnownProperties: () => dispatch(getProperties())
+    }
+})(injectIntl(withI18n(UnmappedPropertiesEdit)));

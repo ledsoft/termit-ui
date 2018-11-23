@@ -9,6 +9,7 @@ export default {
         'cancel': 'Zrušit',
         'not-implemented': 'Zatím není naimplementováno!',
         'edit': 'Upravit',
+        'optional': 'Nepovinné',
 
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
@@ -158,6 +159,10 @@ export default {
         'properties.edit.property': 'Atribut',
         'properties.edit.value': 'Hodnota',
         'properties.edit.add.title': 'Přidat hodnotu atributu',
+        'properties.edit.new': 'Vytvořit atribut',
+        'properties.edit.new.iri': 'Identifikátor',
+        'properties.edit.new.label': 'Název',
+        'properties.edit.new.comment': 'Popis',
 
         'type.term': 'Pojem',
         'type.vocabulary': 'Slovník'

@@ -1,24 +1,28 @@
 import * as React from "react";
 import Generator from "../../../__tests__/environment/Generator";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {UnmappedPropertiesEdit} from "../UnmappedPropertiesEdit";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {Badge} from "reactstrap";
 import {GoPlus} from "react-icons/go";
+import {shallow} from "enzyme";
 
 describe("UnmappedPropertiesEdit", () => {
 
     let onChange: (update: Map<string, string[]>) => void;
+    let loadKnownProperties: () => void;
 
     beforeEach(() => {
         onChange = jest.fn();
+        loadKnownProperties = jest.fn();
     });
 
     it("renders existing properties", () => {
         const property = Generator.generateUri();
         const existing = new Map([[property, ["test"]]]);
-        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing}
-                                                              onChange={onChange} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing} knownProperties={[]}
+                                                              onChange={onChange}
+                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         const value = wrapper.find("li");
         expect(value.length).toEqual(1);
         expect(value.text()).toEqual(existing.get(property)![0]);
@@ -27,8 +31,9 @@ describe("UnmappedPropertiesEdit", () => {
     it('removes prop value when delete button is clicked', () => {
         const property = Generator.generateUri();
         const existing = new Map([[property, ["test1", "test2"]]]);
-        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing}
-                                                              onChange={onChange} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing} knownProperties={[]}
+                                                              onChange={onChange}
+                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
 
         const removeButtons = wrapper.find(Badge);
         expect(removeButtons.length).toEqual(2);
@@ -39,8 +44,9 @@ describe("UnmappedPropertiesEdit", () => {
     it("removes property completely when only value is deleted", () => {
         const property = Generator.generateUri();
         const existing = new Map([[property, ["test1"]]]);
-        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing}
-                                                              onChange={onChange} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing} knownProperties={[]}
+                                                              onChange={onChange}
+                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
 
         const removeButton = wrapper.find(Badge);
         expect(removeButton.length).toEqual(1);
@@ -49,8 +55,9 @@ describe("UnmappedPropertiesEdit", () => {
     });
 
     it("adds new property with value when inputs are filled in and add button is clicked", () => {
-        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()}
-                                                              onChange={onChange} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()} knownProperties={[]}
+                                                              onChange={onChange}
+                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         const property = Generator.generateUri();
         const value = "test";
         const propertyInput = wrapper.find("input[name=\"property\"]");
@@ -66,8 +73,9 @@ describe("UnmappedPropertiesEdit", () => {
     it("adds existing property value when inputs are filled in and add button is clicked", () => {
         const property = Generator.generateUri();
         const existing = new Map([[property, ["test"]]]);
-        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing}
-                                                              onChange={onChange} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing} knownProperties={[]}
+                                                              onChange={onChange}
+                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         const value = "test2";
         const propertyInput = wrapper.find("input[name=\"property\"]");
         (propertyInput.getDOMNode() as HTMLInputElement).value = property;
@@ -80,8 +88,9 @@ describe("UnmappedPropertiesEdit", () => {
     });
 
     it("clears state on add", () => {
-        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()}
-                                                              onChange={onChange} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()} knownProperties={[]}
+                                                              onChange={onChange}
+                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         const property = Generator.generateUri();
         const value = "test";
         const propertyInput = wrapper.find("input[name=\"property\"]");
@@ -96,8 +105,9 @@ describe("UnmappedPropertiesEdit", () => {
     });
 
     it("keeps add button disabled when either input is empty", () => {
-        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()}
-                                                              onChange={onChange} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()} knownProperties={[]}
+                                                              onChange={onChange}
+                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         let addButton = wrapper.find(GoPlus).parent();
         expect(addButton.prop("disabled")).toBeTruthy();
         const propertyInput = wrapper.find("input[name=\"property\"]");
@@ -113,8 +123,9 @@ describe("UnmappedPropertiesEdit", () => {
     });
 
     it("adds property value on Enter in the value field", () => {
-        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()}
-                                                              onChange={onChange} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()} knownProperties={[]}
+                                                              onChange={onChange}
+                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         const property = Generator.generateUri();
         const value = "test";
         const propertyInput = wrapper.find("input[name=\"property\"]");
@@ -125,5 +136,11 @@ describe("UnmappedPropertiesEdit", () => {
         valueInput.simulate("change", valueInput);
         valueInput.simulate("keyPress", {key: 'Enter'});
         expect(onChange).toHaveBeenCalled();
+    });
+
+    it("loads known properties on mount", () => {
+        shallow(<UnmappedPropertiesEdit properties={new Map()} onChange={onChange} knownProperties={[]}
+                                        loadKnownProperties={loadKnownProperties} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(loadKnownProperties).toHaveBeenCalled();
     });
 });
