@@ -63,7 +63,7 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
         }
     };
 
-    private onPropertySelect = (property: RdfsResource | null) => {
+    public onPropertySelect = (property: RdfsResource | null) => {
         this.setState({property});
     };
 

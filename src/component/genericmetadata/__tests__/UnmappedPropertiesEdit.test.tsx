@@ -60,9 +60,10 @@ describe("UnmappedPropertiesEdit", () => {
                                                               loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         const property = Generator.generateUri();
         const value = "test";
-        const propertyInput = wrapper.find("input[name=\"property\"]");
-        (propertyInput.getDOMNode() as HTMLInputElement).value = property;
-        propertyInput.simulate("change", propertyInput);
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+            iri: property,
+            label: "Property"
+        });
         const valueInput = wrapper.find("input[name=\"value\"]");
         (valueInput.getDOMNode() as HTMLInputElement).value = value;
         valueInput.simulate("change", valueInput);
@@ -77,9 +78,10 @@ describe("UnmappedPropertiesEdit", () => {
                                                               onChange={onChange}
                                                               loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         const value = "test2";
-        const propertyInput = wrapper.find("input[name=\"property\"]");
-        (propertyInput.getDOMNode() as HTMLInputElement).value = property;
-        propertyInput.simulate("change", propertyInput);
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+            iri: property,
+            label: "Property"
+        });
         const valueInput = wrapper.find("input[name=\"value\"]");
         (valueInput.getDOMNode() as HTMLInputElement).value = value;
         valueInput.simulate("change", valueInput);
@@ -93,14 +95,14 @@ describe("UnmappedPropertiesEdit", () => {
                                                               loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         const property = Generator.generateUri();
         const value = "test";
-        const propertyInput = wrapper.find("input[name=\"property\"]");
-        (propertyInput.getDOMNode() as HTMLInputElement).value = property;
-        propertyInput.simulate("change", propertyInput);
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+            iri: property,
+            label: "Property"
+        });
         const valueInput = wrapper.find("input[name=\"value\"]");
         (valueInput.getDOMNode() as HTMLInputElement).value = value;
         valueInput.simulate("change", valueInput);
         wrapper.find(GoPlus).simulate("click");
-        expect((wrapper.find("input[name=\"property\"]").getDOMNode() as HTMLInputElement).value.length).toEqual(0);
         expect((wrapper.find("input[name=\"value\"]").getDOMNode() as HTMLInputElement).value.length).toEqual(0);
     });
 
@@ -110,9 +112,10 @@ describe("UnmappedPropertiesEdit", () => {
                                                               loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         let addButton = wrapper.find(GoPlus).parent();
         expect(addButton.prop("disabled")).toBeTruthy();
-        const propertyInput = wrapper.find("input[name=\"property\"]");
-        (propertyInput.getDOMNode() as HTMLInputElement).value = "a";
-        propertyInput.simulate("change", propertyInput);
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+            iri: Generator.generateUri(),
+            label: "Property"
+        });
         addButton = wrapper.find(GoPlus).parent();
         expect(addButton.prop("disabled")).toBeTruthy();
         const valueInput = wrapper.find("input[name=\"value\"]");
@@ -128,9 +131,10 @@ describe("UnmappedPropertiesEdit", () => {
                                                               loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
         const property = Generator.generateUri();
         const value = "test";
-        const propertyInput = wrapper.find("input[name=\"property\"]");
-        (propertyInput.getDOMNode() as HTMLInputElement).value = property;
-        propertyInput.simulate("change", propertyInput);
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+            iri: property,
+            label: "Property"
+        });
         const valueInput = wrapper.find("input[name=\"value\"]");
         (valueInput.getDOMNode() as HTMLInputElement).value = value;
         valueInput.simulate("change", valueInput);
