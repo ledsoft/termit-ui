@@ -7,6 +7,7 @@ import {
     asyncActionSuccess,
     asyncActionSuccessWithPayload,
     clearError,
+    clearProperties,
     dismissMessage,
     publishMessage,
     selectVocabularyTerm,
@@ -317,13 +318,22 @@ describe('Reducers', () => {
 
     describe("properties", () => {
         it("sets properties when they were successfully loaded", () => {
-            const properties: RdfsResource[] = [{
+            const properties: RdfsResource[] = [new RdfsResource({
                 iri: "http://www.w3.org/2000/01/rdf-schema#label",
                 label: "Label",
                 comment: "RDFS label property"
-            }];
+            })];
             expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.GET_PROPERTIES}, properties)))
                 .toEqual(Object.assign({}, initialState, {properties}));
+        });
+
+        it("clear properties on clearProperties action", () => {
+            initialState.properties = [new RdfsResource({
+                iri: "http://www.w3.org/2000/01/rdf-schema#label",
+                label: "Label",
+                comment: "RDFS label property"
+            })];
+            expect(reducers(stateToPlainObject(initialState), clearProperties())).toEqual(Object.assign({}, initialState, {properties: []}));
         });
     });
 });

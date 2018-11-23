@@ -26,7 +26,7 @@ import ActionType from "./ActionType";
 import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
-import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT} from "../model/RdfsResource";
+import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
 import TermItState from "../model/TermItState";
 
 /*
@@ -483,7 +483,19 @@ export function getProperties() {
         return Ajax.get(Constants.API_PREFIX + '/data/properties')
             .then((data: object[]) => data.length > 0 ? jsonld.compact(data, RDFS_RESOURCE_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: RdfsResource[]) => dispatch(asyncActionSuccessWithPayload(action, data)))
+            .then((data: RdfsResourceData[]) => dispatch(asyncActionSuccessWithPayload(action, data.map(d => new RdfsResource(d)))))
             .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
     };
+}
+
+export function createProperty(property: RdfsResource) {
+    const action = {
+        type: ActionType.CREATE_PROPERTY
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.post(Constants.API_PREFIX + "/data/properties", content(property.toJsonLd()))
+            .then(() => dispatch(asyncActionSuccess(action)))
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+    }
 }

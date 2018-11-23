@@ -250,10 +250,13 @@ function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuc
     }
 }
 
-function properties(state: RdfsResource[] = [], action: AsyncActionSuccess<RdfsResource[]>): RdfsResource[] {
+function properties(state: RdfsResource[] = [], action: AsyncActionSuccess<RdfsResource[]> | Action): RdfsResource[] {
     switch (action.type) {
         case ActionType.GET_PROPERTIES:
-            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+            const asyncAction = action as AsyncActionSuccess<RdfsResource[]>;
+            return asyncAction.status === AsyncActionStatus.SUCCESS ? asyncAction.payload : state;
+        case ActionType.CLEAR_PROPERTIES:
+            return [];
         default:
             return state;
     }

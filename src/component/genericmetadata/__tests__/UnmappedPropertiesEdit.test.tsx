@@ -6,15 +6,20 @@ import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {Badge} from "reactstrap";
 import {GoPlus} from "react-icons/go";
 import {shallow} from "enzyme";
+import RdfsResource from "../../../model/RdfsResource";
 
 describe("UnmappedPropertiesEdit", () => {
 
     let onChange: (update: Map<string, string[]>) => void;
     let loadKnownProperties: () => void;
+    let createProperty: (property: RdfsResource) => void;
+    let clearProperties: () => void;
 
     beforeEach(() => {
         onChange = jest.fn();
         loadKnownProperties = jest.fn();
+        createProperty = jest.fn();
+        clearProperties = jest.fn();
     });
 
     it("renders existing properties", () => {
@@ -22,7 +27,9 @@ describe("UnmappedPropertiesEdit", () => {
         const existing = new Map([[property, ["test"]]]);
         const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing} knownProperties={[]}
                                                               onChange={onChange}
-                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
+                                                              loadKnownProperties={loadKnownProperties}
+                                                              createProperty={createProperty}
+                                                              clearProperties={clearProperties} {...intlFunctions()}/>);
         const value = wrapper.find("li");
         expect(value.length).toEqual(1);
         expect(value.text()).toEqual(existing.get(property)![0]);
@@ -33,7 +40,9 @@ describe("UnmappedPropertiesEdit", () => {
         const existing = new Map([[property, ["test1", "test2"]]]);
         const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing} knownProperties={[]}
                                                               onChange={onChange}
-                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
+                                                              loadKnownProperties={loadKnownProperties}
+                                                              createProperty={createProperty}
+                                                              clearProperties={clearProperties} {...intlFunctions()}/>);
 
         const removeButtons = wrapper.find(Badge);
         expect(removeButtons.length).toEqual(2);
@@ -46,7 +55,9 @@ describe("UnmappedPropertiesEdit", () => {
         const existing = new Map([[property, ["test1"]]]);
         const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing} knownProperties={[]}
                                                               onChange={onChange}
-                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
+                                                              loadKnownProperties={loadKnownProperties}
+                                                              createProperty={createProperty}
+                                                              clearProperties={clearProperties} {...intlFunctions()}/>);
 
         const removeButton = wrapper.find(Badge);
         expect(removeButton.length).toEqual(1);
@@ -57,13 +68,15 @@ describe("UnmappedPropertiesEdit", () => {
     it("adds new property with value when inputs are filled in and add button is clicked", () => {
         const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()} knownProperties={[]}
                                                               onChange={onChange}
-                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
+                                                              loadKnownProperties={loadKnownProperties}
+                                                              createProperty={createProperty}
+                                                              clearProperties={clearProperties} {...intlFunctions()}/>);
         const property = Generator.generateUri();
         const value = "test";
-        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect(new RdfsResource({
             iri: property,
             label: "Property"
-        });
+        }));
         const valueInput = wrapper.find("input[name=\"value\"]");
         (valueInput.getDOMNode() as HTMLInputElement).value = value;
         valueInput.simulate("change", valueInput);
@@ -76,12 +89,14 @@ describe("UnmappedPropertiesEdit", () => {
         const existing = new Map([[property, ["test"]]]);
         const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing} knownProperties={[]}
                                                               onChange={onChange}
-                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
+                                                              loadKnownProperties={loadKnownProperties}
+                                                              createProperty={createProperty}
+                                                              clearProperties={clearProperties} {...intlFunctions()}/>);
         const value = "test2";
-        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect(new RdfsResource({
             iri: property,
             label: "Property"
-        });
+        }));
         const valueInput = wrapper.find("input[name=\"value\"]");
         (valueInput.getDOMNode() as HTMLInputElement).value = value;
         valueInput.simulate("change", valueInput);
@@ -92,13 +107,15 @@ describe("UnmappedPropertiesEdit", () => {
     it("clears state on add", () => {
         const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()} knownProperties={[]}
                                                               onChange={onChange}
-                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
+                                                              loadKnownProperties={loadKnownProperties}
+                                                              createProperty={createProperty}
+                                                              clearProperties={clearProperties} {...intlFunctions()}/>);
         const property = Generator.generateUri();
         const value = "test";
-        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect(new RdfsResource({
             iri: property,
             label: "Property"
-        });
+        }));
         const valueInput = wrapper.find("input[name=\"value\"]");
         (valueInput.getDOMNode() as HTMLInputElement).value = value;
         valueInput.simulate("change", valueInput);
@@ -109,13 +126,15 @@ describe("UnmappedPropertiesEdit", () => {
     it("keeps add button disabled when either input is empty", () => {
         const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()} knownProperties={[]}
                                                               onChange={onChange}
-                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
+                                                              loadKnownProperties={loadKnownProperties}
+                                                              createProperty={createProperty}
+                                                              clearProperties={clearProperties} {...intlFunctions()}/>);
         let addButton = wrapper.find(GoPlus).parent();
         expect(addButton.prop("disabled")).toBeTruthy();
-        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect(new RdfsResource({
             iri: Generator.generateUri(),
             label: "Property"
-        });
+        }));
         addButton = wrapper.find(GoPlus).parent();
         expect(addButton.prop("disabled")).toBeTruthy();
         const valueInput = wrapper.find("input[name=\"value\"]");
@@ -128,13 +147,15 @@ describe("UnmappedPropertiesEdit", () => {
     it("adds property value on Enter in the value field", () => {
         const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={new Map()} knownProperties={[]}
                                                               onChange={onChange}
-                                                              loadKnownProperties={loadKnownProperties} {...intlFunctions()}/>);
+                                                              loadKnownProperties={loadKnownProperties}
+                                                              createProperty={createProperty}
+                                                              clearProperties={clearProperties} {...intlFunctions()}/>);
         const property = Generator.generateUri();
         const value = "test";
-        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect({
+        (wrapper.find(UnmappedPropertiesEdit).instance() as UnmappedPropertiesEdit).onPropertySelect(new RdfsResource({
             iri: property,
             label: "Property"
-        });
+        }));
         const valueInput = wrapper.find("input[name=\"value\"]");
         (valueInput.getDOMNode() as HTMLInputElement).value = value;
         valueInput.simulate("change", valueInput);
@@ -144,7 +165,36 @@ describe("UnmappedPropertiesEdit", () => {
 
     it("loads known properties on mount", () => {
         shallow(<UnmappedPropertiesEdit properties={new Map()} onChange={onChange} knownProperties={[]}
-                                        loadKnownProperties={loadKnownProperties} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                        loadKnownProperties={loadKnownProperties} {...intlFunctions()}
+                                        createProperty={createProperty}
+                                        clearProperties={clearProperties} {...intlDataForShallow()}/>);
         expect(loadKnownProperties).toHaveBeenCalled();
+    });
+
+    it("invokes property creation action on created property", () => {
+        const wrapper = shallow(<UnmappedPropertiesEdit properties={new Map()} onChange={onChange} knownProperties={[]}
+                                                        loadKnownProperties={loadKnownProperties}
+                                                        createProperty={createProperty}
+                                                        clearProperties={clearProperties} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const propertyData = {
+            iri: Generator.generateUri(),
+            label: "Test"
+        };
+        (wrapper.instance() as UnmappedPropertiesEdit).onCreateProperty(propertyData);
+        expect(createProperty).toHaveBeenCalledWith(new RdfsResource(propertyData));
+    });
+
+    it("schedules property clear on unmount when new property was created", () => {
+        const wrapper = shallow(<UnmappedPropertiesEdit properties={new Map()} onChange={onChange} knownProperties={[]}
+                                                        loadKnownProperties={loadKnownProperties}
+                                                        createProperty={createProperty}
+                                                        clearProperties={clearProperties} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const propertyData = {
+            iri: Generator.generateUri(),
+            label: "Test"
+        };
+        (wrapper.instance() as UnmappedPropertiesEdit).onCreateProperty(propertyData);
+        wrapper.unmount();
+        expect(clearProperties).toHaveBeenCalled();
     });
 });

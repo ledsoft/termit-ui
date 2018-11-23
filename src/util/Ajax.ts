@@ -291,6 +291,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(Constants.API_PREFIX + "/data/properties").reply(200, require("../rest-mock/properties"), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE
     }));
+    // Mock creating new property
+    mock.onPost(Constants.API_PREFIX + "/data/properties").reply(201, undefined, Object.assign({}, header, {
+        'location': 'http://kbss.felk.cvut.cz/termit/rest/data/properties'
+    }));
 }
 
 const instance = new Ajax();

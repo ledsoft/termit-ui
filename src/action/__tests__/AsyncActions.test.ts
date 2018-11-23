@@ -1,5 +1,6 @@
 import configureMockStore, {MockStoreEnhanced} from 'redux-mock-store';
 import {
+    createProperty,
     createVocabulary,
     createVocabularyTerm,
     fetchVocabularyTerms,
@@ -30,7 +31,7 @@ import {ErrorData} from "../../model/ErrorInfo";
 import Generator from "../../__tests__/environment/Generator";
 import {ThunkDispatch} from "../../util/Types";
 import FetchOptionsFunction from "../../model/Functions";
-import RdfsResource from "../../model/RdfsResource";
+import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT} from "../../model/RdfsResource";
 import TermItState from "../../model/TermItState";
 
 jest.mock('../../util/Routing');
@@ -512,16 +513,35 @@ describe('Async actions', () => {
         });
 
         it("does not send request if data are already present in store", () => {
-            const data = [{
-                "@id": "http://www.w3.org/2000/01/rdf-schema#label",
-                "http://www.w3.org/2000/01/rdf-schema#label": "Label",
-                "http://www.w3.org/2000/01/rdf-schema#comment": "Comment"
-            }];
+            const data = [new RdfsResource({
+                iri: "http://www.w3.org/2000/01/rdf-schema#label",
+                label: "Label",
+                comment: "Comment"
+            })];
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
             store.getState().properties = data;
             (store.dispatch as ThunkDispatch)(getProperties());
             return Promise.resolve().then(() => {
                 expect(store.getActions().length).toEqual(0);
+            });
+        });
+    });
+
+    describe("createProperty", () => {
+        it("sends property data in JSON-LD to server", () => {
+            const data = new RdfsResource({
+                iri: "http://www.w3.org/2000/01/rdf-schema#label",
+                label: "Label",
+                comment: "Comment"
+            });
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createProperty(data))).then(() => {
+                expect(Ajax.post).toHaveBeenCalled();
+                const payload = (Ajax.post as jest.Mock).mock.calls[0][1].getContent();
+                expect(payload.iri).toEqual(data.iri);
+                expect(payload.label).toEqual(data.label);
+                expect(payload.comment).toEqual(data.comment);
+                expect(payload["@context"]).toEqual(RDFS_RESOURCE_CONTEXT);
             });
         });
     });

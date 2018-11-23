@@ -11,20 +11,24 @@ import CustomInput from "../misc/CustomInput";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
-import {getProperties} from "../../action/AsyncActions";
-import RdfsResource from "../../model/RdfsResource";
+import {createProperty, getProperties} from "../../action/AsyncActions";
+import RdfsResource, {RdfsResourceData} from "../../model/RdfsResource";
 import CreatePropertyForm from "./CreatePropertyForm";
+import {clearProperties} from "../../action/SyncActions";
 
 interface UnmappedPropertiesEditProps extends HasI18n {
     properties: Map<string, string[]>;
     onChange: (properties: Map<string, string[]>) => void;
     loadKnownProperties: () => void;
     knownProperties: RdfsResource[];
+    createProperty: (property: RdfsResource) => void;
+    clearProperties: () => void;
 }
 
 interface UnmappedPropertiesEditState {
     property: RdfsResource | null;
     value: string;
+    schedulePropertiesReset: boolean;
 }
 
 export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEditProps, UnmappedPropertiesEditState> {
@@ -32,12 +36,19 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
         super(props);
         this.state = {
             property: null,
-            value: ""
+            value: "",
+            schedulePropertiesReset: false
         };
     }
 
     public componentDidMount() {
         this.props.loadKnownProperties();
+    }
+
+    public componentWillUnmount() {
+        if (this.state.schedulePropertiesReset) {
+            this.props.clearProperties();
+        }
     }
 
     private onRemove = (property: string, value: string) => {
@@ -86,8 +97,10 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
         return option.label ? option.label : option.iri;
     }
 
-    private onCreateProperty = (newProperty: RdfsResource) => {
-        this.setState({property: newProperty});
+    public onCreateProperty = (propertyData: RdfsResourceData) => {
+        const property = new RdfsResource(propertyData);
+        this.setState({schedulePropertiesReset: true, property});
+        this.props.createProperty(property);
     };
 
     public render() {
@@ -165,6 +178,8 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        loadKnownProperties: () => dispatch(getProperties())
+        loadKnownProperties: () => dispatch(getProperties()),
+        createProperty: (property: RdfsResource) => dispatch(createProperty(property)),
+        clearProperties: () => dispatch(clearProperties())
     }
 })(injectIntl(withI18n(UnmappedPropertiesEdit)));
