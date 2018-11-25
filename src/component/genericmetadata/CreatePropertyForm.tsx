@@ -4,6 +4,7 @@ import {RdfsResourceData} from "../../model/RdfsResource";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button, ButtonToolbar, Col, ModalBody, ModalHeader, Row} from "reactstrap";
 import CustomInput from "../misc/CustomInput";
+import VocabularyUtils from "../../util/VocabularyUtils";
 
 interface CreatePropertyFormProps extends HasI18n {
     onOptionCreate: (option: RdfsResourceData) => void;
@@ -32,12 +33,13 @@ export class CreatePropertyForm extends React.Component<CreatePropertyFormProps,
         this.setState(change);
     };
 
-    private onCreate = () => {
+    public onCreate = () => {
         this.props.toggleModal();
         const newProperty: RdfsResourceData = {
             iri: this.state.iri,
             label: this.state.label.length > 0 ? this.state.label : undefined,
-            comment: this.state.comment.length > 0 ? this.state.comment : undefined
+            comment: this.state.comment.length > 0 ? this.state.comment : undefined,
+            types: [VocabularyUtils.RDF_PROPERTY]
         };
         this.props.onOptionCreate(newProperty);
     };
