@@ -1,6 +1,7 @@
 import OntologicalVocabulary from "../util/VocabularyUtils";
 import {AssetData, default as Asset} from "./Asset";
 import Utils from "../util/Utils";
+import WithUnmappedProperties from "./WithUnmappedProperties";
 
 const ctx = {
     iri: '@id',
@@ -57,17 +58,11 @@ export default class Term extends Asset implements TermData {
     }
 
     public get unmappedProperties(): Map<string, string[]> {
-        const map = new Map<string, string[]>();
-        Object.getOwnPropertyNames(this).filter(p => MAPPED_PROPERTIES.indexOf(p) === -1)
-            .forEach(prop => {
-                const values: string[] = Utils.sanitizeArray(this[prop]);
-                map.set(prop, values);
-            });
-        return map;
+        return WithUnmappedProperties.getUnmappedProperties(this, MAPPED_PROPERTIES);
     }
 
     public set unmappedProperties(properties: Map<string, string[]>) {
-        properties.forEach((value, key) => this[key] = value);
+        WithUnmappedProperties.setUnmappedProperties(this, properties);
     }
 
     public toJsonLd(): TermData {

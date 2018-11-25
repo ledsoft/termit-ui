@@ -1,6 +1,7 @@
-import User, {UserData, CONTEXT as USER_CONTEXT} from "./User";
+import User, {CONTEXT as USER_CONTEXT, UserData} from "./User";
 import OntologicalVocabulary from '../util/VocabularyUtils';
 import Asset, {AssetData} from "./Asset";
+import WithUnmappedProperties from "./WithUnmappedProperties";
 
 const ctx = {
     "label": "http://www.w3.org/2000/01/rdf-schema#label",
@@ -11,6 +12,8 @@ const ctx = {
 };
 
 export const CONTEXT = Object.assign(ctx, USER_CONTEXT);
+
+const MAPPED_PROPERTIES = ['@context', 'iri', 'label', "created", "author", "document"];
 
 export interface VocabularyData extends AssetData {
     label: string,
@@ -35,6 +38,14 @@ export default class Vocabulary extends Asset implements VocabularyData {
 
     public toJsonLd(): {} {
         return Object.assign({}, this, {"@context": CONTEXT, "@type": [OntologicalVocabulary.VOCABULARY]});
+    }
+
+    public get unmappedProperties(): Map<string, string[]> {
+        return WithUnmappedProperties.getUnmappedProperties(this, MAPPED_PROPERTIES);
+    }
+
+    public set unmappedProperties(properties: Map<string, string[]>) {
+        WithUnmappedProperties.setUnmappedProperties(this, properties);
     }
 }
 
