@@ -577,7 +577,7 @@ describe('Async actions', () => {
         it("returns loaded data on success", () => {
             const data = [{
                 "@id": Generator.generateUri(),
-                "@type": ["http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/prirazeni-termu"],
+                "@type": [VocabularyUtils.TERM_ASSIGNMENT],
                 "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-prirazenim-termu": require("../../rest-mock/terms")[0],
                 "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-cil": {
                     "@id": Generator.generateUri(),
@@ -594,6 +594,15 @@ describe('Async actions', () => {
                 expect(result).toBeDefined();
                 expect(result.length).toEqual(1);
                 expect(result[0].iri).toEqual(data[0]["@id"]);
+            });
+        });
+
+        it("returns empty array when loading fails", () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.reject({msg: "Error"}));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignments(term))).then((result: TermAssignment[]) => {
+                expect(Ajax.get).toHaveBeenCalled();
+                expect(result).toBeDefined();
+                expect(result.length).toEqual(0);
             });
         });
     });

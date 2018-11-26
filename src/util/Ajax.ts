@@ -212,6 +212,20 @@ function mockRestApi(axiosInst: AxiosInstance): void {
             return [200, [], header];
         }
     });
+
+    // Mock getting term assignments
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+\/assignments/).reply(config => {
+        const iri = config.url;
+        const head = Object.assign({}, header, {
+            'content-type': Constants.JSON_LD_MIME_TYPE
+        });
+        if (iri!.indexOf("pojem-1") !== -1 || iri!.indexOf("pojem-2") !== -1) {
+            return [200, require("../rest-mock/termAssignments.json"), head];
+        } else {
+            return [200, [], head];
+        }
+    });
+
     // Mock getting vocabulary term
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+/).reply((config) => {
         const url: string = config.url!;
@@ -224,6 +238,9 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         }
         return [404, undefined, header];
     });
+
+    // Mock term update
+    mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
     // Mock get vocabulary terms
     mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply(() => {
         return [200, require('../rest-mock/terms'), header];
@@ -277,21 +294,6 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock get document
     mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'), header);
 
-    // Mock getting term assignments
-    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+\/assignments/).reply(config => {
-        const iri = config.url;
-        const head = Object.assign({}, header, {
-            'content-type': Constants.JSON_LD_MIME_TYPE
-        });
-        if (iri!.indexOf("pojem-1") !== -1 || iri!.indexOf("pojem-2") !== -1) {
-            return [200, require("../rest-mock/termAssignments.json"), head];
-        } else {
-            return [200, [], head];
-        }
-    });
-
-    // Mock term update
-    mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
     // Mock get label
     mock.onGet(Constants.API_PREFIX + '/data/label').reply(config => {
         const iri: string = config.params.iri;

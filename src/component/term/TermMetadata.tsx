@@ -12,6 +12,7 @@ import Routes from "../../util/Routes";
 import Routing from '../../util/Routing';
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import AssetLabel from "../misc/AssetLabel";
+import TermAssignments from "./TermAssignments";
 
 interface TermMetadataProps extends HasI18n {
     vocabulary: Vocabulary;
@@ -85,6 +86,11 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
             <Row>
                 <Col xs={12}>
                     <UnmappedProperties properties={term.unmappedProperties}/>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={12}>
+                    <TermAssignments term={term}/>
                 </Col>
             </Row>
         </div>;

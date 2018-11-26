@@ -516,6 +516,9 @@ export function loadTermAssignments(term: Term) {
                 dispatch(asyncActionSuccess(action));
                 return data.map(tad => new TermAssignment(tad));
             })
-            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return [];
+            });
     };
 }

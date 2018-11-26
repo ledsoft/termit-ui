@@ -17,6 +17,7 @@ export default {
     DOCUMENT: _PREFIX + "document",
     JE_POJMEM_ZE_SLOVNIKU: _PREFIX + "je-pojmem-ze-slovniku",
     RESOURCE: _PREFIX + "zdroj",
+    TERM_ASSIGNMENT: _PREFIX + "prirazeni-termu",
     USER: "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu",
     RDFS_RESOURCE: "http://www.w3.org/2000/01/rdf-schema#Resource",
     RDF_PROPERTY: "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",

@@ -10,6 +10,7 @@ export default {
         'not-implemented': 'Zatím není naimplementováno!',
         'edit': 'Upravit',
         'optional': 'Nepovinné',
+        'actions': 'Akce',
 
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
@@ -96,6 +97,10 @@ export default {
         'term.metadata.source.add.placeholder': 'Nový zdroj pojmu',
         'term.metadata.source.remove.title': 'Odebrat zdroj',
         'term.metadata.subterm.link': 'Zobrazit detail tohoto pojmu',
+        'term.metadata.assignments.title': 'Anotované zdroje',
+        'term.metadata.assignments.resource': 'Zdroj',
+        'term.metadata.assignments.description': 'Popis anotace',
+        'term.metadata.assignments.type': 'Typ anotace',
 
         'glossary.title': 'Pojmy',
         'glossary.createTerm': 'Vytvořit nový pojem',

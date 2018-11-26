@@ -9,6 +9,7 @@ import OutgoingLink from "../../misc/OutgoingLink";
 import {Button} from "reactstrap";
 
 jest.mock('../../../util/Routing');
+jest.mock("../TermAssignments");
 
 describe('TermMetadata', () => {
 

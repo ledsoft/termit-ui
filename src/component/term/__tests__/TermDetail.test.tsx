@@ -13,6 +13,8 @@ import Term from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
 import Vocabulary from "../../../model/Vocabulary";
 
+jest.mock("../TermAssignments");
+
 describe('TermDetail', () => {
 
     const normalizedTermName = 'test-term';

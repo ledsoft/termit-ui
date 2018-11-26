@@ -10,6 +10,7 @@ export default {
         'not-implemented': 'Not implemented, yet!',
         'edit': 'Edit',
         'optional': 'Optional',
+        'actions': 'Actions',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
@@ -104,6 +105,10 @@ export default {
         'term.metadata.source.add.placeholder': 'Add source',
         'term.metadata.source.remove.title': 'Remove source',
         'term.metadata.subterm.link': 'View detail of this term',
+        'term.metadata.assignments.title': 'Annotated resources',
+        'term.metadata.assignments.resource': 'Resource',
+        'term.metadata.assignments.description': 'Assignment description',
+        'term.metadata.assignments.type': 'Assignment type',
 
         'glossary.title': 'Terms',
         'glossary.createTerm': 'Create new term',

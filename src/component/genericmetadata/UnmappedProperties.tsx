@@ -2,7 +2,6 @@ import * as React from "react";
 import {Col, Label, Row} from "reactstrap";
 import AssetLabel from "../misc/AssetLabel";
 import OutgoingLink from "../misc/OutgoingLink";
-import "./UnmappedProperties.scss";
 
 interface UnmappedPropertiesProps {
     properties: Map<string, string[]>;
@@ -22,7 +21,7 @@ const UnmappedProperties: React.SFC<UnmappedPropertiesProps> = (props: UnmappedP
             <Col xl={10} md={8}>{items}</Col>
         </Row>);
     });
-    return <div className="unmapped-properties">{result}</div>;
+    return <div className="additional-metadata">{result}</div>;
 };
 
 export default UnmappedProperties;

@@ -105,7 +105,7 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
 
     public render() {
         const i18n = this.props.i18n;
-        return <div className="unmapped-properties">
+        return <div className="additional-metadata">
             {this.renderExisting()}
             <Row>
                 <Col xl={6} md={12}>
