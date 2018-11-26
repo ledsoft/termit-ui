@@ -82,12 +82,11 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
                     {this.renderItems(term.sources)}
                 </Col>
             </Row>
-            {term.unmappedProperties.size > 0 && <Row>
-                <Col>
-                    <hr/>
+            <Row>
+                <Col xs={12}>
+                    <UnmappedProperties properties={term.unmappedProperties}/>
                 </Col>
-            </Row>}
-            <UnmappedProperties properties={term.unmappedProperties}/>
+            </Row>
         </div>;
     }
 

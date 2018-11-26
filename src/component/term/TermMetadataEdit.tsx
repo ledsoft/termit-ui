@@ -124,11 +124,6 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                     </Col>
                 </Row>
                 <Row>
-                    <Col xl={6} md={12}>
-                        <hr/>
-                    </Col>
-                </Row>
-                <Row>
                     <Col md={12}>
                         <UnmappedPropertiesEdit properties={this.state.unmappedProperties}
                                                 onChange={this.onPropertiesChange}/>

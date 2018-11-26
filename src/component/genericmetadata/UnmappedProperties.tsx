@@ -2,12 +2,16 @@ import * as React from "react";
 import {Col, Label, Row} from "reactstrap";
 import AssetLabel from "../misc/AssetLabel";
 import OutgoingLink from "../misc/OutgoingLink";
+import "./UnmappedProperties.scss";
 
 interface UnmappedPropertiesProps {
     properties: Map<string, string[]>;
 }
 
 const UnmappedProperties: React.SFC<UnmappedPropertiesProps> = (props: UnmappedPropertiesProps) => {
+    if (props.properties.size === 0) {
+        return null;
+    }
     const result: JSX.Element[] = [];
     props.properties.forEach((values, k) => {
         const items = <ul className="term-items">{values.map(v => <li key={v}>{v}</li>)}</ul>;
@@ -18,7 +22,7 @@ const UnmappedProperties: React.SFC<UnmappedPropertiesProps> = (props: UnmappedP
             <Col xl={10} md={8}>{items}</Col>
         </Row>);
     });
-    return <div>{result}</div>;
+    return <div className="unmapped-properties">{result}</div>;
 };
 
 export default UnmappedProperties;
