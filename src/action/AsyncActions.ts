@@ -27,6 +27,7 @@ import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "
 import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
+import TermAssignment, {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
 import TermItState from "../model/TermItState";
 
 /*
@@ -498,4 +499,23 @@ export function createProperty(property: RdfsResource) {
             .then(() => dispatch(asyncActionSuccess(action)))
             .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
     }
+}
+
+export function loadTermAssignments(term: Term) {
+    const action = {
+        type: ActionType.LOAD_TERM_ASSIGNMENTS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
+        const url = "/vocabularies/" + vocabularyIri.fragment + "/terms/" + VocabularyUtils.getFragment(term.iri) + "/assignments";
+        return Ajax.get(Constants.API_PREFIX + url, param("namespace", vocabularyIri.namespace))
+            .then((data: object) => jsonld.compact(data, TERM_ASSIGNMENT_CONTEXT))
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: TermAssignmentData[]) => {
+                dispatch(asyncActionSuccess(action));
+                return data.map(tad => new TermAssignment(tad));
+            })
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+    };
 }

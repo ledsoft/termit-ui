@@ -6,6 +6,7 @@ import {
     fetchVocabularyTerms,
     getLabel,
     getProperties,
+    loadTermAssignments,
     loadTypes,
     loadUser,
     loadVocabularies,
@@ -23,6 +24,7 @@ import {Action} from 'redux';
 import Routing from '../../util/Routing';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
 import Vocabulary2 from "../../util/VocabularyUtils";
+import VocabularyUtils from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
 import ActionType, {AsyncAction, AsyncActionSuccess, MessageAction,} from "../ActionType";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
@@ -33,6 +35,7 @@ import {ThunkDispatch} from "../../util/Types";
 import FetchOptionsFunction from "../../model/Functions";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT} from "../../model/RdfsResource";
 import TermItState from "../../model/TermItState";
+import TermAssignment from "../../model/TermAssignment";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -542,6 +545,55 @@ describe('Async actions', () => {
                 expect(payload.label).toEqual(data.label);
                 expect(payload.comment).toEqual(data.comment);
                 expect(payload["@context"]).toEqual(RDFS_RESOURCE_CONTEXT);
+            });
+        });
+    });
+
+    describe("loadTermAssignments", () => {
+
+        let term: Term;
+
+        beforeEach(() => {
+            term = new Term({
+                iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/test-vocabulary/terms/test-term",
+                label: "Test term",
+                vocabulary: {
+                    iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/test-vocabulary"
+                }
+            });
+        });
+
+        it("sends request to load term assignments from server", () => {
+            Ajax.get = jest.fn().mockImplementation(() => []);
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignments(term))).then(() => {
+                expect(Ajax.get).toHaveBeenCalled();
+                const url = (Ajax.get as jest.Mock).mock.calls[0][0];
+                expect(url.endsWith("/vocabularies/test-vocabulary/terms/test-term/assignments")).toBeTruthy();
+                const config = (Ajax.get as jest.Mock).mock.calls[0][1];
+                expect(config.getParams().namespace).toEqual("http://onto.fel.cvut.cz/ontologies/termit/vocabularies/");
+            });
+        });
+
+        it("returns loaded data on success", () => {
+            const data = [{
+                "@id": Generator.generateUri(),
+                "@type": ["http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/prirazeni-termu"],
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-prirazenim-termu": require("../../rest-mock/terms")[0],
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-cil": {
+                    "@id": Generator.generateUri(),
+                    "@type": ["http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/cil"],
+                    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-zdroj": {
+                        "@id": Generator.generateUri(),
+                        "@type": [VocabularyUtils.RESOURCE]
+                    }
+                }
+            }];
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignments(term))).then((result: TermAssignment[]) => {
+                expect(Ajax.get).toHaveBeenCalled();
+                expect(result).toBeDefined();
+                expect(result.length).toEqual(1);
+                expect(result[0].iri).toEqual(data[0]["@id"]);
             });
         });
     });
