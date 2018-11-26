@@ -24,5 +24,6 @@
       "http://onto.fel.cvut.cz/ontologies/termit/admin"
     ]
   },
-  "http://purl.org/dc/terms/created": 1534429897893
+  "http://purl.org/dc/terms/created": 1534429897893,
+  "http://www.w3.org/2004/02/skos/core#definition": "Definition of the vocabulary."
 }

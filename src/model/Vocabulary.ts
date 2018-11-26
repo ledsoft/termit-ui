@@ -8,18 +8,22 @@ const ctx = {
     "iri": "@id",
     "created": "http://purl.org/dc/terms/created",
     "author": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora",
-    "document": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument"
+    "document": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument",
+    "glossary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar",
+    "model": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model"
 };
 
 export const CONTEXT = Object.assign(ctx, USER_CONTEXT);
 
-const MAPPED_PROPERTIES = ['@context', 'iri', 'label', "created", "author", "document"];
+const MAPPED_PROPERTIES = ['@context', 'iri', 'label', "created", "author", "document", "types", "glossary", "model"];
 
 export interface VocabularyData extends AssetData {
-    label: string,
-    author?: UserData,
-    created?: number
-    document?: { iri: string }
+    label: string;
+    author?: UserData;
+    created?: number;
+    document?: { iri: string };
+    glossary?: AssetData;
+    model?: AssetData;
 }
 
 export default class Vocabulary extends Asset implements VocabularyData {
@@ -27,6 +31,8 @@ export default class Vocabulary extends Asset implements VocabularyData {
     public author?: User;
     public created?: number;
     public document?: { iri: string };
+    public glossary?: AssetData;
+    public model?: AssetData;
 
     constructor(data: VocabularyData) {
         super();

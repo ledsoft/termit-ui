@@ -5,6 +5,7 @@ import Vocabulary from "../../model/Vocabulary";
 import {Col, Label, Row} from "reactstrap";
 import OutgoingLink from "../misc/OutgoingLink";
 import VocabularyDocument from '../document/VocabularyDocument';
+import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 
 interface VocabularyMetadataProps extends HasI18n {
     vocabulary: Vocabulary
@@ -41,6 +42,11 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
                 </Col>
                 <Col md={10}>
                     {vocabulary.created && new Date(vocabulary.created).toLocaleString()}
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={12}>
+                    <UnmappedProperties properties={vocabulary.unmappedProperties}/>
                 </Col>
             </Row>
             <VocabularyDocument vocabulary={vocabulary}/>

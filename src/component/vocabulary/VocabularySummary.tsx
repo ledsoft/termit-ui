@@ -4,7 +4,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import Vocabulary from "../../model/Vocabulary";
+import Vocabulary, {EMPTY_VOCABULARY} from "../../model/Vocabulary";
 import {loadVocabulary, updateVocabulary} from "../../action/AsyncActions";
 import VocabularyMetadata from "./VocabularyMetadata";
 import {Button, ButtonToolbar} from "reactstrap";
@@ -38,7 +38,9 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
     }
 
     public componentDidUpdate(): void {
-        this.loadVocabulary();
+        if (this.props.vocabulary !== EMPTY_VOCABULARY) {
+            this.loadVocabulary();
+        }
     }
 
     private loadVocabulary(): void {
