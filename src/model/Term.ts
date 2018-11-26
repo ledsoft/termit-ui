@@ -62,7 +62,7 @@ export default class Term extends Asset implements TermData {
     }
 
     public set unmappedProperties(properties: Map<string, string[]>) {
-        WithUnmappedProperties.setUnmappedProperties(this, properties);
+        WithUnmappedProperties.setUnmappedProperties(this, properties, MAPPED_PROPERTIES);
     }
 
     public toJsonLd(): TermData {

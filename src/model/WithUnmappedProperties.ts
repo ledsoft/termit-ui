@@ -14,7 +14,10 @@ export default {
         return map;
     },
 
-    setUnmappedProperties(instance: any, properties: Map<string, string[]>) {
+    setUnmappedProperties(instance: any, properties: Map<string, string[]>, mappedProperties: string[]) {
+        // Remove all unmapped properties
+        Object.getOwnPropertyNames(instance).filter(p => mappedProperties.indexOf(p) === -1).forEach(p => delete instance[p]);
+        // Set new values for unmapped properties
         properties.forEach((value, key) => instance[key] = value);
     }
 }

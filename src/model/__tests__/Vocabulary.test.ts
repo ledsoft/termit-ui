@@ -1,4 +1,6 @@
 import Vocabulary, {VocabularyData} from "../Vocabulary";
+import VocabularyUtils from "../../util/VocabularyUtils";
+import Generator from "../../__tests__/environment/Generator";
 
 describe("Vocabulary", () => {
 
@@ -57,6 +59,47 @@ describe("Vocabulary", () => {
             unmappedProps.set(extraProperty, value);
             testVocabulary.unmappedProperties = unmappedProps;
             expect(testVocabulary.unmappedProperties).toEqual(unmappedProps);
+        });
+
+        it("deletes unmapped property if it is not present in updated map", () => {
+            const extraProperty = Generator.generateUri();
+            data[extraProperty] = "test";
+            const testVocabulary = new Vocabulary(data);
+            const newProperty = Generator.generateUri();
+            testVocabulary.unmappedProperties = new Map([[newProperty, ["test1"]]]);
+            expect(testVocabulary[newProperty]).toEqual(["test1"]);
+            expect(testVocabulary[extraProperty]).not.toBeDefined();
+        });
+    });
+
+    describe("toJsonLd", () => {
+        it("adds vocabulary type when it is missing", () => {
+            const testVocabulary = new Vocabulary(data);
+            const jsonLd = testVocabulary.toJsonLd();
+            expect(jsonLd.types).toBeDefined();
+            expect(jsonLd.types).toEqual([VocabularyUtils.VOCABULARY]);
+        });
+
+        it("does not add vocabulary type when it is already present", () => {
+            data.types = [VocabularyUtils.VOCABULARY];
+            const testVocabulary = new Vocabulary(data);
+            const jsonLd = testVocabulary.toJsonLd();
+            expect(jsonLd.types).toBeDefined();
+            expect(jsonLd.types).toEqual([VocabularyUtils.VOCABULARY]);
+        });
+
+        it("correctly interprets author", () => {
+            data.author = {
+                iri: Generator.generateUri(),
+                firstName: "Test",
+                lastName: "Test Surname",
+                username: "test@test",
+                types: [VocabularyUtils.USER]
+            };
+            data.types = [VocabularyUtils.VOCABULARY];
+            const testVocabulary = new Vocabulary(data);
+            const jsonLd = testVocabulary.toJsonLd();
+            expect(jsonLd.author).toEqual(data.author);
         });
     });
 });
