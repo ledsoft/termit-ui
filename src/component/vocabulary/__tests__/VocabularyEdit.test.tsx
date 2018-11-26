@@ -2,8 +2,9 @@ import * as React from 'react';
 import {VocabularyEdit} from "../VocabularyEdit";
 import Vocabulary from "../../../model/Vocabulary";
 import Generator from "../../../__tests__/environment/Generator";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
-import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
+import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
+import {shallow} from "enzyme";
 
 describe('VocabularyEdit', () => {
 
@@ -22,7 +23,7 @@ describe('VocabularyEdit', () => {
 
     it('passes updated vocabulary to onSave', () => {
         const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
-                                                      i18n={i18n} formatMessage={formatMessage}/>);
+                                                      {...intlFunctions()}/>);
         const nameInput = wrapper.find('input[name="vocabulary-edit-name"]');
         const newName = 'Metropolitan plan';
         (nameInput.getDOMNode() as HTMLInputElement).value = newName;
@@ -37,8 +38,22 @@ describe('VocabularyEdit', () => {
 
     it('closes editing view on when clicking on cancel', () => {
         const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
-                                                      i18n={i18n} formatMessage={formatMessage}/>);
+                                                      {...intlFunctions()}/>);
         wrapper.find('.btn-secondary').simulate('click');
         expect(onCancel).toHaveBeenCalled();
+    });
+
+    it("correctly sets unmapped properties on save", () => {
+        const property = Generator.generateUri();
+        vocabulary.unmappedProperties = new Map([[property, ["test"]]]);
+        const wrapper = shallow(<VocabularyEdit vocabulary={vocabulary} save={onSave}
+                                                cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const updatedProperties = new Map([[property, ["test1", "test2"]]]);
+        wrapper.instance().setState({unmappedProperties: updatedProperties});
+        (wrapper.instance() as VocabularyEdit).onSave();
+        const result: Vocabulary = (onSave as jest.Mock).mock.calls[0][0];
+        expect(result.unmappedProperties).toEqual(updatedProperties);
+        expect(result[property]).toBeDefined();
+        expect(result[property]).toEqual(updatedProperties.get(property));
     });
 });

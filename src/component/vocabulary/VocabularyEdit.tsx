@@ -4,6 +4,7 @@ import Vocabulary from "../../model/Vocabulary";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button, ButtonToolbar, Col, Form, Row} from "reactstrap";
 import CustomInput from "../misc/CustomInput";
+import UnmappedPropertiesEdit from "../genericmetadata/UnmappedPropertiesEdit";
 
 interface VocabularyEditProps extends HasI18n {
     vocabulary: Vocabulary;
@@ -13,13 +14,15 @@ interface VocabularyEditProps extends HasI18n {
 
 interface VocabularyEditState {
     label: string;
+    unmappedProperties: Map<string, string[]>;
 }
 
 export class VocabularyEdit extends React.Component<VocabularyEditProps, VocabularyEditState> {
     constructor(props: VocabularyEditProps) {
         super(props);
         this.state = {
-            label: this.props.vocabulary.label
+            label: this.props.vocabulary.label,
+            unmappedProperties: this.props.vocabulary.unmappedProperties
         }
     }
 
@@ -27,8 +30,13 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
         this.setState({label: e.currentTarget.value});
     };
 
-    private onSave = () => {
+    private onPropertiesChange = (newProperties: Map<string, string[]>) => {
+        this.setState({unmappedProperties: newProperties});
+    };
+
+    public onSave = () => {
         const newVocabulary = new Vocabulary(Object.assign({}, this.props.vocabulary, {label: this.state.label}));
+        newVocabulary.unmappedProperties = this.state.unmappedProperties;
         this.props.save(newVocabulary);
     };
 
@@ -48,6 +56,13 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
                                      value={this.state.label} onChange={this.onChange}/>
                     </Col>
                 </Row>
+                <Row>
+                    <Col xs={12}>
+                        <UnmappedPropertiesEdit properties={this.state.unmappedProperties}
+                                                onChange={this.onPropertiesChange}/>
+                    </Col>
+                </Row>
+
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className='pull-right'>
