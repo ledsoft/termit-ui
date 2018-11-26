@@ -564,7 +564,7 @@ describe('Async actions', () => {
         });
 
         it("sends request to load term assignments from server", () => {
-            Ajax.get = jest.fn().mockImplementation(() => []);
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignments(term))).then(() => {
                 expect(Ajax.get).toHaveBeenCalled();
                 const url = (Ajax.get as jest.Mock).mock.calls[0][0];
