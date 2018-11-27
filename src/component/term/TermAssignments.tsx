@@ -6,7 +6,13 @@ import TermAssignment from "../../model/TermAssignment";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {loadTermAssignments} from "../../action/AsyncActions";
-import {Table} from "reactstrap";
+import {Badge, Button, Table} from "reactstrap";
+import Routing from "../../util/Routing";
+import Routes from "../../util/Routes";
+import VocabularyUtils from "../../util/VocabularyUtils";
+import TermItState from "../../model/TermItState";
+import IntlData from "../../model/IntlData";
+import "./TermAssignments.scss";
 
 interface TermAssignmentsOwnProps {
     term: Term;
@@ -40,6 +46,14 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
         }
     }
 
+    private openResource = (resourceIri: string) => {
+        const iri = VocabularyUtils.create(resourceIri);
+        Routing.transitionTo(Routes.resourceDetail, {
+            params: new Map([["name", iri.fragment]]),
+            query: new Map([["namespace", iri.namespace!]])
+        });
+    };
+
     public render() {
         if (this.state.assignments.length === 0) {
             return null;
@@ -47,7 +61,7 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
         const i18n = this.props.i18n;
         return <div className="additional-metadata">
             <h5>{i18n("term.metadata.assignments.title")}</h5>
-            <Table striped={true}>
+            <Table borderless={true}>
                 <thead>
                 <tr>
                     <th>{i18n("term.metadata.assignments.resource")}</th>
@@ -62,16 +76,43 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
     }
 
     private renderAssignments() {
-        return this.state.assignments.map(ass => {
-            return <tr key={ass.iri}>
-                <td>{ass.target.source.label}</td>
-                <td>{ass.description}</td>
-            </tr>;
+        const assignmentsPerResource = new Map<string, { count: number, descriptions: string, label: string }>();
+        this.state.assignments.forEach(ass => {
+            const resIri = ass.target.source.iri;
+            let item;
+            if (assignmentsPerResource.has(resIri)) {
+                item = assignmentsPerResource.get(resIri)!;
+                item.count += 1;
+                item.descriptions += item.descriptions.length > 0 ? ("; " + ass.description) : ass.description;
+            } else {
+                item = {count: 1, descriptions: ass.description ? ass.description : "", label: ass.target.source.label};
+            }
+            assignmentsPerResource.set(resIri, item);
         });
+        const result: JSX.Element[] = [];
+        assignmentsPerResource.forEach((v, k) => {
+            result.push(<tr key={k}>
+                <td>
+                    <Button color="link" onClick={this.openResource.bind(null, k)} className="link-to-resource"
+                            title={this.props.i18n("term.metadata.assignments.resource.tooltip")}>
+                        {v.label}
+                    </Button>
+                    {v.count > 1 && <Badge color="info"
+                                           title={this.props.formatMessage("term.metadata.assignments.count.tooltip", {count: v.count})}>{v.count}</Badge>}
+                </td>
+                <td>{v.descriptions}</td>
+            </tr>);
+        });
+        return result;
     }
 }
 
-export default connect<null, StoreDispatchProps, TermAssignmentsOwnProps>(null, (dispatch: ThunkDispatch) => {
+// NOTE: Need to explicitly pass intl to the component in case of merging props interfaces, otherwise, language switching would not work
+export default connect<{ intl: IntlData }, StoreDispatchProps, TermAssignmentsOwnProps>((state: TermItState) => {
+    return {
+        intl: state.intl
+    };
+}, (dispatch: ThunkDispatch) => {
     return {
         loadTermAssignments: (term: Term) => dispatch(loadTermAssignments(term))
     };

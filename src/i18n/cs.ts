@@ -99,8 +99,10 @@ export default {
         'term.metadata.subterm.link': 'Zobrazit detail tohoto pojmu',
         'term.metadata.assignments.title': 'Anotované zdroje',
         'term.metadata.assignments.resource': 'Zdroj',
+        'term.metadata.assignments.resource.tooltip': 'Zobrazit detail tohoto zdroje',
         'term.metadata.assignments.description': 'Popis anotace',
         'term.metadata.assignments.type': 'Typ anotace',
+        'term.metadata.assignments.count.tooltip': 'Pojem se v tomto zdroji vyskytuje {count, plural, one {jednou} other {# -krát}}',
 
         'glossary.title': 'Pojmy',
         'glossary.createTerm': 'Vytvořit nový pojem',

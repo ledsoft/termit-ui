@@ -107,8 +107,10 @@ export default {
         'term.metadata.subterm.link': 'View detail of this term',
         'term.metadata.assignments.title': 'Annotated resources',
         'term.metadata.assignments.resource': 'Resource',
+        'term.metadata.assignments.resource.tooltip': 'View detail of this resource',
         'term.metadata.assignments.description': 'Assignment description',
         'term.metadata.assignments.type': 'Assignment type',
+        'term.metadata.assignments.count.tooltip': 'The term occurs {count, plural, one {# time} other {# times}} in this resource',
 
         'glossary.title': 'Terms',
         'glossary.createTerm': 'Create new term',
