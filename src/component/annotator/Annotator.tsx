@@ -28,6 +28,11 @@ interface HtmlSplit {
 
 export class Annotator extends React.Component<AnnotatorProps> {
     private containerElement: HTMLDivElement | null;
+    private stickyAnnotationId: string;
+
+    constructor(props: AnnotatorProps) {
+        super(props);
+    }
 
     // TODO extract to separate class
     public surroundSelection = (element: any, document: any): AnnotationTarget | null => {
@@ -58,17 +63,25 @@ export class Annotator extends React.Component<AnnotatorProps> {
     }
 
     private renderAnnotation(annTarget: AnnotationTarget) {
+        const annId = this.getRDFNodeId();
+        this.stickyAnnotationId = annId;
         ReactDOM.render(
-            this.getAnnotation(annTarget.text),
+            this.getAnnotation(annId, annTarget.text),
             annTarget.element);
     }
 
-    private getAnnotation = (text: string) => {
+
+    private isStickyAnnotation = (annotationId: string) =>  {
+        return () =>  (this.stickyAnnotationId === annotationId) ;
+    };
+
+    private getAnnotation = (id: string, text: string) => {
         return <Provider store={TermItStore}>
             <IntlProvider {...this.props.intl}>
-                <Annotation about={this.getRDFNodeId()} property={DEFAULT_RDF_PROPERTY_VALUE}
+                <Annotation about={id} property={DEFAULT_RDF_PROPERTY_VALUE}
                             typeof={DEFAULT_RDF_TYPEOF_VALUE}
-                            text={text}/>
+                            text={text}
+                            isSticky={this.isStickyAnnotation(id)}/>
             </IntlProvider>
         </Provider>
     }
