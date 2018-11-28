@@ -26,7 +26,6 @@ import Routes from '../util/Routes';
 import Footer from './Footer';
 import {loadUser, logout} from '../action/ComplexActions';
 import {Route, RouteComponentProps, Switch, withRouter} from 'react-router';
-import Dashboard from './dashboard/Dashboard';
 import VocabularyManagement from './vocabulary/VocabularyManagement';
 import VocabularyDetail from "./vocabulary/VocabularyDetail";
 import LanguageSelector from "./main/LanguageSelector";
@@ -89,7 +88,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         return <div className='wrapper'>
             <header>
                 <Navbar light={this.props.backgroundIsLight} expand={"lg"} className={"navbar-dark d-flex"} style={{background: this.props.backgroundColor}}>
-                    <NavbarBrand href={MainView.hashPath(Routes.dashboard.path)}>
+                    <NavbarBrand href={MainView.hashPath(Routes.search.path)}>
                         {Constants.APP_NAME}
                     </NavbarBrand>
                     <Nav navbar={true} className={"flex-grow-1"}>
@@ -99,9 +98,6 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
 
                     <Collapse isOpen={this.state.isMainMenuOpen} navbar={true}>
                         <Nav navbar={true} className={"flex-grow-1 justify-content-end"}>
-                            <NavItem active={path === Routes.dashboard.path}>
-                                <NavLink href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>
-                            </NavItem>
                             <NavItem active={path.startsWith(Routes.vocabularies.path)}>
                                 <NavLink href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
                             </NavItem>
@@ -143,7 +139,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                     <Route path={Routes.statistics.path} component={Statistics}/>
                     <Route path={Routes.search.path} component={Search}/>
                     <Route path={Routes.facetedSearch.path} component={FacetedSearch}/>
-                    <Route component={Dashboard}/>
+                    <Route component={Search}/>
                 </Switch>
             </Container>
             <Footer/>
