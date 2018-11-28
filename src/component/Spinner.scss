@@ -1,0 +1,37 @@
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+.spinner_container {
+  box-shadow: #fff 0em 0em 4em;
+  background: #fff;
+  padding: 4em;
+  text-align: center;
+  position: fixed;
+  box-sizing: border-box;
+  top: 30%;
+  left: 50%;
+  margin: -6em auto auto -6em;
+  width: auto;
+  height: auto;
+  border-radius: 100%;
+}
+
+.spinner {
+  width: 4em;
+  height: 4em;
+  display: block;
+}
+
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  margin-left: -2em;
+  border-radius: 50%;
+  border-top: 3px solid #07d;
+  border-right: 3px solid transparent;
+  animation: spinner .6s linear infinite;
+}

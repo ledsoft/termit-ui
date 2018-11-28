@@ -244,6 +244,18 @@ function searchListenerCount(state: number = 0, action: Action): number
     }
 }
 
+function searchInProgress(state: boolean = false, action: Action): boolean
+{
+    switch (action.type) {
+        case ActionType.SEARCH_START:
+            return true;
+        case ActionType.SEARCH_FINISH:
+            return false;
+        default:
+            return state;
+    }
+}
+
 function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuccess<Term[]>): {[key: string]: Term } {
     switch (action.type) {
         case ActionType.LOAD_TYPES:
@@ -280,6 +292,7 @@ const rootReducer = combineReducers<TermItState>({
     searchQuery,
     searchResults,
     searchListenerCount,
+    searchInProgress,
     types
 });
 

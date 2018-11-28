@@ -62,7 +62,7 @@ export class SearchResultTerms extends React.Component<SearchResultTermsProps> {
 
 export default connect((state: TermItState) => {
     return {
-        searchResults: state.searchResults,   // FIXME
+        searchResults: state.searchResults,
     };
 }, (dispatch: ThunkDispatch) => {
     return {

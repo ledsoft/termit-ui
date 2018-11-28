@@ -30,6 +30,7 @@ export default class TermItState {
     public createdTermsCounter: number;
     public facetedSearchResult: object;
     public searchListenerCount: number;
+    public searchInProgress: boolean;
     public searchQuery: SearchQuery;
     public searchResults: SearchResult[] | null;
     public types: { [key: string]: Term };
@@ -52,6 +53,7 @@ export default class TermItState {
         this.createdTermsCounter = 0;
         this.facetedSearchResult = {};
         this.searchListenerCount = 0;
+        this.searchInProgress = false;
         this.searchQuery = new SearchQuery();
         this.searchResults = null;
         this.types = {};

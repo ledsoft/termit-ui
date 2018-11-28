@@ -31,7 +31,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         super(props);
         this.state = {
             showResults: false,
-            results: null
+            results: null,
         };
     }
 

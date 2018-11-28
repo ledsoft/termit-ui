@@ -14,6 +14,7 @@ import MessageType from "../model/MessageType";
 import ActionType from "./ActionType";
 import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import TermItState from "../model/TermItState";
+import Timer = NodeJS.Timer;
 
 /**
  * Add a search listener using a simple reference counting.
@@ -45,17 +46,41 @@ export function removeSearchListener() {
 }
 
 /**
+ * Timer to delay search requests as user is still typing.
+ */
+let updateSearchTimer: Timer|null = null;
+const updateSearchDelay = 400; // ms
+
+/**
  * Change the search criteria and trigger a new search.
  */
 export function updateSearchFilter(searchString: string) {
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: () => TermItState) => {
         dispatch({
             type: ActionType.UPDATE_SEARCH_FILTER,
             searchString,
         });
 
-        // TODO: Add timeout to delay the search when typing
-        return dispatch(searchEverything());
+        // Clear search results
+        dispatch({ type: ActionType.SEARCH_START });
+        dispatch({ type: ActionType.SEARCH_RESULT, searchResults: null });
+
+        // Stop waiting after previous update
+        if (updateSearchTimer) {
+            clearTimeout(updateSearchTimer);
+        }
+
+        const state = getState();
+        if (state.searchQuery.isEmpty()) {
+            // Don't delay empty query as it will just reset searches without bothering the server
+            dispatch(searchEverything());
+        } else {
+            // Delay the search while user types the query
+            updateSearchTimer = setTimeout(() => {
+                updateSearchTimer = null;
+                dispatch(searchEverything());
+            }, updateSearchDelay);
+        }
     }
 }
 
@@ -66,10 +91,11 @@ export function updateSearchFilter(searchString: string) {
 export function searchEverything() {
     return (dispatch: ThunkDispatch, getState: () => TermItState) => {
         const state: TermItState = getState();
-        if (state.searchListenerCount > 0) {
+        if (state.searchListenerCount > 0 && !state.searchQuery.isEmpty()) {
             window.console.info('%c 🔍 Searching ... ', 'color: black; font-weight: bold; background: yellow;');
             return dispatch(search(state.searchQuery.searchQuery, true));
         } else {
+            dispatch({ type: ActionType.SEARCH_FINISH });
             return Promise.resolve();
         }
     };
@@ -95,9 +121,9 @@ export function search(searchString: string, disableLoading: boolean = false) {
 }
 
 export function searchResult(searchResults: SearchResult[]) {
-    return {
-        type: ActionType.SEARCH_RESULT,
-        searchResults,
+    return (dispatch: ThunkDispatch) => {
+        dispatch({ type: ActionType.SEARCH_RESULT, searchResults });
+        dispatch({ type: ActionType.SEARCH_FINISH });
     };
 }
 
