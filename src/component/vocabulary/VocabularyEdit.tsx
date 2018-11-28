@@ -5,6 +5,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button, ButtonToolbar, Col, Form, Row} from "reactstrap";
 import CustomInput from "../misc/CustomInput";
 import UnmappedPropertiesEdit from "../genericmetadata/UnmappedPropertiesEdit";
+import TextArea from "../misc/TextArea";
 
 interface VocabularyEditProps extends HasI18n {
     vocabulary: Vocabulary;
@@ -14,6 +15,7 @@ interface VocabularyEditProps extends HasI18n {
 
 interface VocabularyEditState {
     label: string;
+    comment: string;
     unmappedProperties: Map<string, string[]>;
 }
 
@@ -22,12 +24,15 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
         super(props);
         this.state = {
             label: this.props.vocabulary.label,
+            comment: this.props.vocabulary.comment,
             unmappedProperties: this.props.vocabulary.unmappedProperties
         }
     }
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({label: e.currentTarget.value});
+        const change = {};
+        change[e.currentTarget.name.endsWith("label") ? "label" : "comment"] = e.currentTarget.value;
+        this.setState(change);
     };
 
     private onPropertiesChange = (newProperties: Map<string, string[]>) => {
@@ -35,7 +40,10 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
     };
 
     public onSave = () => {
-        const newVocabulary = new Vocabulary(Object.assign({}, this.props.vocabulary, {label: this.state.label}));
+        const newVocabulary = new Vocabulary(Object.assign({}, this.props.vocabulary, {
+            label: this.state.label,
+            comment: this.state.comment
+        }));
         newVocabulary.unmappedProperties = this.state.unmappedProperties;
         this.props.save(newVocabulary);
     };
@@ -52,8 +60,14 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name='vocabulary-edit-name' label={i18n('vocabulary.name')}
+                        <CustomInput name='vocabulary-edit-label' label={i18n('vocabulary.name')}
                                      value={this.state.label} onChange={this.onChange}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xl={6} md={12}>
+                        <TextArea name='vocabulary-edit-comment' label={i18n('vocabulary.comment')} rows={3}
+                                  value={this.state.comment} onChange={this.onChange}/>
                     </Col>
                 </Row>
                 <Row>

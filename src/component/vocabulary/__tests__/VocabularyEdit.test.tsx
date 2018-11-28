@@ -24,7 +24,7 @@ describe('VocabularyEdit', () => {
     it('passes updated vocabulary to onSave', () => {
         const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
                                                       {...intlFunctions()}/>);
-        const nameInput = wrapper.find('input[name="vocabulary-edit-name"]');
+        const nameInput = wrapper.find('input[name="vocabulary-edit-label"]');
         const newName = 'Metropolitan plan';
         (nameInput.getDOMNode() as HTMLInputElement).value = newName;
         nameInput.simulate('change', nameInput);

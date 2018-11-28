@@ -45,6 +45,14 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
                 </Col>
             </Row>
             <Row>
+                <Col md={2}>
+                    <Label className='attribute-label'>{i18n('vocabulary.comment')}</Label>
+                </Col>
+                <Col md={10}>
+                    <Label>{vocabulary.comment}</Label>
+                </Col>
+            </Row>
+            <Row>
                 <Col xs={12}>
                     <UnmappedProperties properties={vocabulary.unmappedProperties}/>
                 </Col>

@@ -70,6 +70,7 @@ export default {
         'vocabulary.create.iri.help': 'Identifikátor bude vygenerován automaticky na základě názvu slovníku. Můžete ho však též zadat ručně.',
         'vocabulary.name': 'Název',
         'vocabulary.iri': 'Identifikátor',
+        'vocabulary.comment': 'Komentář',
         'vocabulary.summary.title': '{name} - přehled',
         'vocabulary.summary.gotodetail.label' : 'Zobrazit pojmy v tomto slovníku',
         'vocabulary.updated.message': 'Slovník úspěšně uložen.',

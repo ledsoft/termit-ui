@@ -72,6 +72,7 @@ export default {
         'vocabulary.create.iri.help': 'Identifier will be automatically generated based on the specified name. Or you can set it manually.',
         'vocabulary.name': 'Name',
         'vocabulary.iri': 'Identifier',
+        'vocabulary.comment': 'Comment',
         'vocabulary.summary.title': '{name} - Summary',
         'vocabulary.summary.gotodetail.label': 'View terms in this vocabulary',
         'vocabulary.updated.message': 'Vocabulary successfully updated.',

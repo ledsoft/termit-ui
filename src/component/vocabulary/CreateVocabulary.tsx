@@ -13,46 +13,53 @@ import withLoading from "../hoc/withLoading";
 import {createVocabulary} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import {ThunkDispatch} from "../../util/Types";
+import TextArea from "../misc/TextArea";
 
 interface CreateVocabularyProps extends HasI18n {
     onCreate: (vocabulary: Vocabulary) => void
 }
 
 interface CreateVocabularyState {
-    name: string,
-    iri: string,
-    generateIri: boolean
+    label: string;
+    comment: string;
+    iri: string;
+    generateIri: boolean;
 }
 
 export class CreateVocabulary extends React.Component<CreateVocabularyProps, CreateVocabularyState> {
     constructor(props: CreateVocabularyProps) {
         super(props);
         this.state = {
-            name: '',
+            label: '',
+            comment: '',
             iri: '',
             generateIri: true
         };
     }
 
     private onNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        const name = (e.currentTarget.value as string);
-        this.setState({name});
+        const label = e.currentTarget.value;
+        this.setState({label});
         this.generateIri(name);
     };
 
-    private generateIri(name: string): void {
+    private generateIri(label: string): void {
         if (!this.state.generateIri) {
             return;
         }
-        Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier', params({name})).then(iri => this.setState({iri}));
+        Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier', params({name: label})).then(iri => this.setState({iri}));
     }
 
     private onIriChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({iri: (e.currentTarget.value as string), generateIri: false});
     };
 
+    private onCommentChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({comment: e.currentTarget.value});
+    };
+
     private onCreate = (): void => {
-        this.props.onCreate(new Vocabulary({label: this.state.name, iri: this.state.iri}));
+        this.props.onCreate(new Vocabulary({label: this.state.label, iri: this.state.iri}));
     };
 
     private static onCancel(): void {
@@ -70,7 +77,7 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
                     <Row>
                         <Col xl={6} md={12}>
                             <CustomInput name='create-vocabulary.name' label={i18n('vocabulary.name')}
-                                         value={this.state.name}
+                                         value={this.state.label}
                                          onChange={this.onNameChange}/>
                         </Col>
                     </Row>
@@ -83,9 +90,16 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
                     </Row>
                     <Row>
                         <Col xl={6} md={12}>
+                            <TextArea name='create-vocabulary.comment' label={i18n('vocabulary.comment')}
+                                      type="textarea" rows={3} value={this.state.comment} help={i18n('optional')}
+                                      onChange={this.onCommentChange}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xl={6} md={12}>
                             <ButtonToolbar className='pull-right'>
                                 <Button onClick={this.onCreate} color='success' size='sm'
-                                        disabled={this.state.name.trim().length === 0}>{i18n('vocabulary.create.submit')}</Button>
+                                        disabled={this.state.label.trim().length === 0}>{i18n('vocabulary.create.submit')}</Button>
                                 <Button onClick={CreateVocabulary.onCancel} color='secondary'
                                         size='sm'>{i18n('cancel')}</Button>
                             </ButtonToolbar>

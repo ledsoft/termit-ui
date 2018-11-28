@@ -7,6 +7,7 @@ import Utils from "../util/Utils";
 // @id and @type are merged from USER_CONTEXT
 const ctx = {
     "label": "http://www.w3.org/2000/01/rdf-schema#label",
+    "comment": "http://www.w3.org/2000/01/rdf-schema#comment",
     "created": "http://purl.org/dc/terms/created",
     "author": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora",
     "document": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument",
@@ -20,6 +21,7 @@ const MAPPED_PROPERTIES = ['@context', 'iri', 'label', "created", "author", "doc
 
 export interface VocabularyData extends AssetData {
     label: string;
+    comment?: string;
     author?: UserData;
     created?: number;
     document?: { iri: string };
@@ -30,6 +32,7 @@ export interface VocabularyData extends AssetData {
 
 export default class Vocabulary extends Asset implements VocabularyData {
     public label: string;
+    public comment: string;
     public author?: User;
     public created?: number;
     public document?: { iri: string };
