@@ -85,7 +85,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         if (user === EMPTY_USER) {
             return this.renderPlaceholder();
         }
-        return <div className='wrapper'>
+        return <>
             <header>
                 <Navbar light={this.props.backgroundIsLight} expand={"lg"} className={"navbar-dark d-flex"} style={{background: this.props.backgroundColor}}>
                     <NavbarBrand href={MainView.hashPath(Routes.search.path)}>
@@ -129,7 +129,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                 </Navbar>
             </header>
             <Messages/>
-            <Container fluid={true} className="mt-5 mb-5">
+            <Container fluid={true} className="mt-5 mb-5 flex-grow-1">
                 <Switch>
                     <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
@@ -143,7 +143,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                 </Switch>
             </Container>
             <Footer/>
-        </div>;
+        </>;
     }
 
     private renderPlaceholder() {

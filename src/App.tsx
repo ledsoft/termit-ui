@@ -4,11 +4,9 @@ import TermItStore from './store/TermItStore';
 import IntlApp from "./IntlApp";
 
 const App: React.SFC = () => {
-    return <div className='app-container'>
-        <Provider store={TermItStore}>
+    return <Provider store={TermItStore}>
             <IntlApp/>
-        </Provider>
-    </div>;
+        </Provider>;
 };
 
 export default App;
