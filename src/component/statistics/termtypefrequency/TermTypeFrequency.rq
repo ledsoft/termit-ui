@@ -16,8 +16,10 @@ CONSTRUCT {
     OPTIONAL {
         ?pojem a ?t .
     	FILTER(!(?t IN (a-popis-dat-pojem:term,skos:Concept)))
+    	OPTIONAL {
       	SERVICE silent <http://onto.fel.cvut.cz/rdf4j-server/repositories/ufo-current> {
         	?t rdfs:label ?lT .
+  	    }
   	    }
     	BIND(COALESCE(?lT,str(?t)) as ?labelTypu)
     }
