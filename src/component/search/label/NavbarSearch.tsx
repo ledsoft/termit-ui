@@ -109,7 +109,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
 
 export default connect((state: TermItState) => {
     return {
-        searchString: state.searchQuery
+        searchString: state.searchQuery.searchQuery
     };
 }, (dispatch: ThunkDispatch) => {
     return {

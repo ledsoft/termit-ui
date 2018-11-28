@@ -68,7 +68,7 @@ export function searchEverything() {
         const state: TermItState = getState();
         if (state.searchListenerCount > 0) {
             window.console.info('%c 🔍 Searching ... ', 'color: black; font-weight: bold; background: yellow;');
-            return dispatch(search(state.searchQuery, true));
+            return dispatch(search(state.searchQuery.searchQuery, true));
         } else {
             return Promise.resolve();
         }

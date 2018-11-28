@@ -13,11 +13,14 @@ import Routes from "../../../util/Routes";
 import {ThunkDispatch} from '../../../util/Types';
 import TermItState from "../../../model/TermItState";
 import SearchResultTerms from "./SearchResultTerms";
+import SearchQuery from "../../../model/SearchQuery";
+import Dashboard from "../../dashboard/Dashboard";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
     removeSearchListener: () => void;
-    searchString: string;
+    searchQuery: SearchQuery;
+    searchResults: SearchResult[] | null;
 }
 
 interface SearchState {
@@ -34,8 +37,8 @@ export class Search extends React.Component<SearchProps, SearchState> {
     }
 
     public componentDidUpdate(prevProps: SearchProps, prevState: SearchState) {
-        if (this.props.searchString !== prevProps.searchString) {
-            window.console.log('Search:', prevProps.searchString, ' -> ', this.props.searchString);
+        if (this.props.searchQuery && this.props.searchQuery.searchQuery !== prevProps.searchQuery.searchQuery) {
+            // window.console.log('Search:', prevProps.searchString, ' -> ', this.props.searchString);
             // this.search(this.props.searchString);
         }
     }
@@ -77,21 +80,28 @@ export class Search extends React.Component<SearchProps, SearchState> {
 
     public render() {
         const i18n = this.props.i18n;
-        return <div>
-            <h2 className='page-header'>{i18n('search.title')}</h2>
-            <SearchResultTerms />
-            <hr />
-            <Row>
-                {this.renderResults()}
-            </Row>
-        </div>;
+
+        if (!this.props.searchQuery || this.props.searchQuery.isEmpty()) {
+            return <div>
+                <Dashboard />
+            </div>;
+        } else {
+            return <div>
+                <h2 className='page-header'>{i18n('search.title')}</h2>
+                <SearchResultTerms/>
+                <hr/>
+                <Row>
+                    {this.renderResults()}
+                </Row>
+            </div>;
+        }
     }
 
     private renderResults() {
         if (this.state.results === null) {
             return null;
         }
-        const title = this.props.formatMessage('search.results.title', {searchString: this.props.searchString});
+        const title = this.props.formatMessage('search.results.title', {searchString: this.props.searchQuery.searchQuery});
         let content;
         if (this.state.results.length === 0) {
             content = <Row><Col md={6}>
@@ -139,7 +149,7 @@ export class Search extends React.Component<SearchProps, SearchState> {
 
 export default connect((state: TermItState) => {
     return {
-        searchString: state.searchQuery,
+        searchQuery: state.searchQuery,
         searchResults: state.searchResults,
     };
 }, (dispatch: ThunkDispatch) => {

@@ -8,6 +8,7 @@ import {QueryResultIF} from "./QueryResult";
 import Term from "./Term";
 import Document, {EMPTY_DOCUMENT} from "./Document";
 import SearchResult from "./SearchResult";
+import SearchQuery from "./SearchQuery";
 
 /**
  * This is the basic shape of the application's state managed by Redux.
@@ -29,7 +30,7 @@ export default class TermItState {
     public createdTermsCounter: number;
     public facetedSearchResult: object;
     public searchListenerCount: number;
-    public searchQuery: string;
+    public searchQuery: SearchQuery;
     public searchResults: SearchResult[] | null;
     public types: { [key: string]: Term };
 
@@ -51,7 +52,7 @@ export default class TermItState {
         this.createdTermsCounter = 0;
         this.facetedSearchResult = {};
         this.searchListenerCount = 0;
-        this.searchQuery = '';
+        this.searchQuery = new SearchQuery();
         this.searchResults = null;
         this.types = {};
     }

@@ -22,6 +22,7 @@ import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import Term from "../model/Term";
 import Document, {EMPTY_DOCUMENT} from "../model/Document";
 import SearchResult from "../model/SearchResult";
+import SearchQuery from "../model/SearchQuery";
 
 /**
  * Handles changes to the currently logged in user.
@@ -210,13 +211,15 @@ function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<D
     }
 }
 
-function searchQuery(state: string = '', action: SearchAction): string
+function searchQuery(state: SearchQuery | undefined, action: SearchAction): SearchQuery
 {
     switch (action.type) {
         case ActionType.UPDATE_SEARCH_FILTER:
-            return action.searchString;
+            const newState = new SearchQuery(state);
+            newState.searchQuery = action.searchString;
+            return newState;
         default:
-            return state;
+            return state || new SearchQuery();
     }
 }
 
