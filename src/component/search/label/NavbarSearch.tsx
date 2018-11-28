@@ -15,7 +15,7 @@ import {ThunkDispatch} from '../../../util/Types';
 import TermItState from "../../../model/TermItState";
 
 interface NavbarSearchProps extends HasI18n {
-    search: (searchString: string) => Promise<object>;
+    search: (searchString: string) => {};
     updateSearchFilter: (searchString: string) => any;
     searchString: string;
 }
@@ -84,7 +84,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         const i18n = this.props.i18n;
         return <div className='search flex-grow-1'>
             <InputGroup>
-                <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')}
+                <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')} autoFocus={true}
                        value={this.props.searchString} onChange={this.onChange} onKeyPress={this.onKeyPress}/>
                 <InputGroupAddon addonType='append' className='search-icon' title={i18n('main.search.tooltip')}>
                     <Button color="grey" onClick={this.openSearchView}>

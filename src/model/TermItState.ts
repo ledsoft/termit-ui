@@ -7,6 +7,7 @@ import Vocabulary, {EMPTY_VOCABULARY} from "./Vocabulary";
 import {QueryResultIF} from "./QueryResult";
 import Term from "./Term";
 import Document, {EMPTY_DOCUMENT} from "./Document";
+import SearchResult from "./SearchResult";
 
 /**
  * This is the basic shape of the application's state managed by Redux.
@@ -29,6 +30,7 @@ export default class TermItState {
     public facetedSearchResult: object;
     public searchListenerCount: number;
     public searchQuery: string;
+    public searchResults: SearchResult[] | null;
     public types: { [key: string]: Term };
 
     // FIXME: WTF: This constructor is never called?
@@ -50,6 +52,7 @@ export default class TermItState {
         this.facetedSearchResult = {};
         this.searchListenerCount = 0;
         this.searchQuery = '';
+        this.searchResults = null;
         this.types = {};
     }
 }

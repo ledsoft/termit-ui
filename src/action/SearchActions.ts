@@ -15,6 +15,10 @@ import ActionType from "./ActionType";
 import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import TermItState from "../model/TermItState";
 
+/**
+ * Add a search listener using a simple reference counting.
+ * Search listener is anything that shows search results.
+ */
 export function addSearchListener() {
     return (dispatch: ThunkDispatch, getState: () => TermItState) => {
         dispatch({
@@ -31,12 +35,18 @@ export function addSearchListener() {
     };
 }
 
+/**
+ * Remove a search listener.
+ */
 export function removeSearchListener() {
     return {
         type: ActionType.REMOVE_SEARCH_LISTENER,
     };
 }
 
+/**
+ * Change the search criteria and trigger a new search.
+ */
 export function updateSearchFilter(searchString: string) {
     return (dispatch: ThunkDispatch) => {
         dispatch({
@@ -49,11 +59,15 @@ export function updateSearchFilter(searchString: string) {
     }
 }
 
+/**
+ * Start searching according the search criteria.
+ * No search is triggered if nobody listens for the results.
+ */
 export function searchEverything() {
     return (dispatch: ThunkDispatch, getState: () => TermItState) => {
         const state: TermItState = getState();
         if (state.searchListenerCount > 0) {
-            window.console.log('OK, SEARCH NOW!');
+            window.console.info('%c 🔍 Searching ... ', 'color: black; font-weight: bold; background: yellow;');
             return dispatch(search(state.searchQuery, true));
         } else {
             return Promise.resolve();
@@ -71,12 +85,19 @@ export function search(searchString: string, disableLoading: boolean = false) {
             .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
             .then((compacted: object) => AsyncActions.loadArrayFromCompactedGraph(compacted))
             .then((data: SearchResultData[]) => {
+                dispatch(searchResult(data.map(d => new SearchResult(d))));
                 dispatch(SyncActions.asyncActionSuccess(action));
-                return data.map(d => new SearchResult(d));
             }).catch((error: ErrorData) => {
                 dispatch(SyncActions.asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
+    };
+}
+
+export function searchResult(searchResults: SearchResult[]) {
+    return {
+        type: ActionType.SEARCH_RESULT,
+        searchResults,
     };
 }
 

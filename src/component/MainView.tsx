@@ -88,16 +88,16 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         }
         return <div className='wrapper'>
             <header>
-                <Navbar light={this.props.backgroundIsLight} expand={"md"} className={"navbar-dark d-flex"} style={{background: this.props.backgroundColor}}>
+                <Navbar light={this.props.backgroundIsLight} expand={"lg"} className={"navbar-dark d-flex"} style={{background: this.props.backgroundColor}}>
                     <NavbarBrand href={MainView.hashPath(Routes.dashboard.path)}>
                         {Constants.APP_NAME}
                     </NavbarBrand>
-
+                    <Nav navbar={true} className={"flex-grow-1"}>
+                        <NavbarSearch/>
+                    </Nav>
                     <NavbarToggler onClick={this.toggle}/>
+
                     <Collapse isOpen={this.state.isMainMenuOpen} navbar={true}>
-                        <Nav navbar={true} className={"flex-grow-1"}>
-                            <NavbarSearch/>
-                        </Nav>
                         <Nav navbar={true} className={"flex-grow-1 justify-content-end"}>
                             <NavItem active={path === Routes.dashboard.path}>
                                 <NavLink href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>

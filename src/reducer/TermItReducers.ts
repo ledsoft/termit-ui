@@ -6,7 +6,7 @@ import ActionType, {
     ExecuteQueryAction, FacetedSearchAction,
     FailureAction,
     FileSelectingAction,
-    MessageAction, SearchAction,
+    MessageAction, SearchAction, SearchResultAction,
     SelectingTermsAction,
     SwitchLanguageAction
 } from '../action/ActionType';
@@ -21,6 +21,7 @@ import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import Term from "../model/Term";
 import Document, {EMPTY_DOCUMENT} from "../model/Document";
+import SearchResult from "../model/SearchResult";
 
 /**
  * Handles changes to the currently logged in user.
@@ -219,6 +220,15 @@ function searchQuery(state: string = '', action: SearchAction): string
     }
 }
 
+function searchResults(state: SearchResult[]|null = null, action: SearchResultAction): SearchResult[]|null
+{
+    switch (action.type) {
+        case ActionType.SEARCH_RESULT:
+            return action.searchResults;
+    }
+    return state;
+}
+
 function searchListenerCount(state: number = 0, action: Action): number
 {
     switch (action.type) {
@@ -265,6 +275,7 @@ const rootReducer = combineReducers<TermItState>({
     fileContent,
     facetedSearchResult,
     searchQuery,
+    searchResults,
     searchListenerCount,
     types
 });

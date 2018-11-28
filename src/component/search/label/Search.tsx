@@ -12,9 +12,9 @@ import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
 import {ThunkDispatch} from '../../../util/Types';
 import TermItState from "../../../model/TermItState";
+import SearchResultTerms from "./SearchResultTerms";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
-    search: (searchString: string) => Promise<object>;
     addSearchListener: () => void;
     removeSearchListener: () => void;
     searchString: string;
@@ -61,12 +61,6 @@ export class Search extends React.Component<SearchProps, SearchState> {
     }
     */
 
-    public search = (searchString: string) => {
-        if (searchString.trim().length > 0) {
-            this.props.search(searchString).then((data: SearchResult[]) => this.setState({results: data}));
-        }
-    };
-
     private openResult = (result: SearchResult) => {
         this.clear();
         if (result.types.indexOf(Vocabulary.VOCABULARY) !== -1) {
@@ -85,6 +79,8 @@ export class Search extends React.Component<SearchProps, SearchState> {
         const i18n = this.props.i18n;
         return <div>
             <h2 className='page-header'>{i18n('search.title')}</h2>
+            <SearchResultTerms />
+            <hr />
             <Row>
                 {this.renderResults()}
             </Row>
@@ -144,10 +140,10 @@ export class Search extends React.Component<SearchProps, SearchState> {
 export default connect((state: TermItState) => {
     return {
         searchString: state.searchQuery,
+        searchResults: state.searchResults,
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        search: (searchString: string) => dispatch(SearchActions.search(searchString)),
         addSearchListener: () => dispatch(SearchActions.addSearchListener()),
         removeSearchListener: () => dispatch(SearchActions.removeSearchListener()),
     };

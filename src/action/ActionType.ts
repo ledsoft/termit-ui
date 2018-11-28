@@ -3,6 +3,7 @@ import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Term from "../model/Term";
 import {Action} from "redux";
+import SearchResult from "../model/SearchResult";
 
 export interface AsyncAction extends Action {
     status: AsyncActionStatus;
@@ -53,6 +54,10 @@ export interface SearchAction extends Action {
     searchString: string
 }
 
+export interface SearchResultAction extends Action {
+    searchResults: SearchResult[]
+}
+
 export default {
     FETCH_USER: 'FETCH_USER',
     LOGIN: 'LOGIN',
@@ -80,6 +85,7 @@ export default {
     EXECUTE_QUERY: 'EXECUTE_QUERY',
     FACETED_SEARCH: 'FACETED_SEARCH',
     SEARCH: 'SEARCH',
+    SEARCH_RESULT: 'SEARCH_RESULT',
     UPDATE_SEARCH_FILTER: 'UPDATE_SEARCH_FILTER',
 
     ADD_SEARCH_LISTENER: 'ADD_SEARCH_LISTENER',
