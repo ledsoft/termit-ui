@@ -108,6 +108,7 @@ describe('Annotation', () => {
     it('hides occurrence view form on mouse leave if not sticky', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
+                sticky={false}
                 {...assignedOccProps} text={"some text"}
                 selectedTerm={selectedTerm} defaultTerms={defaultTerms}
                 vocabulary={vocabulary} selectVocabularyTerm={selectVocabularyTerm}
@@ -124,10 +125,9 @@ describe('Annotation', () => {
     });
 
     it('renders occurrence view form on mouse leave if sticky', () => {
-        const isSticky = () => true;
         const wrapper = mountWithIntlAttached(
             <Annotation
-                isSticky={isSticky}
+                sticky={true}
                 {...assignedOccProps} text={"some text"}
                 selectedTerm={selectedTerm} defaultTerms={defaultTerms}
                 vocabulary={vocabulary} selectVocabularyTerm={selectVocabularyTerm}

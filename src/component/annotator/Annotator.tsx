@@ -1,24 +1,21 @@
 import * as React from "react";
 import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from 'html-to-react';
 import Annotation from "./Annotation";
-import * as ReactDOM from "react-dom";
-import {Provider} from "react-redux";
-import TermItStore from "../../store/TermItStore";
-import {IntlProvider} from "react-intl";
 import IntlData from "../../model/IntlData";
+import {fromRange, toRange} from "xpath-range";
 
 interface AnnotatorProps {
     html: string
     intl: IntlData
 }
 
+interface AnnotatorState {
+    internalHtml: string
+    stickyAnnotationId : string
+}
+
 const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
 const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
-
-interface AnnotationTarget {
-    element: HTMLElement
-    text: string
-}
 
 interface HtmlSplit {
     prefix: string,
@@ -26,71 +23,57 @@ interface HtmlSplit {
     suffix: string
 }
 
-export class Annotator extends React.Component<AnnotatorProps> {
+export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     private containerElement: HTMLDivElement | null;
-    private stickyAnnotationId: string;
 
     constructor(props: AnnotatorProps) {
         super(props);
+        this.state = {
+            internalHtml: this.matchHtml(props.html).body,
+            stickyAnnotationId: ""
+        };
     }
 
     // TODO extract to separate class
-    public surroundSelection = (element: any, document: any): AnnotationTarget | null => {
+    public surroundSelection = (element: any, document: any, about: string): HTMLDivElement | null => {
 
         const sel = window.getSelection();
 
         if (!sel.isCollapsed) {
 
             if (sel.rangeCount) {
-                const range = sel.getRangeAt(0).cloneRange();
+                const rangeOriginal = sel.getRangeAt(0);
+
+                const xpathSelection = fromRange(rangeOriginal, element);
+                const clonedElement = element.cloneNode(true);
+                const range = toRange(xpathSelection.start, xpathSelection.startOffset, xpathSelection.end, xpathSelection.endOffset, clonedElement);
 
                 const fragment = range.cloneContents();
                 if ((fragment.childNodes.length === 1) && (fragment.childNodes[0].nodeType === Node.TEXT_NODE)) {
                     const span = document.createElement("span");
                     const text = fragment.childNodes[0].nodeValue!;
 
+                    span.setAttribute("about", about);
+                    span.setAttribute("property", DEFAULT_RDF_PROPERTY_VALUE);
+                    span.setAttribute("typeof", DEFAULT_RDF_TYPEOF_VALUE);
+
                     // replace
                     range.extractContents();
                     range.surroundContents(span);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
+                    span.append(document.createTextNode(text));
 
-                    return {element: span, 'text': text};
+                    return clonedElement;
                 }
             }
         }
         return null;
     }
 
-    private renderAnnotation(annTarget: AnnotationTarget) {
-        const annId = this.getRDFNodeId();
-        this.stickyAnnotationId = annId;
-        ReactDOM.render(
-            this.getAnnotation(annId, annTarget.text),
-            annTarget.element);
-    }
-
-
-    private isStickyAnnotation = (annotationId: string) =>  {
-        return () =>  (this.stickyAnnotationId === annotationId) ;
-    };
-
-    private getAnnotation = (id: string, text: string) => {
-        return <Provider store={TermItStore}>
-            <IntlProvider {...this.props.intl}>
-                <Annotation about={id} property={DEFAULT_RDF_PROPERTY_VALUE}
-                            typeof={DEFAULT_RDF_TYPEOF_VALUE}
-                            text={text}
-                            isSticky={this.isStickyAnnotation(id)}/>
-            </IntlProvider>
-        </Provider>
-    }
-
     private getRDFNodeId(): string {
         return '_:' + Math.random().toString(36).substring(8);
     }
 
-    private getProcessingInstructions(): Instruction[] {
+    private getProcessingInstructions = ():Instruction[] => {
         // Order matters. Instructions are processed in the order they're defined
         const processNodeDefinitions = new ProcessNodeDefinitions(React);
         return [
@@ -103,7 +86,8 @@ export class Annotator extends React.Component<AnnotatorProps> {
                 processNode: (node: any, children: any) => {
                     // node.attribs = Object.assign(node.attribs, { style:'background-color: rgb(132, 210, 255);
                     // padding: 0px 4px;'})
-                    return <Annotation text={node.children[0].data} {...node.attribs} />
+                    const sticky = this.state.stickyAnnotationId === node.attribs.about;
+                    return <Annotation sticky={sticky} text={node.children[0].data} {...node.attribs} />
                     // return node.data.toUpperCase();
                 }
             }, {
@@ -117,9 +101,15 @@ export class Annotator extends React.Component<AnnotatorProps> {
 
     private handleMouseLeave = () => {
         if (this.containerElement) {
-            const annTarget = this.surroundSelection(this.containerElement, this.containerElement.ownerDocument)
-            if (annTarget != null) {
-                this.renderAnnotation(annTarget);
+            const about = this.getRDFNodeId();
+            const newContainerElement = this.surroundSelection(this.containerElement, this.containerElement.ownerDocument, about)
+            if (newContainerElement != null) {
+                this.setState(
+                    {
+                        internalHtml: newContainerElement.innerHTML,
+                        stickyAnnotationId: about
+                    }
+                )
             }
         }
     };
@@ -132,7 +122,7 @@ export class Annotator extends React.Component<AnnotatorProps> {
         const htmlToReactParser = new HtmlToReactParser();
         const reactComponents = [].concat(
             htmlToReactParser.parseWithInstructions(
-                this.matchHtml(this.props.html).body,
+                this.state.internalHtml,
                 isValidNode,
                 this.getProcessingInstructions()
             ));

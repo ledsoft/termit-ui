@@ -31,7 +31,7 @@ interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     selectedTerm: Term | null
     defaultTerms: Term[];
     vocabulary: Vocabulary
-    isSticky?: () => boolean;
+    sticky?: boolean;
     selectVocabularyTerm: (selectedTerm: Term | null) => Promise<object>;
 }
 
@@ -110,14 +110,10 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     };
 
     private onMouseLeave = () => {
-        if (!this.state.detailEditable && !this.isSticky()) {
+        if (!this.state.detailEditable && !this.props.sticky) {
             this.closeDetail();
         }
     };
-
-    private isSticky = () => {
-        return this.props.isSticky && this.props.isSticky();
-    }
 
     private getReadOnlyComponent = () => {
         const i18n = this.props.i18n;
