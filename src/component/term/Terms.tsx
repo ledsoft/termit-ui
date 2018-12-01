@@ -19,6 +19,7 @@ import Term, {TermData} from "../../model/Term";
 import {fetchVocabularyTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from '../../util/Types';
 import {GoPlus} from "react-icons/go";
+import Utils from "../../util/Utils";
 
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
@@ -34,8 +35,8 @@ export class Terms extends React.Component<GlossaryTermsProps> {
 
     constructor(props: GlossaryTermsProps) {
         super(props);
-        this._onCreateClick = this._onCreateClick.bind(this);
-        this._onChange = this._onChange.bind(this);
+        this.onCreateClick = this.onCreateClick.bind(this);
+        this.onChange = this.onChange.bind(this);
         this.fetchOptions = this.fetchOptions.bind(this);
     }
 
@@ -57,12 +58,16 @@ export class Terms extends React.Component<GlossaryTermsProps> {
         return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name);
     }
 
-    private _onCreateClick() {
+    public onCreateClick() {
         const normalizedName = this.props.match.params.name;
-        Routing.transitionTo(Routes.createVocabularyTerm, {params: new Map([['name', normalizedName]])});
+        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
+        Routing.transitionTo(Routes.createVocabularyTerm, {
+            params: new Map([['name', normalizedName]]),
+            query: namespace ? new Map([["namespace", namespace]]) : undefined
+        });
     }
 
-    private _onChange(term: TermData | null) {
+    public onChange(term: TermData | null) {
         if (term === null) {
             this.props.selectVocabularyTerm(term);
         } else {
@@ -76,9 +81,11 @@ export class Terms extends React.Component<GlossaryTermsProps> {
             delete cloneData.depth;
             const clone = new Term(cloneData);
             this.props.selectVocabularyTerm(clone);
+            const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
             Routing.transitionTo(Routes.vocabularyTermDetail,
                 {
-                    params: new Map([['name', this.props.match.params.name], ['termName', VocabularyUtils.getFragment(clone.iri)]])
+                    params: new Map([['name', this.props.match.params.name], ['termName', VocabularyUtils.getFragment(clone.iri)]]),
+                    query: namespace ? new Map([["namespace", namespace]]) : undefined
                 });
         }
     }
@@ -88,7 +95,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
         const actions = [];
         const component = <IntelligentTreeSelect
             className={"p-0"}
-            onChange={this._onChange}
+            onChange={this.onChange}
             value={this.props.selectedTerms}
             fetchOptions={this.fetchOptions}
             valueKey={"iri"}
@@ -106,7 +113,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                     color='primary'
                     title={i18n('glossary.createTerm.tooltip')}
                     size='sm'
-                    onClick={this._onCreateClick}><GoPlus/></Button>);
+                    onClick={this.onCreateClick}><GoPlus/></Button>);
 
         return (<PanelWithActions
             title={i18n('glossary.title')}
