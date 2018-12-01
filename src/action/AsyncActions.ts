@@ -141,7 +141,7 @@ export function loadVocabulary(iri: IRI) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment + (iri.namespace ? "?query=" + iri.namespace : ""))
+            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment , param("namespace", iri.namespace))
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((data: VocabularyData) =>
@@ -160,7 +160,7 @@ export function loadResource(iri: IRI) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            .get(Constants.API_PREFIX + '/resources/' + iri.fragment + (iri.namespace ? "?query=" + iri.namespace : ""))
+            .get(Constants.API_PREFIX + '/resources/' + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) =>
                 jsonld.compact(data, RESOURCE_CONTEXT))
             .then((data: ResourceData) =>

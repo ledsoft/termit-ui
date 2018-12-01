@@ -9,7 +9,7 @@ import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {ThunkDispatch} from "../../util/Types";
 import EditableComponent from "../misc/EditableComponent";
 import Utils from "../../util/Utils";
-import Resource from "../../model/Resource";
+import Resource, {EMPTY_RESOURCE} from "../../model/Resource";
 import ResourceMetadata from "./ResourceMetadata";
 import {loadResource, loadResourceTerms} from "../../action/AsyncActions";
 import Term from "../../model/Term";
@@ -36,7 +36,9 @@ export class ResourceDetail extends EditableComponent<ResourceDetailProps> {
     }
 
     public componentDidUpdate(): void {
-        this.loadResource();
+        if (this.props.resource !== EMPTY_RESOURCE) {
+            this.loadResource();
+        }
     }
 
     private loadResource(): void {
@@ -56,7 +58,7 @@ export class ResourceDetail extends EditableComponent<ResourceDetailProps> {
         //     buttons.push(<Button key='vocabulary.summary.edit' size='sm' color='info'><GoPencil/></Button>);
         // }
         // const actions = [<ButtonToolbar key='resource.detail.actions'>{buttons}</ButtonToolbar>];
-        const component = <ResourceMetadata resource={this.props.resource} resourceTerms={this.props.resourceTerms}/>
+        const component = <ResourceMetadata resource={this.props.resource} resourceTerms={this.props.resourceTerms}/>;
         return <div>
             <PanelWithActions
                 title={this.props.resource.label}
