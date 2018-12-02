@@ -32,6 +32,7 @@ interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     defaultTerms: Term[];
     vocabulary: Vocabulary
     sticky?: boolean;
+    onRemove?: (annId: string) => void;
     selectVocabularyTerm: (selectedTerm: Term | null) => Promise<object>;
 }
 
@@ -55,7 +56,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         this.state = {
             detailOpened: false,
             detailEditable: false,
-            detailPinned: true
+            detailPinned: false
         };
     }
 
@@ -101,8 +102,29 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 
     };
 
+    private onRemoveAnnotation = () => {
+        if (this.props.onRemove) {
+            this.props.onRemove(this.props.about);
+        }
+    };
+
+    private onCloseDetail = () => {
+        this.setState({
+            detailPinned: false,
+            detailOpened: !this.state.detailOpened
+        });
+    };
+
     private onClick = () => {
-        this.toggleOpenDetail();
+        if (this.state.detailPinned) {
+            this.setState({
+                detailPinned: false
+            });
+        } else {
+            this.setState({
+                detailPinned: true
+            });
+        }
     };
 
     private onMouseEnter = () => {
@@ -110,7 +132,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     };
 
     private onMouseLeave = () => {
-        if (!this.state.detailEditable && !this.props.sticky) {
+        if (!this.state.detailEditable && !this.state.detailPinned && !this.props.sticky) {
             this.closeDetail();
         }
     };
@@ -195,28 +217,38 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         const id = 'id' + this.props.about.substring(2);
         const termClassName = this.getTermState();
         const actions = [];
-        if (!this.state.detailEditable) {
-            actions.push(<Button key='glossary.edit'
+        if (this.state.detailPinned || this.props.sticky) {
+            if (!this.state.detailEditable) {
+                actions.push(<Button key='annotation.edit'
+                                     color='secondary'
+                                     title={"edit"}
+                                     size='sm'
+                                     onClick={this.toggleEditDetail}>{"✎"}</Button>);
+            }
+            if (this.state.detailEditable) {
+                actions.push(<Button key='annotation.save'
+                                     color='secondary'
+                                     title={"save"}
+                                     size='sm'
+                                     onClick={this.toggleEditDetail}>{"✓"}</Button>);
+            }
+            if (this.props.onRemove) {
+                actions.push(<Button key='annotation.remove'
+                                     color='secondary'
+                                     title={"remove"}
+                                     size='sm'
+                                     onClick={this.onRemoveAnnotation}>{"🚮"}</Button>);
+            }
+            actions.push(<Button key='annotation.close'
                                  color='secondary'
-                                 title={"edit"}
+                                 title={"close"}
                                  size='sm'
-                                 onClick={this.toggleEditDetail}>{"✎"}</Button>);
+                                 onClick={this.onCloseDetail}>{"x"}</Button>);
         }
-        if (this.state.detailEditable) {
-            actions.push(<Button key='glossary.save'
-                                 color='secondary'
-                                 title={"save"}
-                                 size='sm'
-                                 onClick={this.toggleEditDetail}>{"✓"}</Button>);
-        }
-        actions.push(<Button key='glossary.close'
-                             color='secondary'
-                             title={"close"}
-                             size='sm'
-                             onClick={this.onClick}>{"x"}</Button>);
         return <span id={id}
                      onMouseEnter={this.onMouseEnter}
                      onMouseLeave={this.onMouseLeave}
+                     onClick={this.onClick}
                      about={this.props.about}
                      property={this.props.property}
                      resource={this.props.resource}
@@ -224,7 +256,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                      className={termClassName}
         >
         {this.props.text}
-            <SimplePopupWithActions isOpen={this.state.detailOpened} isEditable={this.state.detailOpened}
+            <SimplePopupWithActions isOpen={this.state.detailOpened} isEditable={this.state.detailEditable}
                                     target={id} toggle={this.toggleOpenDetail}
                                     component={this.getComponent()} actions={actions} title={this.props.text}/>
 

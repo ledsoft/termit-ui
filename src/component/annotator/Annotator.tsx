@@ -12,6 +12,7 @@ interface AnnotatorProps {
 interface AnnotatorState {
     internalHtml: string
     stickyAnnotationId : string
+    deletedAnnotationId: string
 }
 
 const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
@@ -30,7 +31,8 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         super(props);
         this.state = {
             internalHtml: this.matchHtml(props.html).body,
-            stickyAnnotationId: ""
+            stickyAnnotationId: "",
+            deletedAnnotationId: ""
         };
     }
 
@@ -73,6 +75,12 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         return '_:' + Math.random().toString(36).substring(8);
     }
 
+    private onRemove = (annId : string) => {
+        this.setState(
+            { deletedAnnotationId: annId }
+        )
+    };
+
     private getProcessingInstructions = ():Instruction[] => {
         // Order matters. Instructions are processed in the order they're defined
         const processNodeDefinitions = new ProcessNodeDefinitions(React);
@@ -87,7 +95,10 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                     // node.attribs = Object.assign(node.attribs, { style:'background-color: rgb(132, 210, 255);
                     // padding: 0px 4px;'})
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
-                    return <Annotation sticky={sticky} text={node.children[0].data} {...node.attribs} />
+                    if (this.state.deletedAnnotationId === node.attribs.about) {
+                        return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
+                    }
+                    return <Annotation onRemove={this.onRemove} sticky={sticky} text={node.children[0].data} {...node.attribs} />
                     // return node.data.toUpperCase();
                 }
             }, {

@@ -27,8 +27,8 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "                                <div class=\"odstavec\" id=\"tcz_cl_1_odst_2\">\n" +
 "                                    <p>(2) Metropolitní plán je pořízen pro \n" +
 "                                        <span about=\"_:54950055\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/plocha-rozdilneho-vyuziti-pro-stanoveni-vyskove-regulace\" typeof=\"ddo:vyskyt-termu\" score=\"0.14285714285714285\">stanovení </span>koncepce celého správního\n" +
-"                                        <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území </span>Prahy, a to v měřítku 1:10.000 odpovídajícím rozsahu řešeného\n" +
-"                                        <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území</span>.\n" +
+"                                        <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území </span>Prahy, a to v měřítku 1:10.000 odpovídajícím rozsahu řešeného\n" +
+"                                        <span about=\"_:734401048\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6\" typeof=\"ddo:vyskyt-termu\" score=\"0.5\">území</span>.\n" +
 "                                    </p>\n" +
 "                                </div>\n" +
 "                                <div class=\"odstavec\" id=\"tcz_cl_1_odst_3\">\n" +
