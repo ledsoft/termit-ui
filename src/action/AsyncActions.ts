@@ -173,6 +173,25 @@ export function loadResource(iri: IRI) {
     };
 }
 
+export function loadResources() {
+    const action = {
+        type: ActionType.LOAD_RESOURCES
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.get(Constants.API_PREFIX + '/resources')
+            .then((data: object[]) =>
+                data.length !== 0 ? jsonld.compact(data, RESOURCE_CONTEXT) : [])
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: ResourceData[]) =>
+                dispatch(asyncActionSuccessWithPayload(action, data.map(v => new Resource(v)))))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function loadResourceTerms(iri: IRI) {
     const action = {
         type: ActionType.LOAD_RESOURCE_TERMS

@@ -5,7 +5,7 @@ import {
     createVocabularyTerm,
     fetchVocabularyTerms,
     getLabel,
-    getProperties,
+    getProperties, loadResources,
     loadTermAssignments,
     loadTypes,
     loadUser,
@@ -36,6 +36,7 @@ import FetchOptionsFunction from "../../model/Functions";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT} from "../../model/RdfsResource";
 import TermItState from "../../model/TermItState";
 import TermAssignment from "../../model/TermAssignment";
+import Resource from "../../model/Resource";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -545,6 +546,35 @@ describe('Async actions', () => {
                 expect(payload.label).toEqual(data.label);
                 expect(payload.comment).toEqual(data.comment);
                 expect(payload["@context"]).toEqual(RDFS_RESOURCE_CONTEXT);
+            });
+        });
+    });
+
+    describe('load resources', () => {
+        it('extracts resources from incoming JSON-LD', () => {
+            const resources = require('../../rest-mock/resources');
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(resources));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadResources())).then(() => {
+                const loadSuccessAction: AsyncActionSuccess<Resource[]> = store.getActions()[1];
+                const result = loadSuccessAction.payload;
+                expect(result.length).toEqual(resources.length);
+                result.sort((a, b) => a.iri.localeCompare(b.iri));
+                resources.sort((a: object, b: object) => a['@id'].localeCompare(b['@id']));
+                for (let i = 0; i < resources.length; i++) {
+                    expect(result[i].iri).toEqual(resources[i]['@id']);
+                }
+            });
+        });
+
+        it('extracts single resource as an array of resources from incoming JSON-LD', () => {
+            const resources = require('../../rest-mock/resources');
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([resources[0]]));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadResources())).then(() => {
+                const loadSuccessAction: AsyncActionSuccess<Resource[]> = store.getActions()[1];
+                const result = loadSuccessAction.payload;
+                expect(Array.isArray(result)).toBeTruthy();
+                expect(result.length).toEqual(1);
+                expect(result[0].iri).toEqual(resources[0]['@id']);
             });
         });
     });
