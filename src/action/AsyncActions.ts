@@ -432,6 +432,26 @@ export function loadFileContent(documentIri: IRI, fileName: string) {
     };
 }
 
+export function saveFileContent(documentIri: IRI, fileName: string, fileContent: string) {
+    const action = {
+        type: ActionType.SAVE_FILE_CONTENT
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax
+            .post(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content", params({
+                file: fileName,
+                namespace: documentIri.namespace
+            }))
+            .then((data: object) => fileContent)// TODO load from the service instead
+            .then((data: string) => dispatch(asyncActionSuccessWithPayload(action, data)))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function loadDocument(iri: IRI) {
     const action = {
         type: ActionType.LOAD_DOCUMENT

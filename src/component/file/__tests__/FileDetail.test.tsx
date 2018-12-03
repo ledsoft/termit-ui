@@ -48,7 +48,7 @@ describe('FileDetail', () => {
             vocabulary={vocabulary}
             document={document}
             fileContent={fileContent}
-            loadContentFile={loadContentFile}
+            loadFileContent={loadContentFile}
             intl={intl()}
             i18n={i18n} formatMessage={formatMessage}
             history={history} location={location} match={routeMatch}
@@ -64,7 +64,7 @@ describe('FileDetail', () => {
             vocabulary={vocabulary}
             document={document}
             fileContent={fileContent}
-            loadContentFile={loadContentFile}
+            loadFileContent={loadContentFile}
             intl={intl()}
             i18n={i18n} formatMessage={formatMessage}
             history={history} location={location} match={routeMatch}

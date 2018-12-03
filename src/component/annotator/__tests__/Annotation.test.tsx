@@ -189,6 +189,7 @@ describe('Annotation', () => {
     it('registers remove action if onRemove is bound', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
+                sticky={true}
                 {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
@@ -205,6 +206,7 @@ describe('Annotation', () => {
     it('does not register remove action if onRemove is not bound', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
+                sticky={true}
                 {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
@@ -220,6 +222,7 @@ describe('Annotation', () => {
     it('registers edit action for occurrence view form', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
+                sticky={true}
                 {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
@@ -237,6 +240,7 @@ describe('Annotation', () => {
     it('registers close action for occurrence form', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
+                sticky={true}
                 {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}

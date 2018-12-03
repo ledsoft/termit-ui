@@ -335,6 +335,9 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock get file content
     mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
 
+    // Mock update file content
+    mock.onPost(/\/rest\/documents\/.+\/content/).reply(204, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
+
     // Mock get document
     mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'), header);
 
