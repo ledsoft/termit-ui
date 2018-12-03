@@ -36,7 +36,7 @@ import Search from "./search/label/Search";
 import FacetedSearch from "./search/facets/FacetedSearch";
 import FileDetail from "./file/FileDetail";
 import {ThunkDispatch} from "../util/Types";
-import ResourceDetail from "./resource/ResourceDetail";
+import ResourceManagement from "./resource/ResourceManagement";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -116,7 +116,7 @@ export class MainView extends React.Component<MainViewProps> {
             <Container fluid={true} className="mt-5 mb-5">
                 <Switch>
                     <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail} exact={true}/>
-                    <Route path={Routes.resourceDetail.path} component={ResourceDetail} exact={true}/>
+                    <Route path={Routes.resources.path} component={ResourceManagement}/>
                     <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.vocabularyTermDetail.path} component={VocabularyDetail} exact={true}/>
                     <Route path={Routes.annotateFile.path} component={FileDetail} exact={true}/>

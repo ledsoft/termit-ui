@@ -48,7 +48,7 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
 
     private openResource = (resourceIri: string) => {
         const iri = VocabularyUtils.create(resourceIri);
-        Routing.transitionTo(Routes.resourceDetail, {
+        Routing.transitionTo(Routes.resourceSummary, {
             params: new Map([["name", iri.fragment]]),
             query: new Map([["namespace", iri.namespace!]])
         });

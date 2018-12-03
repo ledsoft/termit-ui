@@ -18,10 +18,11 @@ export default {
     facetedSearch: new Route('facetedSearch', '/facetedSearch'),
     statistics: new Route('statistics', '/statistics'),
     vocabularies: new Route('vocabulary', '/vocabulary'),
+    resources: new Route('resource', '/resource'),
     createVocabulary: new Route('createVocabulary', '/vocabulary/create'),
-    vocabularySummary: new Route('vocabularySummary', '/vocabulary/:name'),
-    resourceDetail: new Route('resourceDetail', '/resource/:name'),
     vocabularyDetail: new Route('vocabularyDetail', '/vocabulary/:name/term'),
+    vocabularySummary: new Route('vocabularySummary', '/vocabulary/:name'),
+    resourceSummary: new Route('resourceSummary', '/resource/:name'),
     createVocabularyTerm: new Route('createVocabularyTerm', '/vocabulary/:name/new-term'),
     vocabularyTermDetail: new Route('vocabularyTermDetail', '/vocabulary/:name/term/:termName'),
     annotateFile: new Route("annotateFile", '/file/:name')

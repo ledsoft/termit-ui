@@ -11,7 +11,6 @@ import Routes from "../../util/Routes";
 
 interface ResourceMetadataProps extends HasI18n {
     resource : Resource;
-    resourceTerms: Term[];
 }
 
 class ResourceMetadata extends React.Component<ResourceMetadataProps> {
@@ -34,8 +33,8 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
 
     public render() {
         const i18n = this.props.i18n;
-        const resource = this.props.resource;
-        const resourceTerms = this.props.resourceTerms;
+        const resource = this.props.resource || {};
+        const resourceTerms = resource.terms || [];
         return <div className='metadata-panel'>
             <Row>
                 <Col md={2}>

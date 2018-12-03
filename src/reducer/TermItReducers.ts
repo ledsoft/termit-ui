@@ -116,19 +116,35 @@ function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuc
     }
 }
 
-function resource(state: Resource = EMPTY_RESOURCE, action: AsyncActionSuccess<Resource>): Resource {
+function resource(state: Resource = EMPTY_RESOURCE, action: AsyncActionSuccess<any>): Resource {
     switch (action.type) {
         case ActionType.LOAD_RESOURCE:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        case ActionType.LOAD_RESOURCE_TERMS:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const r = new Resource(state);
+                r.terms = action.payload;
+                return r;
+            } else {
+                return state;
+            }
         default:
             return state;
     }
 }
 
-function resourceTerms(state: Term[] = [], action: AsyncActionSuccess<Term[]>): Term[] {
+function resources(state: { [key: string]: Resource } | any = {}, action: AsyncActionSuccess<Resource[]>): { [key: string]: Resource } {
     switch (action.type) {
-        case ActionType.LOAD_RESOURCE_TERMS:
-            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        case ActionType.LOAD_RESOURCES:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const map = {};
+                action.payload.forEach(v =>
+                    map[v.iri] = v
+                );
+                return map;
+            } else {
+                return state;
+            }
         default:
             return state;
     }
@@ -268,7 +284,7 @@ const rootReducer = combineReducers<TermItState>({
     vocabulary,
     vocabularies,
     resource,
-    resourceTerms,
+    resources,
     error,
     messages,
     intl,

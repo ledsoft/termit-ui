@@ -27,10 +27,7 @@ export class Dashboard extends React.Component<HasI18n> {
     };
 
     private static onOpenResourceClick(): void {
-        Routing.transitionTo(Routes.resourceDetail, {
-            params: new Map([['name', 'randomInstance-1529066498']]),
-            query: new Map([['namespace', 'http://onto.fel.cvut.cz/ontologies/application/termit/']])
-        });
+        Routing.transitionTo(Routes.resources);
     };
 
     public render() {

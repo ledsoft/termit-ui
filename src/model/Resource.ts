@@ -1,4 +1,5 @@
 import Asset, {AssetData} from "./Asset";
+import Term from "./Term";
 
 const ctx = {
     "iri": "@id",
@@ -11,16 +12,19 @@ export const CONTEXT = Object.assign(ctx);
 export interface ResourceData extends AssetData {
     iri: string,
     label: string,
-    comment?: string
+    comment?: string,
+    terms: Term[]
 }
 
 export default class Resource extends Asset implements ResourceData {
     public iri: string;
     public label: string;
     public comment?: string;
+    public terms : Term[];
 
     constructor(data: ResourceData) {
         super();
+        this.terms = [];
         Object.assign(this, data);
     }
 
@@ -31,5 +35,6 @@ export default class Resource extends Asset implements ResourceData {
 
 export const EMPTY_RESOURCE = new Resource({
     iri: 'http://empty',
-    label: ''
+    label: '',
+    terms: []
 });

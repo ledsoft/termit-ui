@@ -1,24 +1,23 @@
 [
   {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/cz-institut-praha-svs/pojem/Okrsková-volební-komise",
-    "http://www.w3.org/2000/01/rdf-schema#label": "Okrsková volební komise",
-    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
-    "http://www.w3.org/2000/01/rdf-schema#comment" : "Volební orgán, který dbá o pořádek ve volební místnosti.",
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-1",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
+      "http://www.w3.org/2004/02/skos/core#Concept"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 1",
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
-      "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"},
-    "http://purl.org/dc/elements/1.1/source": [
-      "– Zákon č. 491/2001 Sb., o volbách do zastupitelstev obcí"
-    ]
+      "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"
+    }
   },
   {
-    "@id": "http://data.iprpraha.cz/zdroj/slovnik/cz-institut-praha-svs/pojem/Registr-územní-identifikace%2C-adres-a-nemovitostí-%28RUIAN%29",
-    "http://www.w3.org/2000/01/rdf-schema#label": "Registr územní identifikace, adres a nemovitostí (RUIAN)",
-    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
-    "http://www.w3.org/2000/01/rdf-schema#comment": "V tomto registru jsou vedeny referenční údaje o územní identifikaci a katastru nemovitostí.",
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-2",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 2",
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
-      "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"},
-    "http://purl.org/dc/elements/1.1/source": [
-      "– Strategie Efektivní\nveřejná správa a přátelské veřejné služby"
-    ]
+      "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"
+    }
   }
 ]

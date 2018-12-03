@@ -87,6 +87,8 @@ export default {
         'vocabulary.metadata.author': 'Autor',
         'vocabulary.metadata.created': 'Datum vytvoření',
 
+        'resource.management.resources': 'Zdroje',
+
         'term.metadata.identifier': 'Identifikátor',
         'term.metadata.label': 'Popisek',
         'term.metadata.comment': 'Komentář',

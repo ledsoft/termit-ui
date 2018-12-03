@@ -89,6 +89,8 @@ export default {
         'vocabulary.metadata.author': 'Author',
         'vocabulary.metadata.created': 'Created',
 
+        'resource.management.resources': 'Resources',
+
         'resource.metadata.identifier' : 'Identifier',
         'resource.metadata.label' : 'Label',
         'resource.metadata.comment' : 'Comment',
