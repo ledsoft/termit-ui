@@ -11,10 +11,12 @@ class RequestConfigBuilder {
     private mContentType: string;
     private mParams?: {};
     private mAccept: string;
+    private mResponseType: 'arraybuffer'| 'blob'| 'document'| 'json'| 'text' | 'stream';
 
     constructor() {
         this.mContentType = Constants.JSON_LD_MIME_TYPE;
         this.mAccept = Constants.JSON_LD_MIME_TYPE;
+        this.mResponseType = "json";
     }
 
     public content(value: any): RequestConfigBuilder {
@@ -44,6 +46,11 @@ class RequestConfigBuilder {
         return this;
     }
 
+    public responseType(value: 'arraybuffer'| 'blob'| 'document'| 'json'| 'text' | 'stream'): RequestConfigBuilder {
+        this.mResponseType = value;
+        return this;
+    }
+
     public getContent() {
         return this.mContent;
     }
@@ -58,6 +65,15 @@ class RequestConfigBuilder {
 
     public getAccept() {
         return this.mAccept;
+    }
+
+    /**
+     * This should be used sparsely.
+     *
+     * It is mainly to support downloading binary files.
+     */
+    public getResponseType() {
+        return this.mResponseType;
     }
 }
 
@@ -123,9 +139,28 @@ export class Ajax {
             params: config.getParams(),
             headers: {
                 'Accept': config.getAccept()
-            }
+            },
+            responseType: config.getResponseType()
         };
         return this.axiosInstance.get(path, conf).then(resp => resp.data);
+    }
+
+    /**
+     * Performs a GET request and returns the raw Axios response object.
+     *
+     * This is in contrast to "get", which returns only the response body.
+     * @param path URL path
+     * @param config request configuration
+     */
+    public getRaw(path: string, config: RequestConfigBuilder = new RequestConfigBuilder()) {
+        const conf = {
+            params: config.getParams(),
+            headers: {
+                'Accept': config.getAccept(),
+            },
+            responseType: 'arraybuffer'
+        };
+        return this.axiosInstance.get(path, conf);
     }
 
     public post(path: string, config: RequestConfigBuilder) {
@@ -242,7 +277,13 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock term update
     mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
     // Mock get vocabulary terms
-    mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply(() => {
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply((config: AxiosRequestConfig) => {
+        if (config.headers.Accept === Constants.CSV_MIME_TYPE) {
+            const exportData = "IRI,Label,Comment,Types,Sources,SubTerms\nhttp://test.org,Test,Test comment,,,";
+            const attachmentHeader = {};
+            attachmentHeader[Constants.CONTENT_DISPOSITION_HEADER] = "attachment; filename=\"export.csv\"";
+            return [200, exportData, Object.assign({}, header, attachmentHeader)];
+        }
         return [200, require('../rest-mock/terms'), header];
     });
 
@@ -293,6 +334,9 @@ function mockRestApi(axiosInst: AxiosInstance): void {
 
     // Mock get file content
     mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
+
+    // Mock update file content
+    mock.onPost(/\/rest\/documents\/.+\/content/).reply(204, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
 
     // Mock get document
     mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'), header);

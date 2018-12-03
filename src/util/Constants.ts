@@ -17,18 +17,21 @@ const constants = {
     CONNECTION_ERROR: 'CONNECTION_ERROR',
     JSON_LD_MIME_TYPE: 'application/ld+json',
     HTML_MIME_TYPE: 'text/html',
+    CSV_MIME_TYPE: "text/csv",
+    EXCEL_MIME_TYPE: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     X_WWW_FORM_URLENCODED: 'application/x-www-form-urlencoded',
     // HTTP response status 401 Unauthorized
     STATUS_UNAUTHORIZED: 401,
     // Axios uses lower case for header names
     AUTHORIZATION_HEADER: 'authorization',
     LOCATION_HEADER: 'location',
+    CONTENT_DISPOSITION_HEADER: 'content-disposition',
     STORAGE_JWT_KEY: '',
     STORAGE_LANG_KEY: '',
     // How many messages should be displayed at one moment
     MESSAGE_DISPLAY_COUNT: 5,
     // For how long should a message be displayed
-    MESSAGE_DISPLAY_TIMEOUT: 5000,
+    MESSAGE_DISPLAY_TIMEOUT: 5000
 };
 
 constants.STORAGE_JWT_KEY = constants.APP_NAME + '-' + constants.AUTHORIZATION_HEADER;

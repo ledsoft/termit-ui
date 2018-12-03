@@ -226,6 +226,8 @@ function fileContent(state: string | null = null, action: AsyncActionSuccess<str
     switch (action.type) {
         case ActionType.LOAD_FILE_CONTENT:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        case ActionType.SAVE_FILE_CONTENT:
+            return state; // TODD not updating file content for now
         default:
             return state;
     }

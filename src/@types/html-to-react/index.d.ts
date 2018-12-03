@@ -5,7 +5,8 @@ declare module 'html-to-react' {
 
     interface Node {
         name?: string
-        attrib?: object
+        attribs?: any
+        children?: [any]
     }
 
     interface Instruction {

@@ -256,4 +256,15 @@ describe('Ajax', () => {
             });
         });
     });
+
+    describe("getRaw", () => {
+        it("returns response object", () => {
+            mock.onAny().reply(200, {}, Object.assign({}, headers, {"Content-Disposition": "attachment; filename=test.txt"}));
+            return sut.getRaw("/vocabularies?test/terms", accept(Constants.CSV_MIME_TYPE)).then((resp: any) => {
+                expect(resp.status).toEqual(200);
+                expect(resp.headers).toBeDefined();
+                expect(resp.headers["Content-Disposition"]).toContain("attachment");
+            });
+        });
+    });
 });

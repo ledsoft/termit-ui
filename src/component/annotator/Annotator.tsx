@@ -3,19 +3,22 @@ import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from '
 import Annotation from "./Annotation";
 import IntlData from "../../model/IntlData";
 import {fromRange, toRange} from "xpath-range";
+import HtmlParserUtils from "./HtmlParserUtils";
+import AnnotationDomHelper from "./AnnotationDomHelper";
 
 interface AnnotatorProps {
     html: string
     intl: IntlData
+    onUpdate(newHtml :string): void
 }
 
 interface AnnotatorState {
-    internalHtml: string
+    internalHtml: string // TODO use htmlparser2 dom instead
     stickyAnnotationId : string
 }
 
-const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
-const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
+export const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
+export const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
 
 interface HtmlSplit {
     prefix: string,
@@ -73,6 +76,19 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         return '_:' + Math.random().toString(36).substring(8);
     }
 
+    private onRemove = (annotationId : string) => {
+        const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
+        const ann = AnnotationDomHelper.findAnnotation(dom, annotationId);
+        if (ann) {
+            AnnotationDomHelper.removeAnnotation(ann);
+            const newInternalHtml = HtmlParserUtils.dom2html(dom);
+            this.setState(
+                { internalHtml: newInternalHtml }
+            )
+            // this.props.onUpdate(this.reconstructHtml(newInternalHtml));
+        }
+    };
+
     private getProcessingInstructions = ():Instruction[] => {
         // Order matters. Instructions are processed in the order they're defined
         const processNodeDefinitions = new ProcessNodeDefinitions(React);
@@ -87,7 +103,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                     // node.attribs = Object.assign(node.attribs, { style:'background-color: rgb(132, 210, 255);
                     // padding: 0px 4px;'})
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
-                    return <Annotation sticky={sticky} text={node.children[0].data} {...node.attribs} />
+                    return <Annotation onRemove={this.onRemove} sticky={sticky} text={node.children[0].data} {...node.attribs} />
                     // return node.data.toUpperCase();
                 }
             }, {
@@ -159,4 +175,9 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         }
 
     }
+
+    // private reconstructHtml(htmlBodyContent: string) {
+    //     const htmlSplit = this.matchHtml(this.props.html);
+    //     return htmlSplit.prefix + htmlBodyContent + htmlSplit.suffix;
+    // }
 }

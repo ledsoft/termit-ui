@@ -9,7 +9,7 @@ import {VocabularySummary} from "../VocabularySummary";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {VocabularyEdit} from "../VocabularyEdit";
-import {Button} from "reactstrap";
+import {Button, DropdownItem, DropdownToggle} from "reactstrap";
 
 describe('VocabularySummary', () => {
 
@@ -22,12 +22,16 @@ describe('VocabularySummary', () => {
 
     let onLoad: (iri: IRI) => void;
     let onUpdate: (vocabulary: Vocabulary) => Promise<any>;
+    let onExportToCsv: (iri: IRI) => void;
+    let onExportToExcel: (iri: IRI) => void;
 
     let vocabulary: Vocabulary;
 
     beforeEach(() => {
         onLoad = jest.fn();
         onUpdate = jest.fn().mockImplementation(() => Promise.resolve());
+        onExportToCsv = jest.fn();
+        onExportToExcel = jest.fn();
         location = {
             pathname: '/vocabulary/' + normalizedName,
             search: '',
@@ -50,7 +54,8 @@ describe('VocabularySummary', () => {
 
     it('loads vocabulary on mount', () => {
         shallow(<VocabularySummary vocabulary={EMPTY_VOCABULARY} updateVocabulary={onUpdate} loadVocabulary={onLoad}
-                                   history={history} location={location}
+                                   history={history} location={location} exportToCsv={onExportToCsv}
+                                   exportToExcel={onExportToExcel}
                                    match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
         expect(onLoad).toHaveBeenCalledWith({fragment: normalizedName});
     });
@@ -58,14 +63,16 @@ describe('VocabularySummary', () => {
     it('passes namespace to vocabulary loading when specified', () => {
         location.search = '?namespace=' + namespace;
         shallow(<VocabularySummary vocabulary={EMPTY_VOCABULARY} updateVocabulary={onUpdate} loadVocabulary={onLoad}
-                                   history={history} location={location}
+                                   history={history} location={location} exportToCsv={onExportToCsv}
+                                   exportToExcel={onExportToExcel}
                                    match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
         expect(onLoad).toHaveBeenCalledWith({fragment: normalizedName, namespace});
     });
 
     it('opens edit view on edit button click', () => {
         const wrapper = mountWithIntl(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
-                                                         loadVocabulary={onLoad}
+                                                         loadVocabulary={onLoad} exportToCsv={onExportToCsv}
+                                                         exportToExcel={onExportToExcel}
                                                          history={history} location={location}
                                                          match={match} {...intlFunctions()}/>);
         expect(wrapper.find(VocabularyEdit).exists()).toBeFalsy();
@@ -76,7 +83,8 @@ describe('VocabularySummary', () => {
 
     it('hides edit button on on edit', () => {
         const wrapper = mountWithIntl(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
-                                                         loadVocabulary={onLoad}
+                                                         loadVocabulary={onLoad} exportToCsv={onExportToCsv}
+                                                         exportToExcel={onExportToExcel}
                                                          history={history} location={location}
                                                          match={match} {...intlFunctions()}/>);
         (wrapper.find(VocabularySummary).instance() as VocabularySummary).onEdit();
@@ -87,7 +95,8 @@ describe('VocabularySummary', () => {
 
     it('invokes vocabulary update action on save', () => {
         const wrapper = shallow(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
-                                                   loadVocabulary={onLoad}
+                                                   loadVocabulary={onLoad} exportToCsv={onExportToCsv}
+                                                   exportToExcel={onExportToExcel}
                                                    history={history} location={location}
                                                    match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as VocabularySummary).onEdit();
@@ -101,7 +110,8 @@ describe('VocabularySummary', () => {
 
     it('closes edit after successful update', () => {
         const wrapper = shallow(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
-                                                   loadVocabulary={onLoad}
+                                                   loadVocabulary={onLoad} exportToCsv={onExportToCsv}
+                                                   exportToExcel={onExportToExcel}
                                                    history={history} location={location}
                                                    match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as VocabularySummary).onEdit();
@@ -114,7 +124,8 @@ describe('VocabularySummary', () => {
     it('reloads vocabulary after successful update', () => {
         location.search = '?namespace=' + namespace;
         const wrapper = shallow(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
-                                                   loadVocabulary={onLoad}
+                                                   loadVocabulary={onLoad} exportToCsv={onExportToCsv}
+                                                   exportToExcel={onExportToExcel}
                                                    history={history} location={location}
                                                    match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as VocabularySummary).onEdit();
@@ -122,5 +133,27 @@ describe('VocabularySummary', () => {
         return Promise.resolve().then(() => {
             expect(onLoad).toHaveBeenCalledWith(VocabularyUtils.create(vocabulary.iri));
         });
+    });
+
+    it("invokes export to CSV when exportToCsv is triggered", () => {
+        const wrapper = mountWithIntl(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
+                                                         loadVocabulary={onLoad} exportToCsv={onExportToCsv}
+                                                         exportToExcel={onExportToExcel}
+                                                         history={history} location={location}
+                                                         match={match} {...intlFunctions()}/>);
+        wrapper.find(DropdownToggle).simulate("click");
+        wrapper.find(DropdownItem).at(0).simulate("click");
+        expect(onExportToCsv).toHaveBeenCalledWith(VocabularyUtils.create(vocabulary.iri));
+    });
+
+    it("invokes export to Excel when exportToExcel is triggered", () => {
+        const wrapper = mountWithIntl(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
+                                                         loadVocabulary={onLoad} exportToCsv={onExportToCsv}
+                                                         exportToExcel={onExportToExcel}
+                                                         history={history} location={location}
+                                                         match={match} {...intlFunctions()}/>);
+        wrapper.find(DropdownToggle).simulate("click");
+        wrapper.find(DropdownItem).at(1).simulate("click");
+        expect(onExportToExcel).toHaveBeenCalledWith(VocabularyUtils.create(vocabulary.iri));
     });
 });
