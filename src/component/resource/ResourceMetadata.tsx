@@ -5,12 +5,12 @@ import {Col, Label, Row} from "reactstrap";
 import OutgoingLink from "../misc/OutgoingLink";
 import Resource from "../../model/Resource";
 import Term from "../../model/Term";
-import Vocabulary from "../../util/VocabularyUtils";
+import VocabularyUtils from "../../util/VocabularyUtils";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
 
 interface ResourceMetadataProps extends HasI18n {
-    resource : Resource;
+    resource: Resource;
 }
 
 class ResourceMetadata extends React.Component<ResourceMetadataProps> {
@@ -20,11 +20,12 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
 
     public openResult = (term: Term) => {
         this.clear();
-            const vocabularyIri = Vocabulary.create(term.iri!);
-            Routing.transitionTo(Routes.vocabularyTermDetail, {
-                params: new Map([['name', vocabularyIri.fragment], ['termName', Vocabulary.getFragment(term.iri)]]),
-                query: new Map([['namespace', vocabularyIri.namespace!]])
-            });
+        const termIri = VocabularyUtils.create(term.iri!);
+        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
+        Routing.transitionTo(Routes.vocabularyTermDetail, {
+            params: new Map([['name', vocabularyIri.fragment], ['termName', termIri.fragment]]),
+            query: new Map([['namespace', vocabularyIri.namespace!]])
+        });
     };
 
     protected clear = () => {
