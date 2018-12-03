@@ -3,7 +3,7 @@ import {
     createProperty,
     createVocabulary,
     createVocabularyTerm,
-    exportGlossaryToCsv,
+    exportGlossary,
     fetchVocabularyTerms,
     getLabel,
     getProperties,
@@ -42,6 +42,7 @@ import TermAssignment from "../../model/TermAssignment";
 import Resource from "../../model/Resource";
 import Utils from "../../util/Utils";
 import AsyncActionStatus from "../AsyncActionStatus";
+import ExportType from "../../util/ExportType";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -689,7 +690,7 @@ describe('Async actions', () => {
         });
     });
 
-    describe("exportGlossaryToCsv", () => {
+    describe("exportGlossary", () => {
         it("provides vocabulary normalized name and namespace in request", () => {
             const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
             const name = "test-vocabulary";
@@ -697,10 +698,10 @@ describe('Async actions', () => {
                 data: "test",
                 headers: {"Content-type": "text/csv"}
             }));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossaryToCsv({
+            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary({
                 namespace,
                 fragment: name
-            }))).then(() => {
+            }, ExportType.CSV))).then(() => {
                 expect(Ajax.getRaw).toHaveBeenCalled();
                 const url = (Ajax.getRaw as jest.Mock).mock.calls[0][0];
                 expect(url).toEqual(Constants.API_PREFIX + "/vocabularies/" + name + "/terms");
@@ -709,16 +710,29 @@ describe('Async actions', () => {
             });
         });
 
-        it("sets accept type to CSV", () => {
+        it("sets accept type to CSV when CSV export type is provided", () => {
             const iri = VocabularyUtils.create(Generator.generateUri());
             Ajax.getRaw = jest.fn().mockImplementation(() => Promise.resolve({
                 data: "test",
                 headers: {"Content-type": "text/csv"}
             }));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossaryToCsv(iri))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary(iri, ExportType.CSV))).then(() => {
                 expect(Ajax.getRaw).toHaveBeenCalled();
                 const config = (Ajax.getRaw as jest.Mock).mock.calls[0][1];
                 expect(config.getAccept()).toEqual(Constants.CSV_MIME_TYPE);
+            });
+        });
+
+        it("sets accept type to Excel when Excel export type is provided", () => {
+            const iri = VocabularyUtils.create(Generator.generateUri());
+            Ajax.getRaw = jest.fn().mockImplementation(() => Promise.resolve({
+                data: "test",
+                headers: {"Content-type": Constants.EXCEL_MIME_TYPE}
+            }));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary(iri, ExportType.Excel))).then(() => {
+                expect(Ajax.getRaw).toHaveBeenCalled();
+                const config = (Ajax.getRaw as jest.Mock).mock.calls[0][1];
+                expect(config.getAccept()).toEqual(Constants.EXCEL_MIME_TYPE);
             });
         });
 
@@ -734,7 +748,7 @@ describe('Async actions', () => {
                 }
             }));
             Utils.fileDownload = jest.fn();
-            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossaryToCsv(iri))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary(iri, ExportType.CSV))).then(() => {
                 expect(Utils.fileDownload).toHaveBeenCalledWith(data, fileName, Constants.CSV_MIME_TYPE);
             });
         });
@@ -751,10 +765,10 @@ describe('Async actions', () => {
                 }
             }));
             Utils.fileDownload = jest.fn();
-            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossaryToCsv(iri))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary(iri, ExportType.CSV))).then(() => {
                 expect(store.getActions().length).toEqual(2);
                 const successAction = store.getActions()[1];
-                expect(successAction.type).toEqual(ActionType.EXPORT_GLOSSARY_CSV);
+                expect(successAction.type).toEqual(ActionType.EXPORT_GLOSSARY);
                 expect(successAction.status).toEqual(AsyncActionStatus.SUCCESS);
             });
         });
@@ -769,10 +783,10 @@ describe('Async actions', () => {
                 }
             }));
             Utils.fileDownload = jest.fn();
-            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossaryToCsv(iri))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary(iri, ExportType.CSV))).then(() => {
                 expect(store.getActions().length).toEqual(3);
                 const successAction = store.getActions()[1];
-                expect(successAction.type).toEqual(ActionType.EXPORT_GLOSSARY_CSV);
+                expect(successAction.type).toEqual(ActionType.EXPORT_GLOSSARY);
                 expect(successAction.status).toEqual(AsyncActionStatus.FAILURE);
             });
         });

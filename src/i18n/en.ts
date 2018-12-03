@@ -78,6 +78,8 @@ export default {
         'vocabulary.summary.export.title': 'Export glossary terms from this vocabulary',
         'vocabulary.summary.export.csv': 'CSV',
         'vocabulary.summary.export.csv.title': 'Export to CSV',
+        'vocabulary.summary.export.excel': 'Excel',
+        'vocabulary.summary.export.excel.title': 'Export to MS Excel',
         'vocabulary.summary.export.error': 'Unable to retrieve exported data from server response.',
         'vocabulary.updated.message': 'Vocabulary successfully updated.',
         'vocabulary.created.message': 'Vocabulary successfully created.',

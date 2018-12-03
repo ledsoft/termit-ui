@@ -11,10 +11,12 @@ class RequestConfigBuilder {
     private mContentType: string;
     private mParams?: {};
     private mAccept: string;
+    private mResponseType: 'arraybuffer'| 'blob'| 'document'| 'json'| 'text' | 'stream';
 
     constructor() {
         this.mContentType = Constants.JSON_LD_MIME_TYPE;
         this.mAccept = Constants.JSON_LD_MIME_TYPE;
+        this.mResponseType = "json";
     }
 
     public content(value: any): RequestConfigBuilder {
@@ -44,6 +46,11 @@ class RequestConfigBuilder {
         return this;
     }
 
+    public responseType(value: 'arraybuffer'| 'blob'| 'document'| 'json'| 'text' | 'stream'): RequestConfigBuilder {
+        this.mResponseType = value;
+        return this;
+    }
+
     public getContent() {
         return this.mContent;
     }
@@ -58,6 +65,15 @@ class RequestConfigBuilder {
 
     public getAccept() {
         return this.mAccept;
+    }
+
+    /**
+     * This should be used sparsely.
+     *
+     * It is mainly to support downloading binary files.
+     */
+    public getResponseType() {
+        return this.mResponseType;
     }
 }
 
@@ -123,7 +139,8 @@ export class Ajax {
             params: config.getParams(),
             headers: {
                 'Accept': config.getAccept()
-            }
+            },
+            responseType: config.getResponseType()
         };
         return this.axiosInstance.get(path, conf).then(resp => resp.data);
     }
@@ -139,8 +156,9 @@ export class Ajax {
         const conf = {
             params: config.getParams(),
             headers: {
-                'Accept': config.getAccept()
-            }
+                'Accept': config.getAccept(),
+            },
+            responseType: 'arraybuffer'
         };
         return this.axiosInstance.get(path, conf);
     }

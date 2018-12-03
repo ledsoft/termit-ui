@@ -76,6 +76,8 @@ export default {
         'vocabulary.summary.export.title': 'Exportovat pojmy ze slovníku',
         'vocabulary.summary.export.csv': 'CSV',
         'vocabulary.summary.export.csv.title': 'Export do CSV',
+        'vocabulary.summary.export.excel': 'Excel',
+        'vocabulary.summary.export.excel.title': 'Export do formát MS Excel',
         'vocabulary.summary.export.error': 'Nepodařilo se získat data z odpovědi serveru.',
         'vocabulary.updated.message': 'Slovník úspěšně uložen.',
         'vocabulary.created.message': 'Slovník úspěšně vytvořen.',

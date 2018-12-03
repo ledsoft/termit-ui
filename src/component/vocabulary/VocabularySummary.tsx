@@ -5,7 +5,7 @@ import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Vocabulary, {EMPTY_VOCABULARY} from "../../model/Vocabulary";
-import {exportGlossaryToCsv, loadVocabulary, updateVocabulary} from "../../action/AsyncActions";
+import {exportGlossary, loadVocabulary, updateVocabulary} from "../../action/AsyncActions";
 import VocabularyMetadata from "./VocabularyMetadata";
 import {
     Button,
@@ -25,12 +25,14 @@ import Routes from "../../util/Routes";
 import VocabularyEdit from "./VocabularyEdit";
 import Utils from "../../util/Utils";
 import "./VocabularySummary.scss";
+import ExportType from "../../util/ExportType";
 
 interface VocabularySummaryProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary;
     loadVocabulary: (iri: IRI) => void;
     updateVocabulary: (vocabulary: Vocabulary) => Promise<any>;
     exportToCsv: (iri: IRI) => void;
+    exportToExcel: (iri: IRI) => void;
 }
 
 export class VocabularySummary extends EditableComponent<VocabularySummaryProps> {
@@ -80,6 +82,10 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
         this.props.exportToCsv(VocabularyUtils.create(this.props.vocabulary.iri));
     };
 
+    private onExportToExcel = () => {
+        this.props.exportToExcel(VocabularyUtils.create(this.props.vocabulary.iri));
+    };
+
     public render() {
         const buttons = [<Button key='vocabulary.summary.detail' color='info' size='sm'
                                  title={this.props.i18n('vocabulary.summary.gotodetail.label')}
@@ -111,6 +117,8 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
             <DropdownMenu className="glossary-export-menu">
                 <DropdownItem className="btn-sm" onClick={this.onExportToCsv}
                               title={i18n("vocabulary.summary.export.csv.title")}>{i18n('vocabulary.summary.export.csv')}</DropdownItem>
+                <DropdownItem className="btn-sm" onClick={this.onExportToExcel}
+                              title={i18n("vocabulary.summary.export.excel.title")}>{i18n('vocabulary.summary.export.excel')}</DropdownItem>
             </DropdownMenu>
         </UncontrolledButtonDropdown>;
     }
@@ -124,6 +132,7 @@ export default connect((state: TermItState) => {
     return {
         loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri)),
         updateVocabulary: (vocabulary: Vocabulary) => dispatch(updateVocabulary(vocabulary)),
-        exportToCsv: (iri: IRI) => dispatch(exportGlossaryToCsv(iri))
+        exportToCsv: (iri: IRI) => dispatch(exportGlossary(iri, ExportType.CSV)),
+        exportToExcel: (iri: IRI) => dispatch(exportGlossary(iri, ExportType.Excel)),
     };
 })(injectIntl(withI18n(VocabularySummary)));

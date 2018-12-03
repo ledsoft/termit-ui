@@ -30,6 +30,7 @@ import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "
 import TermAssignment, {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
 import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
+import ExportType from "../util/ExportType";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -567,20 +568,20 @@ export function loadTermAssignments(term: Term) {
     };
 }
 
-export function exportGlossaryToCsv(vocabularyIri: IRI) {
+export function exportGlossary(vocabularyIri: IRI, type: ExportType) {
     const action = {
-        type: ActionType.EXPORT_GLOSSARY_CSV
+        type: ActionType.EXPORT_GLOSSARY
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         const url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
-        return Ajax.getRaw(url, param("namespace", vocabularyIri.namespace).accept(Constants.CSV_MIME_TYPE))
+        return Ajax.getRaw(url, param("namespace", vocabularyIri.namespace).accept(type.mimeType).responseType("arraybuffer"))
             .then((resp: AxiosResponse) => {
                 const disposition = resp.headers[Constants.CONTENT_DISPOSITION_HEADER];
                 const filenameMatch = disposition ? disposition.match(/filename="(.+\..+)"/) : null;
                 if (filenameMatch) {
                     const fileName = filenameMatch[1];
-                    Utils.fileDownload(resp.data, fileName, Constants.CSV_MIME_TYPE);
+                    Utils.fileDownload(resp.data, fileName, type.mimeType);
                     return dispatch(asyncActionSuccess(action));
                 } else {
                     const error: ErrorData = {
