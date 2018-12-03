@@ -128,6 +128,23 @@ export class Ajax {
         return this.axiosInstance.get(path, conf).then(resp => resp.data);
     }
 
+    /**
+     * Performs a GET request and returns the raw Axios response object.
+     *
+     * This is in contrast to "get", which returns only the response body.
+     * @param path URL path
+     * @param config request configuration
+     */
+    public getRaw(path: string, config: RequestConfigBuilder = new RequestConfigBuilder()) {
+        const conf = {
+            params: config.getParams(),
+            headers: {
+                'Accept': config.getAccept()
+            }
+        };
+        return this.axiosInstance.get(path, conf);
+    }
+
     public post(path: string, config: RequestConfigBuilder) {
         const conf = {
             headers: {
