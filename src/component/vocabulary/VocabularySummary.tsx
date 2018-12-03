@@ -5,23 +5,32 @@ import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Vocabulary, {EMPTY_VOCABULARY} from "../../model/Vocabulary";
-import {loadVocabulary, updateVocabulary} from "../../action/AsyncActions";
+import {exportGlossaryToCsv, loadVocabulary, updateVocabulary} from "../../action/AsyncActions";
 import VocabularyMetadata from "./VocabularyMetadata";
-import {Button, ButtonToolbar} from "reactstrap";
+import {
+    Button,
+    ButtonToolbar,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    UncontrolledButtonDropdown
+} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
-import {GoPencil, GoThreeBars} from 'react-icons/go';
+import {GoCloudDownload, GoPencil, GoThreeBars} from 'react-icons/go';
 import {ThunkDispatch} from "../../util/Types";
 import EditableComponent from "../misc/EditableComponent";
 import Routing from '../../util/Routing';
 import Routes from "../../util/Routes";
 import VocabularyEdit from "./VocabularyEdit";
 import Utils from "../../util/Utils";
+import "./VocabularySummary.scss";
 
 interface VocabularySummaryProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary;
     loadVocabulary: (iri: IRI) => void;
     updateVocabulary: (vocabulary: Vocabulary) => Promise<any>;
+    exportToCsv: (iri: IRI) => void;
 }
 
 export class VocabularySummary extends EditableComponent<VocabularySummaryProps> {
@@ -67,6 +76,10 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
         });
     };
 
+    private onExportToCsv = () => {
+        this.props.exportToCsv(VocabularyUtils.create(this.props.vocabulary.iri));
+    };
+
     public render() {
         const buttons = [<Button key='vocabulary.summary.detail' color='info' size='sm'
                                  title={this.props.i18n('vocabulary.summary.gotodetail.label')}
@@ -77,6 +90,7 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
             buttons.push(<Button key='vocabulary.summary.edit' size='sm' color='info' title={this.props.i18n('edit')}
                                  onClick={this.onEdit}><GoPencil/></Button>);
         }
+        buttons.push(this.renderExportDropdown());
         const actions = [<ButtonToolbar key='vocabulary.summary.actions'>{buttons}</ButtonToolbar>];
         const component = this.state.edit ?
             <VocabularyEdit save={this.onSave} cancel={this.onCloseEdit} vocabulary={this.props.vocabulary}/> :
@@ -88,6 +102,18 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
                 component={component}/>
         </div>;
     }
+
+    private renderExportDropdown() {
+        const i18n = this.props.i18n;
+        return <UncontrolledButtonDropdown key="vocabulary.summary.export"
+                                           size="sm" title={i18n("vocabulary.summary.export.title")}>
+            <DropdownToggle caret={true} color="info"><GoCloudDownload/></DropdownToggle>
+            <DropdownMenu className="glossary-export-menu">
+                <DropdownItem className="btn-sm" onClick={this.onExportToCsv}
+                              title={i18n("vocabulary.summary.export.csv.title")}>{i18n('vocabulary.summary.export.csv')}</DropdownItem>
+            </DropdownMenu>
+        </UncontrolledButtonDropdown>;
+    }
 }
 
 export default connect((state: TermItState) => {
@@ -97,6 +123,7 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         loadVocabulary: (iri: IRI) => dispatch(loadVocabulary(iri)),
-        updateVocabulary: (vocabulary: Vocabulary) => dispatch(updateVocabulary(vocabulary))
+        updateVocabulary: (vocabulary: Vocabulary) => dispatch(updateVocabulary(vocabulary)),
+        exportToCsv: (iri: IRI) => dispatch(exportGlossaryToCsv(iri))
     };
 })(injectIntl(withI18n(VocabularySummary)));

@@ -29,6 +29,7 @@ import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Reso
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
 import TermAssignment, {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
 import TermItState from "../model/TermItState";
+import Utils from "../util/Utils";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -141,7 +142,7 @@ export function loadVocabulary(iri: IRI) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment , param("namespace", iri.namespace))
+            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((data: VocabularyData) =>
@@ -223,7 +224,10 @@ export function updateResource(res: Resource) {
         // const termIri = VocabularyUtils.create(term.iri);
         // const vocabularyIri = VocabularyUtils.create(vocabulary.iri);
         // Vocabulary namespace defines also term namespace
-        return Ajax.put( Constants.API_PREFIX + '/resources/resource/terms', params({iri: res.iri, terms: res.terms!.map(t => t.iri) }))
+        return Ajax.put(Constants.API_PREFIX + '/resources/resource/terms', params({
+            iri: res.iri,
+            terms: res.terms!.map(t => t.iri)
+        }))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
                 return dispatch(publishMessage(new Message({messageId: 'resource.updated.message'}, MessageType.SUCCESS)));
@@ -561,4 +565,32 @@ export function loadTermAssignments(term: Term) {
                 return [];
             });
     };
+}
+
+export function exportGlossaryToCsv(vocabularyIri: IRI) {
+    const action = {
+        type: ActionType.EXPORT_GLOSSARY_CSV
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        const url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
+        return Ajax.getRaw(url, param("namespace", vocabularyIri.namespace).accept(Constants.CSV_MIME_TYPE))
+            .then((resp: AxiosResponse) => {
+                const disposition = resp.headers[Constants.CONTENT_DISPOSITION_HEADER];
+                const filenameMatch = disposition ? disposition.match(/filename="(.+\..+)"/) : null;
+                if (filenameMatch) {
+                    const fileName = filenameMatch[1];
+                    Utils.fileDownload(resp.data, fileName, Constants.CSV_MIME_TYPE);
+                    return dispatch(asyncActionSuccess(action));
+                } else {
+                    const error: ErrorData = {
+                        requestUrl: url,
+                        messageId: "vocabulary.summary.export.error"
+                    };
+                    dispatch(asyncActionFailure(action, error));
+                    return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)))
+                }
+            })
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+    }
 }

@@ -31,5 +31,27 @@ export default {
     extractQueryParam(queryString: string, paramName: string): string | undefined {
         const match = queryString.match(new RegExp(paramName + '=([^&]*)'));
         return match ? match[1] : undefined;
+    },
+
+    /**
+     * Ensures that file download using Ajax triggers browser file save mechanism.
+     *
+     * Adapted from https://github.com/kennethjiang/js-file-download/blob/master/file-download.js
+     * @param data The downloaded data
+     * @param filename Name of the file
+     * @param mimeType Type of data
+     */
+    fileDownload(data: any, filename: string, mimeType: string = 'application/octet-stream') {
+        const blob = new Blob([data], {type: mimeType});
+        const blobURL = window.URL.createObjectURL(blob);
+        const tempLink = document.createElement('a');
+        tempLink.style.display = 'none';
+        tempLink.href = blobURL;
+        tempLink.setAttribute('download', filename);
+
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        document.body.removeChild(tempLink);
+        window.URL.revokeObjectURL(blobURL);
     }
 }

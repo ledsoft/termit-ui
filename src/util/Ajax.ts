@@ -259,7 +259,13 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock term update
     mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
     // Mock get vocabulary terms
-    mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply(() => {
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply((config: AxiosRequestConfig) => {
+        if (config.headers.Accept === Constants.CSV_MIME_TYPE) {
+            const exportData = "IRI,Label,Comment,Types,Sources,SubTerms\nhttp://test.org,Test,Test comment,,,";
+            const attachmentHeader = {};
+            attachmentHeader[Constants.CONTENT_DISPOSITION_HEADER] = "attachment; filename=\"export.csv\"";
+            return [200, exportData, Object.assign({}, header, attachmentHeader)];
+        }
         return [200, require('../rest-mock/terms'), header];
     });
 
