@@ -42,7 +42,7 @@ function stateToPlainObject(state: TermItState) {
         facetedSearchResult: state.facetedSearchResult,
         types: state.types,
         resource: state.resource,
-        resourceTerms: state.resourceTerms,
+        resources: state.resources,
         properties: state.properties
     };
 }
