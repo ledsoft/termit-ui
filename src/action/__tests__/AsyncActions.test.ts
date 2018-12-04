@@ -16,7 +16,7 @@ import {
     loadVocabularyTerm,
     login,
     search,
-    updateResource,
+    updateResourceTerms,
     updateTerm,
     updateVocabulary
 } from '../AsyncActions';
@@ -602,32 +602,14 @@ describe('Async actions', () => {
             });
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
             Ajax.put = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(updateResource(resource))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(updateResourceTerms(resource))).then(() => {
                 expect(Ajax.put).toHaveBeenCalled();
                 const requestUri = mock.mock.calls[0][0];
                 expect(requestUri).toEqual(Constants.API_PREFIX + '/resources/resource/terms');
                 const params = mock.mock.calls[0][1].getParams();
                 expect(params.iri).toBeDefined();
-                expect(params.terms).toBeDefined();
-            });
-        });
-
-        it('sends JSON-LD of term argument to REST endpoint', () => {
-            const term: Term = new Term({
-                iri: Generator.generateUri(),
-                label: 'Test',
-                comment: 'Test term'
-            });
-            const vocabulary = new Vocabulary({
-                iri: Generator.generateUri(),
-                label: 'Test vocabulary'
-            });
-            const mock = jest.fn().mockImplementation(() => Promise.resolve());
-            Ajax.put = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(updateTerm(term, vocabulary))).then(() => {
-                expect(Ajax.put).toHaveBeenCalled();
-                const data = mock.mock.calls[0][1].getContent();
-                expect(data).toEqual(term.toJsonLd());
+                const content = mock.mock.calls[0][1].getContent();
+                expect(content).toBeDefined();
             });
         });
     });

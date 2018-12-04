@@ -9,21 +9,21 @@ import Term from "../../model/Term";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
-// import VocabularyUtils from "../../util/VocabularyUtils";
 import {AssetData} from '../../model/Asset';
 import FetchOptionsFunction from "../../model/Functions";
 import {fetchVocabularyTerms} from "../../action/AsyncActions";
-import Vocabulary from "../../model/Vocabulary";
-import VocabularyUtils from "../../util/VocabularyUtils";
 
 interface ResourceRelatedTermsEditProps extends HasI18n {
-    vocabulary: Vocabulary;
     terms: Term[];
     onChange: (subTerms: AssetData[]) => void;
-    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
+    fetchTerms: (fetchOptions: FetchOptionsFunction) => Promise<Term[]>;
 }
 
 export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTermsEditProps> {
+
+    constructor(props: ResourceRelatedTermsEditProps) {
+        super(props);
+    }
 
     private onChange = (val: Term[]) => {
         this.props.onChange(val.map(v => Object.assign({}, {iri: v.iri})));
@@ -35,7 +35,7 @@ export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTer
             optionID,
             limit,
             offset
-        }, VocabularyUtils.getFragment(this.props.vocabulary.iri));
+        });
     };
 
     private valueRenderer = (option: Term) => {
@@ -71,10 +71,9 @@ export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTer
 
 export default connect((state: TermItState) => {
     return {
-        vocabulary : state.vocabulary
     }
 }, ((dispatch: ThunkDispatch) => {
     return {
-        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction) => dispatch(fetchVocabularyTerms(fetchOptions, "cz-institut-praha-svs")),
     }
 }))(injectIntl(withI18n(ResourceRelatedTermsEdit)));

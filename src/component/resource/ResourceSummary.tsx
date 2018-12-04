@@ -4,7 +4,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadResource, loadResourceTerms, updateResource} from "../../action/AsyncActions";
+import {loadResource, loadResourceTerms, updateResourceTerms} from "../../action/AsyncActions";
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
@@ -48,7 +48,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
         const normalizedName = this.props.match.params.name;
         const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
         const iri = VocabularyUtils.create(this.props.resource.iri);
-        if (iri.fragment !== normalizedName || iri.namespace !== namespace) {
+        if (iri.fragment !== normalizedName || iri.namespace !== (namespace === undefined ? undefined : decodeURI(namespace!))) { // todo nasty hack
             this.props.loadResource({fragment: normalizedName, namespace});
             this.props.loadResourceTerms({fragment: normalizedName, namespace});
         }
@@ -93,6 +93,6 @@ export default connect((state: TermItState) => {
     return {
         loadResource: (iri: IRI) => dispatch(loadResource(iri)),
         loadResourceTerms: (iri: IRI) => dispatch(loadResourceTerms(iri)),
-        saveResource: (resource: Resource) => dispatch(updateResource(resource))
+        saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource))
     };
 })(injectIntl(withI18n(ResourceSummary)));
