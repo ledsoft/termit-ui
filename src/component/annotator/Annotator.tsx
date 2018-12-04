@@ -19,7 +19,7 @@ interface AnnotatorState {
 
 export const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
 export const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
-const ANNOTATION_SCORE_TRASHOLD = 0.8;
+const ANNOTATION_SCORE_TRASHOLD = 0.5;
 
 interface HtmlSplit {
     prefix: string,
