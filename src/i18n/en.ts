@@ -61,7 +61,7 @@ export default {
         'dashboard.search.tile': 'Search',
         'dashboard.create-vocabulary.tile': 'Create Vocabulary',
         'dashboard.add-document.tile': 'Add Document',
-        'dashboard.resource.test' : 'Open resource',
+        'dashboard.resources.tile' : 'Resources',
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
@@ -102,7 +102,6 @@ export default {
         'resource.metadata.label' : 'Label',
         'resource.metadata.comment' : 'Comment',
         'resource.metadata.terms' : 'Related Terms',
-
 
         'term.metadata.identifier': 'Identifier',
         'term.metadata.label': 'Label',

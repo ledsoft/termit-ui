@@ -60,6 +60,7 @@ export default {
         'dashboard.search.tile': 'Vyhledávání',
         'dashboard.create-vocabulary.tile' : 'Vytvořit slovník',
         'dashboard.add-document.tile' : 'Přidat dokument',
+        'dashboard.resources.tile' : 'Zdroje',
 
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',
@@ -95,6 +96,11 @@ export default {
 
         'resource.management.resources': 'Zdroje',
         'resource.updated.message': 'Zdroj úspěšně uložen.',
+
+        'resource.metadata.identifier' : 'Identifikátor',
+        'resource.metadata.label' : 'Popisek',
+        'resource.metadata.comment' : 'Komentář',
+        'resource.metadata.terms' : 'Související pojmy',
 
         'term.metadata.identifier': 'Identifikátor',
         'term.metadata.label': 'Popisek',

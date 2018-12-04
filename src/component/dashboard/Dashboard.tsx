@@ -26,7 +26,7 @@ export class Dashboard extends React.Component<HasI18n> {
         Routing.transitionTo(Routes.createVocabulary);
     };
 
-    private static onOpenResourceClick(): void {
+    private static onResourcesClick(): void {
         Routing.transitionTo(Routes.resources);
     };
 
@@ -76,7 +76,7 @@ export class Dashboard extends React.Component<HasI18n> {
                     <DashboardQuickAccessTile text={i18n('dashboard.search.tile')} onClick={Dashboard.onSearchClick}/>
                 </Col>
                 <Col xs={4} className='dashboard-sector'>
-                    <DashboardQuickAccessTile text='Open resource' onClick={Dashboard.onOpenResourceClick}/>
+                    <DashboardQuickAccessTile text={i18n('dashboard.resources.tile')} onClick={Dashboard.onResourcesClick}/>
                 </Col>
             </Row>
         </Container>;
