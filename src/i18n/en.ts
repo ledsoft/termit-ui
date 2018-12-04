@@ -96,6 +96,7 @@ export default {
         'vocabulary.metadata.created': 'Created',
 
         'resource.management.resources': 'Resources',
+        'resource.updated.message': 'Resource successfully updated.',
 
         'resource.metadata.identifier' : 'Identifier',
         'resource.metadata.label' : 'Label',

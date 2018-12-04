@@ -94,6 +94,7 @@ export default {
         'vocabulary.metadata.created': 'Datum vytvoření',
 
         'resource.management.resources': 'Zdroje',
+        'resource.updated.message': 'Zdroj úspěšně uložen.',
 
         'term.metadata.identifier': 'Identifikátor',
         'term.metadata.label': 'Popisek',

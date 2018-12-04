@@ -310,6 +310,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/resources\/.+/).reply(200, require('../rest-mock/resource'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE
     }));
+
+    // Mock resource tags update
+    mock.onPut('/rest/resources/resource/terms').reply(204, null, header);
+
     // Mock vocabulary update endpoint
     mock.onPut(/\/rest\/vocabularies\/.+/).reply(204, undefined, header);
 
@@ -324,7 +328,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     });
 
     // Mock label search results
-    mock.onGet('rest/search/label').reply(200, require('../rest-mock/searchResults'), header);
+    mock.onGet(Constants.API_PREFIX + '/search/label').reply(200, require('../rest-mock/searchResults'), header);
 
     // Mock get document
     mock.onGet(/\/rest\/language\/types/).reply(200, require('../rest-mock/types'), header);
