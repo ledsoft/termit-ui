@@ -413,7 +413,7 @@ export function saveFileContent(documentIri: IRI, fileName: string, fileContent:
         type: ActionType.SAVE_FILE_CONTENT
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
+        dispatch(asyncActionRequest(action, true));
         return Ajax
             .post(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content", params({
                 file: fileName,

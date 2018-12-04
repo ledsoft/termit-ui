@@ -19,6 +19,7 @@ interface AnnotatorState {
 
 export const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
 export const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
+const ANNOTATION_SCORE_TRASHOLD = 0.8;
 
 interface HtmlSplit {
     prefix: string,
@@ -85,7 +86,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
             this.setState(
                 { internalHtml: newInternalHtml }
             )
-            // this.props.onUpdate(this.reconstructHtml(newInternalHtml));
+            this.props.onUpdate(this.reconstructHtml(newInternalHtml));
         }
     };
 
@@ -97,11 +98,17 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                 // Custom annotated <span> processing
                 shouldProcessNode: (node: any): boolean => {
                     // return node.parent && node.parent.name && node.parent.name === 'span';
-                    return node.name && (node.name === 'span') && (node.attribs.typeof === "ddo:vyskyt-termu")
+                    return AnnotationDomHelper.isAnnotation(node);
                 },
                 processNode: (node: any, children: any) => {
                     // node.attribs = Object.assign(node.attribs, { style:'background-color: rgb(132, 210, 255);
                     // padding: 0px 4px;'})
+
+                    // filter annotations by score
+                    if (! AnnotationDomHelper.isAnnotationWithMinimumScore(node, ANNOTATION_SCORE_TRASHOLD)){
+                         // return AnnotationDomHelper.createTextualNode(node);
+                         return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
+                    }
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
                     return <Annotation onRemove={this.onRemove} sticky={sticky} text={node.children[0].data} {...node.attribs} />
                     // return node.data.toUpperCase();
@@ -176,8 +183,8 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
 
     }
 
-    // private reconstructHtml(htmlBodyContent: string) {
-    //     const htmlSplit = this.matchHtml(this.props.html);
-    //     return htmlSplit.prefix + htmlBodyContent + htmlSplit.suffix;
-    // }
+    private reconstructHtml(htmlBodyContent: string) {
+        const htmlSplit = this.matchHtml(this.props.html);
+        return htmlSplit.prefix + htmlBodyContent + htmlSplit.suffix;
+    }
 }
