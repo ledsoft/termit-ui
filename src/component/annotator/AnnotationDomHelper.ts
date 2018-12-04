@@ -16,6 +16,18 @@ export default {
         }
     },
     removeAnnotation(annotation: Node): void {
-        DomUtils.replaceElement(annotation, {data: annotation.children![0].data, type: "text"})
-    }
+        DomUtils.replaceElement(annotation, this.createTextualNode(annotation))
+    },
+    createTextualNode(annotation: Node): any {
+        return {data: annotation.children![0].data, type: "text"}
+    },
+    isAnnotationWithMinimumScore(node: Node, score: number): boolean {
+        if (!this.isAnnotation(node)) {
+            return false;
+        }
+        if (!node.attribs.score) {
+            return true;
+        }
+        return score <= Number(node.attribs.score);
+    },
 }

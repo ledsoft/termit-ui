@@ -63,4 +63,29 @@ describe('AnnotationDomHelper', () => {
         expect(newHtml).toContain(text);
     });
 
+    it('isAnnotationWithMinimumScore returns false if it is not annotation', () => {
+        expect(ah.isAnnotationWithMinimumScore(otherSpan, 0.5)).toBe(false);
+    });
+
+    it('isAnnotationWithMinimumScore returns false if score is less-than trashold', () => {
+        annotationSpan.attribs.score = "0.4";
+        expect(ah.isAnnotationWithMinimumScore(annotationSpan, 0.5)).toBe(false);
+    });
+
+    it('isAnnotationWithMinimumScore returns true if score is more-than or equal trashold', () => {
+        annotationSpan.attribs.score = "0.5";
+        expect(ah.isAnnotationWithMinimumScore(annotationSpan, 0.5)).toBe(true);
+        expect(ah.isAnnotationWithMinimumScore(annotationSpan, 0.4)).toBe(true);
+    });
+
+    it('isAnnotationWithMinimumScore returns true if score is not defined', () => {
+        expect(ah.isAnnotationWithMinimumScore(annotationSpan, 0.5)).toBe(true);
+    });
+
+
+
+
+
+
+
 });
