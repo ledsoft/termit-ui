@@ -5,9 +5,10 @@ import {
     createVocabularyTerm,
     exportGlossary,
     fetchVocabularyTerms,
-    loadDocument,
     getLabel,
     getProperties,
+    loadDocument,
+    loadFileContent,
     loadResources,
     loadTermAssignments,
     loadTypes,
@@ -45,6 +46,7 @@ import Resource from "../../model/Resource";
 import Utils from "../../util/Utils";
 import AsyncActionStatus from "../AsyncActionStatus";
 import ExportType from "../../util/ExportType";
+import fileContent from "../../rest-mock/file";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -174,11 +176,22 @@ describe('Async actions', () => {
     describe('load document', () => {
         it('extracts document data from incoming JSON-LD', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(require('../../rest-mock/document')));
-            return Promise.resolve(
-                (store.dispatch as ThunkDispatch)
-                (loadDocument({fragment: 'metropolitan-plan'}))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadDocument({fragment: 'metropolitan-plan'}))).then(() => {
                 const loadSuccessAction: AsyncActionSuccess<Document> = store.getActions()[1];
                 expect(Vocabulary2.create(loadSuccessAction.payload.iri).fragment === 'metropolitan-plan').toBeTruthy();
+            });
+        });
+    });
+
+    describe('load file content', () => {
+        it('extracts file content from incoming html data', () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(fileContent));
+            return Promise.resolve(
+                (store.dispatch as ThunkDispatch)
+                (loadFileContent({fragment: 'metropolitan-plan'}, "metropolitan-plan-p1.html"))
+            ).then(() => {
+                const loadSuccessAction: AsyncActionSuccess<string> = store.getActions()[1];
+                expect(loadSuccessAction.payload).toContain("html");
             });
         });
     });
