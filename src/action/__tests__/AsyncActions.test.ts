@@ -5,6 +5,7 @@ import {
     createVocabularyTerm,
     exportGlossary,
     fetchVocabularyTerms,
+    loadDocument,
     getLabel,
     getProperties,
     loadResources,
@@ -26,6 +27,7 @@ import thunk from 'redux-thunk';
 import {Action} from 'redux';
 import Routing from '../../util/Routing';
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
+import Document from "../../model/Document";
 import Vocabulary2 from "../../util/VocabularyUtils";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
@@ -165,6 +167,18 @@ describe('Async actions', () => {
                 expect(Array.isArray(result)).toBeTruthy();
                 expect(result.length).toEqual(1);
                 expect(result[0].iri).toEqual(vocabularies[0]['@id']);
+            });
+        });
+    });
+
+    describe('load document', () => {
+        it('extracts document data from incoming JSON-LD', () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(require('../../rest-mock/document')));
+            return Promise.resolve(
+                (store.dispatch as ThunkDispatch)
+                (loadDocument({fragment: 'metropolitan-plan'}))).then(() => {
+                const loadSuccessAction: AsyncActionSuccess<Document> = store.getActions()[1];
+                expect(Vocabulary2.create(loadSuccessAction.payload.iri).fragment === 'metropolitan-plan').toBeTruthy();
             });
         });
     });
