@@ -7,19 +7,17 @@ import TermItState from "../../model/TermItState";
 import {loadResource, loadResourceTerms, updateResourceTerms} from "../../action/AsyncActions";
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
-import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
+import {IRI, default as VocabularyUtils} from "../../util/VocabularyUtils";
 import {GoPencil} from 'react-icons/go';
 import {ThunkDispatch} from "../../util/Types";
 import EditableComponent from "../misc/EditableComponent";
 import Utils from "../../util/Utils";
-import {EMPTY_RESOURCE, default as Resource} from "../../model/Resource";
+import {default as Resource, EMPTY_RESOURCE} from "../../model/Resource";
 import ResourceMetadata from "./ResourceMetadata";
 import ResourceEdit from "./ResourceEdit";
-import Term from "../../model/Term";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
-    terms: Term[],
     loadResource: (iri: IRI) => void;
     loadResourceTerms: (iri: IRI) => void;
     saveResource: (resource: Resource) => Promise<any>;
@@ -45,21 +43,24 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
     }
 
     private loadResource(): void {
-        const normalizedName = this.props.match.params.name;
-        const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
         const iri = VocabularyUtils.create(this.props.resource.iri);
-        if (iri.fragment !== normalizedName || iri.namespace !== (namespace === undefined ? undefined : decodeURI(namespace!))) { // todo nasty hack
-            this.props.loadResource({fragment: normalizedName, namespace});
-            this.props.loadResourceTerms({fragment: normalizedName, namespace});
+        const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
+        const normalizedName = this.props.match.params.name;
+        if (iri.fragment !== normalizedName || iri.namespace !== namespace) {
+            this.forceReload();
         }
     }
 
     public onSave = (resource: Resource) => {
-        this.props.saveResource(resource).then(() => {
-            this.onCloseEdit();
-            this.props.loadResource(VocabularyUtils.create(resource.iri));
-        });
+        this.props.saveResource(resource).then(() => this.onCloseEdit()).then(()=> this.forceReload());
     };
+
+    private forceReload() {
+        const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
+        const normalizedName = this.props.match.params.name;
+        this.props.loadResource({fragment: normalizedName, namespace});
+        this.props.loadResourceTerms({fragment: normalizedName, namespace});
+    }
 
     public render() {
         const buttons = [];
@@ -87,7 +88,6 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
 export default connect((state: TermItState) => {
     return {
         resource: state.resource,
-        terms : state.defaultTerms
     };
 }, (dispatch: ThunkDispatch) => {
     return {
