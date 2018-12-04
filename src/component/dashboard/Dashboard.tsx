@@ -57,6 +57,9 @@ export class Dashboard extends React.Component<HasI18n> {
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardTile text={i18n('dashboard.statistics.tile')} onClick={Dashboard.onStatisticsClick}/>
                 </Col>
+                <Col xs={4} className='dashboard-sector'>
+                    <DashboardTile text={i18n('dashboard.resources.tile')} onClick={Dashboard.onResourcesClick}/>
+                </Col>
             </Row>
         </Container>;
     }
@@ -74,9 +77,6 @@ export class Dashboard extends React.Component<HasI18n> {
                 {/*</Col>*/}
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardQuickAccessTile text={i18n('dashboard.search.tile')} onClick={Dashboard.onSearchClick}/>
-                </Col>
-                <Col xs={4} className='dashboard-sector'>
-                    <DashboardQuickAccessTile text={i18n('dashboard.resources.tile')} onClick={Dashboard.onResourcesClick}/>
                 </Col>
             </Row>
         </Container>;
