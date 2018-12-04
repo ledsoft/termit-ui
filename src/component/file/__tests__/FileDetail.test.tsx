@@ -3,7 +3,7 @@ import Document from "../../../model/Document";
 import {FileDetail} from "../FileDetail";
 import Vocabulary from "../../../model/Vocabulary";
 import {IRI} from "../../../util/VocabularyUtils";
-import {formatMessage, i18n, intl} from "../../../__tests__/environment/IntlUtil";
+import {intl, intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import createMemoryHistory from "history/createMemoryHistory";
 import {shallow} from "enzyme";
 import {match} from "react-router";
@@ -15,7 +15,6 @@ describe('FileDetail', () => {
     let document: Document;
     let vocabulary: Vocabulary;
     let fileContent: string;
-    let loadContentFile: (documentIri: IRI, fileName: string) => void
     const history = createMemoryHistory();
     const routeMatch: match<any> = {
         params: {},
@@ -29,6 +28,10 @@ describe('FileDetail', () => {
         hash: '',
         state: {}
     };
+    let mockedCallbackProps: {
+        loadFileContent: (documentIri: IRI, fileName: string) => void
+        saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => void
+    };
     beforeEach(() => {
         document = new Document({
             iri: Generator.generateUri(),
@@ -40,7 +43,10 @@ describe('FileDetail', () => {
             label: 'Test vocabulary'
         });
         fileContent = "<html><body>Test content</body></html>"
-        loadContentFile = jest.fn();
+        mockedCallbackProps = {
+            loadFileContent: jest.fn(),
+            saveFileContent: jest.fn()
+        }
     });
 
     it('loads file content on mount', () => {
@@ -48,13 +54,13 @@ describe('FileDetail', () => {
             vocabulary={vocabulary}
             document={document}
             fileContent={fileContent}
-            loadFileContent={loadContentFile}
+            {...mockedCallbackProps}
             intl={intl()}
-            i18n={i18n} formatMessage={formatMessage}
+            {...intlFunctions()}
             history={history} location={location} match={routeMatch}
         />);
 
-        expect(loadContentFile).toBeCalled();
+        expect(mockedCallbackProps.loadFileContent).toBeCalled();
     });
 
 
@@ -64,9 +70,9 @@ describe('FileDetail', () => {
             vocabulary={vocabulary}
             document={document}
             fileContent={fileContent}
-            loadFileContent={loadContentFile}
+            {...mockedCallbackProps}
             intl={intl()}
-            i18n={i18n} formatMessage={formatMessage}
+            {...intlFunctions()}
             history={history} location={location} match={routeMatch}
         />);
 

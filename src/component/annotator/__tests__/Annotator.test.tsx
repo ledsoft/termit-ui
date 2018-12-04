@@ -6,7 +6,6 @@ import {shallow} from "enzyme";
 import Annotation from "..//Annotation";
 import {createAnnotationSpan, mountWithIntlAttached, surroundWithHtml} from "./AnnotationUtil";
 
-
 describe("Annotator", () => {
 
     const sampleContent = "<div><span>sample content</span></div>";
@@ -23,10 +22,19 @@ describe("Annotator", () => {
         score: "1.0",
         typeof: "ddo:vyskyt-termu"
     };
+    let mockedCallbackProps: {
+        onUpdate(newHtml: string): void
+    };
+    beforeEach(() => {
+        mockedCallbackProps = {
+            onUpdate: jest.fn()
+        }
+    });
 
     it('renders body of provided html content', () => {
 
         const wrapper = mountWithIntl(<Annotator
+            {...mockedCallbackProps}
             html={generalHtmlContent}
             intl={intl()}
         />);
@@ -42,6 +50,7 @@ describe("Annotator", () => {
             )
         );
         const wrapper = mountWithIntlAttached(<Annotator
+            {...mockedCallbackProps}
             html={htmlWithOccurrence}
             intl={intl()}
         />);
@@ -61,6 +70,7 @@ describe("Annotator", () => {
             )
         );
         const wrapper = shallow(<Annotator
+            {...mockedCallbackProps}
             html={htmlWithOccurrence}
             intl={intl()}
         />);
@@ -77,6 +87,7 @@ describe("Annotator", () => {
         const div = document.createElement('div');
         document.body.appendChild(div);
         const wrapper = mountWithIntl(<Annotator
+            {...mockedCallbackProps}
             html={generalHtmlContent}
             intl={intl()}
         />, {attachTo: div});
