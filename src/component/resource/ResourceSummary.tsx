@@ -7,7 +7,7 @@ import TermItState from "../../model/TermItState";
 import {loadResource, loadResourceTerms, updateResourceTerms} from "../../action/AsyncActions";
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
-import {IRI, default as VocabularyUtils} from "../../util/VocabularyUtils";
+import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
 import {GoPencil} from 'react-icons/go';
 import {ThunkDispatch} from "../../util/Types";
 import EditableComponent from "../misc/EditableComponent";
@@ -18,8 +18,8 @@ import ResourceEdit from "./ResourceEdit";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
-    loadResource: (iri: IRI) => void;
-    loadResourceTerms: (iri: IRI) => void;
+    loadResource: (iri: IRI) => Promise<any>;
+    loadResourceTerms: (iri: IRI) => Promise<any>;
     saveResource: (resource: Resource) => Promise<any>;
 }
 
@@ -33,33 +33,29 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
     }
 
     public componentDidMount(): void {
-        this.loadResource();
+        this.forceReload();
     }
 
     public componentDidUpdate(): void {
         if (this.props.resource !== EMPTY_RESOURCE) {
-            this.loadResource();
-        }
-    }
-
-    private loadResource(): void {
-        const iri = VocabularyUtils.create(this.props.resource.iri);
-        const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
-        const normalizedName = this.props.match.params.name;
-        if (iri.fragment !== normalizedName || iri.namespace !== namespace) {
-            this.forceReload();
+            const iri = VocabularyUtils.create(this.props.resource.iri);
+            const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
+            const normalizedName = this.props.match.params.name;
+            if (iri.fragment !== normalizedName || iri.namespace !== namespace) {
+                this.forceReload();
+            }
         }
     }
 
     public onSave = (resource: Resource) => {
-        this.props.saveResource(resource).then(() => this.onCloseEdit()).then(()=> this.forceReload());
+        this.props.saveResource(resource).then(() => this.onCloseEdit()).then(() => this.forceReload());
     };
 
     private forceReload() {
         const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
         const normalizedName = this.props.match.params.name;
-        this.props.loadResource({fragment: normalizedName, namespace});
-        this.props.loadResourceTerms({fragment: normalizedName, namespace});
+        this.props.loadResource({fragment: normalizedName, namespace}).then(() =>
+        this.props.loadResourceTerms({fragment: normalizedName, namespace}));
     }
 
     public render() {
