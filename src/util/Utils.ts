@@ -29,6 +29,7 @@ export default {
      * @return extracted parameter value or undefined if the parameter is not present in the query
      */
     extractQueryParam(queryString: string, paramName: string): string | undefined {
+        queryString = decodeURI(queryString); // TODO This is a nasty hack, the problem with encoding seems to be somewhere in thunk
         const match = queryString.match(new RegExp(paramName + '=([^&]*)'));
         return match ? match[1] : undefined;
     },
