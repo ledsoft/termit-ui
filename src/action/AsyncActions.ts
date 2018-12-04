@@ -216,30 +216,6 @@ export function loadResourceTerms(iri: IRI) {
     };
 }
 
-export function updateResource(res: Resource) {
-    const action = {
-        type: ActionType.UPDATE_RESOURCE
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
-        // const termIri = VocabularyUtils.create(term.iri);
-        // const vocabularyIri = VocabularyUtils.create(vocabulary.iri);
-        // Vocabulary namespace defines also term namespace
-        return Ajax.put(Constants.API_PREFIX + '/resources/resource/terms', params({
-            iri: res.iri,
-            terms: res.terms!.map(t => t.iri)
-        }))
-            .then(() => {
-                dispatch(asyncActionSuccess(action));
-                return dispatch(publishMessage(new Message({messageId: 'resource.updated.message'}, MessageType.SUCCESS)));
-            })
-            .catch((error: ErrorData) => {
-                dispatch(asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-            });
-    };
-}
-
 export function loadVocabularies() {
     const action = {
         type: ActionType.LOAD_VOCABULARIES
@@ -492,6 +468,27 @@ export function updateTerm(term: Term, vocabulary: Vocabulary) {
             });
     };
 }
+
+export function updateResource(res: Resource) {
+    const action = {
+        type: ActionType.UPDATE_RESOURCE
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.put(Constants.API_PREFIX + '/resources/resource/terms',
+            content(res.terms!.map(t => t.iri))
+                .params({ iri: res.iri }))
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                return dispatch(publishMessage(new Message({messageId: 'resource.updated.message'}, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 
 export function updateVocabulary(vocabulary: Vocabulary) {
     const action = {
