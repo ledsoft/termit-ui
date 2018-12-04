@@ -11,12 +11,12 @@ class RequestConfigBuilder {
     private mContentType: string;
     private mParams?: {};
     private mAccept: string;
-    private mResponseType: 'arraybuffer'| 'blob'| 'document'| 'json'| 'text' | 'stream';
+    private mResponseType?: 'arraybuffer'| 'blob'| 'document'| 'json'| 'text' | 'stream';
 
     constructor() {
         this.mContentType = Constants.JSON_LD_MIME_TYPE;
         this.mAccept = Constants.JSON_LD_MIME_TYPE;
-        this.mResponseType = "json";
+        this.mResponseType = undefined;
     }
 
     public content(value: any): RequestConfigBuilder {
