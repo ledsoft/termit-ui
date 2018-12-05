@@ -106,6 +106,9 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                             <NavItem active={path === Routes.statistics.path}>
                                 <NavLink href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
                             </NavItem>
+                            <NavItem active={path === Routes.resources.path}>
+                                <NavLink href={MainView.hashPath(Routes.resources.path)}>{i18n('main.nav.resources')}</NavLink>
+                            </NavItem>
                             <NavItem active={path === Routes.facetedSearch.path}>
                                 <NavLink href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
                             </NavItem>

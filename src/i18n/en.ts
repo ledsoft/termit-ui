@@ -44,6 +44,7 @@ export default {
         'main.nav.dashboard': 'Dashboard',
         'main.nav.vocabularies': 'Vocabularies',
         'main.nav.statistics': 'Statistics',
+        'main.nav.resources': 'Resources',
         'main.nav.search': 'Search',
         'main.nav.facetedSearch': 'Faceted Search',
         'main.nav.resourceDetail': 'Resource Detail',

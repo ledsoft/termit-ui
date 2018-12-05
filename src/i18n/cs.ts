@@ -44,6 +44,7 @@ export default {
         'main.nav.dashboard': 'Hlavní strana',
         'main.nav.vocabularies': 'Slovníky',
         'main.nav.statistics': 'Statistiky',
+        'main.nav.resources': 'Zdroje',
         'main.nav.search': 'Vyhledávání',
         'main.nav.facetedSearch': 'Facetové vyhledávání',
         'main.nav.admin': 'Administrace',
