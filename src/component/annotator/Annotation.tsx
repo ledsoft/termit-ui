@@ -52,7 +52,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 
     constructor(props: any) {
         super(props);
-        const term = this.findTermByIri(props.resource);
+        const term = this.findTermByIri(props.resource);// TODO most-likely does not work
         this.state = {
             detailOpened: false,
             detailEditable: false,
@@ -103,7 +103,9 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         //     }
         // }
         this.setState({
-            detailEditable: false
+            detailEditable: false,
+            detailPinned: false,
+            detailOpened: false
         });
         // TODO -- start only if state changes
         if (this.props.onUpdate) {
@@ -114,6 +116,8 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
             }
             if (this.state.term) {
                 newSpan.resource = this.state.term.iri;
+            } else {
+                newSpan.resource = this.props.resource;
             }
             this.props.onUpdate(newSpan);
         }
