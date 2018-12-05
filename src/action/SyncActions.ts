@@ -4,7 +4,6 @@ import ActionType, {
     AsyncFailureAction,
     ClearErrorAction,
     ExecuteQueryAction,
-    FileSelectingAction,
     MessageAction,
     SelectingTermsAction,
     SwitchLanguageAction,
@@ -14,7 +13,6 @@ import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import {saveLanguagePreference} from "../util/IntlUtil";
 import Term, {TermData} from "../model/Term";
-import {FileData} from "../model/File";
 import {Action} from 'redux';
 
 export function asyncActionRequest(a: Action, ignoreLoading: boolean = false): AsyncAction {
@@ -94,14 +92,6 @@ export function fireFacetedSearchFinished(data: any) {
 
 export function fireFacetedSearchFailed(error: any) {
     return asyncActionFailure({type: ActionType.FACETED_SEARCH}, error)
-}
-
-// TODO MB Unused
-export function selectFile(data: FileData | null): FileSelectingAction {
-    return {
-        type: ActionType.SELECT_FILE,
-        fileIri: data ? (data.iri ? data.iri : null) : data,
-    }
 }
 
 export function clearProperties() {

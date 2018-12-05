@@ -6,7 +6,6 @@ import ActionType, {
     ExecuteQueryAction,
     FacetedSearchAction,
     FailureAction,
-    FileSelectingAction,
     MessageAction,
     SelectingTermsAction,
     SwitchLanguageAction
@@ -233,15 +232,6 @@ function fileContent(state: string | null = null, action: AsyncActionSuccess<str
     }
 }
 
-function fileIri(state: string | null = null, action: FileSelectingAction): string | null {
-    switch (action.type) {
-        case ActionType.SELECT_FILE:
-            return action.fileIri;
-        default:
-            return state;
-    }
-}
-
 function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<Document>): Document {
     switch (action.type) {
         case ActionType.LOAD_DOCUMENT:
@@ -295,7 +285,6 @@ const rootReducer = combineReducers<TermItState>({
     queryResults,
     createdTermsCounter,
     document,
-    fileIri,
     fileContent,
     facetedSearchResult,
     types,

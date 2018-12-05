@@ -22,7 +22,6 @@ export default class TermItState {
     public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
     public document: Document;
-    public fileIri: string | null;
     public fileContent: string | null;
     public error: ErrorInfo;
     public messages: Message[];
@@ -43,7 +42,6 @@ export default class TermItState {
         this.defaultTerms = [];
         this.vocabularies = {};
         this.document = EMPTY_DOCUMENT;
-        this.fileIri = null;
         this.fileContent = null;
         this.error = EMPTY_ERROR;
         this.messages = [];
