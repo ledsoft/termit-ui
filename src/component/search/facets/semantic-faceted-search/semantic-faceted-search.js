@@ -1,4 +1,13 @@
 import "./bootstrap-part/css/bootstrap.css";
+
+function dumpQuery(query, caller)
+{
+    window.console.log('%cFacet Query in%s:\n%c%s',
+        'font-weight: bold; color: purple;',
+        caller ? ' ' + caller + '()': '',
+        'white-space: pre;', query);
+}
+
 (function() {
     'use strict';
 
@@ -19,9 +28,9 @@ import "./bootstrap-part/css/bootstrap.css";
     ])
     .constant('_', _) // eslint-disable-line no-undef
     .constant('PREFIXES',
-        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ' +
-        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> ' +
-        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> '
+        ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n' +
+        ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \n' +
+        ' PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n'
     )
     .constant('EVENT_REQUEST_CONSTRAINTS', 'sf-request-constraints')
     .constant('EVENT_INITIAL_CONSTRAINTS', 'sf-initial-constraints')
@@ -681,49 +690,49 @@ import "./bootstrap-part/css/bootstrap.css";
             this.state = {};
 
             var labelPart =
-            ' OPTIONAL {' +
-            '  ?labelValue skos:prefLabel ?lbl . ' +
-            '  FILTER(langMatches(lang(?lbl), "<PREF_LANG>")) .' +
-            ' }' +
-            ' OPTIONAL {' +
-            '  ?labelValue rdfs:label ?lbl . ' +
-            '  FILTER(langMatches(lang(?lbl), "<PREF_LANG>")) .' +
-            ' }';
+            ' OPTIONAL {\n' +
+            '  ?labelValue skos:prefLabel ?lbl . \n' +
+            '  FILTER(langMatches(lang(?lbl), "<PREF_LANG>")) .\n' +
+            ' }\n' +
+            ' OPTIONAL {\n' +
+            '  ?labelValue rdfs:label ?lbl . \n' +
+            '  FILTER(langMatches(lang(?lbl), "<PREF_LANG>")) .\n' +
+            ' }\n';
 
             var serviceQueryTemplate = PREFIXES +
-            ' SELECT DISTINCT ?facet_text ?value {' +
-            '  VALUES ?value { <VALUES> } ' +
-            '  ?value skos:prefLabel|rdfs:label [] . ' +
-            '  BIND(?value AS ?labelValue) ' +
-            '  <LABEL_PART>' +
-            '  BIND(?lbl AS ?facet_text)' +
-            '  FILTER(?facet_text != "")' +
-            ' }';
+            ' SELECT DISTINCT ?facet_text ?value {\n' +
+            '  VALUES ?value { <VALUES> } \n' +
+            '  ?value skos:prefLabel|rdfs:label [] . \n' +
+            '  BIND(?value AS ?labelValue) \n' +
+            '  <LABEL_PART>\n' +
+            '  BIND(?lbl AS ?facet_text)\n' +
+            '  FILTER(?facet_text != "")\n' +
+            ' }\n';
 
             var queryTemplate = PREFIXES +
-            ' SELECT DISTINCT ?cnt ?facet_text ?value WHERE {' +
-            ' { ' +
-            '  { ' +
-            '   SELECT DISTINCT (count(DISTINCT ?id) as ?cnt) { ' +
-            '    <OTHER_SELECTIONS> ' +
-            '   } ' +
-            '  } ' +
-            '  BIND("<NO_SELECTION_STRING>" AS ?facet_text) ' +
-            ' } UNION ' +
-            '  {' +
-            '   SELECT DISTINCT ?cnt ?value ?facet_text { ' +
-            '    {' +
-            '     SELECT DISTINCT (count(DISTINCT ?id) as ?cnt) ?value {' +
-            '      <SELECTIONS> ' +
-            '     } GROUP BY ?value ' +
-            '    } ' +
-            '    FILTER(BOUND(?value))' +
-            '    BIND(COALESCE(?value, <http://ldf.fi/NONEXISTENT_URI>) AS ?labelValue) ' +
-            '    <LABEL_PART> ' +
-            '    BIND(COALESCE(?lbl, IF(!ISURI(?value), ?value, "")) AS ?facet_text)' +
-            '   } ' +
-            '  }' +
-            ' } ';
+            ' SELECT DISTINCT ?cnt ?facet_text ?value WHERE {\n' +
+            ' { \n' +
+            '  { \n' +
+            '   SELECT DISTINCT (count(DISTINCT ?id) as ?cnt) { \n' +
+            '    <OTHER_SELECTIONS> \n' +
+            '   } \n' +
+            '  } \n' +
+            '  BIND("<NO_SELECTION_STRING>" AS ?facet_text) \n' +
+            ' } UNION \n' +
+            '  {\n' +
+            '   SELECT DISTINCT ?cnt ?value ?facet_text { \n' +
+            '    {\n' +
+            '     SELECT DISTINCT (count(DISTINCT ?id) as ?cnt) ?value {\n' +
+            '      <SELECTIONS> \n' +
+            '     } GROUP BY ?value \n' +
+            '    } \n' +
+            '    FILTER(BOUND(?value)) \n' +
+            '    BIND(COALESCE(?value, <http://ldf.fi/NONEXISTENT_URI>) AS ?labelValue) \n' +
+            '    <LABEL_PART> \n' +
+            '    BIND(COALESCE(?lbl, IF(!ISURI(?value), ?value, "")) AS ?facet_text)\n' +
+            '   } \n' +
+            '  }\n' +
+            ' } \n';
 
             var defaultConfig = {
                 labelPart: labelPart,
@@ -883,6 +892,7 @@ import "./bootstrap-part/css/bootstrap.css";
                 .replace(/<OTHER_SELECTIONS>/g, otherConstraints.join(' '))
                 .replace(/<SELECTIONS>/g, this.buildSelections(otherConstraints));
 
+            dumpQuery(query, 'BasicFacet::buildQuery');
             return query;
         }
 
@@ -922,10 +932,6 @@ import "./bootstrap-part/css/bootstrap.css";
                 {
                     placeHolder: /<NO_SELECTION_STRING>/g,
                     value: this.config.noSelectionString
-                },
-                {
-                    placeHolder: /\s+/g,
-                    value: ' '
                 }
             ];
 
@@ -1343,26 +1349,26 @@ import "./bootstrap-part/css/bootstrap.css";
 
         function TimespanFacetConstructor(options) {
             var simpleTemplate = PREFIXES +
-            ' SELECT (min(xsd:date(?value)) AS ?min) (max(xsd:date(?value)) AS ?max) { ' +
-            '   <SELECTIONS> ' +
-            '   ?id <START_PROPERTY> ?value . ' +
-            ' } ';
+            ' SELECT (min(xsd:date(?value)) AS ?min) (max(xsd:date(?value)) AS ?max) { \n' +
+            '   <SELECTIONS> \n' +
+            '   ?id <START_PROPERTY> ?value . \n' +
+            ' } \n';
 
             var separateTemplate = PREFIXES +
-            ' SELECT ?min ?max { ' +
-            '   { ' +
-            '     SELECT (min(xsd:date(?start)) AS ?min) { ' +
-            '       <SELECTIONS> ' +
-            '       ?id <START_PROPERTY> ?start . ' +
-            '     } ' +
-            '   } ' +
-            '   { ' +
-            '     SELECT (max(xsd:date(?end)) AS ?max) { ' +
-            '       <SELECTIONS> ' +
-            '       ?id <END_PROPERTY> ?end . ' +
-            '     } ' +
-            '   } ' +
-            ' } ';
+            ' SELECT ?min ?max { \n' +
+            '   { \n' +
+            '     SELECT (min(xsd:date(?start)) AS ?min) { \n' +
+            '       <SELECTIONS> \n' +
+            '       ?id <START_PROPERTY> ?start . \n' +
+            '     } \n' +
+            '   } \n' +
+            '   { \n' +
+            '     SELECT (max(xsd:date(?end)) AS ?max) { \n' +
+            '       <SELECTIONS> \n' +
+            '       ?id <END_PROPERTY> ?end . \n' +
+            '     } \n' +
+            '   } \n' +
+            ' } \n';
 
             var defaultConfig = {};
 
@@ -1485,14 +1491,14 @@ import "./bootstrap-part/css/bootstrap.css";
         function buildQueryTemplate(template) {
             return template
                 .replace(/<START_PROPERTY>/g, this.startPredicate)
-                .replace(/<END_PROPERTY>/g, this.endPredicate)
-                .replace(/\s+/g, ' ');
+                .replace(/<END_PROPERTY>/g, this.endPredicate);
         }
 
         function buildQuery(constraints) {
             constraints = constraints || [];
             var query = this.queryTemplate
                 .replace(/<SELECTIONS>/g, this.getOtherSelections(constraints));
+            dumpQuery(query, 'TimespanFacet::buildQuery');
             return query;
         }
 
@@ -1700,19 +1706,19 @@ import "./bootstrap-part/css/bootstrap.css";
         function CheckboxFacetX(options) {
 
             var queryTemplate = PREFIXES +
-            ' SELECT DISTINCT ?value ?facet_text ?cnt WHERE { ' +
-            '  <PREDICATE_UNION> ' +
-            ' } ';
+            ' SELECT DISTINCT ?value ?facet_text ?cnt WHERE { \n' +
+            '  <PREDICATE_UNION> \n' +
+            ' }\n';
 
             var predTemplate =
-            ' { ' +
-            '  SELECT DISTINCT (COUNT(DISTINCT(?id)) AS ?cnt) ("<ID>" AS ?value)' +
-            '     ("<LABEL>" AS ?facet_text) { ' +
-            '   <SELECTIONS> ' +
-            '   BIND("<ID>" AS ?val) ' +
-            '   <PREDICATE> ' +
-            '  } GROUP BY ?val ' +
-            ' } ';
+            ' { \n' +
+            '  SELECT DISTINCT (COUNT(DISTINCT(?id)) AS ?cnt) ("<ID>" AS ?value)\n' +
+            '     ("<LABEL>" AS ?facet_text) { \n' +
+            '   <SELECTIONS> \n' +
+            '   BIND("<ID>" AS ?val) \n' +
+            '   <PREDICATE> \n' +
+            '  } GROUP BY ?val \n' +
+            ' } \n';
 
             var defaultConfig = {
                 usePost: true
@@ -1758,14 +1764,14 @@ import "./bootstrap-part/css/bootstrap.css";
             });
 
             return template
-                .replace(/<PREDICATE_UNION>/g, unions)
-                .replace(/\s+/g, ' ');
+                .replace(/<PREDICATE_UNION>/g, unions);
         }
 
         function buildQuery(constraints) {
             constraints = constraints || [];
             var query = this.queryTemplate
                 .replace(/<SELECTIONS>/g, this.getOtherSelections(constraints));
+            dumpQuery(query, 'CheckboxFacet::buildQuery');
             return query;
         }
 
@@ -1870,34 +1876,34 @@ import "./bootstrap-part/css/bootstrap.css";
         function HierarchyFacetConstructor(options) {
 
             var queryTemplate = PREFIXES +
-            ' SELECT DISTINCT ?cnt ?facet_text ?value WHERE {' +
-            ' { ' +
-            '  { ' +
-            '   SELECT DISTINCT (count(DISTINCT ?id) as ?cnt) { ' +
-            '    <OTHER_SELECTIONS> ' +
-            '   } ' +
-            '  } ' +
-            '  BIND("<NO_SELECTION_STRING>" AS ?facet_text) ' +
-            ' } UNION ' +
-            '  {' +
-            '   SELECT DISTINCT ?cnt ?value ?facet_text {' +
-            '    {' +
-            '     SELECT DISTINCT (count(DISTINCT ?id) as ?cnt) ?value ?hierarchy ?lvl {' +
-            '      { SELECT DISTINCT ?h { [] <ID> ?h . <SPECIFIER> } } ' +
-            '      ?h (<HIERARCHY>)* ?value . ' +
-            '      <LEVELS> ' +
-            '      ?id <ID> ?h .' +
-            '      <OTHER_SELECTIONS> ' +
-            '     } GROUP BY ?hierarchy ?value ?lvl ORDER BY ?hierarchy ' +
-            '    } ' +
-            '    FILTER(BOUND(?value))' +
-            '    BIND(COALESCE(?value, <http://ldf.fi/NONEXISTENT_URI>) AS ?labelValue) ' +
-            '    <LABEL_PART> ' +
-            '    BIND(COALESCE(?lbl, STR(?value)) as ?label) ' +
-            '    BIND(CONCAT(?lvl, ?label) as ?facet_text)' +
-            '   } ' +
-            '  } ' +
-            ' } ';
+            ' SELECT DISTINCT ?cnt ?facet_text ?value WHERE {\n' +
+            ' { \n' +
+            '  { \n' +
+            '   SELECT DISTINCT (count(DISTINCT ?id) as ?cnt) { \n' +
+            '    <OTHER_SELECTIONS> \n' +
+            '   } \n' +
+            '  } \n' +
+            '  BIND("<NO_SELECTION_STRING>" AS ?facet_text) \n' +
+            ' } UNION \n' +
+            '  {\n' +
+            '   SELECT DISTINCT ?cnt ?value ?facet_text {\n' +
+            '    {\n' +
+            '     SELECT DISTINCT (count(DISTINCT ?id) as ?cnt) ?value ?hierarchy ?lvl {\n' +
+            '      { SELECT DISTINCT ?h { [] <ID> ?h . <SPECIFIER> } } \n' +
+            '      ?h (<HIERARCHY>)* ?value . \n' +
+            '      <LEVELS> \n' +
+            '      ?id <ID> ?h .\n' +
+            '      <OTHER_SELECTIONS> \n' +
+            '     } GROUP BY ?hierarchy ?value ?lvl ORDER BY ?hierarchy \n' +
+            '    } \n' +
+            '    FILTER(BOUND(?value))\n' +
+            '    BIND(COALESCE(?value, <http://ldf.fi/NONEXISTENT_URI>) AS ?labelValue) \n' +
+            '    <LABEL_PART> \n' +
+            '    BIND(COALESCE(?lbl, STR(?value)) as ?label) \n' +
+            '    BIND(CONCAT(?lvl, ?label) as ?facet_text)\n' +
+            '   } \n' +
+            '  } \n' +
+            ' } \n';
 
             options.queryTemplate = options.queryTemplate || queryTemplate;
             options.depth = angular.isUndefined(options.depth) ? 3 : options.depth;
@@ -1940,10 +1946,6 @@ import "./bootstrap-part/css/bootstrap.css";
                 {
                     placeHolder: /<V_VAR>/g,
                     value: 'seco_v_' + this.facetId
-                },
-                {
-                    placeHolder: /\s+/g,
-                    value: ' '
                 }
             ];
 
@@ -1995,6 +1997,7 @@ import "./bootstrap-part/css/bootstrap.css";
                 .replace(/<LEVELS>/g, buildLevels(this.config.depth, this.config.hierarchy))
                 .replace(/<SPECIFIER>/g, this.getSpecifier().replace(/\?value\b/g, '?h'));
 
+            dumpQuery(query, 'HierarchyFacet::buildQuery');
             return query;
         }
 
