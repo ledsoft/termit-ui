@@ -83,14 +83,17 @@ export function selectVocabularyTerm(data: TermData | null): SelectingTermsActio
         selectedTerms: data ? new Term(data) : data,
     }
 }
+
 export function fireFacetedSearchRequested() {
     return asyncActionRequest({type: ActionType.FACETED_SEARCH});
 }
+
 export function fireFacetedSearchFinished(data: any) {
-    return asyncActionSuccessWithPayload({type: ActionType.FACETED_SEARCH},data)
+    return asyncActionSuccessWithPayload({type: ActionType.FACETED_SEARCH}, data)
 }
+
 export function fireFacetedSearchFailed(error: any) {
-    return asyncActionFailure({type: ActionType.FACETED_SEARCH},error)
+    return asyncActionFailure({type: ActionType.FACETED_SEARCH}, error)
 }
 
 // TODO MB Unused
@@ -99,4 +102,10 @@ export function selectFile(data: FileData | null): FileSelectingAction {
         type: ActionType.SELECT_FILE,
         fileIri: data ? (data.iri ? data.iri : null) : data,
     }
+}
+
+export function clearProperties() {
+    return {
+        type: ActionType.CLEAR_PROPERTIES
+    };
 }

@@ -7,7 +7,7 @@ interface FileLinkProps {
 }
 
 export default (props : FileLinkProps) => <div>
-    <Link to={"/file/" + props.file.fileName}>
-        {props.file.fileName}
+    <Link to={"/file/" + props.file.name}>
+        {props.file.name}
     </Link>
 </div>

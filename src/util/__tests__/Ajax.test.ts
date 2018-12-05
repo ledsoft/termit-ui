@@ -1,5 +1,5 @@
 import MockAdapter from 'axios-mock-adapter';
-import {accept, Ajax, content, params} from '../Ajax';
+import {accept, Ajax, content, param, params} from '../Ajax';
 import Routing from '../Routing';
 import {EMPTY_USER} from "../../model/User";
 import Constants from "../Constants";
@@ -236,6 +236,34 @@ describe('Ajax', () => {
             return sut.delete('/users', params(qParams)).then(() => {
                 const reqConfig = spy.mock.calls[0][1];
                 return expect(reqConfig.params).toEqual(qParams);
+            });
+        });
+
+        it('supports adding params one by one', () => {
+            mock.onAny().reply(200, {}, headers);
+            const spy = jest.spyOn(sut.axios, 'get');
+            spy.mockClear();
+            const pOne = 'searchString';
+            const vOne = 'test';
+            const pTwo = 'namespace';
+            const vTwo = 'http://onto.fel.cvut.cz/ontologies/termit/vocabularies';
+            return sut.get('/terms', param(pOne, vOne).param(pTwo, vTwo)).then(() => {
+                const reqConfig = spy.mock.calls[0][1];
+                const expected = {};
+                expected[pOne] = vOne;
+                expected[pTwo] = vTwo;
+                return expect(reqConfig.params).toEqual(expected);
+            });
+        });
+    });
+
+    describe("getRaw", () => {
+        it("returns response object", () => {
+            mock.onAny().reply(200, {}, Object.assign({}, headers, {"Content-Disposition": "attachment; filename=test.txt"}));
+            return sut.getRaw("/vocabularies?test/terms", accept(Constants.CSV_MIME_TYPE)).then((resp: any) => {
+                expect(resp.status).toEqual(200);
+                expect(resp.headers).toBeDefined();
+                expect(resp.headers["Content-Disposition"]).toContain("attachment");
             });
         });
     });

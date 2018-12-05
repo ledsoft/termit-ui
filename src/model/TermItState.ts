@@ -7,6 +7,8 @@ import Vocabulary, {EMPTY_VOCABULARY} from "./Vocabulary";
 import {QueryResultIF} from "./QueryResult";
 import Term from "./Term";
 import Document, {EMPTY_DOCUMENT} from "./Document";
+import Resource, {EMPTY_RESOURCE} from "./Resource";
+import RdfsResource from "./RdfsResource";
 import SearchResult from "./SearchResult";
 import SearchQuery from "./SearchQuery";
 
@@ -17,6 +19,8 @@ export default class TermItState {
     public loading: boolean;
     public user: User;
     public vocabulary: Vocabulary;
+    public resources: { [key: string]: Resource };
+    public resource: Resource;
     public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
     public document: Document;
@@ -34,12 +38,15 @@ export default class TermItState {
     public searchQuery: SearchQuery;
     public searchResults: SearchResult[] | null;
     public types: { [key: string]: Term };
+    public properties: RdfsResource[];
 
     // FIXME: WTF: This constructor is never called?
     constructor() {
         this.loading = false;
         this.user = EMPTY_USER;
         this.vocabulary = EMPTY_VOCABULARY;
+        this.resource = EMPTY_RESOURCE;
+        this.resources = {};
         this.defaultTerms = [];
         this.vocabularies = {};
         this.document = EMPTY_DOCUMENT;
@@ -57,5 +64,6 @@ export default class TermItState {
         this.searchQuery = new SearchQuery();
         this.searchResults = null;
         this.types = {};
+        this.properties = [];
     }
 }

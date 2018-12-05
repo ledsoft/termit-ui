@@ -3,10 +3,13 @@ import ActionType, {
     AsyncAction,
     AsyncActionSuccess,
     ClearErrorAction,
-    ExecuteQueryAction, FacetedSearchAction,
+    ExecuteQueryAction,
+    FacetedSearchAction,
     FailureAction,
     FileSelectingAction,
-    MessageAction, SearchAction, SearchResultAction,
+    MessageAction,
+    SearchAction,
+    SearchResultAction,
     SelectingTermsAction,
     SwitchLanguageAction
 } from '../action/ActionType';
@@ -18,9 +21,11 @@ import IntlData from "../model/IntlData";
 import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
 import AsyncActionStatus from "../action/AsyncActionStatus";
 import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
+import Resource, {EMPTY_RESOURCE} from "../model/Resource";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import Term from "../model/Term";
 import Document, {EMPTY_DOCUMENT} from "../model/Document";
+import RdfsResource from "../model/RdfsResource";
 import SearchResult from "../model/SearchResult";
 import SearchQuery from "../model/SearchQuery";
 
@@ -115,6 +120,40 @@ function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuc
     }
 }
 
+function resource(state: Resource = EMPTY_RESOURCE, action: AsyncActionSuccess<any>): Resource {
+    switch (action.type) {
+        case ActionType.LOAD_RESOURCE:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        case ActionType.LOAD_RESOURCE_TERMS:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const r = new Resource(state);
+                r.terms = action.payload;
+                return r;
+            } else {
+                return state;
+            }
+        default:
+            return state;
+    }
+}
+
+function resources(state: { [key: string]: Resource } | any = {}, action: AsyncActionSuccess<Resource[]>): { [key: string]: Resource } {
+    switch (action.type) {
+        case ActionType.LOAD_RESOURCES:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const map = {};
+                action.payload.forEach(v =>
+                    map[v.iri] = v
+                );
+                return map;
+            } else {
+                return state;
+            }
+        default:
+            return state;
+    }
+}
+
 function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: AsyncActionSuccess<Vocabulary[]>): { [key: string]: Vocabulary } {
     switch (action.type) {
         case ActionType.LOAD_VOCABULARIES:
@@ -132,10 +171,13 @@ function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: A
     }
 }
 
-function selectedTerm(state: Term | null = null, action: SelectingTermsAction) {
+function selectedTerm(state: Term | null = null, action: SelectingTermsAction | AsyncActionSuccess<Term>) {
     switch (action.type) {
         case ActionType.SELECT_VOCABULARY_TERM:
-            return action.selectedTerms;
+            return (action as SelectingTermsAction).selectedTerms;
+        case ActionType.LOAD_TERM:
+            const aa = action as AsyncActionSuccess<Term>;
+            return aa.status === AsyncActionStatus.SUCCESS ? aa.payload : state;
         default:
             return state;
     }
@@ -188,6 +230,8 @@ function fileContent(state: string | null = null, action: AsyncActionSuccess<str
     switch (action.type) {
         case ActionType.LOAD_FILE_CONTENT:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        case ActionType.SAVE_FILE_CONTENT:
+            return state; // TODD not updating file content for now
         default:
             return state;
     }
@@ -256,7 +300,7 @@ function searchInProgress(state: boolean = false, action: Action): boolean
     }
 }
 
-function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuccess<Term[]>): {[key: string]: Term } {
+function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuccess<Term[]>): { [key: string]: Term } {
     switch (action.type) {
         case ActionType.LOAD_TYPES:
             if (action.status === AsyncActionStatus.SUCCESS) {
@@ -273,11 +317,25 @@ function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuc
     }
 }
 
+function properties(state: RdfsResource[] = [], action: AsyncActionSuccess<RdfsResource[]> | Action): RdfsResource[] {
+    switch (action.type) {
+        case ActionType.GET_PROPERTIES:
+            const asyncAction = action as AsyncActionSuccess<RdfsResource[]>;
+            return asyncAction.status === AsyncActionStatus.SUCCESS ? asyncAction.payload : state;
+        case ActionType.CLEAR_PROPERTIES:
+            return [];
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers<TermItState>({
     user,
     loading,
     vocabulary,
     vocabularies,
+    resource,
+    resources,
     error,
     messages,
     intl,
@@ -293,7 +351,8 @@ const rootReducer = combineReducers<TermItState>({
     searchResults,
     searchListenerCount,
     searchInProgress,
-    types
+    types,
+    properties
 });
 
 export default rootReducer;

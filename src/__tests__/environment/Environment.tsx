@@ -6,6 +6,7 @@ import {IntlProvider} from "react-intl";
 import {Provider} from "react-redux";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
+import TermItState from "../../model/TermItState";
 
 const mockStore = configureMockStore([thunk]);
 
@@ -16,7 +17,9 @@ const mockStore = configureMockStore([thunk]);
  * @param options Optional rendering options for Enzyme
  */
 export function mountWithIntl(node: ReactElement<any>, options?: MountRendererProps) {
-    return mount(<Provider store={mockStore({})}><IntlProvider {...intlData}>{node}</IntlProvider></Provider>, options);
+    return mount(<Provider store={mockStore(new TermItState())}>
+        <IntlProvider {...intlData}>{node}</IntlProvider>
+    </Provider>, options);
 }
 
 export function intlDataForShallow(): {} {

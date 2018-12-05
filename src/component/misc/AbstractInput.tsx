@@ -8,7 +8,6 @@ export interface AbstractInputProps {
     placeholder?: string;
     title?: string;
     value?: string;
-    defaultValue?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     help?: string;
     invalid?: boolean;
@@ -21,7 +20,7 @@ export interface AbstractInputProps {
 export default class AbstractInput<T extends AbstractInputProps> extends React.Component<T> {
 
     protected renderLabel() {
-        return this.props.label ? <Label size='sm'>{this.props.label}</Label> : null;
+        return this.props.label ? <Label className='attribute-label'>{this.props.label}</Label> : null;
     }
 
     protected renderHelp() {

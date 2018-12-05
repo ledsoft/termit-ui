@@ -13,7 +13,7 @@ import {ThunkDispatch} from "../../util/Types";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import {AssetData} from '../../model/Asset';
 import FetchOptionsFunction from "../../model/Functions";
-import {fetchVocabularyTerms} from "../../action/ComplexActions";
+import {fetchVocabularyTerms} from "../../action/AsyncActions";
 
 interface TermSubTermsEditProps extends HasI18n {
     vocabulary: Vocabulary;
@@ -51,7 +51,7 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
     public render() {
         const selected = this.resolveSelectedSubTerms();
         return <FormGroup>
-            <Label size='sm'>{this.props.i18n('term.metadata.subTerms')}</Label>
+            <Label className='attribute-label'>{this.props.i18n('term.metadata.subTerms')}</Label>
             <IntelligentTreeSelect className='term-edit'
                                    onChange={this.onChange}
                                    value={selected}

@@ -13,14 +13,15 @@ CONSTRUCT {
     OPTIONAL {
    	    ?slovnik rdfs:label ?labelS .
    	}
+  	BIND(COALESCE(?labelS,str(?slovnik)) as ?labelSlovniku)
+
     OPTIONAL {
         ?pojem a ?t .
     	FILTER(!(?t IN (a-popis-dat-pojem:term,skos:Concept)))
-      	SERVICE silent <http://onto.fel.cvut.cz/rdf4j-server/repositories/ufo-current> {
-        	?t rdfs:label ?lT .
-  	    }
+  	    OPTIONAL {
+                ?t rdfs:label ?lT .
+        }
     	BIND(COALESCE(?lT,str(?t)) as ?labelTypu)
     }
-  	BIND(COALESCE(?labelS,str(?slovnik)) as ?labelSlovniku)
     BIND(COALESCE(?t,a-popis-dat-pojem:not-filled) as ?typ)
 }

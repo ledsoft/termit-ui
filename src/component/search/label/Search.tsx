@@ -8,9 +8,8 @@ import SearchResult from "../../../model/SearchResult";
 import './Search.scss';
 import * as SearchActions from "../../../action/SearchActions";
 // import Vocabulary from "../../../util/VocabularyUtils";
-// import Routing from "../../../util/Routing";
-// import Routes from "../../../util/Routes";
 import {ThunkDispatch} from '../../../util/Types';
+import {AbstractSearch} from "./AbstractSearch";
 import TermItState from "../../../model/TermItState";
 import SearchResultTerms from "./SearchResultTerms";
 import SearchQuery from "../../../model/SearchQuery";
@@ -28,7 +27,7 @@ interface SearchProps extends HasI18n, RouteComponentProps<any> {
 interface SearchState {
 }
 
-export class Search extends React.Component<SearchProps, SearchState> {
+export class Search extends AbstractSearch<SearchProps, SearchState> {
 
     public componentDidMount() {
         this.props.addSearchListener();
@@ -41,29 +40,12 @@ export class Search extends React.Component<SearchProps, SearchState> {
     /*
     // TODO: Parse URL on page load (or some time like that)
     public componentDidMount() {
-        const query = this.props.location.search;
-        const match = query.match(/searchString=(.+)/);
-        if (match) {
-            const searchString = match[1];
+        const searchString = Utils.extractQueryParam(this.props.location.search, 'searchString');
+        if (searchString) {
+            this.setState({searchString});
             this.search(searchString);
         }
     }
-    */
-
-    /*
-    private openResult = (result: SearchResult) => {
-        this.clear();
-        if (result.types.indexOf(Vocabulary.VOCABULARY) !== -1) {
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
-        } else {
-            // TODO Transition to term (once term detail is implemented)
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.vocabularyIri!)]])});
-        }
-    };
-
-    private clear = () => {
-        this.setState({results: null});
-    };
     */
 
     public render() {
@@ -112,7 +94,7 @@ export class Search extends React.Component<SearchProps, SearchState> {
 
     private renderVocabularies() {
         return <Card className='search-result-container'>
-            <CardHeader tag='h5' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
+            <CardHeader tag='h4' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
             <CardBody>
                 {this.state.results!.filter(r => r.hasType(Vocabulary.VOCABULARY)).map(r => {
                     return <span key={r.iri} className='search-result-item search-result-link btn-link'
@@ -125,7 +107,7 @@ export class Search extends React.Component<SearchProps, SearchState> {
 
     private renderTerms() {
         return <Card className='search-result-container'>
-            <CardHeader tag='h5' color='info'>{this.props.i18n('search.pojem')}</CardHeader>
+            <CardHeader tag='h4' color='info'>{this.props.i18n('search.pojem')}</CardHeader>
             <CardBody>
                 {this.state.results!.filter(r => r.hasType(Vocabulary.TERM)).map(r => {
                     return <span key={r.iri} className='search-result-item search-result-link btn-link'

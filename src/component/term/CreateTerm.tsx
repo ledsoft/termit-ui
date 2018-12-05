@@ -29,7 +29,7 @@ import Constants from "../../util/Constants";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
-import {createVocabularyTerm, fetchVocabularyTerms} from "../../action/ComplexActions";
+import {createVocabularyTerm, fetchVocabularyTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from "../../util/Types";
 import {AssetData} from "../../model/Asset";
 
@@ -218,8 +218,8 @@ export class CreateTerm extends React.Component<CreateVocabularyTermProps, Creat
             comment: data.optionDescription as string,
             subTerms: children,
             parent: parent as string,
-            types: [data.typeOption.iri as string],
-            sources: [data.optionSource as string],
+            types: data.typeOption ? [data.typeOption.iri] : [],
+            sources: [data.optionSource],
         }), this.props.match.params.name);
     }
 

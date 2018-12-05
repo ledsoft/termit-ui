@@ -3,7 +3,7 @@ import Widget from "./Widget";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {QueryResultIF} from "../../model/QueryResult";
-import {executeQuery} from "../../action/ComplexActions";
+import {executeQuery} from "../../action/AsyncActions";
 import * as _ from "lodash";
 import {ThunkDispatch} from "../../util/Types";
 

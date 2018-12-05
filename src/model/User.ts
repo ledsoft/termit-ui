@@ -1,3 +1,5 @@
+import Utils from "../util/Utils";
+
 export const CONTEXT = {
     "iri": "@id",
     "firstName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno",
@@ -26,9 +28,7 @@ export default class User implements UserData {
 
     constructor(data: UserData) {
         Object.assign(this, data);
-        if (!this.types) {
-            this.types = [];
-        }
+        this.types = Utils.sanitizeArray(data.types);
     }
 
     get fullName(): string {

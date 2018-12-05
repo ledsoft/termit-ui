@@ -4,9 +4,9 @@ import {
     asyncActionRequest,
     asyncActionSuccess,
     asyncActionSuccessWithPayload,
-    publishMessage, selectVocabularyTerm
+    publishMessage
 } from './SyncActions';
-import Ajax, {content, params} from '../util/Ajax';
+import Ajax, {content, param, params} from '../util/Ajax';
 import {ThunkDispatch} from '../util/Types';
 import Routing from '../util/Routing';
 import Constants from '../util/Constants';
@@ -24,13 +24,19 @@ import FetchOptionsFunction from "../model/Functions";
 import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
 import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
+import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
+import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
+import TermAssignment, {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
+import TermItState from "../model/TermItState";
+import Utils from "../util/Utils";
+import ExportType from "../util/ExportType";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
  * of several synchronous sub-actions which inform the application of initiation of the request and its result.
  */
 
-export function fetchUser() {
+export function loadUser() {
     const action = {
         type: ActionType.FETCH_USER
     };
@@ -136,12 +142,73 @@ export function loadVocabulary(iri: IRI) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment + (iri.namespace ? "?query=" + iri.namespace : ""))
+            .get(Constants.API_PREFIX + '/vocabularies/' + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) =>
                 jsonld.compact(data, VOCABULARY_CONTEXT))
             .then((data: VocabularyData) =>
                 dispatch(asyncActionSuccessWithPayload(action, new Vocabulary(data))))
             .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function loadResource(iri: IRI) {
+    const action = {
+        type: ActionType.LOAD_RESOURCE
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax
+            .get(Constants.API_PREFIX + '/resources/' + iri.fragment, param("namespace", iri.namespace))
+            .then((data: object) =>
+                jsonld.compact(data, RESOURCE_CONTEXT))
+            .then((data: ResourceData) =>
+                dispatch(asyncActionSuccessWithPayload(action, new Resource(data))))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)))
+            })
+
+    };
+}
+
+export function loadResources() {
+    const action = {
+        type: ActionType.LOAD_RESOURCES
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.get(Constants.API_PREFIX + '/resources')
+            .then((data: object[]) =>
+                data.length !== 0 ? jsonld.compact(data, RESOURCE_CONTEXT) : [])
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: ResourceData[]) =>
+                dispatch(asyncActionSuccessWithPayload(action, data.map(v => new Resource(v)))))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+export function loadResourceTerms(iri: IRI) {
+    const action = {
+        type: ActionType.LOAD_RESOURCE_TERMS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax
+        // , params({query: queryString})
+            .get(Constants.API_PREFIX + '/resources/resource/terms', param('iri', iri.namespace + iri.fragment))
+            // .get(Constants.API_PREFIX + '/resources/resource/terms', params({iri}))
+            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: TermData[]) => {
+                const terms = data.map(d => new Term(d));
+                return dispatch(asyncActionSuccessWithPayload(action, terms));
+            }).catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
@@ -167,32 +234,35 @@ export function loadVocabularies() {
     };
 }
 
-// TODO Add support for namespace
-export function loadDefaultTerms(normalizedName: string) {
+export function loadDefaultTerms(normalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.LOAD_DEFAULT_TERMS
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(fetchVocabularyTerms({limit: 100, offset: 0, searchString: '', optionID: ''}, normalizedName))
+        dispatch(fetchVocabularyTerms({}, normalizedName, namespace))
             .then((result: Term[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
     }
 
 }
 
-// TODO Add support for namespace
-export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
+export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/find',
+        let url: string;
+        if (fetchOptions.optionID) {
+            url = Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/' + VocabularyUtils.getFragment(fetchOptions.optionID) + '/subterms'
+        } else {
+            url = Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms';
+        }
+        return Ajax.get(url,
             params({
-                label: fetchOptions.searchString,
-                parentTerm: fetchOptions.optionID,
+                searchString: fetchOptions.searchString,
                 limit: fetchOptions.limit,
                 offset: fetchOptions.offset
-            }))
+            }).param('namespace', namespace))
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: TermData[]) => data.map(d => new Term(d)))
@@ -203,40 +273,18 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
     };
 }
 
-// TODO Add support for namespace, unused?
-export function fetchVocabularySubTerms(termNormalizedNamed: string, vocabularyNormalizedName: string) {
+export function loadVocabularyTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
     const action = {
-        type: ActionType.FETCH_VOCABULARY_TERMS
+        type: ActionType.LOAD_TERM
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedNamed + '/subterms')
-            .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: TermData[]) => data.map(d => new Term(d)))
-            .catch((error: ErrorData) => {
-                dispatch(asyncActionFailure(action, error));
-                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-                return []
-            });
-    };
-}
-
-// TODO server return http code 406
-// TODO We need to support custom namespace as well
-export function getVocabularyTermByName(termNormalizedName: string, vocabularyNormalizedName: string) {
-    const action = {
-        type: ActionType.FETCH_VOCABULARY_TERMS
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedName)
+        dispatch(asyncActionRequest(action));
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedName, param('namespace', namespace))
             .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
-            .then((data: TermData) => dispatch(selectVocabularyTerm(new Term(data))))
+            .then((data: TermData) => dispatch(asyncActionSuccessWithPayload(action, new Term(data))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
-                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-                return null
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
 }
@@ -340,12 +388,32 @@ export function loadFileContent(documentIri: IRI, fileName: string) {
     };
 }
 
+export function saveFileContent(documentIri: IRI, fileName: string, fileContent: string) {
+    const action = {
+        type: ActionType.SAVE_FILE_CONTENT
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax
+            .post(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content", params({
+                file: fileName,
+                namespace: documentIri.namespace
+            }))
+            .then((data: object) => fileContent)// TODO load from the service instead
+            .then((data: string) => dispatch(asyncActionSuccessWithPayload(action, data)))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function loadDocument(iri: IRI) {
     const action = {
         type: ActionType.LOAD_DOCUMENT
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
+        dispatch(asyncActionRequest(action, true));
         return Ajax
             .get(Constants.API_PREFIX + '/documents/' + iri.fragment, params({namespace: iri.namespace}))
             .then((data: object) =>
@@ -381,6 +449,27 @@ export function updateTerm(term: Term, vocabulary: Vocabulary) {
     };
 }
 
+export function updateResourceTerms(res: Resource) {
+    const action = {
+        type: ActionType.UPDATE_RESOURCE_TERMS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.put(Constants.API_PREFIX + '/resources/resource/terms',
+            content(res.terms!.map(t => t.iri))
+                .params({ iri: res.iri }).contentType('application/json'))
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                return dispatch(publishMessage(new Message({messageId: 'resource.updated.message'}, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
+
 export function updateVocabulary(vocabulary: Vocabulary) {
     const action = {
         type: ActionType.UPDATE_VOCABULARY
@@ -400,4 +489,106 @@ export function updateVocabulary(vocabulary: Vocabulary) {
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
+}
+
+/**
+ * Fetches RDFS:label of a resource with the specified identifier.
+ * @param iri Resource identifier
+ */
+export function getLabel(iri: string) {
+    const action = {
+        type: ActionType.GET_LABEL
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(Constants.API_PREFIX + '/data/label', param('iri', iri)).then(data => {
+            dispatch(asyncActionSuccess(action));
+            return data;
+        }).catch((error: ErrorData) => {
+            dispatch(asyncActionFailure(action, error));
+            return undefined;
+        });
+    };
+}
+
+/**
+ * Fetches properties existing in the server repository.
+ */
+export function getProperties() {
+    const action = {
+        type: ActionType.GET_PROPERTIES
+    };
+    return (dispatch: ThunkDispatch, getState: () => TermItState) => {
+        if (getState().properties.length > 0) {
+            return;
+        }
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(Constants.API_PREFIX + '/data/properties')
+            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, RDFS_RESOURCE_CONTEXT) : [])
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: RdfsResourceData[]) => dispatch(asyncActionSuccessWithPayload(action, data.map(d => new RdfsResource(d)))))
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+    };
+}
+
+export function createProperty(property: RdfsResource) {
+    const action = {
+        type: ActionType.CREATE_PROPERTY
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.post(Constants.API_PREFIX + "/data/properties", content(property.toJsonLd()))
+            .then(() => dispatch(asyncActionSuccess(action)))
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+    }
+}
+
+export function loadTermAssignments(term: Term) {
+    const action = {
+        type: ActionType.LOAD_TERM_ASSIGNMENTS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
+        const url = "/vocabularies/" + vocabularyIri.fragment + "/terms/" + VocabularyUtils.getFragment(term.iri) + "/assignments";
+        return Ajax.get(Constants.API_PREFIX + url, param("namespace", vocabularyIri.namespace))
+            .then((data: object) => jsonld.compact(data, TERM_ASSIGNMENT_CONTEXT))
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: TermAssignmentData[]) => {
+                dispatch(asyncActionSuccess(action));
+                return data.map(tad => new TermAssignment(tad));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return [];
+            });
+    };
+}
+
+export function exportGlossary(vocabularyIri: IRI, type: ExportType) {
+    const action = {
+        type: ActionType.EXPORT_GLOSSARY
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        const url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
+        return Ajax.getRaw(url, param("namespace", vocabularyIri.namespace).accept(type.mimeType).responseType("arraybuffer"))
+            .then((resp: AxiosResponse) => {
+                const disposition = resp.headers[Constants.CONTENT_DISPOSITION_HEADER];
+                const filenameMatch = disposition ? disposition.match(/filename="(.+\..+)"/) : null;
+                if (filenameMatch) {
+                    const fileName = filenameMatch[1];
+                    Utils.fileDownload(resp.data, fileName, type.mimeType);
+                    return dispatch(asyncActionSuccess(action));
+                } else {
+                    const error: ErrorData = {
+                        requestUrl: url,
+                        messageId: "vocabulary.summary.export.error"
+                    };
+                    dispatch(asyncActionFailure(action, error));
+                    return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)))
+                }
+            })
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+    }
 }

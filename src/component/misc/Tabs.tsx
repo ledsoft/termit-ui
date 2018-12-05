@@ -11,7 +11,7 @@ interface TabsProps extends HasI18n {
     /**
      * Map of IDs to the actual components
      */
-    tabs: { [activeTabLabelKey: string]: React.SFC },
+    tabs: { [activeTabLabelKey: string]: JSX.Element },
     /**
      * Tab change function.
      */
@@ -41,7 +41,7 @@ export class Tabs extends React.Component<TabsProps> {
                     <NavLink
                         className={(id === this.props.activeTabLabelKey) ? 'active' : ''}
                         onClick={changeTab}>
-                    {this.props.formatMessage(id,{})}
+                        {this.props.formatMessage(id, {})}
                     </NavLink>
                 </NavItem>
             );

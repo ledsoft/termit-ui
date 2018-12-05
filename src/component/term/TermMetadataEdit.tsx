@@ -26,12 +26,13 @@ interface TermMetadataEditProps extends HasI18n {
 
 interface TermMetadataEditState extends TermData {
     labelExists: boolean;
+    unmappedProperties: Map<string, string[]>;
 }
 
 export class TermMetadataEdit extends React.Component<TermMetadataEditProps, TermMetadataEditState> {
     constructor(props: TermMetadataEditProps) {
         super(props);
-        this.state = Object.assign({labelExists: false}, props.term);
+        this.state = Object.assign({labelExists: false, unmappedProperties: props.term.unmappedProperties}, props.term);
     }
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,8 +67,14 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.setState({subTerms: newChildren, plainSubTerms: newChildren.map(t => t.iri!)});
     };
 
-    private onSave = () => {
-        const t = new Term(this.state);
+    private onPropertiesChange = (update: Map<string, string[]>) => {
+        this.setState({unmappedProperties: update});
+    };
+
+    public onSave = () => {
+        const {labelExists, unmappedProperties, ...data} = this.state;
+        const t = new Term(data);
+        t.unmappedProperties = this.state.unmappedProperties;
         this.props.save(t);
     };
 
@@ -116,7 +123,12 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                                          sources={Utils.sanitizeArray(this.state.sources)}/>
                     </Col>
                 </Row>
-                <UnmappedPropertiesEdit properties={this.props.term.unmappedProperties}/>
+                <Row>
+                    <Col md={12}>
+                        <UnmappedPropertiesEdit properties={this.state.unmappedProperties}
+                                                onChange={this.onPropertiesChange}/>
+                    </Col>
+                </Row>
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className='pull-right term-edit-buttons'>

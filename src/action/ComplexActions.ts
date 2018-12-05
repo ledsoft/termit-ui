@@ -1,12 +1,7 @@
-import * as AsyncActions from './AsyncActions';
 import Authentication from '../util/Authentication';
 import {userLogout} from './SyncActions';
 import Routes from '../util/Routes';
 import Routing from '../util/Routing';
-import Vocabulary from "../model/Vocabulary";
-import Term from "../model/Term";
-import FetchOptionsFunction from "../model/Functions";
-import {IRI} from "../util/VocabularyUtils";
 import {ThunkDispatch} from '../util/Types';
 
 /*
@@ -15,24 +10,6 @@ import {ThunkDispatch} from '../util/Types';
  * the rest of the application.
  */
 
-export function loadUser() {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.fetchUser());
-    };
-}
-
-export function login(username: string, password: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.login(username, password));
-    };
-}
-
-export function register(user: { username: string, password: string }) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.register(user));
-    };
-}
-
 export function logout() {
     Authentication.clearToken();
     Routing.transitionTo(Routes.login);
@@ -40,77 +17,3 @@ export function logout() {
         dispatch(userLogout());
     };
 }
-
-export function createVocabulary(vocabulary: Vocabulary) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.createVocabulary(vocabulary));
-    };
-}
-
-export function createVocabularyTerm(term: Term, normalizedName: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.createVocabularyTerm(term, normalizedName));
-    };
-}
-
-export function loadVocabulary(iri: IRI) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.loadVocabulary(iri));
-    };
-}
-
-export function loadVocabularies() {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.loadVocabularies());
-    };
-}
-
-export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.fetchVocabularyTerms(fetchOptions, normalizedName));
-    };
-}
-
-export function loadDefaultTerms(normalizedName: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.loadDefaultTerms(normalizedName));
-    };
-}
-
-export function loadTypes(language: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.loadTypes(language));
-    };
-}
-
-export function getVocabularyTermByName(termNormalizedName: string, vocabularyNormalizedName: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.getVocabularyTermByName(termNormalizedName, vocabularyNormalizedName));
-    };
-}
-
-export function executeQuery(queryString: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.executeQuery(queryString));
-    };
-}
-
-export function loadFileContent(documentIri: IRI, fileName: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.loadFileContent(documentIri, fileName));
-    };
-}
-
-export function startFileTextAnalysis(documentIri: IRI, fileName: string) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.startFileTextAnalysis(documentIri, fileName));
-    };
-}
-
-export function loadDocument(iri: IRI) {
-    return (dispatch: ThunkDispatch) => {
-        return dispatch(AsyncActions.loadDocument(iri));
-    };
-
-}
-

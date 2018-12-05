@@ -9,8 +9,8 @@ interface PanelWithActionsProps {
 
 }
 
-export default (props: PanelWithActionsProps) => <Card style={{zIndex: 200}}>
-    <CardHeader tag='h5' color='info' className='d-flex align-items-center'>
+export default (props: PanelWithActionsProps) => <Card>
+    <CardHeader tag='h4' color='info' className='d-flex align-items-center'>
         <div className='flex-grow-1'>{props.title}</div>
         <div className="float-sm-right">
             {props.actions}

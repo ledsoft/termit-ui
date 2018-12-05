@@ -15,7 +15,7 @@ import {RouteComponentProps, withRouter} from "react-router";
 import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
 import Term from "../../model/Term";
-import {fetchVocabularyTerms} from "../../action/ComplexActions";
+import {fetchVocabularyTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from '../../util/Types';
 
 interface TermSelectProps extends HasI18n, RouteComponentProps<any> {

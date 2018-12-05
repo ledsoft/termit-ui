@@ -7,6 +7,7 @@ import {
     asyncActionSuccess,
     asyncActionSuccessWithPayload,
     clearError,
+    clearProperties,
     dismissMessage,
     publishMessage,
     selectVocabularyTerm,
@@ -20,6 +21,7 @@ import Constants from "../../util/Constants";
 import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import Term, {TermData} from "../../model/Term";
+import RdfsResource from "../../model/RdfsResource";
 
 function stateToPlainObject(state: TermItState) {
     return {
@@ -37,8 +39,11 @@ function stateToPlainObject(state: TermItState) {
         document: state.document,
         fileIri: state.fileIri,
         fileContent: state.fileContent,
-        facetedSearchResult : state.facetedSearchResult,
-        types : state.types
+        facetedSearchResult: state.facetedSearchResult,
+        types: state.types,
+        resource: state.resource,
+        resources: state.resources,
+        properties: state.properties
     };
 }
 
@@ -293,7 +298,7 @@ describe('Reducers', () => {
             ];
 
             const map = {};
-            terms.forEach((v : TermData) =>
+            terms.forEach((v: TermData) =>
                 map[(v.iri || "")] = new Term(v)
             );
 
@@ -309,5 +314,26 @@ describe('Reducers', () => {
             ignoreLoading: true
         };
         expect(reducers(stateToPlainObject(initialState), action)).toEqual(initialState);
+    });
+
+    describe("properties", () => {
+        it("sets properties when they were successfully loaded", () => {
+            const properties: RdfsResource[] = [new RdfsResource({
+                iri: "http://www.w3.org/2000/01/rdf-schema#label",
+                label: "Label",
+                comment: "RDFS label property"
+            })];
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.GET_PROPERTIES}, properties)))
+                .toEqual(Object.assign({}, initialState, {properties}));
+        });
+
+        it("clear properties on clearProperties action", () => {
+            initialState.properties = [new RdfsResource({
+                iri: "http://www.w3.org/2000/01/rdf-schema#label",
+                label: "Label",
+                comment: "RDFS label property"
+            })];
+            expect(reducers(stateToPlainObject(initialState), clearProperties())).toEqual(Object.assign({}, initialState, {properties: []}));
+        });
     });
 });

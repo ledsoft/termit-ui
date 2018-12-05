@@ -2,7 +2,7 @@ import OntologicalVocabulary from '../util/VocabularyUtils';
 
 const ctx = {
     "iri": "@id",
-    "fileName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-nazev-souboru",
+    "name": "http://www.w3.org/2000/01/rdf-schema#label",
     "comment": "http://www.w3.org/2000/01/rdf-schema#comment",
     "content": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor/content"
 };
@@ -11,7 +11,7 @@ export const CONTEXT = ctx;
 
 export interface FileData {
     iri?: string,
-    fileName: string,
+    name: string,
     comment?: string,
     origin?: string,
     content?: string
@@ -19,7 +19,7 @@ export interface FileData {
 
 export default class File implements FileData {
     public iri: string;
-    public fileName: string;
+    public name: string;
     public comment: string;
     public origin: string;
     public content?: string;
@@ -35,5 +35,5 @@ export default class File implements FileData {
 
 export const EMPTY_FILE = new File({
     iri: 'http://empty',
-    fileName: ''
+    name: ''
 });

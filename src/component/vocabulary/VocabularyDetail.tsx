@@ -6,28 +6,31 @@ import {Route, RouteComponentProps, Switch} from "react-router";
 import Terms from "../term/Terms";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadTypes, loadVocabulary} from "../../action/ComplexActions";
+import {loadTypes, loadVocabulary} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import './VocabularyDetail.scss';
 import OutgoingLink from "../misc/OutgoingLink";
-import VocabularyDetailTabPanel from "./VocabularyDetailTabPanel";
 import Routes from "../../util/Routes";
-import {IRI} from "../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {ThunkDispatch} from '../../util/Types';
 import CreateTerm from "../term/CreateTerm";
+import TermDetail from "../term/TermDetail";
+import NoTermSelected from "../term/NoTermSelected";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
     loadVocabulary: (iri: IRI) => void,
     loadTypes: (language: string) => void,
-    lang : string
+    lang: string
 }
 
 export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 
     public componentDidMount(): void {
         const normalizedName: string = this.props.match.params.name;
-        this.props.loadVocabulary({fragment: normalizedName});
+        if (!this.props.vocabulary || VocabularyUtils.getFragment(this.props.vocabulary.iri) !== normalizedName) {
+            this.props.loadVocabulary({fragment: normalizedName});
+        }
         this.props.loadTypes(this.props.lang);
     }
 
@@ -50,9 +53,9 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
                 </Col>
                 <Col md={8}>
                     <Switch>
-                        <Route path={Routes.vocabularyDetail.path} component={VocabularyDetailTabPanel}/>
-                        <Route path={Routes.vocabularyTermDetail.path} component={VocabularyDetailTabPanel}/>
+                        <Route path={Routes.vocabularyTermDetail.path} component={TermDetail}/>
                         <Route path={Routes.createVocabularyTerm.path} component={CreateTerm}/>
+                        <Route path={Routes.vocabularyDetail.path} component={NoTermSelected} exact={true}/>
                     </Switch>
                 </Col>
             </Row>

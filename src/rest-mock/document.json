@@ -7,14 +7,14 @@
     {
       "@id": "http://onto.fel.cvut.cz/ontologies/termit/file/instance12345",
       "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-nazev-souboru": "metropolitan-plan-p1.html",
+      "http://www.w3.org/2000/01/rdf-schema#label": "metropolitan-plan-p1.html",
       "http://www.w3.org/2000/01/rdf-schema#comment": "První část metropolitního plánu",
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-puvod": "https://plan.iprpraha.cz/cs/metropolitni-plan"
     },
     {
       "@id": "http://onto.fel.cvut.cz/ontologies/termit/file/instance54321",
       "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-nazev-souboru": "metropolitan-plan-p2.html",
+      "http://www.w3.org/2000/01/rdf-schema#label": "metropolitan-plan-p2.html",
       "http://www.w3.org/2000/01/rdf-schema#comment": "Druhá část metropolitního plánu",
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-puvod": "https://plan.iprpraha.cz/cs/metropolitni-plan"
     }

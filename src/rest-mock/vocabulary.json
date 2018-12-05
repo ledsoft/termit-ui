@@ -11,7 +11,7 @@
     "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
   },
   "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument": {
-    "@id": "http://onto.fel.cvut.cz/ontologies/termit/dokument/instance13579",
+    "@id": "http://onto.fel.cvut.cz/ontologies/termit/document/metropolitan-plan",
     "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/dokument"
   },
   "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
@@ -24,5 +24,6 @@
       "http://onto.fel.cvut.cz/ontologies/termit/admin"
     ]
   },
-  "http://purl.org/dc/terms/created": 1534429897893
+  "http://purl.org/dc/terms/created": 1534429897893,
+  "http://www.w3.org/2004/02/skos/core#definition": "Definition of the vocabulary."
 }

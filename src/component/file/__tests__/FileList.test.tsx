@@ -14,17 +14,17 @@ describe('FileList', () => {
     const documentIri = VocabularyUtils.create("http://ex.org/document");
     let files: File[];
     let file: File;
-    let startFileTextAnalysis: (documentIri: IRI, fileName: string) => void
+    let startFileTextAnalysis: (documentIri: IRI, name: string) => void
     beforeEach(() => {
         files = [
             new File({
                 iri: "http://ex.org/file1",
-                fileName: "fileName1",
+                name: "fileName1",
                 comment: "comment1"
             }),
             new File({
                 iri: "http://ex.org/file2",
-                fileName: "fileName2",
+                name: "fileName2",
             })
         ];
         file = files[0];
@@ -86,6 +86,6 @@ describe('FileList', () => {
 
         expect(startFileTextAnalysis).not.toBeCalled();
         wrapper.find(Button).simulate("click");
-        expect(startFileTextAnalysis).toBeCalledWith(documentIri, file.fileName)
+        expect(startFileTextAnalysis).toBeCalledWith(documentIri, file.name)
     });
 });

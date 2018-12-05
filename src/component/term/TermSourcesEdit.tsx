@@ -49,14 +49,14 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
 
     public render() {
         const i18n = this.props.i18n;
-        return <div className='form-group'>
-            <Label className='col-form-label-sm'>{i18n('term.metadata.source')}</Label>
+        return <div>
+            <Label className='attribute-label'>{i18n('term.metadata.source')}</Label>
             {this.renderSources()}
-            <InputGroup>
+            <InputGroup className="form-group">
                 <Input bsSize='sm' value={this.state.inputValue} onChange={this.onChange} onKeyPress={this.onKeyPress}
                        placeholder={i18n('term.metadata.source.add.placeholder')}/>
                 <InputGroupAddon addonType='append'>
-                    <Button color='success' size='sm' onClick={this.onAdd} className='term-edit-source-add-button'
+                    <Button color='primary' size='sm' onClick={this.onAdd} className='term-edit-source-add-button'
                             title={i18n('term.metadata.source.add.placeholder')}><GoPlus/></Button>
                 </InputGroupAddon>
             </InputGroup>

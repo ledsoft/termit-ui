@@ -8,20 +8,20 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
 import {IRI} from "../../util/VocabularyUtils";
-import {startFileTextAnalysis} from "../../action/ComplexActions";
+import {startFileTextAnalysis} from "../../action/AsyncActions";
 import {GoClippy} from "react-icons/go";
 
 
 interface FileListProps extends HasI18n {
     documentIri: IRI,
     files: File[],
-    startFileTextAnalysis: (documentIri: IRI, fileName: string) => void
+    startFileTextAnalysis: (documentIri: IRI, name: string) => void
 }
 
 export class FileList extends React.Component<FileListProps> {
 
-    private fileTextAnalysisCallback = (fileName: string) => {
-        return () => this.props.startFileTextAnalysis(this.props.documentIri, fileName);
+    private fileTextAnalysisCallback = (name: string) => {
+        return () => this.props.startFileTextAnalysis(this.props.documentIri, name);
     }
 
     public render() {
@@ -37,7 +37,7 @@ export class FileList extends React.Component<FileListProps> {
                     <td>
                         <ButtonToolbar className='pull-right clearfix'>
                             <Button size='sm' color='info' title={this.props.i18n('file.metadata.startTextAnalysis')}
-                                    onClick={this.fileTextAnalysisCallback(v.fileName)}><GoClippy/></Button>
+                                    onClick={this.fileTextAnalysisCallback(v.name)}><GoClippy/></Button>
                         </ButtonToolbar>
                     </td>
                 </tr>
@@ -59,6 +59,6 @@ export default connect((state: TermItState) => {
     return {};
 }, (dispatch: ThunkDispatch) => {
     return {
-        startFileTextAnalysis: (documentIri: IRI, fileName: string) => dispatch(startFileTextAnalysis(documentIri, fileName))
+        startFileTextAnalysis: (documentIri: IRI, name: string) => dispatch(startFileTextAnalysis(documentIri, name))
     };
 })(injectIntl(withI18n(FileList)));

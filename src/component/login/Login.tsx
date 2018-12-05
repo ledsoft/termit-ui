@@ -9,7 +9,7 @@ import Routes from "../../util/Routes";
 import Mask from "../misc/Mask";
 import {connect} from 'react-redux';
 import TermItState from "../../model/TermItState";
-import {login} from "../../action/ComplexActions";
+import {login} from "../../action/AsyncActions";
 import ErrorInfo from "../../model/ErrorInfo";
 import ActionType from "../../action/ActionType";
 import {clearError} from "../../action/SyncActions";

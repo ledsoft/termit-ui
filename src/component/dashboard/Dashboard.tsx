@@ -26,6 +26,10 @@ export class Dashboard extends React.Component<HasI18n> {
         Routing.transitionTo(Routes.createVocabulary);
     };
 
+    private static onResourcesClick(): void {
+        Routing.transitionTo(Routes.resources);
+    };
+
     public render() {
         return <div className='row'>
             <div className='dashboard-left'>
@@ -52,6 +56,9 @@ export class Dashboard extends React.Component<HasI18n> {
                 {/*</Col>*/}
                 <Col xs={4} className='dashboard-sector'>
                     <DashboardTile text={i18n('dashboard.statistics.tile')} onClick={Dashboard.onStatisticsClick}/>
+                </Col>
+                <Col xs={4} className='dashboard-sector'>
+                    <DashboardTile text={i18n('dashboard.resources.tile')} onClick={Dashboard.onResourcesClick}/>
                 </Col>
             </Row>
         </Container>;

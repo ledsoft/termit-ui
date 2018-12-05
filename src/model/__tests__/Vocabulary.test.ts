@@ -1,15 +1,105 @@
-import * as jsonld from "jsonld";
-import Vocabulary, {CONTEXT, VocabularyData} from "../Vocabulary";
+import Vocabulary, {VocabularyData} from "../Vocabulary";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import Generator from "../../__tests__/environment/Generator";
 
-describe('Vocabulary', () => {
+describe("Vocabulary", () => {
 
-    it('constructor and toJsonLd are symmetric', () => {
-        const jsonldData = require('../../rest-mock/vocabulary');
-        return jsonld.compact(jsonldData, CONTEXT).then((data: VocabularyData) => {
-            const vocabulary = new Vocabulary(data);
-            const result: VocabularyData = vocabulary.toJsonLd();
-            expect(result.types).toEqual([VocabularyUtils.VOCABULARY]);
+    let data: VocabularyData;
+
+    beforeEach(() => {
+        data = {
+            "iri": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/vocabularies/metropolitan-plan",
+            "label": "Metropolitan plan",
+            created: Date.now()
+        };
+    });
+
+    describe('get unmappedProperties', () => {
+        it('returns map of unmapped properties with values in vocabulary', () => {
+            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
+            const value = 'value]';
+            data[extraProperty] = value;
+            const testVocabulary = new Vocabulary(data);
+            const result = testVocabulary.unmappedProperties;
+            expect(result.has(extraProperty)).toBeTruthy();
+            expect(result.get(extraProperty)).toEqual([value]);
+            expect(result.size).toEqual(1);
+        });
+
+        it('returns map of unmapped properties with values containing multiple values per property', () => {
+            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
+            const values = ['v1', 'v2', 'v3'];
+            data[extraProperty] = values;
+            const testVocabulary = new Vocabulary(data);
+            const result = testVocabulary.unmappedProperties;
+            expect(result.has(extraProperty)).toBeTruthy();
+            expect(result.get(extraProperty)).toEqual(values);
+        });
+    });
+
+    describe('set unmappedProperties', () => {
+
+
+        it('merges specified properties into the object state', () => {
+            const testVocabulary = new Vocabulary(data);
+            const unmappedProps = new Map<string, string[]>();
+            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
+            const value = ['1', '2'];
+            unmappedProps.set(extraProperty, value);
+            testVocabulary.unmappedProperties = unmappedProps;
+            expect(testVocabulary[extraProperty]).toBeDefined();
+            expect(testVocabulary[extraProperty]).toEqual(value);
+        });
+
+        it('is symmetric to getter', () => {
+            const testVocabulary = new Vocabulary(data);
+            const unmappedProps = new Map<string, string[]>();
+            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
+            const value = ['1', '2'];
+            unmappedProps.set(extraProperty, value);
+            testVocabulary.unmappedProperties = unmappedProps;
+            expect(testVocabulary.unmappedProperties).toEqual(unmappedProps);
+        });
+
+        it("deletes unmapped property if it is not present in updated map", () => {
+            const extraProperty = Generator.generateUri();
+            data[extraProperty] = "test";
+            const testVocabulary = new Vocabulary(data);
+            const newProperty = Generator.generateUri();
+            testVocabulary.unmappedProperties = new Map([[newProperty, ["test1"]]]);
+            expect(testVocabulary[newProperty]).toEqual(["test1"]);
+            expect(testVocabulary[extraProperty]).not.toBeDefined();
+        });
+    });
+
+    describe("toJsonLd", () => {
+        it("adds vocabulary type when it is missing", () => {
+            const testVocabulary = new Vocabulary(data);
+            const jsonLd = testVocabulary.toJsonLd();
+            expect(jsonLd.types).toBeDefined();
+            expect(jsonLd.types).toEqual([VocabularyUtils.VOCABULARY]);
+        });
+
+        it("does not add vocabulary type when it is already present", () => {
+            data.types = [VocabularyUtils.VOCABULARY];
+            const testVocabulary = new Vocabulary(data);
+            const jsonLd = testVocabulary.toJsonLd();
+            expect(jsonLd.types).toBeDefined();
+            expect(jsonLd.types).toEqual([VocabularyUtils.VOCABULARY]);
+        });
+
+        it("correctly interprets author", () => {
+            data.author = {
+                iri: Generator.generateUri(),
+                firstName: "Test",
+                lastName: "Test Surname",
+                username: "test@test",
+                types: [VocabularyUtils.USER]
+            };
+            data.types = [VocabularyUtils.VOCABULARY];
+            const testVocabulary = new Vocabulary(data);
+            const jsonLd = testVocabulary.toJsonLd();
+            expect(jsonLd.author).toEqual(data.author);
         });
     });
 });

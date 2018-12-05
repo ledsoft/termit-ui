@@ -1,6 +1,7 @@
 import OntologicalVocabulary from "../util/VocabularyUtils";
 import {AssetData, default as Asset} from "./Asset";
 import Utils from "../util/Utils";
+import WithUnmappedProperties from "./WithUnmappedProperties";
 
 const ctx = {
     iri: '@id',
@@ -8,10 +9,13 @@ const ctx = {
     comment: "http://www.w3.org/2000/01/rdf-schema#comment",
     subTerms: "http://www.w3.org/2004/02/skos/core#narrower",
     sources: "http://purl.org/dc/elements/1.1/source",
+    vocabulary: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku",
     types: "@type",
 };
 
 export const CONTEXT = Object.assign(ctx);
+
+const MAPPED_PROPERTIES = ['@context', 'iri', 'label', 'comment', 'subTerms', 'sources', 'types', 'parent', 'plainSubTerms', "vocabulary"];
 
 export interface TermData extends AssetData {
     label: string;
@@ -21,9 +25,8 @@ export interface TermData extends AssetData {
     types?: string[];
     parent?: string;
     plainSubTerms?: string[];   // Introduced in order to support the Intelligent Tree Select component
+    vocabulary?: AssetData;
 }
-
-const MAPPED_PROPERTIES = ['@context', 'iri', 'label', 'comment', 'subTerms', 'sources', 'types', 'parent', 'plainSubTerms'];
 
 export default class Term extends Asset implements TermData {
     public comment?: string;
@@ -32,6 +35,7 @@ export default class Term extends Asset implements TermData {
     public types?: string[];
     public sources?: string[];
     public plainSubTerms?: string[];
+    public readonly vocabulary?: AssetData;
 
     constructor(termData: TermData) {
         super();
@@ -54,17 +58,11 @@ export default class Term extends Asset implements TermData {
     }
 
     public get unmappedProperties(): Map<string, string[]> {
-        const map = new Map<string, string[]>();
-        Object.getOwnPropertyNames(this).filter(p => MAPPED_PROPERTIES.indexOf(p) === -1)
-            .forEach(prop => {
-                const values: string[] = Utils.sanitizeArray(this[prop]);
-                map.set(prop, values);
-            });
-        return map;
+        return WithUnmappedProperties.getUnmappedProperties(this, MAPPED_PROPERTIES);
     }
 
     public set unmappedProperties(properties: Map<string, string[]>) {
-        properties.forEach((value, key) => this[key] = value);
+        WithUnmappedProperties.setUnmappedProperties(this, properties, MAPPED_PROPERTIES);
     }
 
     public toJsonLd(): TermData {

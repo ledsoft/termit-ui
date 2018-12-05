@@ -10,7 +10,7 @@ interface AssetLinkProps<T extends Asset> {
 }
 
 export default <T extends Asset>(props: AssetLinkProps<T>) => {
-    const {fragment, namespace} = Vocabulary2.create(props.asset.iri)
+    const {fragment, namespace} = Vocabulary2.create(props.asset.iri);
     return <OutgoingLink label=
                              {<Link
                                  to={props.assetContextPath + "/" + fragment + (namespace ? "?namespace=" + namespace : "")}>

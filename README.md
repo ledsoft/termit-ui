@@ -11,9 +11,9 @@ The backend is developed separately and their communication is enabled via CORS 
 
 The proposed test structure consists of:
 
-- **Unit tests** - should test singular classes/components. The tests should be put in a `__tests__` directory
+* **Unit tests** - should test singular classes/components. The tests should be put in a `__tests__` directory
 next to the file they test (see `src/reducer` and `src/reducer/__tests__`).
-- **Integration tests** - tests using multiple components and classes. These include sanity tests,
+* **Integration tests** - tests using multiple components and classes. These include sanity tests,
 regression tests and general integration tests. These should be put in the `src/__tests__` directory. Further structuring
 is recommended (e.g., the sanity tests are currently in `src/__tests__/sanity`).
 
@@ -23,24 +23,50 @@ tested file (see for example `TermItReducers.ts` and the corresponding `TermItRe
 
 General testing utilities should be put in `src/__tests__/environment`.
 
+### Internationalization in Tests
+
+Since most of the components are localized, they expect intl-related functions like `i18n`, `formatMessage` (specified in `HasI18n`). To be able to render such components
+in tests, there are two things that need to be done:
+1. Render the component using `mountWithIntl` instead of Enzyme's default `mount`. This wraps the component in an `IntlProvider`, which sets up the intl context.
+2. Pass the intl-related functions to the component. This can be done by invoking the `intlFunctions` function, which returns an object with all the necessary functions/objects.
+
+So mounting the component in tests can look for example as follows:
+```jsx harmony
+const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} {...intlFunctions()}/>);
+```
+
+Note that this means that `wrapper` is not the actual tested component but an instance of `IntlProvider` wrapping the component. `mountWithIntl` also provides a default Redux store
+mock which is required by some components.
+
+If shallow rendering is used, use the regular Enzyme `shallow` method to mount the component, but set up the intl context using the `intlDataForShallow` function.
+
+For example:
+```jsx harmony
+const wrapper = shallow(<CreateVocabulary onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+```
+
+Do not forget to import the core component into tests not the wrapped component!
+
 ## Developer Notes
 
-- Action are currently split into `SyncAction`, `AsyncActions` and `ComplexActions`, where `SyncActions` are simple synchronous actions represented by objects,
+* Action are currently split into `SyncAction`, `AsyncActions` and `ComplexActions`, where `SyncActions` are simple synchronous actions represented by objects,
 whereas `AsyncActions` and `ComplexActions` exploit `redux-thunk` and return functions. `ComplexActions` represent actions which involve both synchronous and
-asynchronous actions. This division might change as the number of actions grows.
-- The main purpose of `ComplexActions` is to provide a clear and simple name for the complex action which usually involves asynchronous data-fetching actions and
-synchronous actions demarcating these events.
-- Navigation is handled separately from Redux, although the Redux documentation contains a section on setting up routing with react-router and redux. Currently, I
+asynchronous actions.
+* Navigation is handled separately from Redux, although the Redux documentation contains a section on setting up routing with react-router and redux. Currently, I
 believe it is not necessary to interconnect the two.
-- Localization is now handled by Redux state, so that page refreshes are not necessary when switching language.
-- Logout involves no server request, only removal of user token from local storage. This is because JWT is stateless and all user info is stored in the token,
+* Localization is now handled by Redux state, so that page refreshes are not necessary when switching language.
+* Logout involves no server request, only removal of user token from local storage. This is because JWT is stateless and all user info is stored in the token,
 so server keeps no sessions.
+* In case a component needs props specified by parent + store-based props (actions, Redux state), interfaces have to defined 
+separately and then specified in generic arguments to `connect`. An example of this technique can be found in `TermAssignments`. 
+Also, this means that intl props need to be explicitly passed to the component in `connect`. Otherwise, internationalization would not work properly 
+(language switching would have no effect). See `TermAssignments` again for a showcase how to do this.
 
 
 ## Debugging
 
-- Tests can be debugged directly in IDEA just like JUnit tests - IDEA is able to run singular tests.
-- The application can be debugged in IDEA as well, see the [JetBrains blog](https://blog.jetbrains.com/webstorm/2017/01/debugging-react-apps/).
+* Tests can be debugged directly in IDEA just like JUnit tests - IDEA is able to run singular tests.
+* The application can be debugged in IDEA as well, see the [JetBrains blog](https://blog.jetbrains.com/webstorm/2017/01/debugging-react-apps/).
 
 ## Mocking Server REST API
 It is possible to mock server REST API, so that the application can be developed and run without having to start the backend application.

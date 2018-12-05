@@ -1,4 +1,4 @@
-import Utils from "../Utils";
+import Utils from '../Utils';
 
 describe('Utils', () => {
 
@@ -19,6 +19,25 @@ describe('Utils', () => {
 
         it('returns empty array for null argument', () => {
             expect(Utils.sanitizeArray(null)).toEqual([]);
+        });
+    });
+
+    describe('extractQueryParam', () => {
+        it('extracts parameter value from query string', () => {
+            const value = 'http://onto.fel.cvut.cz/ontologies/termit/';
+            const queryString = '?namespace=' + value;
+            expect(Utils.extractQueryParam(queryString, 'namespace')).toEqual(value);
+        });
+
+        it('extracts parameter value from query string containing multiple parameters', () => {
+            const value = 'http://onto.fel.cvut.cz/ontologies/termit/';
+            const queryString = '?namespace=' + value + '&searchString=test';
+            expect(Utils.extractQueryParam(queryString, 'namespace')).toEqual(value);
+        });
+        
+        it('returns undefined when parameter is not set in query string', () => {
+            const queryString = '&searchString=test';
+            expect(Utils.extractQueryParam(queryString, 'namespace')).not.toBeDefined();
         });
     });
 });

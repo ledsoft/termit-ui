@@ -3,7 +3,7 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadFileContent} from "../../action/ComplexActions";
+import {loadDefaultTerms, loadFileContent, saveFileContent} from "../../action/AsyncActions";
 import Document from "../../model/Document";
 import {RouteComponentProps} from "react-router";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
@@ -17,7 +17,9 @@ interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
     document: Document,
     fileContent: string | null
-    loadContentFile: (documentIri: IRI, fileName: string) => void
+    loadFileContent: (documentIri: IRI, fileName: string) => void,
+    saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => void
+    loadDefaultTerms: (normalizedName: string, namespace?: string) => void
     intl: IntlData
 }
 
@@ -26,28 +28,18 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     public componentDidMount(): void {
         const normalizedFileName = this.props.match.params.name;
-        this.props.loadContentFile(VocabularyUtils.create(this.props.document.iri), normalizedFileName);
+        this.props.loadFileContent(VocabularyUtils.create(this.props.document.iri), normalizedFileName);
+        // TODO should not be responsibility of file detail
+        this.props.loadDefaultTerms(VocabularyUtils.create(this.props.vocabulary.iri).fragment, VocabularyUtils.create(this.props.vocabulary.iri).namespace);
     }
 
-    // private onAnnotate = () => {
-    // };
-    //
-    // private onSave = () => {
-    // };
+    private onUpdate = (newFileContent: string) => {
+        const normalizedFileName = this.props.match.params.name;
+        this.props.saveFileContent(VocabularyUtils.create(this.props.document.iri), normalizedFileName, newFileContent);
+    };
 
     public render() {
-        // const actions = [];
-        // actions.push(<Button key='glossary.edit'
-        //                          color='secondary'
-        //                          title={"annotate"}
-        //                          size='sm'
-        //                          onClick={this.onAnnotate}>{"✎"}</Button>);
-        // actions.push(<Button key='glossary.save'
-        //                          color='secondary'
-        //                          title={"save"}
-        //                          size='sm'
-        //                          onClick={this.onSave}>{"✓"}</Button>);
-        return (this.props.fileContent) ? <Annotator html={this.props.fileContent} intl={this.props.intl}/> : null;
+        return (this.props.fileContent) ? <Annotator html={this.props.fileContent} onUpdate={this.onUpdate} intl={this.props.intl}/> : null;
     }
 }
 
@@ -60,6 +52,8 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        loadContentFile: (documentIri: IRI, fileName: string) => dispatch(loadFileContent(documentIri, fileName)),
+        loadFileContent: (documentIri: IRI, fileName: string) => dispatch(loadFileContent(documentIri, fileName)),
+        saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => dispatch(saveFileContent(documentIri, fileName, fileContent)),
+        loadDefaultTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace))
     };
 })(injectIntl(withI18n(FileDetail)));
