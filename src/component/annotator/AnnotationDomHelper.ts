@@ -18,6 +18,12 @@ export default {
     removeAnnotation(annotation: Node): void {
         DomUtils.replaceElement(annotation, this.createTextualNode(annotation))
     },
+    replaceAnnotation(oldAnnotation: Node, newAnnotation: Node): void {
+        DomUtils.replaceElement(oldAnnotation, newAnnotation)
+    },
+    createNewAnnotation(): any {
+        return {type: "tag", name: "span"}
+    },
     createTextualNode(annotation: Node): any {
         return {data: annotation.children![0].data, type: "text"}
     },

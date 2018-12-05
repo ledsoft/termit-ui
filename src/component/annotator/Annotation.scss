@@ -7,9 +7,23 @@
 }
 
 .invalid-term-occurrence {
-  background: rgba(239, 66, 24, 0.8);
+  background: rgba(239, 66, 24, 0.7);
 }
 
+.invalid-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted rgb(239, 14, 0)
+}
+
+.suggested-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted rgb(239, 69, 27)
+}
+
+.assigned-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted green;
+}
+
+.selected-occurrence {
+}
 
 .pwa-popup-title {
   margin-right: 20px
