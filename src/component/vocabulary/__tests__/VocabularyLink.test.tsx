@@ -17,6 +17,6 @@ describe('Vocabulary Link links to correct internal asset', () => {
         const namespace = "http://test.org/";
         const vocabulary = vocGen(namespace);
         const link = mountWithIntl(<MemoryRouter><VocabularyLink vocabulary={vocabulary}/></MemoryRouter>).find(Link);
-        expect(link.props().to).toEqual("/vocabulary/" + fragment + "?namespace=" + namespace);
+        expect(link.props().to).toEqual("/vocabularies/" + fragment + "?namespace=" + namespace);
     });
 });
