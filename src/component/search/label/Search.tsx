@@ -12,6 +12,7 @@ import {ThunkDispatch} from '../../../util/Types';
 import {AbstractSearch} from "./AbstractSearch";
 import TermItState from "../../../model/TermItState";
 import SearchResultTerms from "./SearchResultTerms";
+import SearchResultVocabularies from "./SearchResultVocabularies";
 import SearchQuery from "../../../model/SearchQuery";
 import Dashboard from "../../dashboard/Dashboard";
 import Spinner from "../../Spinner";
@@ -37,17 +38,6 @@ export class Search extends AbstractSearch<SearchProps, SearchState> {
         this.props.removeSearchListener();
     }
 
-    /*
-    // TODO: Parse URL on page load (or some time like that)
-    public componentDidMount() {
-        const searchString = Utils.extractQueryParam(this.props.location.search, 'searchString');
-        if (searchString) {
-            this.setState({searchString});
-            this.search(searchString);
-        }
-    }
-    */
-
     public render() {
         const i18n = this.props.i18n;
 
@@ -61,63 +51,13 @@ export class Search extends AbstractSearch<SearchProps, SearchState> {
         } else {
             return <div>
                 <h2 className='page-header'>{i18n('search.title')}</h2>
+                <SearchResultVocabularies/>
                 <SearchResultTerms/>
-                <hr/>
                 {loading}
             </div>;
         }
     }
 
-    /*
-    private renderResults() {
-        if (this.state.results === null) {
-            return null;
-        }
-        const title = this.props.formatMessage('search.results.title', {searchString: this.props.searchQuery.searchQuery});
-        let content;
-        if (this.state.results.length === 0) {
-            content = <Row><Col md={6}>
-                <div className='italics'>{this.props.i18n('main.search.no-results')}</div>
-            </Col></Row>;
-        } else {
-            content = <div>
-                <Row><Col md={12}>{this.renderVocabularies()}</Col></Row>
-                <Row><Col md={12}>{this.renderTerms()}</Col></Row>
-            </div>;
-        }
-        return <div className='container-fluid'>
-            <hr/>
-            <h3>{title}</h3>
-            {content}
-        </div>;
-    }
-
-    private renderVocabularies() {
-        return <Card className='search-result-container'>
-            <CardHeader tag='h4' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
-            <CardBody>
-                {this.state.results!.filter(r => r.hasType(Vocabulary.VOCABULARY)).map(r => {
-                    return <span key={r.iri} className='search-result-item search-result-link btn-link'
-                                 title={this.props.i18n('search.results.item.vocabulary.tooltip')}
-                                 onClick={this.openResult.bind(null, r)}>{r.label}</span>;
-                })}
-            </CardBody>
-        </Card>;
-    }
-
-    private renderTerms() {
-        return <Card className='search-result-container'>
-            <CardHeader tag='h4' color='info'>{this.props.i18n('search.pojem')}</CardHeader>
-            <CardBody>
-                {this.state.results!.filter(r => r.hasType(Vocabulary.TERM)).map(r => {
-                    return <span key={r.iri} className='search-result-item search-result-link btn-link'
-                                 title={this.props.i18n('search.results.item.term.tooltip')}
-                                 onClick={this.openResult.bind(null, r)}>{r.label}</span>;
-                })}
-            </CardBody>
-        </Card>;
-    }
-    */
 }
 
 export default connect((state: TermItState) => {

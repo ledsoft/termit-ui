@@ -12,13 +12,13 @@ import SearchResult from "../../../model/SearchResult";
 import {Link} from "react-router-dom";
 import VocabularyUtils from "../../../util/VocabularyUtils";
 
-interface SearchResultTermsProps extends HasI18n, RouteComponentProps<any> {
+interface SearchResultVocabulariesProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
     removeSearchListener: () => void;
     searchResults: SearchResult[] | null;
 }
 
-export class SearchResultTerms extends React.Component<SearchResultTermsProps> {
+export class SearchResultVocabularies extends React.Component<SearchResultVocabulariesProps> {
 
     public componentDidMount() {
         this.props.addSearchListener();
@@ -31,10 +31,10 @@ export class SearchResultTerms extends React.Component<SearchResultTermsProps> {
     public render() {
         if (this.props.searchResults) {
             return <Card className='search-result-container'>
-                <CardHeader tag='h4' color='info'>{this.props.i18n('search.pojem')}</CardHeader>
+                <CardHeader tag='h4' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
                 <CardBody>
                     {this.props.searchResults!
-                        .filter((r: SearchResult) => r.hasType(VocabularyUtils.TERM))
+                        .filter((r: SearchResult) => r.hasType(VocabularyUtils.VOCABULARY))
                         .map((r: SearchResult) => {
                             const to = Routes.vocabularyTermDetail.link({
                                 name: VocabularyUtils.getFragment(r.vocabularyIri!),
@@ -61,4 +61,4 @@ export default connect((state: TermItState) => {
         addSearchListener: () => dispatch(SearchActions.addSearchListener()),
         removeSearchListener: () => dispatch(SearchActions.removeSearchListener()),
     };
-})(withRouter(injectIntl(withI18n(SearchResultTerms))));
+})(withRouter(injectIntl(withI18n(SearchResultVocabularies))));
