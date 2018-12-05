@@ -97,6 +97,7 @@ export default {
 
         'resource.management.resources': 'Zdroje',
         'resource.updated.message': 'Zdroj úspěšně uložen.',
+        'resource.management.add': 'Přidat zdroj',
 
         'resource.metadata.identifier' : 'Identifikátor',
         'resource.metadata.label' : 'Popisek',

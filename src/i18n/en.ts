@@ -98,6 +98,7 @@ export default {
 
         'resource.management.resources': 'Resources',
         'resource.updated.message': 'Resource successfully updated.',
+        'resource.management.add': 'Add resource',
 
         'resource.metadata.identifier' : 'Identifier',
         'resource.metadata.label' : 'Label',
