@@ -43,6 +43,7 @@ export default {
 
         'main.nav.dashboard': 'Dashboard',
         'main.nav.vocabularies': 'Vocabularies',
+        'main.nav.resources': 'Resources',
         'main.nav.statistics': 'Statistics',
         'main.nav.search': 'Search',
         'main.nav.facetedSearch': 'Faceted Search',
@@ -56,12 +57,11 @@ export default {
         'main.search.no-results': 'No results found.',
 
         'dashboard.vocabulary.tile': 'Vocabulary Management',
-        'dashboard.document.tile': 'Document Management',
+        'dashboard.resource.tile': 'Resource Management',
         'dashboard.statistics.tile': 'Statistics',
         'dashboard.search.tile': 'Search',
         'dashboard.create-vocabulary.tile': 'Create Vocabulary',
         'dashboard.add-document.tile': 'Add Document',
-        'dashboard.resources.tile' : 'Resources',
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',

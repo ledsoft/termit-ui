@@ -14,6 +14,10 @@ export class Dashboard extends React.Component<HasI18n> {
         Routing.transitionTo(Routes.vocabularies);
     };
 
+    private static onResourceManagementClick(): void {
+        Routing.transitionTo(Routes.resources);
+    };
+
     private static onSearchClick(): void {
         Routing.transitionTo(Routes.search);
     };
@@ -24,10 +28,6 @@ export class Dashboard extends React.Component<HasI18n> {
 
     private static onCreateVocabularyClick(): void {
         Routing.transitionTo(Routes.createVocabulary);
-    };
-
-    private static onResourcesClick(): void {
-        Routing.transitionTo(Routes.resources);
     };
 
     public render() {
@@ -51,14 +51,12 @@ export class Dashboard extends React.Component<HasI18n> {
                     <DashboardTile text={i18n('dashboard.vocabulary.tile')}
                                    onClick={Dashboard.onVocabularyManagementClick}/>
                 </Col>
-                {/*<Col xs={4} className='dashboard-sector'>*/}
-                {/*<DashboardTile text={i18n('dashboard.document.tile')} onClick={this.onClick}/>*/}
-                {/*</Col>*/}
                 <Col xs={4} className='dashboard-sector'>
-                    <DashboardTile text={i18n('dashboard.statistics.tile')} onClick={Dashboard.onStatisticsClick}/>
+                    <DashboardTile text={i18n('dashboard.resource.tile')}
+                                   onClick={Dashboard.onResourceManagementClick}/>
                 </Col>
                 <Col xs={4} className='dashboard-sector'>
-                    <DashboardTile text={i18n('dashboard.resources.tile')} onClick={Dashboard.onResourcesClick}/>
+                    <DashboardTile text={i18n('dashboard.statistics.tile')} onClick={Dashboard.onStatisticsClick}/>
                 </Col>
             </Row>
         </Container>;

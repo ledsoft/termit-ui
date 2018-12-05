@@ -43,6 +43,7 @@ export default {
 
         'main.nav.dashboard': 'Hlavní strana',
         'main.nav.vocabularies': 'Slovníky',
+        'main.nav.resources': 'Datové zdroje',
         'main.nav.statistics': 'Statistiky',
         'main.nav.search': 'Vyhledávání',
         'main.nav.facetedSearch': 'Facetové vyhledávání',
@@ -55,7 +56,7 @@ export default {
         'main.search.no-results': 'Nenalezeny žádné výsledky.',
 
         'dashboard.vocabulary.tile': 'Správa slovníků',
-        'dashboard.document.tile': 'Správa dokumentů',
+        'dashboard.resource.tile': 'Správa zdrojů',
         'dashboard.statistics.tile': 'Statistiky',
         'dashboard.search.tile': 'Vyhledávání',
         'dashboard.create-vocabulary.tile' : 'Vytvořit slovník',
