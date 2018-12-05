@@ -160,7 +160,6 @@ export default {
         'search.title': 'Vyhledávání',
         'search.results.title': 'Výsledky vyhledávání \'{searchString}\'',
         'search.results.item.vocabulary.tooltip': 'Detail slovníku',
-        'search.results.item.term.tooltip': 'Detail pojmu',
         'search.slovnik' : 'Slovník',
         'search.informace' : 'Informace',
         'search.je-instanci-typu' : 'je instancí typu',

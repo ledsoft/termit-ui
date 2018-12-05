@@ -7,6 +7,10 @@ export class Route {
         this.name = name;
         this.path = path;
     }
+
+    public link(params: object = {}): string {
+        return this.path.replace(/:([A-Za-z0-9]+)/g, (match, placeholder) => encodeURIComponent(params[placeholder] || placeholder));
+    }
 }
 
 export default {

@@ -161,7 +161,6 @@ export default {
         'search.title': 'Search',
         'search.results.title': 'Results for \'{searchString}\'',
         'search.results.item.vocabulary.tooltip': 'Open vocabulary detail',
-        'search.results.item.term.tooltip': 'Open term detail',
         'search.slovnik': 'Vocabulary',
         'search.informace': 'Information',
         'search.je-instanci-typu': 'has type',

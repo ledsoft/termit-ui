@@ -2,7 +2,7 @@ import {createHashHistory, History} from "history";
 import Constants from "./Constants";
 import {Route} from "./Routes";
 
-class Routing {
+export class Routing {
     get history(): History {
         return this.mHistory;
     }
@@ -19,6 +19,16 @@ class Routing {
         return paramValuePairs.length > 0 ? path + '?' + paramValuePairs.join('&') : path;
     }
 
+    public static buildUrl(route: Route, options: { params?: Map<string, string>, query?: Map<string, string> } = {}) {
+        let path = route.path;
+        if (options.params) {
+            path = Routing.setPathParams(path, options.params);
+        }
+        if (options.query) {
+            path = Routing.setQueryParams(path, options.query);
+        }
+        return path;
+    };
 
     private readonly mHistory: History;
     private originalTarget: Route;
@@ -40,14 +50,7 @@ class Routing {
      * @param options Transition options, can specify path parameters and query parameters.
      */
     public transitionTo = (route: Route, options: { params?: Map<string, string>, query?: Map<string, string> } = {}) => {
-        let path = route.path;
-        if (options.params) {
-            path = Routing.setPathParams(path, options.params);
-        }
-        if (options.query) {
-            path = Routing.setQueryParams(path, options.query);
-        }
-        this.mHistory.push(path);
+        this.mHistory.push(Routing.buildUrl(route, options));
     };
 
     public transitionToHome = () => {
