@@ -31,6 +31,7 @@ describe('FileDetail', () => {
     let mockedCallbackProps: {
         loadFileContent: (documentIri: IRI, fileName: string) => void
         saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => void
+        loadDefaultTerms: (normalizedName: string, namespace?: string) => void
     };
     beforeEach(() => {
         document = new Document({
@@ -45,7 +46,8 @@ describe('FileDetail', () => {
         fileContent = "<html><body>Test content</body></html>"
         mockedCallbackProps = {
             loadFileContent: jest.fn(),
-            saveFileContent: jest.fn()
+            saveFileContent: jest.fn(),
+            loadDefaultTerms: jest.fn()
         }
     });
 

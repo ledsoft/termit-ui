@@ -19,7 +19,7 @@ interface AnnotatorState {
 
 export const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
 export const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
-const ANNOTATION_SCORE_TRASHOLD = 0.5;
+const ANNOTATION_MINIMUM_SCORE_TRASHOLD = 0;
 
 interface HtmlSplit {
     prefix: string,
@@ -105,7 +105,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                     // padding: 0px 4px;'})
 
                     // filter annotations by score
-                    if (! AnnotationDomHelper.isAnnotationWithMinimumScore(node, ANNOTATION_SCORE_TRASHOLD)){
+                    if (! AnnotationDomHelper.isAnnotationWithMinimumScore(node, ANNOTATION_MINIMUM_SCORE_TRASHOLD)){
                          // return AnnotationDomHelper.createTextualNode(node);
                          return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
                     }

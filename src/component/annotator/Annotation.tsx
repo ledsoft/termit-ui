@@ -1,5 +1,4 @@
 import * as React from 'react';
-import TermSelect from "./TermSelect";
 import {connect} from "react-redux";
 import Term from "../../model/Term";
 import {selectVocabularyTerm} from "../../action/SyncActions";
@@ -12,6 +11,7 @@ import TermItState from "../../model/TermItState";
 import Vocabulary from "../../model/Vocabulary";
 import OutgoingLink from "../misc/OutgoingLink";
 import {ThunkDispatch} from "../../util/Types";
+import AnnotationTerms from "./AnnotationTerms";
 
 export interface AnnotationSpanProps {
     about?: string
@@ -191,11 +191,16 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     };
 
     private getEditableComponent = () => <div>
-        <TermSelect/>
+        <AnnotationTerms/>
     </div>;
 
     private getComponent = () => {
         if (this.state.detailEditable) {
+            const res = this.props.resource;
+            if (res) {
+                const t = this.findTermByIri(res!);
+                this.props.selectVocabularyTerm(t);
+            }
             return this.getEditableComponent();
         } else {
             return this.getReadOnlyComponent();

@@ -80,7 +80,7 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "                    správního\n" +
 "\n" +
 "                    <span about=\"_:835008522\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6\"\n" +
+"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4\"\n" +
 "                          typeof=\"ddo:vyskyt-termu\">území </span>Prahy\n" +
 "\n" +
 "                    <span about=\"_:355142348\" property=\"ddo:je-vyskytem-termu\"\n" +

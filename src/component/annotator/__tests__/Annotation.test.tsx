@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Annotation} from "../Annotation";
-import {formatMessage, i18n, intlFunctions} from "../../../__tests__/environment/IntlUtil";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Term from "../../../model/Term";
 import Vocabulary from "../../../model/Vocabulary";
 import Generator from "../../../__tests__/environment/Generator";
@@ -27,7 +27,6 @@ function showOccurrenceViewForm(wrapper: ReactWrapper, popupComponent: Component
 
 describe('Annotation', () => {
 
-    const locale = "en";
     const term = new Term({
         label: "Mesto",
         iri: "http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto"
@@ -77,10 +76,10 @@ describe('Annotation', () => {
     it('recognizes suggested occurrence', () => {
         const wrapper = shallow(
             <Annotation
-                {...suggestedOccProps}
                 {...mockedVocabularyProps}
                 text={"some text"}
-                i18n={i18n} formatMessage={formatMessage} locale={locale}
+                {...intlFunctions()}
+                {...suggestedOccProps}
             />);
 
         expect(wrapper.find(".suggested-term-occurrence").exists()).toBeTruthy();
@@ -89,9 +88,9 @@ describe('Annotation', () => {
     it('recognizes assigned occurrence', () => {
         const wrapper = shallow(
             <Annotation
-                {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
+                {...assignedOccProps}
             />);
 
         expect(wrapper.find(".assigned-term-occurrence").exists()).toBeTruthy();
@@ -102,10 +101,10 @@ describe('Annotation', () => {
         const emptyDefaultTerms: Term[] = [];
         const wrapper = shallow(
             <Annotation
+                {...intlFunctions()}
                 defaultTerms={emptyDefaultTerms}
                 selectedTerm={selectedTerm} vocabulary={vocabulary} selectVocabularyTerm={selectVocabularyTerm}
                 {...assignedOccProps}
-                {...intlFunctions()}
             />);
 
         expect(wrapper.find(".invalid-term-occurrence").exists()).toBeTruthy();
@@ -115,9 +114,9 @@ describe('Annotation', () => {
     it('renders occurrence view form on mouse enter', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
-                {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
+                {...assignedOccProps}
             />);
 
         expectProps(wrapper, popupComponentClass, {isOpen: false});
@@ -130,10 +129,10 @@ describe('Annotation', () => {
     it('hides occurrence view form on mouse leave if not sticky', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
-                sticky={false}
-                {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
+                sticky={false}
+                {...assignedOccProps}
             />);
 
         wrapper.find(Annotation).simulate("mouseEnter");
@@ -148,10 +147,10 @@ describe('Annotation', () => {
     it('renders occurrence view form on mouse leave if sticky', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
-                sticky={true}
-                {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
+                sticky={true}
+                {...assignedOccProps}
             />);
 
         wrapper.find(Annotation).simulate("mouseEnter");
@@ -168,9 +167,9 @@ describe('Annotation', () => {
     it('renders occurrence view form on mouse leave if pinned', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
-                {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
+                {...assignedOccProps}
             />);
 
         // @ts-ignore
@@ -189,10 +188,10 @@ describe('Annotation', () => {
     it('registers remove action if onRemove is bound', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
-                sticky={true}
-                {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
+                sticky={true}
+                {...assignedOccProps}
                 onRemove={jest.fn()}
             />);
 
@@ -206,10 +205,10 @@ describe('Annotation', () => {
     it('does not register remove action if onRemove is not bound', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
-                sticky={true}
-                {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
+                sticky={true}
+                {...assignedOccProps}
             />);
 
         showOccurrenceViewForm(wrapper, popupComponentClass);
@@ -222,10 +221,10 @@ describe('Annotation', () => {
     it('registers edit action for occurrence view form', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
-                sticky={true}
-                {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
+                sticky={true}
+                {...assignedOccProps}
             />);
 
         showOccurrenceViewForm(wrapper, popupComponentClass);
@@ -240,10 +239,10 @@ describe('Annotation', () => {
     it('registers close action for occurrence form', () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
-                sticky={true}
-                {...assignedOccProps}
                 {...mockedVocabularyProps}
                 {...intlFunctions()}
+                {...assignedOccProps}
+                sticky={true}
             />);
 
         showOccurrenceViewForm(wrapper, popupComponentClass);
