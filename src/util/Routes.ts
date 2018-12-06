@@ -19,6 +19,7 @@ export default {
     profile: new Route('profile', '/profile'),
     register: new Route('register','/register'),
     search: new Route('search', '/search'),
+    searchTerms: new Route('searchTerms', '/search/terms'),
     facetedSearch: new Route('facetedSearch', '/facetedSearch'),
     statistics: new Route('statistics', '/statistics'),
     vocabularies: new Route('vocabulary', '/vocabulary'),

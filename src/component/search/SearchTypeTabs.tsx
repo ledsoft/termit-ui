@@ -32,24 +32,29 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
         const path = this.props.location.pathname;
 
         const tabs = [
-            { route: Routes.search, label: i18n('search.tab.everything'), isActive: false },
-            { route: Routes.facetedSearch, label: i18n('search.tab.facets'), isActive: false }
+            { route: Routes.search, label: i18n('search.tab.everything') },
+            { route: Routes.searchTerms, label: i18n('search.tab.terms') },
+            { route: Routes.facetedSearch, label: i18n('search.tab.facets') },
         ];
 
         // Find an active tab
-        let isSometingActive = false;
+        let activeTab: object|null = null;
+        let activeTabDepth = -1;
         for (const tab of tabs) {
-            tab.isActive = path.startsWith(tab.route.path);
-            if (tab.isActive) {
-                isSometingActive = true;
+            const isActive = (path === tab.route.path || path.startsWith(tab.route.path + "/"));
+            const slashes = tab.route.path.match('/');
+            const depth = slashes ? slashes.length : 0;
+            if (isActive && depth >= activeTabDepth) {
+                activeTab = tab;
+                activeTabDepth = depth;
             }
         }
 
-        if (isSometingActive) {
+        if (activeTab !== null) {
             return <Nav tabs={true}>
                 {tabs.map((tab) => (
                     <NavItem>
-                        <NavLink active={tab.isActive} href={'#' + tab.route.link()}>{tab.label}</NavLink>
+                        <NavLink active={tab === activeTab} href={'#' + tab.route.link()}>{tab.label}</NavLink>
                     </NavItem>)
                 )}
             </Nav>;

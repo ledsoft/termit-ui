@@ -161,6 +161,7 @@ export default {
 
         'search.title': 'Search',
         'search.tab.everything': 'Search everything',
+        'search.tab.terms': 'Terms',
         'search.tab.facets': 'Faceted search',
         'search.results.title': 'Results for \'{searchString}\'',
         'search.slovnik': 'Vocabulary',

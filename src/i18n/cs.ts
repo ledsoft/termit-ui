@@ -160,6 +160,7 @@ export default {
 
         'search.title': 'Vyhledávání',
         'search.tab.everything': 'Hledat vše',
+        'search.tab.terms': 'Pojmy',
         'search.tab.facets': 'Facetové vyhledávání',
         'search.results.title': 'Výsledky vyhledávání \'{searchString}\'',
         'search.slovnik' : 'Slovník',

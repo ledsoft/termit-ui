@@ -39,6 +39,7 @@ import FileDetail from "./file/FileDetail";
 import {ThunkDispatch} from "../util/Types";
 import ResourceManagement from "./resource/ResourceManagement";
 import SearchTypeTabs from "./search/SearchTypeTabs";
+import SearchTerms from "./search/SearchTerms";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -143,6 +144,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                     <Route path={Routes.annotateFile.path} component={FileDetail} exact={true}/>
                     <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
                     <Route path={Routes.statistics.path} component={Statistics}/>
+                    <Route path={Routes.searchTerms.path} component={SearchTerms}/>
                     <Route path={Routes.search.path} component={Search}/>
                     <Route path={Routes.facetedSearch.path} component={FacetedSearch}/>
                     <Route component={Search}/>
