@@ -84,7 +84,7 @@ export default {
         'vocabulary.summary.export.error': 'Nepodařilo se získat data z odpovědi serveru.',
         'vocabulary.updated.message': 'Slovník úspěšně uložen.',
         'vocabulary.created.message': 'Slovník úspěšně vytvořen.',
-        'vocabulary.detail.subtitle': 'Vytvořen autorem {author} {created}',
+        'vocabulary.detail.subtitle': 'Vytvořen autorem {author} ',
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Detail pojmu',
         'vocabulary.detail.files' : 'Soubory',

@@ -84,7 +84,7 @@ export default {
         'vocabulary.summary.export.error': 'Unable to retrieve exported data from server response.',
         'vocabulary.updated.message': 'Vocabulary successfully updated.',
         'vocabulary.created.message': 'Vocabulary successfully created.',
-        'vocabulary.detail.subtitle': 'Created by {author} on {created}',
+        'vocabulary.detail.subtitle': 'Created by {author} on ',
         'vocabulary.detail.tabs.metadata': 'Metadata',
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
         'vocabulary.detail.files' : 'Files',
