@@ -55,12 +55,12 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
     };
 
     public render() {
-        if (this.state.assignments.length === 0) {
-            return null;
-        }
         const i18n = this.props.i18n;
-        return <div className="additional-metadata">
-            <h5>{i18n("term.metadata.assignments.title")}</h5>
+        if (this.state.assignments.length === 0) {
+            return <div
+                className="additional-metadata-container italics">{i18n("term.metadata.assignments.empty")}</div>;
+        }
+        return <div className="additional-metadata-container">
             <Table borderless={true}>
                 <thead>
                 <tr>
@@ -107,7 +107,8 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
     }
 }
 
-// NOTE: Need to explicitly pass intl to the component in case of merging props interfaces, otherwise, language switching would not work
+// NOTE: Need to explicitly pass intl to the component in case of merging props interfaces, otherwise, language
+// switching would not work
 export default connect<{ intl: IntlData }, StoreDispatchProps, TermAssignmentsOwnProps>((state: TermItState) => {
     return {
         intl: state.intl

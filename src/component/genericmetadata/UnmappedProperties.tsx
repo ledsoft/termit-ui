@@ -1,15 +1,19 @@
 import * as React from "react";
+import {injectIntl} from "react-intl";
 import {Col, Label, Row} from "reactstrap";
 import AssetLabel from "../misc/AssetLabel";
 import OutgoingLink from "../misc/OutgoingLink";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 
-interface UnmappedPropertiesProps {
+interface UnmappedPropertiesProps extends HasI18n {
     properties: Map<string, string[]>;
+    showInfoOnEmpty?: boolean;
 }
 
 const UnmappedProperties: React.SFC<UnmappedPropertiesProps> = (props: UnmappedPropertiesProps) => {
     if (props.properties.size === 0) {
-        return null;
+        return props.showInfoOnEmpty ?
+            <div className="additional-metadata-container italics">{props.i18n("properties.empty")}</div> : null;
     }
     const result: JSX.Element[] = [];
     props.properties.forEach((values, k) => {
@@ -24,7 +28,11 @@ const UnmappedProperties: React.SFC<UnmappedPropertiesProps> = (props: UnmappedP
             <Col xl={10} md={8}>{items}</Col>
         </Row>);
     });
-    return <div className="additional-metadata">{result}</div>;
+    return <div className="additional-metadata-container">{result}</div>;
 };
 
-export default UnmappedProperties;
+UnmappedProperties.defaultProps = {
+    showInfoOnEmpty: false
+};
+
+export default injectIntl(withI18n(UnmappedProperties));
