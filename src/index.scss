@@ -16,6 +16,13 @@ body {
   flex-grow: 1;
 }
 
+header .nav-tabs {
+  background: rgba(0, 0, 0, 0.03);
+  text-align: center;
+  justify-content: center;
+  padding-top: 0.3em;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;

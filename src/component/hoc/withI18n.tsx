@@ -15,7 +15,7 @@ export interface HasI18n {
 export default function withI18n<P extends HasI18n>(Component: React.ComponentType<P>): React.ComponentClass<Pick<P, Exclude<keyof P, keyof HasI18n>> & InjectedIntlProps> {
     class Wrapper extends React.Component<P & HasI18n & InjectedIntlProps> {
         protected i18n = (id: string): string => {
-            return this.props.intl.messages[id];
+            return this.props.intl.messages[id] || ("{" + id + "}");
         };
 
         protected formatMessage = (msgId: string, values: {} | undefined = {}): string => {

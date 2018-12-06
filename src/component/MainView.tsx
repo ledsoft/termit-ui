@@ -38,6 +38,7 @@ import FacetedSearch from "./search/facets/FacetedSearch";
 import FileDetail from "./file/FileDetail";
 import {ThunkDispatch} from "../util/Types";
 import ResourceManagement from "./resource/ResourceManagement";
+import SearchTypeTabs from "./search/SearchTypeTabs";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -84,6 +85,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
     public render() {
         const {i18n, user} = this.props;
         const path = this.props.location.pathname;
+
         if (user === EMPTY_USER) {
             return this.renderPlaceholder();
         }
@@ -109,9 +111,6 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                             <NavItem active={path === Routes.resources.path}>
                                 <NavLink href={MainView.hashPath(Routes.resources.path)}>{i18n('main.nav.resources')}</NavLink>
                             </NavItem>
-                            <NavItem active={path === Routes.facetedSearch.path}>
-                                <NavLink href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
-                            </NavItem>
                         </Nav>
                         <Nav navbar={true}>
                             <LanguageSelector/>
@@ -132,6 +131,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         </Nav>
                     </Collapse>
                 </Navbar>
+                <SearchTypeTabs />
             </header>
             <Messages/>
             <Container fluid={true} className="mt-5 mb-5 flex-grow-1">

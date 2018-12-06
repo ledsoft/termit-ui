@@ -46,7 +46,6 @@ export default {
         'main.nav.statistics': 'Statistiky',
         'main.nav.resources': 'Zdroje',
         'main.nav.search': 'Vyhledávání',
-        'main.nav.facetedSearch': 'Facetové vyhledávání',
         'main.nav.admin': 'Administrace',
         'main.user-profile': 'Profil uživatele',
         'main.logout': 'Odhlásit se',
@@ -95,6 +94,7 @@ export default {
         'vocabulary.metadata.author': 'Autor',
         'vocabulary.metadata.created': 'Datum vytvoření',
 
+        'resource.management': 'Správa zdrojů',
         'resource.management.resources': 'Zdroje',
         'resource.updated.message': 'Zdroj úspěšně uložen.',
         'resource.management.add': 'Přidat zdroj',
@@ -159,6 +159,8 @@ export default {
         'fullscreen.enter' : 'Zobrazit na celou obrazovku',
 
         'search.title': 'Vyhledávání',
+        'search.tab.everything': 'Hledat vše',
+        'search.tab.facets': 'Facetové vyhledávání',
         'search.results.title': 'Výsledky vyhledávání \'{searchString}\'',
         'search.slovnik' : 'Slovník',
         'search.informace' : 'Informace',

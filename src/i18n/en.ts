@@ -46,7 +46,6 @@ export default {
         'main.nav.statistics': 'Statistics',
         'main.nav.resources': 'Resources',
         'main.nav.search': 'Search',
-        'main.nav.facetedSearch': 'Faceted Search',
         'main.nav.resourceDetail': 'Resource Detail',
         'main.nav.admin': 'Administration',
         'main.user-profile': 'User profile',
@@ -96,6 +95,7 @@ export default {
         'vocabulary.metadata.author': 'Author',
         'vocabulary.metadata.created': 'Created',
 
+        'resource.management': 'Resources management',
         'resource.management.resources': 'Resources',
         'resource.updated.message': 'Resource successfully updated.',
         'resource.management.add': 'Add resource',
@@ -160,6 +160,8 @@ export default {
         'fullscreen.enter': 'Enter fullscreen',
 
         'search.title': 'Search',
+        'search.tab.everything': 'Search everything',
+        'search.tab.facets': 'Faceted search',
         'search.results.title': 'Results for \'{searchString}\'',
         'search.slovnik': 'Vocabulary',
         'search.informace': 'Information',
