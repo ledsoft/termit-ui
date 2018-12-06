@@ -4,7 +4,8 @@ import {
     asyncActionRequest,
     asyncActionSuccess,
     asyncActionSuccessWithPayload,
-    publishMessage
+    publishMessage,
+    publishNotification
 } from './SyncActions';
 import Ajax, {content, param, params} from '../util/Ajax';
 import {ThunkDispatch} from '../util/Types';
@@ -124,10 +125,11 @@ export function createVocabularyTerm(term: Term, normalizedName: string) {
         return Ajax.post(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms',
             content(term.toJsonLd()).params({parentTermUri: term.parent}).contentType(Constants.JSON_LD_MIME_TYPE))
             .then((resp: AxiosResponse) => {
-                dispatch(asyncActionSuccess(action));
-                const location = resp.headers[Constants.LOCATION_HEADER];
-                Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
-                return dispatch(SyncActions.publishMessage(new Message({messageId: 'vocabulary.term.created.message'}, MessageType.SUCCESS)));
+                const asyncSuccessAction = asyncActionSuccess(action);
+                dispatch(asyncSuccessAction);
+                dispatch(SyncActions.publishMessage(new Message({messageId: 'vocabulary.term.created.message'}, MessageType.SUCCESS)));
+                dispatch(publishNotification({source: asyncSuccessAction}));
+                return resp.headers[Constants.LOCATION_HEADER];
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));

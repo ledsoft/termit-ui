@@ -9,6 +9,7 @@ import Term from "./Term";
 import Document, {EMPTY_DOCUMENT} from "./Document";
 import Resource, {EMPTY_RESOURCE} from "./Resource";
 import RdfsResource from "./RdfsResource";
+import AppNotification from "./AppNotification";
 
 /**
  * This is the basic shape of the application's state managed by Redux.
@@ -32,6 +33,8 @@ export default class TermItState {
     public facetedSearchResult: object;
     public types: { [key: string]: Term };
     public properties: RdfsResource[];
+    // Represents a queue of inter-component notifications
+    public notifications: AppNotification[];
 
     constructor() {
         this.loading = false;
@@ -52,5 +55,6 @@ export default class TermItState {
         this.facetedSearchResult = {};
         this.types = {};
         this.properties = [];
+        this.notifications = [];
     }
 }

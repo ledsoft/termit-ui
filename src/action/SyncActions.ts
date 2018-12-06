@@ -5,6 +5,7 @@ import ActionType, {
     ClearErrorAction,
     ExecuteQueryAction,
     MessageAction,
+    NotificationAction,
     SelectingTermsAction,
     SwitchLanguageAction,
 } from './ActionType';
@@ -14,6 +15,7 @@ import AsyncActionStatus from "./AsyncActionStatus";
 import {saveLanguagePreference} from "../util/IntlUtil";
 import Term, {TermData} from "../model/Term";
 import {Action} from 'redux';
+import AppNotification from "../model/AppNotification";
 
 export function asyncActionRequest(a: Action, ignoreLoading: boolean = false): AsyncAction {
     return {...a, status: AsyncActionStatus.REQUEST, ignoreLoading};
@@ -97,5 +99,19 @@ export function fireFacetedSearchFailed(error: any) {
 export function clearProperties() {
     return {
         type: ActionType.CLEAR_PROPERTIES
+    };
+}
+
+export function publishNotification(notification: AppNotification): NotificationAction {
+    return {
+        type: ActionType.PUBLISH_NOTIFICATION,
+        notification
+    };
+}
+
+export function consumeNotification(notification: AppNotification): NotificationAction {
+    return {
+        type: ActionType.CONSUME_NOTIFICATION,
+        notification
     };
 }

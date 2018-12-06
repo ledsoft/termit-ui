@@ -15,6 +15,9 @@ import {GoPencil} from "react-icons/go";
 import EditableComponent from "../misc/EditableComponent";
 import TermMetadataEdit from "./TermMetadataEdit";
 import Utils from "../../util/Utils";
+import AppNotification from "../../model/AppNotification";
+import {publishNotification} from "../../action/SyncActions";
+import NotificationType from "../../model/NotificationType";
 
 interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
@@ -22,6 +25,7 @@ interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     loadTerm: (termName: string, vocabularyName: string, namespace?: string) => void;
     updateTerm: (term: Term, vocabulary: Vocabulary) => Promise<any>;
     reloadVocabularyTerms: (normalizedName: string, namespace?: string) => void;
+    publishNotification: (notification: AppNotification) => void;
 }
 
 export class TermDetail extends EditableComponent<TermDetailProps> {
@@ -64,10 +68,14 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
     }
 
     public onSave = (term: Term) => {
+        const oldChildren = this.props.term!.plainSubTerms;
         this.props.updateTerm(term, this.props.vocabulary!).then(() => {
             this.loadTerm();
             this.reloadVocabularyTerms();
             this.onCloseEdit();
+            if (term.plainSubTerms !== oldChildren) {
+                this.props.publishNotification({source: {type: NotificationType.TERM_CHILDREN_UPDATED}});
+            }
         });
     };
 
@@ -95,6 +103,7 @@ export default connect((state: TermItState) => {
     return {
         loadTerm: (termName: string, vocabularyName: string, namespace?: string) => dispatch(loadVocabularyTerm(termName, vocabularyName, namespace)),
         updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary)),
-        reloadVocabularyTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace))
+        reloadVocabularyTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace)),
+        publishNotification: (notification: AppNotification) => dispatch(publishNotification(notification))
     };
 })(injectIntl(withI18n(withRouter(TermDetail))));
