@@ -10,8 +10,8 @@ interface TileProps {
 
 const DashboardTile: React.SFC<TileProps> = props => {
     return <Button color="primary" className='dashboard-tile' title={props.title} onClick={props.onClick}>
-        {props.text}
-    </Button>
+        <h5>{props.text}</h5>
+    </Button>;
 };
 
 export default DashboardTile;

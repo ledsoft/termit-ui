@@ -11,6 +11,7 @@ export default {
         'edit': 'Edit',
         'optional': 'Optional',
         'actions': 'Actions',
+        'description': 'Description',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
@@ -87,6 +88,7 @@ export default {
         'vocabulary.detail.tabs.metadata': 'Metadata',
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
         'vocabulary.detail.files' : 'Files',
+        'vocabulary.detail.files.file': 'Filename',
         'vocabulary.detail.noTermSelected': 'Start by selecting a term in the tree on the left.',
 
         'vocabulary.term.created.message': 'Term successfully created.',

@@ -11,6 +11,7 @@ export default {
         'edit': 'Upravit',
         'optional': 'Nepovinné',
         'actions': 'Akce',
+        'description': 'Popis',
 
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
@@ -87,6 +88,7 @@ export default {
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Detail pojmu',
         'vocabulary.detail.files' : 'Soubory',
+        'vocabulary.detail.files.file': 'Název souboru',
         'vocabulary.detail.noTermSelected': 'Vyberte pojem ve stromečku vlevo.',
 
         'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',

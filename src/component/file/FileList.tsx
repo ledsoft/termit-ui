@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
-import {Button, ButtonToolbar, Table} from "reactstrap";
+import {Button, Table} from "reactstrap";
 import FileLink from "./FileLink";
 import File from "../../model/File";
 import {connect} from "react-redux";
@@ -22,28 +22,35 @@ export class FileList extends React.Component<FileListProps> {
 
     private fileTextAnalysisCallback = (name: string) => {
         return () => this.props.startFileTextAnalysis(this.props.documentIri, name);
-    }
+    };
 
     public render() {
+        const i18n = this.props.i18n;
         if (this.props.files.length > 0) {
             const rows = this.props.files.map(v =>
                 <tr key={v.iri}>
-                    <td>
+                    <td className='align-middle'>
                         <FileLink file={v}/>
                     </td>
-                    <td>
+                    <td className='align-middle'>
                         {v.comment}
                     </td>
-                    <td>
-                        <ButtonToolbar className='pull-right clearfix'>
-                            <Button size='sm' color='info' title={this.props.i18n('file.metadata.startTextAnalysis')}
-                                    onClick={this.fileTextAnalysisCallback(v.name)}><GoClippy/></Button>
-                        </ButtonToolbar>
+                    <td className="pull-right">
+                        <Button className="link-to-resource" size='sm' color='info'
+                                title={i18n('file.metadata.startTextAnalysis')}
+                                onClick={this.fileTextAnalysisCallback(v.name)}><GoClippy/></Button>
                     </td>
                 </tr>
             );
             return <div>
                 <Table borderless={true}>
+                    <thead>
+                    <tr>
+                        <th>{i18n("vocabulary.detail.files.file")}</th>
+                        <th>{i18n("description")}</th>
+                        <th className="pull-right">{i18n("actions")}</th>
+                    </tr>
+                    </thead>
                     <tbody>
                     {rows}
                     </tbody>

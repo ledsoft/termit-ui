@@ -74,3 +74,9 @@ To do so, use `npm run start-mock-rest`, which sets environment variables tellin
 in `src/util/Ajax`, function `mockRestApi`, we are using [Axios Mock Adapter](https://github.com/ctimmerm/axios-mock-adapter). The usage should be
 fairly intuitive. Data should be kept in JSON files in `src/rest-mock` (has to be in `src`, otherwise webpack refuses to import the data).
 
+## Adjusting Bootstrap Styles
+
+It is possible to adjust the styling of the application. We are using Bootstrap which provides SCSS definitions which can be overridden. Based on the
+documentation [here](https://getbootstrap.com/docs/4.0/getting-started/webpack/#importing-precompiled-sass) and [here](https://getbootstrap.com/docs/4.0/getting-started/theming/),
+there is the `_custom.scss` file in `src`. This file allows to override default Bootstrap styles and its content is automatically imported in the application.
+

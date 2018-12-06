@@ -19,13 +19,13 @@ const UnmappedProperties: React.SFC<UnmappedPropertiesProps> = (props: UnmappedP
     props.properties.forEach((values, k) => {
         const items = <ul className="term-items">{values.map(v => <li key={v}>{v}</li>)}</ul>;
         result.push(<Row key={k}>
-            <Col xl={2} md={4}>
+            <Col xl={3} md={4}>
                 <OutgoingLink
                     label={<Label className="attribute-label" title={k}><AssetLabel iri={k}
                                                                                     shrinkFullIri={true}/></Label>}
                     iri={k}/>
             </Col>
-            <Col xl={10} md={8}>{items}</Col>
+            <Col xl={9} md={8}>{items}</Col>
         </Row>);
     });
     return <div className="additional-metadata-container">{result}</div>;
