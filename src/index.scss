@@ -1,3 +1,6 @@
+@import "custom";
+@import "~bootstrap/scss/bootstrap";
+
 html {
   height: 100%;
   margin: 0;
@@ -6,6 +9,8 @@ html {
 
 body {
   height: 100%;
+  $font-size-base: 0.875rem;
+  $line-height-base: 1.2;
 }
 
 .app-container {
