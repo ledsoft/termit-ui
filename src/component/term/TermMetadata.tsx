@@ -49,10 +49,10 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         return <div className='metadata-panel'>
             <Row>
                 <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.comment')}</Label>
+                    <Label className='attribute-label'>{i18n('term.metadata.types')}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    <Label>{term.comment}</Label>
+                    {this.renderItems(term.types)}
                 </Col>
             </Row>
             <Row>
@@ -65,10 +65,10 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
             </Row>
             <Row>
                 <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.types')}</Label>
+                    <Label className='attribute-label'>{i18n('term.metadata.comment')}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    {this.renderItems(term.types)}
+                    <Label>{term.comment}</Label>
                 </Col>
             </Row>
             <Row>
