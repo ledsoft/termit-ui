@@ -42,4 +42,22 @@ describe("AssetLabel", () => {
             expect(wrapper.text()).toEqual(SKOS.prefix + ":narrower");
         });
     });
+
+    it("renders shrinked IRI when label cannot be loaded and shrinkFullIri is specified", () => {
+        const iri = "http://onto.fel.cvut.cz/ontologies/termit/test-vocabulary";
+        getLabel = jest.fn().mockImplementation(() => Promise.resolve(undefined));
+        const wrapper = mount(<AssetLabel iri={iri} getLabel={getLabel} shrinkFullIri={true}/>);
+        return Promise.resolve().then(() => {
+            expect(wrapper.text()).toEqual(".../test-vocabulary");
+        });
+    });
+
+    it("renders shrinked IRI with hash when label cannot be loaded and shrinkFullIri is specified", () => {
+        const iri = "http://onto.fel.cvut.cz/ontologies/termit#test-vocabulary";
+        getLabel = jest.fn().mockImplementation(() => Promise.resolve(undefined));
+        const wrapper = mount(<AssetLabel iri={iri} getLabel={getLabel} shrinkFullIri={true}/>);
+        return Promise.resolve().then(() => {
+            expect(wrapper.text()).toEqual("...#test-vocabulary");
+        });
+    });
 });

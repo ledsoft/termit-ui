@@ -273,6 +273,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         }
         return [404, undefined, header];
     });
+    // Mock term creation
+    mock.onPost(/\/rest\/vocabularies\/.+\/terms/).reply(201, null, Object.assign({}, header, {
+        'location': 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/metropolitan-plan/terms/test-term'
+    }));
 
     // Mock term update
     mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);

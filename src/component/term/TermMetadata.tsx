@@ -13,22 +13,34 @@ import Routing from '../../util/Routing';
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import AssetLabel from "../misc/AssetLabel";
 import TermAssignments from "./TermAssignments";
+import Tabs from "../misc/Tabs";
 
 interface TermMetadataProps extends HasI18n {
     vocabulary: Vocabulary;
     term: Term;
 }
 
-export class TermMetadata extends React.Component<TermMetadataProps> {
+interface TermMetadataState {
+    activeTab: string;
+}
+
+export class TermMetadata extends React.Component<TermMetadataProps, TermMetadataState> {
 
     constructor(props: TermMetadataProps) {
         super(props);
+        this.state = {
+            activeTab: 'properties.edit.title'
+        };
     }
 
     public openSubTerm = (term: Term) => {
         Routing.transitionTo(Routes.vocabularyTermDetail, {
             params: new Map([['name', VocabularyUtils.getFragment(this.props.vocabulary.iri)], ['termName', VocabularyUtils.getFragment(term.iri)]])
         });
+    };
+
+    private onTabSelect = (tabId: string) => {
+        this.setState({activeTab: tabId});
     };
 
     public render() {
@@ -85,12 +97,10 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
             </Row>
             <Row>
                 <Col xs={12}>
-                    <UnmappedProperties properties={term.unmappedProperties}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={12}>
-                    <TermAssignments term={term}/>
+                    <Tabs activeTabLabelKey={this.state.activeTab} changeTab={this.onTabSelect} tabs={{
+                        'properties.edit.title': <UnmappedProperties properties={term.unmappedProperties} showInfoOnEmpty={true}/>,
+                        'term.metadata.assignments.title': <TermAssignments term={term}/>
+                    }}/>
                 </Col>
             </Row>
         </div>;

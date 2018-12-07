@@ -265,6 +265,27 @@ describe('Async actions', () => {
                 expect(data['@context']).toEqual(TERM_CONTEXT);
             });
         });
+
+        it("publishes notification on successful creation", () => {
+            const term = new Term(
+                {
+                    label: 'Test term 1',
+                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
+                },
+            );
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({
+                headers: {
+                    'location': 'http://test'
+                }
+            }));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabularyTerm(term, 'test-vocabulary'))).then(() => {
+                const actions = store.getActions();
+                const action = actions[actions.length - 1];
+                expect(action.type).toEqual(ActionType.PUBLISH_NOTIFICATION);
+                expect(action.notification.source.type).toEqual(ActionType.CREATE_VOCABULARY_TERM);
+                expect(action.notification.source.status).toEqual(AsyncActionStatus.SUCCESS);
+            });
+        });
     });
 
     describe('fetch terms', () => {

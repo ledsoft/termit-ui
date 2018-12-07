@@ -14,29 +14,29 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "\n" +
 "            <span about=\"_:1716840807\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                  resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                  typeof=\"ddo:vyskyt-termu\"  score=\"0.9\">(</span>II\n" +
+"                  typeof=\"ddo:vyskyt-termu\" score=\"0.9\">(</span>II\n" +
 "\n" +
 "            <span about=\"_:1895323707\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                  resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                  typeof=\"ddo:vyskyt-termu\"  score=\"0.8\">)</span>\n" +
+"                  typeof=\"ddo:vyskyt-termu\" score=\"0.8\">)</span>\n" +
 "            <br>Smysl a účel plánování Prahy\n" +
 "\n" +
 "        </h2>\n" +
 "        <div class=\"clanek\" id=\"tcz_cl_1\">\n" +
 "            <h4>Článek 1\n" +
 "\n" +
-"                <br><span about=\"_:2126723403\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan\" typeof=\"ddo:vyskyt-termu\"  score=\"0.7\">Metropolitní plán</span>\n" +
+"                <br><span about=\"_:2126723403\" property=\"ddo:je-vyskytem-termu\" resource=\"http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan\" typeof=\"ddo:vyskyt-termu\" score=\"0.7\">Metropolitní plán</span>\n" +
 "\n" +
 "            </h4>\n" +
 "            <div class=\"odstavec\" id=\"tcz_cl_1_odst_1\">\n" +
 "                <p>\n" +
 "                    <span about=\"_:503864250\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\"  score=\"0.6\">(</span>1\n" +
+"                          typeof=\"ddo:vyskyt-termu\" score=\"0.6\">(</span>1\n" +
 "\n" +
 "                    <span about=\"_:464152225\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\"  score=\"1.0\">) </span>Metropolitní plán jako Územní plán hlavního\n" +
+"                          typeof=\"ddo:vyskyt-termu\" score=\"0.5\">) </span>Metropolitní plán jako Územní plán hlavního\n" +
 "\n" +
 "                    <span about=\"_:694019650\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto\" typeof=\"ddo:vyskyt-termu\"  score=\"1.0\">města </span>Prahy\n" +
@@ -81,11 +81,11 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "\n" +
 "                    <span about=\"_:835008522\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">území </span>Prahy\n" +
+"                          typeof=\"ddo:vyskyt-termu\"  score=\"0.7\">území </span>Prahy\n" +
 "\n" +
 "                    <span about=\"_:355142348\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/struktura-%28krajiny%2C-mesta%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">, </span>a to v měřítku 1:10.000 odpovídajícím rozsahu řešeného\n" +
+"                          resource=\"\"\n" +
+"                          typeof=\"ddo:vyskyt-termu\" score=\"0.7\">, </span>a to v měřítku 1:10.000 odpovídajícím rozsahu řešeného\n" +
 "\n" +
 "                    <span about=\"_:56644596\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6\"\n" +
@@ -104,7 +104,7 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán vytváří podmínky pro účelnou správu a\n" +
 "\n" +
 "                    <span about=\"_:1334041096\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
+"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4\"\n" +
 "                          typeof=\"ddo:vyskyt-termu\">rozvoj území </span>a stanovuje základní rámce pro všechny\n" +
 "                    navazující podrobnější úrovně plánování.\n" +
 "\n" +
@@ -117,7 +117,7 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "                          typeof=\"ddo:vyskyt-termu\">(</span>4\n" +
 "\n" +
 "                    <span about=\"_:569333605\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
+"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-3\"\n" +
 "                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán je koncepčním\n" +
 "\n" +
 "                    <span about=\"_:1886227146\" property=\"ddo:je-vyskytem-termu\"\n" +

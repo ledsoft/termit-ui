@@ -7,4 +7,4 @@ interface ResourceLinkProps {
 }
 
 export default (props : ResourceLinkProps) =>
-    <AssetLink asset={props.resource} assetContextPath={"/resource"}/>
+    <AssetLink asset={props.resource} assetContextPath={"/resources"}/>

@@ -17,6 +17,14 @@ interface AnnotatorState {
     stickyAnnotationId : string
 }
 
+export interface AnnotationSpanProps { // TODO remove
+    about?: string
+    property?: string
+    resource?: string
+    typeof?: string
+    score?: string
+}
+
 export const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
 export const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
 const ANNOTATION_MINIMUM_SCORE_TRASHOLD = 0;
@@ -90,6 +98,20 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         }
     };
 
+    private onUpdate = (annotationSpan : AnnotationSpanProps) => {
+        const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
+        const ann = AnnotationDomHelper.findAnnotation(dom, annotationSpan.about!);
+        if (ann) {
+            ann.attribs.resource = annotationSpan.resource;
+            delete ann.attribs.score;
+            const newInternalHtml = HtmlParserUtils.dom2html(dom);
+            this.setState(
+                { internalHtml: newInternalHtml }
+            )
+            this.props.onUpdate(this.reconstructHtml(newInternalHtml));
+        }
+    };
+
     private getProcessingInstructions = ():Instruction[] => {
         // Order matters. Instructions are processed in the order they're defined
         const processNodeDefinitions = new ProcessNodeDefinitions(React);
@@ -110,7 +132,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                          return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
                     }
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
-                    return <Annotation onRemove={this.onRemove} sticky={sticky} text={node.children[0].data} {...node.attribs} />
+                    return <Annotation onRemove={this.onRemove} onUpdate={this.onUpdate} sticky={sticky} text={node.children[0].data} {...node.attribs} />
                     // return node.data.toUpperCase();
                 }
             }, {

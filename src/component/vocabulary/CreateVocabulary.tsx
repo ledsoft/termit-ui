@@ -40,7 +40,7 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
     private onNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const label = e.currentTarget.value;
         this.setState({label});
-        this.generateIri(name);
+        this.generateIri(label);
     };
 
     private generateIri(label: string): void {

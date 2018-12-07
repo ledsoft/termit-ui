@@ -12,14 +12,7 @@ import Vocabulary from "../../model/Vocabulary";
 import OutgoingLink from "../misc/OutgoingLink";
 import {ThunkDispatch} from "../../util/Types";
 import AnnotationTerms from "./AnnotationTerms";
-
-export interface AnnotationSpanProps {
-    about?: string
-    property?: string
-    resource?: string
-    typeof?: string
-    score?: string
-}
+import {AnnotationSpanProps} from "./Annotator";
 
 interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     about: string
@@ -28,11 +21,12 @@ interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     typeof: string
     score?: string
     text: string
-    selectedTerm: Term | null
+    // selectedTerm: Term | null
     defaultTerms: Term[];
     vocabulary: Vocabulary
     sticky?: boolean;
     onRemove?: (annId: string) => void;
+    onUpdate?: (annotation: AnnotationSpanProps) => void;
     selectVocabularyTerm: (selectedTerm: Term | null) => Promise<object>;
 }
 
@@ -40,6 +34,7 @@ interface AnnotationState {
     detailOpened: boolean
     detailEditable: boolean
     detailPinned: boolean
+    term: Term | null;
 }
 
 const TermOccurrenceState = {
@@ -48,21 +43,32 @@ const TermOccurrenceState = {
     SUGGESTED: 'suggested-term-occurrence',
 };
 
+const TermOccurrenceCreatorState = {
+    PROPOSED: 'proposed-occurrence',
+    SELECTED: 'selected-occurrence'
+}
+
 export class Annotation extends React.Component<AnnotationProps, AnnotationState> {
 
     constructor(props: any) {
         super(props);
-
+        const term = this.findTermByIri(props.resource);// TODO most-likely does not work
         this.state = {
             detailOpened: false,
             detailEditable: false,
-            detailPinned: false
+            detailPinned: false,
+            term
         };
     }
 
     public componentDidMount() {
         if (this.props.resource) {
-            this.findTermByIri(this.props.resource);
+            const term = this.findTermByIri(this.props.resource);
+            if (this.state.term !== term) {
+                this.setState(
+                    { term }
+                )
+            }
         }
     }
 
@@ -87,6 +93,38 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
             });
         }
     };
+
+    private onSaveDetail = () => {
+        // if (!this.state.detailEditable) {
+        //     if (this.props.resource) {
+        //         this.props.selectVocabularyTerm(this.findTermByIri(this.props.resource));
+        //     } else {
+        //         this.props.selectVocabularyTerm(null);
+        //     }
+        // }
+        this.setState({
+            detailEditable: false,
+            detailPinned: false,
+            detailOpened: false
+        });
+        // TODO -- start only if state changes
+        if (this.props.onUpdate) {
+            const newSpan: AnnotationSpanProps = {
+                about: this.props.about,
+                property: this.props.property,
+                typeof: this.props.typeof
+            }
+            if (this.state.term) {
+                newSpan.resource = this.state.term.iri;
+            } else {
+                newSpan.resource = this.props.resource;
+            }
+            this.props.onUpdate(newSpan);
+        }
+
+    };
+
+
 
     private toggleEditDetail = () => {
         if (!this.state.detailEditable) {
@@ -190,8 +228,14 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         return outputComponent;
     };
 
+    private onTermChange = (term: Term) => {
+        this.setState(
+            { term }
+        )
+    };
+
     private getEditableComponent = () => <div>
-        <AnnotationTerms/>
+        <AnnotationTerms selectedTerm={this.state.term} onChange={this.onTermChange}/>
     </div>;
 
     private getComponent = () => {
@@ -217,25 +261,33 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         return TermOccurrenceState.INVALID;
     }
 
+    private getTermCreatorState = () => {
+        if (this.props.score) {
+            return TermOccurrenceCreatorState.PROPOSED;
+        }
+        return TermOccurrenceCreatorState.SELECTED;
+    }
+
 
     public render() {
         const id = 'id' + this.props.about.substring(2);
         const termClassName = this.getTermState();
+        const termCreatorClassName = this.getTermCreatorState();
         const actions = [];
         if (this.state.detailPinned || this.props.sticky) {
+            if (this.props.onUpdate && (this.state.detailEditable || termCreatorClassName === TermOccurrenceCreatorState.PROPOSED)) {
+                actions.push(<Button key='annotation.save'
+                                     color='secondary'
+                                     title={"save"}
+                                     size='sm'
+                                     onClick={this.onSaveDetail}>{"✓"}</Button>);
+            }
             if (!this.state.detailEditable) {
                 actions.push(<Button key='annotation.edit'
                                      color='secondary'
                                      title={"edit"}
                                      size='sm'
                                      onClick={this.toggleEditDetail}>{"✎"}</Button>);
-            }
-            if (this.state.detailEditable) {
-                actions.push(<Button key='annotation.save'
-                                     color='secondary'
-                                     title={"save"}
-                                     size='sm'
-                                     onClick={this.toggleEditDetail}>{"✓"}</Button>);
             }
             if (this.props.onRemove) {
                 actions.push(<Button key='annotation.remove'
@@ -258,7 +310,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                      property={this.props.property}
                      resource={this.props.resource}
                      typeof={this.props.typeof}
-                     className={termClassName}
+                     className={termClassName + " " + termCreatorClassName}
         >
         {this.props.text}
             <SimplePopupWithActions isOpen={this.state.detailOpened} isEditable={this.state.detailEditable}
@@ -284,7 +336,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary,
-        selectedTerm: state.selectedTerm,
+        // selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms
     };
 }, (dispatch: ThunkDispatch) => {

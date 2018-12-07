@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Button} from 'reactstrap';
+import {Button, FormGroup, Label} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import Vocabulary from "../../model/Vocabulary";
 // @ts-ignore
@@ -10,33 +10,32 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {selectVocabularyTerm} from "../../action/SyncActions";
 import {RouteComponentProps, withRouter} from "react-router";
-import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
 import Term, {TermData} from "../../model/Term";
 import {fetchVocabularyTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from '../../util/Types';
+import Vocabulary2 from "../../util/VocabularyUtils";
 import {GoPlus} from "react-icons/go";
-
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
     counter: number;
-    selectedTerms: Term | null;
     selectVocabularyTerm: (selectedTerms: Term | null) => void;
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
 }
 
-export class AnnotationTerms extends React.Component<GlossaryTermsProps> {
+interface AnnotationTermsProps extends GlossaryTermsProps {
+    onChange: (term: Term) => void;
+    selectedTerm: Term | null;
+}
 
+export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
 
-    constructor(props: GlossaryTermsProps) {
+    constructor(props: AnnotationTermsProps) {
         super(props);
-        this.onCreateClick = this.onCreateClick.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.fetchOptions = this.fetchOptions.bind(this);
     }
 
-    public componentDidUpdate(prevProps: GlossaryTermsProps) {
+    public componentDidUpdate(prevProps: AnnotationTermsProps) {
         if (prevProps.counter < this.props.counter) {
             this.forceUpdate()
         }
@@ -50,11 +49,12 @@ export class AnnotationTerms extends React.Component<GlossaryTermsProps> {
         return option.label
     }
 
-    private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name);
+    private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
+        const vocabularyName = Vocabulary2.create(this.props.vocabulary!.iri).fragment
+        return this.props.fetchTerms({searchString, optionID, limit, offset}, vocabularyName);
     }
 
-    public onCreateClick() {
+    private handleCreateClick = () =>  {
         // const normalizedName = this.props.match.params.name;
         // const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         // Routing.transitionTo(Routes.createVocabularyTerm, {
@@ -63,7 +63,7 @@ export class AnnotationTerms extends React.Component<GlossaryTermsProps> {
         // });
     }
 
-    public onChange(term: TermData | null) {
+    private handleChange = (term: TermData | null) => {
         if (term === null) {
             this.props.selectVocabularyTerm(term);
         } else {
@@ -77,6 +77,7 @@ export class AnnotationTerms extends React.Component<GlossaryTermsProps> {
             delete cloneData.depth;
             const clone = new Term(cloneData);
             this.props.selectVocabularyTerm(clone);
+            this.props.onChange(clone);
             // const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
             // Routing.transitionTo(Routes.vocabularyTermDetail,
             //     {
@@ -91,14 +92,14 @@ export class AnnotationTerms extends React.Component<GlossaryTermsProps> {
         const actions = [];
         const component = <IntelligentTreeSelect
             className={"p-0"}
-            onChange={this.onChange}
-            value={this.props.selectedTerms}
+            onChange={this.handleChange}
+            value={this.props.selectedTerm}
             fetchOptions={this.fetchOptions}
             valueKey={"iri"}
             labelKey={"label"}
             childrenKey={"plainSubTerms"}
             simpleTreeData={true}
-            isMenuOpen={true}
+            isMenuOpen={false}
             multi={false}
             showSettings={false}
             valueRenderer={AnnotationTerms._valueRenderer}
@@ -109,21 +110,25 @@ export class AnnotationTerms extends React.Component<GlossaryTermsProps> {
                     color='primary'
                     title={i18n('glossary.createTerm.tooltip')}
                     size='sm'
-                    onClick={this.onCreateClick}><GoPlus/></Button>);
+                    onClick={this.handleCreateClick}><GoPlus/></Button>);
 
-        return (<PanelWithActions
-            title={i18n('glossary.title')}
-            className={"p-0"}
-            component={component}
-            actions={actions}
-        />);
-
+        // return (<PanelWithActions
+        //     title={i18n('glossary.title')}
+        //     className={"p-0"}
+        //     component={component}
+        //     actions={actions}
+        // />);
+        return (<FormGroup>
+        <div> <Label className='attribute-label'>{'Term:'}</Label> {actions[0]} </div>
+        {component}
+    </FormGroup>);
     }
 }
 
 export default withRouter(connect((state: TermItState) => {
     return {
-        selectedTerms: state.selectedTerm,
+        vocabulary: state.vocabulary,
+        // selectedTerm: state.selectedTerm,
         counter: state.createdTermsCounter
     };
 }, (dispatch: ThunkDispatch) => {

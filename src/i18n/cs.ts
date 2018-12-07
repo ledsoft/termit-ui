@@ -11,6 +11,7 @@ export default {
         'edit': 'Upravit',
         'optional': 'Nepovinné',
         'actions': 'Akce',
+        'description': 'Popis',
 
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
@@ -43,6 +44,7 @@ export default {
 
         'main.nav.dashboard': 'Hlavní strana',
         'main.nav.vocabularies': 'Slovníky',
+        'main.nav.resources': 'Datové zdroje',
         'main.nav.statistics': 'Statistiky',
         'main.nav.search': 'Vyhledávání',
         'main.nav.facetedSearch': 'Facetové vyhledávání',
@@ -55,7 +57,7 @@ export default {
         'main.search.no-results': 'Nenalezeny žádné výsledky.',
 
         'dashboard.vocabulary.tile': 'Správa slovníků',
-        'dashboard.document.tile': 'Správa dokumentů',
+        'dashboard.resource.tile': 'Správa zdrojů',
         'dashboard.statistics.tile': 'Statistiky',
         'dashboard.search.tile': 'Vyhledávání',
         'dashboard.create-vocabulary.tile' : 'Vytvořit slovník',
@@ -82,10 +84,11 @@ export default {
         'vocabulary.summary.export.error': 'Nepodařilo se získat data z odpovědi serveru.',
         'vocabulary.updated.message': 'Slovník úspěšně uložen.',
         'vocabulary.created.message': 'Slovník úspěšně vytvořen.',
-        'vocabulary.detail.subtitle': 'Vytvořen autorem {author} {created}',
+        'vocabulary.detail.subtitle': 'Vytvořen autorem {author} ',
         'vocabulary.detail.tabs.metadata' : 'Metadata',
         'vocabulary.detail.tabs.termdetail' : 'Detail pojmu',
         'vocabulary.detail.files' : 'Soubory',
+        'vocabulary.detail.files.file': 'Název souboru',
         'vocabulary.detail.noTermSelected': 'Vyberte pojem ve stromečku vlevo.',
 
         'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',
@@ -114,6 +117,7 @@ export default {
         'term.metadata.source.remove.title': 'Odebrat zdroj',
         'term.metadata.subterm.link': 'Zobrazit detail tohoto pojmu',
         'term.metadata.assignments.title': 'Anotované zdroje',
+        'term.metadata.assignments.empty': 'Žádný zdroj není anotován tímto pojmem.',
         'term.metadata.assignments.resource': 'Zdroj',
         'term.metadata.assignments.resource.tooltip': 'Zobrazit detail tohoto zdroje',
         'term.metadata.assignments.description': 'Popis anotace',
@@ -178,6 +182,7 @@ export default {
         'message.welcome': 'Vítejte v aplikaci TermIt!',
         'link.external.title': '{url} - otevřít v nové záložce',
         'properties.edit.title': 'Další atributy',
+        'properties.empty': 'Žádné další atributy nebyly nalezeny.',
         'properties.edit.remove': 'Odebrat tuto hodnotu',
         'properties.edit.property': 'Atribut',
         'properties.edit.value': 'Hodnota',

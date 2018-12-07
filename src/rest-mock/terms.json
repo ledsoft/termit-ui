@@ -64,6 +64,7 @@
       "https://kbss.felk.cvut.cz/web/kbss/dataset-descriptor-ontology"
     ],
     "http://www.w3.org/2004/02/skos/core#definition": "Definition of the term.",
+    "http://onto.fel.cvut.cz/ontologies/termit/properties#UnmappedProperty": "Value of an unmapped property without known prefix.",
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
       "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"
     }

@@ -3,6 +3,7 @@ import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import Term from "../model/Term";
 import {Action} from "redux";
+import AppNotification from "../model/AppNotification";
 
 export interface AsyncAction extends Action {
     status: AsyncActionStatus;
@@ -49,6 +50,10 @@ export interface FileSelectingAction extends Action {
     fileIri: string | null
 }
 
+export interface NotificationAction extends Action {
+    notification: AppNotification;
+}
+
 export default {
     FETCH_USER: 'FETCH_USER',
     LOGIN: 'LOGIN',
@@ -59,6 +64,9 @@ export default {
     PUBLISH_MESSAGE: 'PUBLISH_MESSAGE',
     DISMISS_MESSAGE: 'DISMISS_MESSAGE',
     SWITCH_LANGUAGE: 'SWITCH_LANGUAGE',
+
+    PUBLISH_NOTIFICATION: "PUBLISH_NOTIFICATION",
+    CONSUME_NOTIFICATION: "CONSUME_NOTIFICATION",
 
     CREATE_VOCABULARY: 'CREATE_VOCABULARY',
     LOAD_VOCABULARY: 'LOAD_VOCABULARY',
@@ -84,7 +92,6 @@ export default {
     SEARCH: 'SEARCH',
 
     LOAD_DOCUMENT: 'LOAD_DOCUMENT',
-    SELECT_FILE: 'SELECT_FILE',
     LOAD_FILE_CONTENT: 'LOAD_FILE_CONTENT',
     SAVE_FILE_CONTENT: 'SAVE_FILE_CONTENT',
 

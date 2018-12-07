@@ -27,4 +27,21 @@ export default class IdentifierResolver {
             query: queryMap
         };
     }
+
+    /**
+     * Extracts normalized name from the specified location URL.
+     *
+     * This basically means stripping away query parameters (if present) and taking the last part of the remainder,
+     * until a forward slash or hash, whichever comes first.
+     * @param location
+     */
+    public static extractNameFromLocation(location: string): string {
+        const queryIndex = location.indexOf('?');
+        if (queryIndex !== -1) {
+            location = location.substring(0, queryIndex);
+        }
+        const slashIndex = location.lastIndexOf('/');
+        const hashIndex = location.lastIndexOf('#');
+        return location.substring((slashIndex > hashIndex ? slashIndex : hashIndex) + 1);
+    }
 }

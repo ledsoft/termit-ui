@@ -7,4 +7,4 @@ interface VocabularyLinkProps {
 }
 
 export default (props : VocabularyLinkProps) =>
-    <AssetLink asset={props.vocabulary} assetContextPath={"/vocabulary"}/>
+    <AssetLink asset={props.vocabulary} assetContextPath={"/vocabularies"}/>

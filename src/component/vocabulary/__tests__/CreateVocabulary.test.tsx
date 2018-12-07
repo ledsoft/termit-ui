@@ -10,7 +10,13 @@ import Constants from "../../../util/Constants";
 import Vocabulary from "../../../model/Vocabulary";
 
 jest.mock('../../../util/Routing');
-jest.mock('../../../util/Ajax');
+jest.mock('../../../util/Ajax', () => ({
+    default: jest.fn(),
+    content: require.requireActual('../../../util/Ajax').content,
+    params: require.requireActual('../../../util/Ajax').params,
+    param: require.requireActual('../../../util/Ajax').param,
+    accept: require.requireActual('../../../util/Ajax').accept,
+}));
 
 describe('Create vocabulary view', () => {
 
@@ -60,7 +66,9 @@ describe('Create vocabulary view', () => {
             const name = 'Metropolitan Plan';
             (nameInput.getDOMNode() as HTMLInputElement).value = name;
             nameInput.simulate('change', nameInput);
-            expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + '/vocabularies/identifier', params({name}));
+            return Promise.resolve().then(() => {
+                expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + '/vocabularies/identifier', params({name}));
+            });
         });
 
         it('does not request IRI generation when IRI value had been changed manually before', () => {
