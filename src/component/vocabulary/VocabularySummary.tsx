@@ -26,6 +26,7 @@ import VocabularyEdit from "./VocabularyEdit";
 import Utils from "../../util/Utils";
 import "./VocabularySummary.scss";
 import ExportType from "../../util/ExportType";
+import OutgoingLink from "../misc/OutgoingLink";
 
 interface VocabularySummaryProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary;
@@ -103,7 +104,10 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
             <VocabularyMetadata vocabulary={this.props.vocabulary}/>;
         return <div>
             <PanelWithActions
-                title={this.props.vocabulary.label}
+                title={<OutgoingLink
+                    label={this.props.vocabulary.label}
+                    iri={this.props.vocabulary.iri as string}
+                />}
                 actions={actions}
                 component={component}/>
         </div>;

@@ -3,7 +3,6 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
 import {Col, Label, Row} from "reactstrap";
-import OutgoingLink from "../misc/OutgoingLink";
 import VocabularyDocument from '../document/VocabularyDocument';
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 
@@ -20,14 +19,6 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
         const i18n = this.props.i18n;
         const vocabulary = this.props.vocabulary;
         return <div className='metadata-panel'>
-            <Row>
-                <Col md={2}>
-                    <Label className='attribute-label'>{i18n('vocabulary.metadata.identifier')}</Label>
-                </Col>
-                <Col md={10}>
-                    <OutgoingLink iri={vocabulary.iri} label={vocabulary.iri}/>
-                </Col>
-            </Row>
             <Row>
                 <Col md={2}>
                     <Label className='attribute-label'>{i18n('vocabulary.metadata.author')}</Label>
