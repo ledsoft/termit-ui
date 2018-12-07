@@ -7,7 +7,6 @@ import {IntelligentTreeSelect} from "intelligent-tree-select";
 import "intelligent-tree-select/lib/styles.css";
 import Term from "../../model/Term";
 import {connect} from "react-redux";
-import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
 import {AssetData} from '../../model/Asset';
 import FetchOptionsFunction from "../../model/Functions";
@@ -16,12 +15,15 @@ import {fetchVocabularyTerms} from "../../action/AsyncActions";
 interface ResourceRelatedTermsEditProps extends HasI18n {
     terms: Term[];
     onChange: (subTerms: AssetData[]) => void;
+}
+
+interface ResourceRelatedTermsEditPropsConnected {
     fetchTerms: (fetchOptions: FetchOptionsFunction) => Promise<Term[]>;
 }
 
-export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTermsEditProps> {
+export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTermsEditProps & ResourceRelatedTermsEditPropsConnected> {
 
-    constructor(props: ResourceRelatedTermsEditProps) {
+    constructor(props: ResourceRelatedTermsEditProps & ResourceRelatedTermsEditPropsConnected) {
         super(props);
     }
 
@@ -69,11 +71,9 @@ export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTer
     }
 }
 
-export default connect((state: TermItState) => {
+export default connect<{},ResourceRelatedTermsEditPropsConnected>( null,((dispatch: ThunkDispatch) => {
     return {
-    }
-}, ((dispatch: ThunkDispatch) => {
-    return {
-        fetchTerms: (fetchOptions: FetchOptionsFunction) => dispatch(fetchVocabularyTerms(fetchOptions, "cz-institut-praha-svs")),
+        fetchTerms: (fetchOptions: FetchOptionsFunction) =>
+            dispatch(fetchVocabularyTerms(fetchOptions, "legislativní-sbírka-247-1995")),
     }
 }))(injectIntl(withI18n(ResourceRelatedTermsEdit)));
