@@ -146,7 +146,7 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "                          typeof=\"ddo:vyskyt-termu\">) </span>Metropolitní plán je koncipován především jako plán\n" +
 "\n" +
 "                    <span about=\"_:1711769908\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
+"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4\"\n" +
 "                          typeof=\"ddo:vyskyt-termu\">struktury území </span>a jeho rozpoznatelného a zapamatovatelného\n" +
 "                    obrazu\n" +
 "\n" +
@@ -159,8 +159,8 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "                          typeof=\"ddo:vyskyt-termu\">stanovením </span>z toho plynoucích podmínek\n" +
 "\n" +
 "                    <span about=\"_:1992606816\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/vyuziti-uzemi\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">využití území</span>.\n" +
+"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4\"\n" +
+"                          typeof=\"ddo:vyskyt-termu\" score=\"0.7\">využití území</span>.\n" +
 "\n" +
 "                </p>\n" +
 "            </div>\n" +
@@ -171,13 +171,13 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "                          typeof=\"ddo:vyskyt-termu\">(</span>2\n" +
 "\n" +
 "                    <span about=\"_:140565553\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
+"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4\"\n" +
 "                          typeof=\"ddo:vyskyt-termu\">) </span>Strukturální pojetí\n" +
 "\n" +
 "                    <span about=\"_:1482161817\" property=\"ddo:je-vyskytem-termu\" resource=\"\" typeof=\"ddo:vyskyt-termu\">plánu </span>rozvíjí\n" +
 "                    a doplňuje\n" +
 "\n" +
-"                    <span about=\"_:1229388194\" property=\"ddo:je-vyskytem-termu\" resource=\"\" typeof=\"ddo:vyskyt-termu\">koncepci </span>Pražských\n" +
+"                    <span about=\"_:1229388194\" property=\"ddo:je-vyskytem-termu\" resource=\"\" typeof=\"ddo:vyskyt-termu\" score=\"0.8\">koncepci </span>Pražských\n" +
 "\n" +
 "                    <span about=\"_:431197230\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/stavebni-blok\"\n" +
@@ -189,8 +189,8 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "                          typeof=\"ddo:vyskyt-termu\">zástavby </span>a\n" +
 "\n" +
 "                    <span about=\"_:2118173398\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">veřejných prostranství, zástavby </span>a\n" +
+"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4\"\n" +
+"                          typeof=\"ddo:vyskyt-termu\" score=\"0.7\">veřejných prostranství, zástavby </span>a\n" +
 "\n" +
 "                    <span about=\"_:1214724430\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/transtormacni-plocha-otevrene-krajiny\"\n" +
@@ -201,12 +201,12 @@ export default "<html prefix=\"ddo: http://onto.fel.cvut.cz/ontologies/slovnik/a
 "                          typeof=\"ddo:vyskyt-termu\">otevřené krajiny</span>.\n" +
 "\n" +
 "                    <span about=\"_:207263660\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/typ-struktury-v-nezastavitelnych-lokalitach\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">Struktura </span>je zároveň hlavním určujícím\n" +
+"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4\"\n" +
+"                          typeof=\"ddo:vyskyt-termu\" score=\"0.7\">Struktura </span>je zároveň hlavním určujícím\n" +
 "\n" +
 "                    <span about=\"_:2097570336\" property=\"ddo:je-vyskytem-termu\"\n" +
-"                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/navrhovy-prvek-infrastruktury\"\n" +
-"                          typeof=\"ddo:vyskyt-termu\">prvkem </span>pro uspořádání jednotlivých systémů a subsystémů\n" +
+"                          resource=\"\"\n" +
+"                          typeof=\"ddo:vyskyt-termu\" score=\"0.8\">prvkem </span>pro uspořádání jednotlivých systémů a subsystémů\n" +
 "\n" +
 "                    <span about=\"_:1120390357\" property=\"ddo:je-vyskytem-termu\"\n" +
 "                          resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/infrastruktura\"\n" +
