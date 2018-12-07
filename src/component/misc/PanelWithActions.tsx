@@ -2,11 +2,10 @@ import * as React from 'react';
 import {Card, CardBody, CardHeader} from 'reactstrap';
 
 interface PanelWithActionsProps {
-    title: string,
+    title: JSX.Element | string,
     actions: JSX.Element[],
     component: JSX.Element,
     className?: string,
-
 }
 
 export default (props: PanelWithActionsProps) => <Card>

@@ -49,22 +49,6 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         return <div className='metadata-panel'>
             <Row>
                 <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.identifier')}</Label>
-                </Col>
-                <Col xl={10} md={8}>
-                    <OutgoingLink iri={term.iri} label={term.iri}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.label')}</Label>
-                </Col>
-                <Col xl={10} md={8}>
-                    <Label>{term.label}</Label>
-                </Col>
-            </Row>
-            <Row>
-                <Col xl={2} md={4}>
                     <Label className='attribute-label'>{i18n('term.metadata.comment')}</Label>
                 </Col>
                 <Col xl={10} md={8}>

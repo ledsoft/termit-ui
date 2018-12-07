@@ -18,6 +18,7 @@ import Utils from "../../util/Utils";
 import AppNotification from "../../model/AppNotification";
 import {publishNotification} from "../../action/SyncActions";
 import NotificationType from "../../model/NotificationType";
+import OutgoingLink from "../misc/OutgoingLink";
 
 interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
@@ -90,7 +91,8 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
             <TermMetadataEdit save={this.onSave} term={this.props.term!} vocabulary={this.props.vocabulary!}
                               cancel={this.onCloseEdit}/> :
             <TermMetadata term={this.props.term!} vocabulary={this.props.vocabulary!}/>;
-        return <PanelWithActions title={this.props.term.label} actions={actions} component={component}/>;
+        return <PanelWithActions title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
+                                 actions={actions} component={component}/>;
     }
 }
 
