@@ -66,10 +66,10 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         if (this.props.resource) {
             this.props
                 .onFetchTerm(this.props.resource).then(
-                t => { console.log('onfullfiled called -- ' + t.iri); this.setState(
-                    { term:t }) }
+                t => this.setState(
+                    { term:t })
             ).catch(
-                (reason) => { console.log('catch called -- ' + reason); }
+                (reason) => undefined
             );
         }
     }
@@ -272,7 +272,6 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 
 
     public render() {
-        console.log("rendering " + this.props.resource);
         const id = 'id' + this.props.about.substring(2);
         const termClassName = this.getTermState();
         const termCreatorClassName = this.getTermCreatorState();
