@@ -5,11 +5,13 @@ import IntlData from "../../model/IntlData";
 import {fromRange, toRange} from "xpath-range";
 import HtmlParserUtils from "./HtmlParserUtils";
 import AnnotationDomHelper from "./AnnotationDomHelper";
+import Term from "../../model/Term";
 
 interface AnnotatorProps {
     html: string
     intl: IntlData
     onUpdate(newHtml :string): void
+    onFetchTerm(termIri: string): Promise<Term>
 }
 
 interface AnnotatorState {
@@ -132,7 +134,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                          return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
                     }
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
-                    return <Annotation onRemove={this.onRemove} onUpdate={this.onUpdate} sticky={sticky} text={node.children[0].data} {...node.attribs} />
+                    return <Annotation onRemove={this.onRemove} onUpdate={this.onUpdate} onFetchTerm={this.props.onFetchTerm} sticky={sticky} text={node.children[0].data} {...node.attribs} />
                     // return node.data.toUpperCase();
                 }
             }, {

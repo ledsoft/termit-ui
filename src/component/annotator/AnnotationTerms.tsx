@@ -66,6 +66,7 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
     private handleChange = (term: TermData | null) => {
         if (term === null) {
             this.props.selectVocabularyTerm(term);
+            // this.props.onChange(null);
         } else {
             // The tree component adds depth and expanded attributes to the options when rendering,
             // We need to get rid of them before working with the term

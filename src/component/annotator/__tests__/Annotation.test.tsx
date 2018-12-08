@@ -55,6 +55,7 @@ describe('Annotation', () => {
         defaultTerms: Term[],
         vocabulary: Vocabulary,
         selectVocabularyTerm: (selectedTerm: Term | null) => Promise<object>;
+        onFetchTerm: (termIri: string) => Promise<Term>;
     };
     beforeEach(() => {
         selectedTerm = null;
@@ -68,7 +69,8 @@ describe('Annotation', () => {
             selectedTerm,
             defaultTerms,
             vocabulary,
-            selectVocabularyTerm
+            selectVocabularyTerm,
+            onFetchTerm : () => Promise.resolve(term)
         }
     });
 
@@ -93,17 +95,21 @@ describe('Annotation', () => {
                 {...assignedOccProps}
             />);
 
+        wrapper.setState({term}); // TODO not very good way
         expect(wrapper.find(".assigned-term-occurrence").exists()).toBeTruthy();
     });
 
     it('recognizes invalid occurrence', () => {
         // noinspection JSMismatchedCollectionQueryUpdate
         const emptyDefaultTerms: Term[] = [];
+        const fetchTermReject = (termIri: string) => Promise.reject("Term not found.");
         const wrapper = shallow(
             <Annotation
                 {...intlFunctions()}
                 defaultTerms={emptyDefaultTerms}
-                selectedTerm={selectedTerm} vocabulary={vocabulary} selectVocabularyTerm={selectVocabularyTerm}
+                vocabulary={vocabulary}
+                selectVocabularyTerm={selectVocabularyTerm}
+                onFetchTerm={fetchTermReject}
                 {...assignedOccProps}
             />);
 
