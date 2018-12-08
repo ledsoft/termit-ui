@@ -24,6 +24,12 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
         };
     }
 
+    public componentDidUpdate(prevProps : ResourceEditProps) {
+        if (prevProps.resource.terms !== this.props.resource.terms) {
+            this.setState({terms:this.props.resource.terms});
+        }
+    }
+
     private onTagsChange = (newChildren: Term[]) => {
         this.setState({terms: newChildren});
     };
