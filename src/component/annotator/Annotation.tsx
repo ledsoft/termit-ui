@@ -1,14 +1,12 @@
 import * as React from 'react';
 import {connect} from "react-redux";
 import Term from "../../model/Term";
-import {selectVocabularyTerm} from "../../action/SyncActions";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button} from "reactstrap";
 import SimplePopupWithActions from "./SimplePopupWithActions";
 import "./Annotation.scss";
 import TermItState from "../../model/TermItState";
-import Vocabulary from "../../model/Vocabulary";
 import OutgoingLink from "../misc/OutgoingLink";
 import {ThunkDispatch} from "../../util/Types";
 import AnnotationTerms from "./AnnotationTerms";
@@ -22,13 +20,10 @@ interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     typeof: string
     score?: string
     text: string
-    defaultTerms: Term[];
-    vocabulary: Vocabulary
     sticky?: boolean;
     onRemove?: (annId: string) => void;
     onUpdate?: (annotation: AnnotationSpanProps) => void;
     onFetchTerm: (termIri: string) => Promise<Term>;
-    selectVocabularyTerm: (selectedTerm: Term | null) => Promise<object>;
 }
 
 interface AnnotationState {
@@ -122,13 +117,6 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 
 
     private toggleEditDetail = () => {
-        if (!this.state.detailEditable) {
-            if (this.props.resource) {
-                this.props.selectVocabularyTerm(this.findTermByIri(this.props.resource));
-            } else {
-                this.props.selectVocabularyTerm(null);
-            }
-        }
         this.setState({
             detailEditable: !this.state.detailEditable
         });
@@ -172,7 +160,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     };
 
     private getReadOnlyComponent = () => {
-        const i18n = this.props.i18n;
+        // const i18n = this.props.i18n;
         const score = this.props.score;
         const scoreRow = (score) ? <tr>
             <td>{i18n('annotation.term.occurrence.scoreLabel')}</td>
@@ -288,7 +276,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
             }
             actions.push(<Button key='annotation.close'
                                  color='secondary'
-                                 title={i18n("annotation.remove")}
+                                 title={i18n("annotation.close")}
                                  size='sm'
                                  onClick={this.onCloseDetail}>{"x"}</Button>);
         }
@@ -309,27 +297,11 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 
         </span>;
     }
-
-    private findTermByIri(iri: string): Term | null {
-        return this.undefinedToNull(this.props.defaultTerms.filter((t, i) => (t.iri === iri)).pop());
-    }
-
-    private undefinedToNull(value: any) {
-        if (value === undefined) {
-            return null;
-        }
-        return value;
-    }
 }
 
 
 export default connect((state: TermItState) => {
-    return {
-        vocabulary: state.vocabulary,
-        defaultTerms: state.defaultTerms
-    };
+    return {};
 }, (dispatch: ThunkDispatch) => {
-    return {
-        selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
-    };
+    return {};
 })(injectIntl(withI18n(Annotation)));
