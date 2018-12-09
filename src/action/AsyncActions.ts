@@ -276,6 +276,18 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
     };
 }
 
+export function fetchVocabularyTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
+    const action = {
+        type: ActionType.FETCH_TERM
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(Constants.API_PREFIX + '/vocabularies/' + vocabularyNormalizedName + '/terms/' + termNormalizedName, param('namespace', namespace))
+            .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
+            .then((data: TermData) => new Term(data))
+    };
+}
+
 export function loadVocabularyTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.LOAD_TERM
