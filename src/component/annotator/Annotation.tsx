@@ -186,7 +186,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
             <td>{score}</td>
         </tr> : null;
         const labelRow = (this.state.term) ? <tr>
-            <td>{i18n('annotation.term.assigned-occurrence.termLabel')}</td>
+            <td className={"label"}>{i18n('annotation.term.assigned-occurrence.termLabel')}</td>
             <td><OutgoingLink
                 label={this.state.term!.label}
                 iri={this.state.term!.iri}/></td>

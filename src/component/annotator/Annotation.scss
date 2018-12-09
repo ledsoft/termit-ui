@@ -41,8 +41,16 @@
   color: red;
 }
 
+.popover {
+  min-width: 300px
+}
+
 .popover-body {
   background-color: rgba(230, 230, 230,1);
+}
+
+.popover-body td.label {
+  min-width: 110px
 }
 
 .popover-header {
