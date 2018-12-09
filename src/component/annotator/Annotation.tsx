@@ -13,6 +13,7 @@ import OutgoingLink from "../misc/OutgoingLink";
 import {ThunkDispatch} from "../../util/Types";
 import AnnotationTerms from "./AnnotationTerms";
 import {AnnotationSpanProps} from "./Annotator";
+import {i18n} from "../../__tests__/environment/IntlUtil";
 
 interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     about: string
@@ -21,7 +22,6 @@ interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     typeof: string
     score?: string
     text: string
-    // selectedTerm: Term | null
     defaultTerms: Term[];
     vocabulary: Vocabulary
     sticky?: boolean;
@@ -97,13 +97,6 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     };
 
     private onSaveDetail = () => {
-        // if (!this.state.detailEditable) {
-        //     if (this.props.resource) {
-        //         this.props.selectVocabularyTerm(this.findTermByIri(this.props.resource));
-        //     } else {
-        //         this.props.selectVocabularyTerm(null);
-        //     }
-        // }
         this.setState({
             detailEditable: false,
             detailPinned: false,
@@ -242,11 +235,6 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 
     private getComponent = () => {
         if (this.state.detailEditable) {
-            const res = this.props.resource;
-            if (res) {
-                const t = this.findTermByIri(res!);
-                this.props.selectVocabularyTerm(t);
-            }
             return this.getEditableComponent();
         } else {
             return this.getReadOnlyComponent();
@@ -280,27 +268,27 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
             if (this.props.onUpdate && (this.state.detailEditable || termCreatorClassName === TermOccurrenceCreatorState.PROPOSED)) {
                 actions.push(<Button key='annotation.save'
                                      color='secondary'
-                                     title={"save"}
+                                     title={i18n("save")}
                                      size='sm'
                                      onClick={this.onSaveDetail}>{"✓"}</Button>);
             }
             if (!this.state.detailEditable) {
                 actions.push(<Button key='annotation.edit'
                                      color='secondary'
-                                     title={"edit"}
+                                     title={i18n("edit")}
                                      size='sm'
                                      onClick={this.toggleEditDetail}>{"✎"}</Button>);
             }
             if (this.props.onRemove) {
                 actions.push(<Button key='annotation.remove'
                                      color='secondary'
-                                     title={"remove"}
+                                     title={i18n("annotation.remove")}
                                      size='sm'
                                      onClick={this.onRemoveAnnotation}>{"🚮"}</Button>);
             }
             actions.push(<Button key='annotation.close'
                                  color='secondary'
-                                 title={"close"}
+                                 title={i18n("annotation.remove")}
                                  size='sm'
                                  onClick={this.onCloseDetail}>{"x"}</Button>);
         }
@@ -338,7 +326,6 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary,
-        // selectedTerm: state.selectedTerm,
         defaultTerms: state.defaultTerms
     };
 }, (dispatch: ThunkDispatch) => {

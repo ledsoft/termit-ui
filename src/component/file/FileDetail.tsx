@@ -34,10 +34,6 @@ interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
     defaultTerms: Term[]
 }
 
-// interface FileDetailState {
-//     terms: {};
-// }
-
 // TODO "file detail" --> "file content detail"
 export class FileDetail extends React.Component<FileDetailProps> {
 
@@ -46,9 +42,6 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     constructor(props: FileDetailProps) {
         super(props);
-        // this.state = {
-        //     terms: {}
-        // };
     }
 
     public componentDidMount(): void {
