@@ -7,7 +7,7 @@ import {
     publishMessage,
     publishNotification
 } from './SyncActions';
-import Ajax, {content, param, params} from '../util/Ajax';
+import Ajax, {content, contentType, param, params} from '../util/Ajax';
 import {ThunkDispatch} from '../util/Types';
 import Routing from '../util/Routing';
 import Constants from '../util/Constants';
@@ -426,13 +426,19 @@ export function saveFileContent(documentIri: IRI, fileName: string, fileContent:
     const action = {
         type: ActionType.SAVE_FILE_CONTENT
     };
+    const formData = new FormData();
+    const fileBlob = new Blob([fileContent], { type: 'text/html' })
+    formData.append("file", fileBlob, fileName);
+    if (documentIri.namespace) {
+        formData.append("namespace", documentIri.namespace);
+    }
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax
-            .post(Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content", params({
-                file: fileName,
-                namespace: documentIri.namespace
-            }))
+            .post(
+                Constants.API_PREFIX + '/documents/' + documentIri.fragment + "/content",
+                contentType(Constants.MULTIPART_FORM_DATA).formData(formData)
+            )
             .then((data: object) => fileContent)// TODO load from the service instead
             .then((data: string) => dispatch(asyncActionSuccessWithPayload(action, data)))
             .catch((error: ErrorData) => {
@@ -491,7 +497,7 @@ export function updateResourceTerms(res: Resource) {
         dispatch(asyncActionRequest(action));
         return Ajax.put(Constants.API_PREFIX + '/resources/resource/terms',
             content(res.terms!.map(t => t.iri))
-                .params({ iri: res.iri }).contentType('application/json'))
+                .params({iri: res.iri}).contentType('application/json'))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
                 return dispatch(publishMessage(new Message({messageId: 'resource.updated.message'}, MessageType.SUCCESS)));

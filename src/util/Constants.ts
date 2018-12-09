@@ -20,6 +20,7 @@ const constants = {
     CSV_MIME_TYPE: "text/csv",
     EXCEL_MIME_TYPE: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     X_WWW_FORM_URLENCODED: 'application/x-www-form-urlencoded',
+    MULTIPART_FORM_DATA: 'multipart/form-data',
     // HTTP response status 401 Unauthorized
     STATUS_UNAUTHORIZED: 401,
     // Axios uses lower case for header names
