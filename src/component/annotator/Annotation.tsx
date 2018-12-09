@@ -11,7 +11,6 @@ import OutgoingLink from "../misc/OutgoingLink";
 import {ThunkDispatch} from "../../util/Types";
 import AnnotationTerms from "./AnnotationTerms";
 import {AnnotationSpanProps} from "./Annotator";
-import {i18n} from "../../__tests__/environment/IntlUtil";
 
 interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     about: string
@@ -31,12 +30,14 @@ interface AnnotationState {
     detailEditable: boolean
     detailPinned: boolean
     term: Term | null | undefined;
+    termFetchFinished: boolean
 }
 
 const TermOccurrenceState = {
     INVALID: 'invalid-term-occurrence',
     ASSIGNED: 'assigned-term-occurrence',
     SUGGESTED: 'suggested-term-occurrence',
+    LOADING: 'loading-term-occurrence',
 };
 
 const TermOccurrenceCreatorState = {
@@ -53,7 +54,8 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
             detailOpened: false,
             detailEditable: false,
             detailPinned: false,
-            term: resourceAssigned ? undefined : null
+            term: resourceAssigned ? undefined : null,
+            termFetchFinished: false
         };
     }
 
@@ -62,10 +64,23 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
             this.props
                 .onFetchTerm(this.props.resource).then(
                 t => this.setState(
-                    { term:t })
+                    {
+                        term: t,
+                        termFetchFinished: true
+                    })
             ).catch(
-                (reason) => undefined
+                (reason) => this.setState(
+                    {
+                        term: undefined,
+                        termFetchFinished: true
+                    })
             );
+        } else {
+            this.setState(
+                {
+                    term: null,
+                    termFetchFinished: true
+                })
         }
     }
 
@@ -104,10 +119,9 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                 property: this.props.property,
                 typeof: this.props.typeof
             }
-            if (this.state.term) {
-                newSpan.resource = this.state.term.iri;
-            } else {
-                newSpan.resource = this.props.resource;
+            const res = this.getCurrentResource();
+            if (res) {
+                newSpan.resource = res;
             }
             this.props.onUpdate(newSpan);
         }
@@ -160,7 +174,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     };
 
     private getReadOnlyComponent = () => {
-        // const i18n = this.props.i18n;
+        const i18n = this.props.i18n;
         const score = this.props.score;
         const scoreRow = (score) ? <tr>
             <td>{i18n('annotation.term.occurrence.scoreLabel')}</td>
@@ -193,7 +207,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                     </span>
                 break;
             case TermOccurrenceState.INVALID:
-                const errorLine = i18n('annotation.form.invalid-occurrence.message').replace('%', this.props.resource!)
+                const errorLine = i18n('annotation.form.invalid-occurrence.message').replace('%', this.getCurrentResource()!)
 
                 outputComponent = <div>
                     <span className={'an-error'}>
@@ -211,7 +225,8 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         return outputComponent;
     };
 
-    private onTermChange = (term: Term) => {
+    private onTermChange = (term: Term | null) => {
+
         this.setState(
             { term }
         )
@@ -230,7 +245,10 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     }
 
     private getTermState = () => {
-        if (!this.props.resource) {
+        if (!this.state.termFetchFinished) {
+            return TermOccurrenceState.LOADING;
+        }
+        if (this.state.term === null) {
             return TermOccurrenceState.SUGGESTED;
         }
         if (this.state.term) {
@@ -246,8 +264,19 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         return TermOccurrenceCreatorState.SELECTED;
     }
 
+    private getCurrentResource = () => {
+        if (this.state.term) {
+            return this.state.term.iri;
+        }
+        if ((this.state.term === undefined) && (this.props.resource !== "")) {
+            return this.props.resource;
+        }
+        return;
+    }
+
 
     public render() {
+        const i18n = this.props.i18n;
         const id = 'id' + this.props.about.substring(2);
         const termClassName = this.getTermState();
         const termCreatorClassName = this.getTermCreatorState();
@@ -286,7 +315,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                      onClick={this.onClick}
                      about={this.props.about}
                      property={this.props.property}
-                     resource={this.props.resource}
+                     resource={this.getCurrentResource()}
                      typeof={this.props.typeof}
                      className={termClassName + " " + termCreatorClassName}
         >

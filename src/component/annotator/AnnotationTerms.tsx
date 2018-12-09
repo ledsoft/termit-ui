@@ -25,7 +25,7 @@ interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
 }
 
 interface AnnotationTermsProps extends GlossaryTermsProps {
-    onChange: (term: Term) => void;
+    onChange: (term: Term | null) => void;
     selectedTerm: Term | null;
 }
 
@@ -67,6 +67,7 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
         if (term === null) {
             this.props.selectVocabularyTerm(term);
             // this.props.onChange(null);
+            this.props.onChange(null);
         } else {
             // The tree component adds depth and expanded attributes to the options when rendering,
             // We need to get rid of them before working with the term
