@@ -14,16 +14,20 @@
   background: rgba(238, 239, 144, 0.4);
 }
 
-.invalid-term-occurrence.proposed-occurrence {
-  border: 0.15em dotted rgb(239, 14, 0)
+.assigned-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted green;
 }
 
 .suggested-term-occurrence.proposed-occurrence {
   border: 0.15em dotted rgb(239, 69, 27)
 }
 
-.assigned-term-occurrence.proposed-occurrence {
-  border: 0.15em dotted green;
+.invalid-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted rgb(239, 14, 0)
+}
+
+.loading-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted rgb(239, 173, 62)
 }
 
 .selected-occurrence {
