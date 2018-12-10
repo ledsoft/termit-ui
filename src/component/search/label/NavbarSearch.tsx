@@ -41,6 +41,7 @@ export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearch
     public search = (str?: string) => {
         const searchVal = str ? str : this.state.searchString;
         if (searchVal.trim().length > 0) {
+            this.setState({results: []});
             this.props.search(searchVal).then((data: SearchResult[]) => this.setState({results: data}));
         }
     };
