@@ -310,6 +310,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                                  onClick={this.onCloseDetail}>{"x"}</Button>);
         }
         const resourceProps = this.getCurrentResource() ? {resource: this.getCurrentResource()} : {};
+        const scoreProps = this.props.score ? {score: this.props.score.toString()} : {};
         return <span id={id}
                      onMouseEnter={this.onMouseEnter}
                      onMouseLeave={this.onMouseLeave}
@@ -318,6 +319,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                      property={this.props.property}
                      {...resourceProps}
                      typeof={this.props.typeof}
+                     {...scoreProps}
                      className={termClassName + " " + termCreatorClassName}
         >
         {this.props.text}
