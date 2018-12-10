@@ -74,7 +74,7 @@ describe('Annotation', () => {
                 {...assignedOccProps}
             />);
 
-        wrapper.setState({term}); // TODO not very good way
+        wrapper.setState({term, termFetchFinished: true}); // TODO not very good way
         expect(wrapper.find(".assigned-term-occurrence").exists()).toBeTruthy();
     });
 
@@ -87,6 +87,7 @@ describe('Annotation', () => {
                 {...assignedOccProps}
             />);
 
+        wrapper.setState({term: undefined, termFetchFinished: true}); // TODO not very good way
         expect(wrapper.find(".invalid-term-occurrence").exists()).toBeTruthy();
     });
 
