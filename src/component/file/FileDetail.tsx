@@ -3,7 +3,13 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {fetchVocabularyTerms, loadDefaultTerms, loadFileContent, saveFileContent} from "../../action/AsyncActions";
+import {
+    fetchVocabularyTerm,
+    fetchVocabularyTerms,
+    loadDefaultTerms,
+    loadFileContent,
+    saveFileContent
+} from "../../action/AsyncActions";
 import Document from "../../model/Document";
 import {RouteComponentProps} from "react-router";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
@@ -22,14 +28,11 @@ interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
     loadFileContent: (documentIri: IRI, fileName: string) => void,
     saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => void
     loadDefaultTerms: (normalizedName: string, namespace?: string) => void
-    intl: IntlData,
-    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
+    intl: IntlData
+    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>
+    fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => Promise<Term>
     defaultTerms: Term[]
 }
-
-// interface FileDetailState {
-//     terms: {};
-// }
 
 // TODO "file detail" --> "file content detail"
 export class FileDetail extends React.Component<FileDetailProps> {
@@ -39,9 +42,6 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     constructor(props: FileDetailProps) {
         super(props);
-        // this.state = {
-        //     terms: {}
-        // };
     }
 
     public componentDidMount(): void {
@@ -76,6 +76,10 @@ export class FileDetail extends React.Component<FileDetailProps> {
         return VocabularyUtils.create(this.props.vocabulary.iri).fragment;
     }
 
+    private getVocabularyIri(): IRI {
+        return VocabularyUtils.create(this.props.vocabulary.iri);
+    }
+
     /**
      * Creates lambda function that checks if term identified by termIri is downloaded.
      * If term is already downloaded resolved promise is returned with term as output.
@@ -87,12 +91,15 @@ export class FileDetail extends React.Component<FileDetailProps> {
             const term = this.terms[termIri];
 
             if (!term) {
-                return this.props.fetchTerms({optionID: termIri}, this.getVocabularyNormalizedName())
-                    .then((terms: Term[]) => {
-                        this.updateTerms(terms);
+                return this.props.fetchTerm(VocabularyUtils.create(termIri).fragment,
+                    this.getVocabularyIri().fragment,
+                    this.getVocabularyIri().namespace
+                )
+                    .then((foundTerm: Term) => {
+                        this.updateTerms([foundTerm]);
                         const t = this.terms[termIri];
                         if (!t) {
-                            throw Error("Term " + termIri + "not found.");
+                            throw Error("Term " + termIri + " not found.");
                         }
                         return t;
                     })
@@ -136,6 +143,7 @@ export default connect((state: TermItState) => {
         loadFileContent: (documentIri: IRI, fileName: string) => dispatch(loadFileContent(documentIri, fileName)),
         saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => dispatch(saveFileContent(documentIri, fileName, fileContent)),
         loadDefaultTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace)),
-        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName))
+        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
+        fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => dispatch(fetchVocabularyTerm(termNormalizedName, vocabularyNormalizedName, namespace))
     };
 })(injectIntl(withI18n(FileDetail)));

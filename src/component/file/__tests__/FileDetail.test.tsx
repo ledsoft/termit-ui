@@ -11,6 +11,7 @@ import Generator from "../../../__tests__/environment/Generator";
 import {Annotator} from "../../annotator/Annotator";
 import FetchOptionsFunction from "../../../model/Functions";
 import Term from "../../../model/Term";
+import VocabularyUtils from "../../../util/VocabularyUtils";
 
 function generateTerm(i: number): Term {
     return new Term({
@@ -44,6 +45,7 @@ describe('FileDetail', () => {
         saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => void
         loadDefaultTerms: (normalizedName: string, namespace?: string) => void
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
+        fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => Promise<Term>
     };
     let mockDataProps: {
         defaultTerms: Term[]
@@ -65,7 +67,8 @@ describe('FileDetail', () => {
             loadFileContent: jest.fn(),
             saveFileContent: jest.fn(),
             loadDefaultTerms: jest.fn(),
-            fetchTerms: (fetchOptions, normalizedName) => Promise.resolve([])
+            fetchTerms: (fetchOptions, normalizedName) => Promise.resolve([]),
+            fetchTerm: (termNormalizedName, vocabularyNormalizedName, namespace) => Promise.resolve(generateTerm(0))
         }
         mockDataProps = {
             defaultTerms: []
@@ -166,10 +169,10 @@ describe('FileDetail', () => {
     it('onFetchTerm fetches non-root term', async () => {
         const terms: Term[] = [0,1,2,3].map(i => generateTerm(i));
         const term4 = generateTerm(4);
-        const term4WithRandomTerms = [terms[2], term4, terms[3]];
         mockedFunctionLikeProps.fetchTerms = jest.fn()
-            .mockImplementationOnce(() => Promise.resolve(terms))
-            .mockImplementationOnce(() => Promise.resolve(term4WithRandomTerms));
+            .mockImplementationOnce(() => Promise.resolve(terms));
+        mockedFunctionLikeProps.fetchTerm = jest.fn()
+            .mockImplementationOnce(() => Promise.resolve(term4));
 
         const wrapper = shallow(<FileDetail
             vocabulary={vocabulary}
@@ -187,8 +190,13 @@ describe('FileDetail', () => {
         const returnedTerm = await wrapper.instance().onFetchTerm(term4.iri);
 
         expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, expect.anything())
-        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({optionID: term4.iri}, expect.anything())
-        expect(mockedFunctionLikeProps.fetchTerms).toHaveBeenCalledTimes(2);
+        expect(mockedFunctionLikeProps.fetchTerm).toBeCalledWith(
+            VocabularyUtils.create(term4.iri).fragment,
+            expect.anything(),
+            expect.anything()
+        )
+        expect(mockedFunctionLikeProps.fetchTerms).toHaveBeenCalledTimes(1);
+        expect(mockedFunctionLikeProps.fetchTerm).toHaveBeenCalledTimes(1);
         expect(returnedTerm).toEqual(term4);
     });
 });

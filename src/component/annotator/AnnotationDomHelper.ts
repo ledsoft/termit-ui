@@ -15,8 +15,10 @@ export default {
             return foundResults[0];
         }
     },
-    removeAnnotation(annotation: Node): void {
-        DomUtils.replaceElement(annotation, this.createTextualNode(annotation))
+    removeAnnotation(annotation: Node): Node {
+        const newNode = this.createTextualNode(annotation);
+        DomUtils.replaceElement(annotation, newNode)
+        return newNode;
     },
     replaceAnnotation(oldAnnotation: Node, newAnnotation: Node): void {
         DomUtils.replaceElement(oldAnnotation, newAnnotation)

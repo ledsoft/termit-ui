@@ -178,6 +178,8 @@ export default {
         'annotation.form.assigned-occurrence.termInfoLabel': 'Term info : ',
         'annotation.term.assigned-occurrence.termLabel': 'Assigned term : ',
         'annotation.term.occurrence.scoreLabel': 'Score:',
+        'annotation.remove': 'Remove',
+        'annotation.close': 'Close',
 
         'message.welcome': 'Welcome to TermIt!',
         'link.external.title': '{url} - open in a new browser tab',
