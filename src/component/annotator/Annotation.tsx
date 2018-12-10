@@ -309,13 +309,14 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                                  size='sm'
                                  onClick={this.onCloseDetail}>{"x"}</Button>);
         }
+        const resourceProps = this.getCurrentResource() ? {resource: this.getCurrentResource()} : {};
         return <span id={id}
                      onMouseEnter={this.onMouseEnter}
                      onMouseLeave={this.onMouseLeave}
                      onClick={this.onClick}
                      about={this.props.about}
                      property={this.props.property}
-                     resource={this.getCurrentResource()}
+                     {...resourceProps}
                      typeof={this.props.typeof}
                      className={termClassName + " " + termCreatorClassName}
         >
