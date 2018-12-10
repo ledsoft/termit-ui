@@ -30,7 +30,7 @@ const Statistics = (props: HasI18n) => {
             className="layout"
             layouts={layouts}
             cols={cols}
-        rowHeight={100}>
+        rowHeight={80}>
             <div key="topright"><AssetCount
                 title={props.i18n('statistics.vocabulary.count')}
                 typeIri={Vocabulary.VOCABULARY}/>

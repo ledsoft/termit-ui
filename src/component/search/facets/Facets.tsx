@@ -109,7 +109,7 @@ export class Facets extends React.Component<Props, State> {
                 ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
                 ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
                 ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>' +
-                ' PREFIX zs: <https://slovník.gov.cz/základní/pojem/>' +
+                ' PREFIX zs: <https://onto.fel.cvut.cz/ontologies/ufo/>' +
                 ' PREFIX a-popis-dat: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>',
             queryTemplate: this.getSparqlQuery(this.props.lang), // required
             resultsPerPage: 500, // optional (default is 10)

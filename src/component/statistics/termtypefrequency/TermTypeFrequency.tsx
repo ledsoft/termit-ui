@@ -83,7 +83,7 @@ export default class TermTypeFrequency extends React.Component<Props> {
                           series={series}
                           type="bar"
                           width="100%"
-                          height="auto"/>
+                          height="430px"/>
         }
 
         return <SparqlWidget
