@@ -94,7 +94,9 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
             AnnotationDomHelper.removeAnnotation(ann);
             const newInternalHtml = HtmlParserUtils.dom2html(dom);
             this.setState(
-                { internalHtml: newInternalHtml }
+                { internalHtml: newInternalHtml,
+                        stickyAnnotationId: ""
+                }
             )
             this.props.onUpdate(this.reconstructHtml(newInternalHtml));
         }
