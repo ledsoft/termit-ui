@@ -16,6 +16,9 @@ import {fetchVocabularyTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from '../../util/Types';
 import Vocabulary2 from "../../util/VocabularyUtils";
 import {GoPlus} from "react-icons/go";
+import Routes from "../../util/Routes";
+import Routing from "../../util/Routing";
+import VocabularyUtils from "../../util/VocabularyUtils";
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
@@ -57,10 +60,13 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
     private handleCreateClick = () =>  {
         // const normalizedName = this.props.match.params.name;
         // const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
-        // Routing.transitionTo(Routes.createVocabularyTerm, {
-        //     params: new Map([['name', normalizedName]]),
-        //     query: namespace ? new Map([["namespace", namespace]]) : undefined
-        // });
+        const voc = VocabularyUtils.create(this.props.vocabulary!.iri);
+        const namespace = voc.namespace;
+        const normalizedName = voc.fragment;
+        Routing.transitionTo(Routes.createVocabularyTerm, {
+            params: new Map([['name', normalizedName]]),
+            query: namespace ? new Map([["namespace", namespace]]) : undefined
+        });
     }
 
     private handleChange = (term: TermData | null) => {
