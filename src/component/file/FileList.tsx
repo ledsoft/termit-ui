@@ -36,7 +36,7 @@ export class FileList extends React.Component<FileListProps> {
                         {v.comment}
                     </td>
                     <td className="pull-right">
-                        <Button className="link-to-resource" size='sm' color='info'
+                        <Button className="link-to-resource" size="sm" color="primary"
                                 title={i18n('file.metadata.startTextAnalysis')}
                                 onClick={this.fileTextAnalysisCallback(v.name)}><GoClippy/></Button>
                     </td>

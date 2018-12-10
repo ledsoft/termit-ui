@@ -97,7 +97,7 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
                             title={this.props.i18n("term.metadata.assignments.resource.tooltip")}>
                         {v.label}
                     </Button>
-                    {v.count > 1 && <Badge color="info"
+                    {v.count > 1 && <Badge color="primary"
                                            title={this.props.formatMessage("term.metadata.assignments.count.tooltip", {count: v.count})}>{v.count}</Badge>}
                 </td>
                 <td>{v.descriptions}</td>

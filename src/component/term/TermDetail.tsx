@@ -85,7 +85,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
             return null;
         }
         const actions = this.state.edit ? [] :
-            [<Button size='sm' color='info' onClick={this.onEdit} key='term-detail-edit'
+            [<Button size='sm' color='primary' onClick={this.onEdit} key='term-detail-edit'
                      title={this.props.i18n('edit')}><GoPencil/></Button>];
         const component = this.state.edit ?
             <TermMetadataEdit save={this.onSave} term={this.props.term!} vocabulary={this.props.vocabulary!}

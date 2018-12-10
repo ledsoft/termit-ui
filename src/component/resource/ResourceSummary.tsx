@@ -61,7 +61,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
     public render() {
         const buttons = [];
         if (!this.state.edit) {
-            buttons.push(<Button key='resource.summary.edit' size='sm' color='info' title={this.props.i18n('edit')}
+            buttons.push(<Button key='resource.summary.edit' size='sm' color='primary' title={this.props.i18n('edit')}
                                  onClick={this.onEdit}><GoPencil/></Button>);
         }
         const actions = [<ButtonToolbar key='resource.summary.actions'>{buttons}</ButtonToolbar>];

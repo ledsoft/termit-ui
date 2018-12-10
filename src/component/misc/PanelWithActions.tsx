@@ -9,7 +9,7 @@ interface PanelWithActionsProps {
 }
 
 export default (props: PanelWithActionsProps) => <Card>
-    <CardHeader tag='h4' color='info' className='d-flex align-items-center'>
+    <CardHeader tag="h4" color="primary" className="d-flex align-items-center">
         <div className='flex-grow-1'>{props.title}</div>
         <div className="float-sm-right">
             {props.actions}
