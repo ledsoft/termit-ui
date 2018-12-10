@@ -56,6 +56,7 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
                                    onChange={this.onChange}
                                    value={selected}
                                    fetchOptions={this.fetchOptions}
+                                   fetchLimit={100000}
                                    valueKey='iri'
                                    labelKey='label'
                                    childrenKey='plainSubTerms'
