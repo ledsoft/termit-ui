@@ -9,12 +9,41 @@ interface AssetLinkProps<T extends Asset> {
     assetContextPath: string
 }
 
-export default <T extends Asset>(props: AssetLinkProps<T>) => {
-    const {fragment, namespace} = Vocabulary2.create(props.asset.iri);
-    return <OutgoingLink label=
-                             {<Link
-                                 to={props.assetContextPath + "/" + fragment + (namespace ? "?namespace=" + namespace : "")}>
-                                 {props.asset.label}
-                             </Link>}
-                         iri={props.asset.iri}/>
+interface AssetLinkState {
+    showLink: boolean;
+}
+
+export default class AssetLink<T extends Asset> extends React.Component<AssetLinkProps<T>, AssetLinkState> {
+
+    constructor(props: AssetLinkProps<T>) {
+        super(props);
+        this.state = {showLink: false};
+    }
+
+    private setVisible() {
+        this.setState({showLink: true});
+    }
+
+    private setInvisible() {
+        this.setState({showLink: false});
+    }
+
+    public render() {
+        const props = this.props;
+        const setInvisible = this.setInvisible.bind(this);
+        const setVisible = this.setVisible.bind(this);
+
+        const {fragment, namespace} = Vocabulary2.create(props.asset.iri);
+        return <span
+            onMouseOut={setInvisible}
+            onMouseOver={setVisible}>
+            <OutgoingLink label=
+                              {<Link
+                                  to={props.assetContextPath + "/" + fragment + (namespace ? "?namespace=" + namespace : "")}>
+                                  {props.asset.label}
+                              </Link>}
+                          iri={props.asset.iri}
+                          showLink={this.state.showLink}/>
+        </span>
+    }
 }
