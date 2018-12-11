@@ -3,6 +3,7 @@ import AssetLink from "../AssetLink";
 import {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
 import {MemoryRouter} from "react-router";
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
+import {shallow} from "enzyme";
 
 describe('Asset Link', () => {
     const voc = EMPTY_VOCABULARY;
@@ -20,6 +21,30 @@ describe('Asset Link', () => {
             assetContextPath={"/vocabulary"}
         /></MemoryRouter>);
         expect(wrapper.find('a[href="http://empty"]').exists()).toBeTruthy();
+    });
+    it('showLink is false by default', () => {
+        const wrapper = shallow(<AssetLink
+            asset={voc}
+            assetContextPath={"/vocabulary"}
+        />);
+        expect(wrapper.state("showLink")).toBeFalsy();
+    });
+    it('On mouse out sets showLink to false', () => {
+        const wrapper = shallow(<AssetLink
+            asset={voc}
+            assetContextPath={"/vocabulary"}
+        />);
+        wrapper.find("span").simulate("mouseOver");
+        expect(wrapper.state("showLink")).toBeTruthy();
+    });
+    it('On mouse over sets showLink to true', () => {
+        const wrapper = shallow(<AssetLink
+            asset={voc}
+            assetContextPath={"/vocabulary"}
+        />);
+        wrapper.setState({showLink : false})
+        wrapper.find("span").simulate("mouseOut");
+        expect(wrapper.state("showLink")).toBeFalsy();
     });
 });
 
