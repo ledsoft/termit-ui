@@ -31,31 +31,31 @@ export class Dashboard extends React.Component<HasI18n> {
     };
 
     public render() {
-        return <div className='row'>
-            <div className='dashboard-left'>
+        return <Row>
+            <Col lg={8} xs={12}>
                 <Jumbotron>
                     {this.renderMainDashboard()}
                 </Jumbotron>
                 <Jumbotron>
                     {this.renderQuickAccessDashboard()}
                 </Jumbotron>
-            </div>
-        </div>;
+            </Col>
+        </Row>;
     }
 
     private renderMainDashboard() {
         const i18n = this.props.i18n;
         return <Container fluid={true}>
             <Row>
-                <Col xs={4} className='dashboard-sector'>
+                <Col xs={12} lg={4} className='dashboard-sector'>
                     <DashboardTile text={i18n('dashboard.vocabulary.tile')}
                                    onClick={Dashboard.onVocabularyManagementClick}/>
                 </Col>
-                <Col xs={4} className='dashboard-sector'>
+                <Col xs={12} lg={4} className='dashboard-sector'>
                     <DashboardTile text={i18n('dashboard.resource.tile')}
                                    onClick={Dashboard.onResourceManagementClick}/>
                 </Col>
-                <Col xs={4} className='dashboard-sector'>
+                <Col xs={12} lg={4} className='dashboard-sector'>
                     <DashboardTile text={i18n('dashboard.statistics.tile')} onClick={Dashboard.onStatisticsClick}/>
                 </Col>
             </Row>
@@ -66,14 +66,14 @@ export class Dashboard extends React.Component<HasI18n> {
         const i18n = this.props.i18n;
         return <Container fluid={true}>
             <Row>
-                <Col xs={4} className='dashboard-sector'>
+                <Col xs={12} lg={4} className='dashboard-sector'>
                     <DashboardQuickAccessTile text={i18n('dashboard.create-vocabulary.tile')}
                                               onClick={Dashboard.onCreateVocabularyClick}/>
                 </Col>
                 {/*<Col xs={4} className='dashboard-sector'>*/}
                 {/*<DashboardQuickAccessTile text={i18n('dashboard.add-document.tile')} onClick={this.onClick}/>*/}
                 {/*</Col>*/}
-                <Col xs={4} className='dashboard-sector'>
+                <Col xs={12} lg={4} className='dashboard-sector'>
                     <DashboardQuickAccessTile text={i18n('dashboard.search.tile')} onClick={Dashboard.onSearchClick}/>
                 </Col>
             </Row>
