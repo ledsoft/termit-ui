@@ -70,5 +70,6 @@ export default class Vocabulary extends Asset implements VocabularyData {
 
 export const EMPTY_VOCABULARY = new Vocabulary({
     iri: 'http://empty',
-    label: ''
+    label: '',
+    created: Date.now()
 });

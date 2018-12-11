@@ -16,6 +16,8 @@ import {ThunkDispatch} from '../../util/Types';
 import CreateTerm from "../term/CreateTerm";
 import TermDetail from "../term/TermDetail";
 import NoTermSelected from "../term/NoTermSelected";
+import BreadcrumbRoute from "../breadcrumb/BreadcrumbRoute";
+import DynamicBreadcrumbRoute from "../breadcrumb/DynamicBreadcrumbRoute";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
@@ -58,8 +60,11 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
                 </Col>
                 <Col md={8}>
                     <Switch>
-                        <Route path={Routes.vocabularyTermDetail.path} component={TermDetail}/>
-                        <Route path={Routes.createVocabularyTerm.path} component={CreateTerm}/>
+                        <BreadcrumbRoute title={this.props.i18n("glossary.createTerm.breadcrumb")}
+                                         path={Routes.createVocabularyTerm.path} component={CreateTerm}
+                                         includeSearch={true}/>
+                        <DynamicBreadcrumbRoute asset="selectedTerm" path={Routes.vocabularyTermDetail.path}
+                                                component={TermDetail} includeSearch={true}/>
                         <Route path={Routes.vocabularyDetail.path} component={NoTermSelected} exact={true}/>
                     </Switch>
                 </Col>

@@ -127,6 +127,7 @@ export default {
         'glossary.title': 'Terms',
         'glossary.createTerm': 'Create new term',
         'glossary.createTerm.tooltip': "Create new vocabulary's term",
+        'glossary.createTerm.breadcrumb': 'Create term',
         'glossary.form.header': 'Create new term',
         'glossary.form.tooltipLabel': 'Didn\'t find your term? Create new one.',
         'glossary.form.field.label': 'Label (required)',
