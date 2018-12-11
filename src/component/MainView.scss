@@ -15,7 +15,7 @@
 header {
   margin-top: -60px;
   margin-bottom: -20px;
-  height: 54px;
+  height: 74px;
 }
 
 .content {
@@ -33,4 +33,19 @@ header {
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.breadcrumb-bar {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  margin-bottom: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.breadcrumbs__separator {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }

@@ -9,6 +9,7 @@ import Register from "./component/register/Register";
 import MainView from "./component/MainView";
 import {connect} from "react-redux";
 import TermItState from "./model/TermItState";
+import BreadcrumbRoute from "./component/breadcrumb/BreadcrumbRoute";
 
 interface IntlWrapperProps {
     intl: IntlData
@@ -20,7 +21,7 @@ const IntlWrapper: React.SFC<IntlWrapperProps> = (props) => {
             <Switch>
                 <Route path={Routes.login.path} component={Login}/>
                 <Route path={Routes.register.path} component={Register}/>
-                <Route component={MainView}/>
+                <BreadcrumbRoute title={props.intl.messages["main.nav.dashboard"]} component={MainView}/>
             </Switch>
         </Router>
     </IntlProvider>;

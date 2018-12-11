@@ -26,8 +26,6 @@ import {loadUser} from '../action/AsyncActions';
 import {logout} from '../action/ComplexActions';
 import {Route, RouteComponentProps, Switch, withRouter} from 'react-router';
 import Dashboard from './dashboard/Dashboard';
-import VocabularyManagement from './vocabulary/VocabularyManagement';
-import VocabularyDetail from "./vocabulary/VocabularyDetail";
 import LanguageSelector from "./main/LanguageSelector";
 import Messages from "./message/Messages";
 import Statistics from "./statistics/Statistics";
@@ -37,6 +35,9 @@ import FacetedSearch from "./search/facets/FacetedSearch";
 import FileDetail from "./file/FileDetail";
 import {ThunkDispatch} from "../util/Types";
 import ResourceManagement from "./resource/ResourceManagement";
+import {Breadcrumbs} from "react-breadcrumbs";
+import BreadcrumbRoute from "./breadcrumb/BreadcrumbRoute";
+import VocabularyManagementRoute from "./vocabulary/VocabularyManagementRoute";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -115,19 +116,23 @@ export class MainView extends React.Component<MainViewProps> {
                         </UncontrolledDropdown>
                     </Nav>
                 </Navbar>
+                <Breadcrumbs className="breadcrumb-bar"/>
             </header>
             <Messages/>
             <Container fluid={true} className="mt-5 mb-5">
                 <Switch>
-                    <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail} exact={true}/>
-                    <Route path={Routes.resources.path} component={ResourceManagement}/>
-                    <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
-                    <Route path={Routes.vocabularyTermDetail.path} component={VocabularyDetail} exact={true}/>
-                    <Route path={Routes.annotateFile.path} component={FileDetail} exact={true}/>
-                    <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
-                    <Route path={Routes.statistics.path} component={Statistics}/>
-                    <Route path={Routes.search.path} component={Search}/>
-                    <Route path={Routes.facetedSearch.path} component={FacetedSearch}/>
+
+                    <BreadcrumbRoute title={i18n("main.nav.resources")} path={Routes.resources.path}
+                                     component={ResourceManagement}/>
+                    <BreadcrumbRoute title={i18n("main.nav.vocabularies")} path={Routes.annotateFile.path}
+                                     component={FileDetail} exact={true}/>
+                    <BreadcrumbRoute title={i18n("main.nav.vocabularies")} path={Routes.vocabularies.path}
+                                     component={VocabularyManagementRoute}/>
+                    <BreadcrumbRoute title={i18n("main.nav.statistics")} path={Routes.statistics.path}
+                                     component={Statistics}/>
+                    <BreadcrumbRoute title={i18n("main.nav.search")} path={Routes.search.path} component={Search}/>
+                    <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path}
+                                     component={FacetedSearch}/>
                     <Route component={Dashboard}/>
                 </Switch>
             </Container>
