@@ -42,7 +42,7 @@ describe('Asset Link', () => {
             asset={voc}
             assetContextPath={"/vocabulary"}
         />);
-        wrapper.setState({showLink : false})
+        wrapper.setState({showLink : false});
         wrapper.find("span").simulate("mouseOut");
         expect(wrapper.state("showLink")).toBeFalsy();
     });

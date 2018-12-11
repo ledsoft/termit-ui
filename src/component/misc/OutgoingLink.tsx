@@ -9,11 +9,11 @@ interface OutgoingLinkProps extends HasI18n {
     showLink?: boolean;
 }
 
-const OutgoingLink: React.SFC<OutgoingLinkProps> = (props: OutgoingLinkProps) => {
+export const OutgoingLink: React.SFC<OutgoingLinkProps> = (props: OutgoingLinkProps) => {
     return <span>{props.label}
         <a href={props.iri} target='_blank' style={{color: 'gray'}}
            title={props.formatMessage('link.external.title', {url: props.iri})}>
-            {props.showLink ? '↱':''}</a>
+            <span>{props.showLink ? '↱':' '}</span></a>
     </span>;
 };
 
