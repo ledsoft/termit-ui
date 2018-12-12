@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import Vocabulary from "../../model/Vocabulary";
 import AssetLink from "../misc/AssetLink";
 
@@ -7,4 +7,6 @@ interface VocabularyLinkProps {
 }
 
 export default (props : VocabularyLinkProps) =>
-    <AssetLink asset={props.vocabulary} assetContextPath={"/vocabularies"}/>
+    <AssetLink
+        asset={props.vocabulary}
+        assetContextPath={"/vocabularies"}/>

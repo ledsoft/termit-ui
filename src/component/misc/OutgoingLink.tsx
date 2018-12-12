@@ -1,7 +1,8 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import "intelligent-tree-select/lib/styles.css";
 import withI18n, {HasI18n} from "../hoc/withI18n";
+import "./OutgoingLink.scss";
 
 interface OutgoingLinkProps extends HasI18n {
     label: string | JSX.Element,
@@ -11,9 +12,9 @@ interface OutgoingLinkProps extends HasI18n {
 
 export const OutgoingLink: React.SFC<OutgoingLinkProps> = (props: OutgoingLinkProps) => {
     return <span>{props.label}
-        <a href={props.iri} target='_blank' style={{color: 'gray'}}
-           title={props.formatMessage('link.external.title', {url: props.iri})}>
-            <span>{props.showLink ? '↱':' '}</span></a>
+        <a href={props.iri} target="_blank" style={{color: "gray"}}
+           title={props.formatMessage("link.external.title", {url: props.iri})}>
+            <span className={props.showLink ? "" : "hidden"}>↱</span></a>
     </span>;
 };
 
