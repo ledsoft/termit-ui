@@ -4,10 +4,6 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Col, Label, Row} from "reactstrap";
 import OutgoingLink from "../misc/OutgoingLink";
 import Resource from "../../model/Resource";
-import Term from "../../model/Term";
-import VocabularyUtils from "../../util/VocabularyUtils";
-import Routing from "../../util/Routing";
-import Routes from "../../util/Routes";
 import TermLink from "../term/TermLink";
 
 interface ResourceMetadataProps extends HasI18n {
@@ -18,16 +14,6 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
     constructor(props: ResourceMetadataProps) {
         super(props);
     }
-
-    public openResult = (term: Term) => {
-        this.clear();
-        const termIri = VocabularyUtils.create(term.iri!);
-        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
-        Routing.transitionTo(Routes.vocabularyTermDetail, {
-            params: new Map([["name", vocabularyIri.fragment], ["termName", termIri.fragment]]),
-            query: new Map([["namespace", vocabularyIri.namespace!]])
-        });
-    };
 
     protected clear = () => {
         this.setState({searchString: "", results: null});

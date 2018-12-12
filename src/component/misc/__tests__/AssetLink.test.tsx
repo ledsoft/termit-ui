@@ -11,28 +11,28 @@ describe("Asset Link", () => {
     it("Render internal link", () => {
         const wrapper = mountWithIntl(<MemoryRouter><AssetLink
             asset={voc}
-            assetContextPath={"/vocabulary"}
+            path={"/vocabulary"}
         /></MemoryRouter>);
-        expect(wrapper.find("Link[to=\"/vocabulary/empty?namespace=http://\"]").exists()).toBeTruthy();
+        expect(wrapper.find("Link[to=\"/vocabulary\"]").exists()).toBeTruthy();
     });
     it("Render outgoing link", () => {
         const wrapper = mountWithIntl(<MemoryRouter><AssetLink
             asset={voc}
-            assetContextPath={"/vocabulary"}
+            path={"/vocabulary"}
         /></MemoryRouter>);
         expect(wrapper.find("a[href=\"http://empty\"]").exists()).toBeTruthy();
     });
     it("showLink is false by default", () => {
         const wrapper = shallow(<AssetLink
             asset={voc}
-            assetContextPath={"/vocabulary"}
+            path={"/vocabulary"}
         />);
         expect(wrapper.state("showLink")).toBeFalsy();
     });
     it("On mouse out sets showLink to false", () => {
         const wrapper = shallow(<AssetLink
             asset={voc}
-            assetContextPath={"/vocabulary"}
+            path={"/vocabulary"}
         />);
         wrapper.find("span").simulate("mouseOver");
         expect(wrapper.state("showLink")).toBeTruthy();
@@ -40,7 +40,7 @@ describe("Asset Link", () => {
     it("On mouse over sets showLink to true", () => {
         const wrapper = shallow(<AssetLink
             asset={voc}
-            assetContextPath={"/vocabulary"}
+            path={"/vocabulary"}
         />);
         wrapper.setState({showLink : false});
         wrapper.find("span").simulate("mouseOut");
