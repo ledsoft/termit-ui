@@ -40,7 +40,6 @@ function stateToPlainObject(state: TermItState) {
         defaultTerms: state.defaultTerms,
         createdTermsCounter: state.createdTermsCounter,
         document: state.document,
-        fileIri: state.fileIri,
         fileContent: state.fileContent,
         facetedSearchResult: state.facetedSearchResult,
         types: state.types,

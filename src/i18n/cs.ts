@@ -106,7 +106,7 @@ export default {
         'resource.metadata.terms' : 'Související pojmy',
 
         'term.metadata.identifier': 'Identifikátor',
-        'term.metadata.label': 'Popisek',
+        'term.metadata.label': 'Název',
         'term.metadata.comment': 'Komentář',
         'term.metadata.subTerms': 'Podřazené pojmy',
         'term.metadata.types': 'Typy pojmu',

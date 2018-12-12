@@ -71,7 +71,7 @@ export default {
         'vocabulary.create.title': 'Create Vocabulary',
         'vocabulary.create.submit': 'Create',
         'vocabulary.create.iri.help': 'Identifier will be automatically generated based on the specified name. Or you can set it manually.',
-        'vocabulary.name': 'Name',
+        'vocabulary.name': 'Label',
         'vocabulary.iri': 'Identifier',
         'vocabulary.comment': 'Comment',
         'vocabulary.summary.title': '{name} - Summary',

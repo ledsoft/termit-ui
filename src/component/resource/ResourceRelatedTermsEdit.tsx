@@ -51,7 +51,7 @@ export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTer
     public render() {
         const selected = this.resolveSelectedSubTerms();
         return <FormGroup>
-            <Label className="attribute-label">{this.props.i18n("resource.metadata.tags")}</Label>
+            <Label className="attribute-label">{this.props.i18n("resource.metadata.terms")}</Label>
             <IntelligentTreeSelect className="resource-tags-edit"
                                    onChange={this.onChange}
                                    value={selected}
@@ -72,6 +72,7 @@ export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTer
     }
 }
 
+// TODO Remove the hardcoded value
 export default connect<{},ResourceRelatedTermsEditPropsConnected>( null,((dispatch: ThunkDispatch) => {
     return {
         fetchTerms: (fetchOptions: FetchOptionsFunction) =>
