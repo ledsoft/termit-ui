@@ -27,8 +27,8 @@ describe("ResourceEdit", () => {
                                                       cancel={cancel}
                                                       resource={resource}
                                                       save={save}/>);
-        const saveButton = component.find('Button[color="success"]');
-        saveButton.simulate('click', saveButton);
+        const saveButton = component.find("Button[color=\"success\"]");
+        saveButton.simulate("click", saveButton);
         expect(save).toHaveBeenCalled();
     });
 
@@ -37,8 +37,8 @@ describe("ResourceEdit", () => {
                                                       cancel={cancel}
                                                       resource={resource}
                                                       save={save}/>);
-        const cancelButton = component.find('Button[color="secondary"]');
-        cancelButton.simulate('click', cancelButton);
+        const cancelButton = component.find("Button[color=\"secondary\"]");
+        cancelButton.simulate("click", cancelButton);
         expect(cancel).toHaveBeenCalled();
     });
 

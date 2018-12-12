@@ -9,7 +9,6 @@ import {Location} from "history";
 import createMemoryHistory from "history/createMemoryHistory";
 import {match as Match} from "react-router";
 import Generator from "../../../__tests__/environment/Generator";
-// import Generator from "../../../__tests__/environment/Generator";
 
 describe("ResourceSummary", () => {
 
@@ -29,9 +28,9 @@ describe("ResourceSummary", () => {
         saveResource = jest.fn().mockImplementation(() => Promise.resolve());
 
         location = {
-            pathname: '/resource/' + resourceName,
-            search: '',
-            hash: '',
+            pathname: "/resource/" + resourceName,
+            search: "",
+            hash: "",
             state: {}
         };
         match = {
@@ -40,7 +39,7 @@ describe("ResourceSummary", () => {
             },
             path: location.pathname,
             isExact: true,
-            url: 'http://localhost:3000/' + location.pathname
+            url: "http://localhost:3000/" + location.pathname
         };
     });
 

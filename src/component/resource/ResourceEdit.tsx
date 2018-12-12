@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button, ButtonToolbar, Col, Form, Row} from "reactstrap";
 import Resource from "../../model/Resource";
@@ -42,7 +42,7 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
 
     public render() {
         const i18n = this.props.i18n;
-        return <div className='metadata-panel'>
+        return <div className="metadata-panel">
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
@@ -54,9 +54,9 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
 
                 <Row>
                     <Col xl={6} md={12}>
-                        <ButtonToolbar className='pull-right'>
-                            <Button onClick={this.onSave} color='success' size='sm'>{i18n('save')}</Button>
-                            <Button onClick={this.props.cancel} color='secondary' size='sm'>{i18n('cancel')}</Button>
+                        <ButtonToolbar className="pull-right">
+                            <Button onClick={this.onSave} color="success" size="sm">{i18n("save")}</Button>
+                            <Button onClick={this.props.cancel} color="secondary" size="sm">{i18n("cancel")}</Button>
                         </ButtonToolbar>
                     </Col>
                 </Row>

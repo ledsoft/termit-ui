@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {FormGroup, Label} from "reactstrap";
 // @ts-ignore
@@ -8,7 +8,7 @@ import "intelligent-tree-select/lib/styles.css";
 import Term from "../../model/Term";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {AssetData} from '../../model/Asset';
+import {AssetData} from "../../model/Asset";
 import FetchOptionsFunction from "../../model/Functions";
 import {fetchVocabularyTerms} from "../../action/AsyncActions";
 
@@ -51,14 +51,14 @@ export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTer
     public render() {
         const selected = this.resolveSelectedSubTerms();
         return <FormGroup>
-            <Label className='attribute-label'>{this.props.i18n('resource.metadata.tags')}</Label>
-            <IntelligentTreeSelect className='resource-tags-edit'
+            <Label className="attribute-label">{this.props.i18n("resource.metadata.tags")}</Label>
+            <IntelligentTreeSelect className="resource-tags-edit"
                                    onChange={this.onChange}
                                    value={selected}
                                    fetchOptions={this.fetchOptions}
-                                   valueKey='iri'
-                                   labelKey='label'
-                                   childrenKey='plainSubTerms'
+                                   valueKey="iri"
+                                   labelKey="label"
+                                   childrenKey="plainSubTerms"
                                    simpleTreeData={true}
                                    showSettings={false}
                                    fetchLimit={100000}
