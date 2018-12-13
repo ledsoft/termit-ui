@@ -495,9 +495,10 @@ export function updateResourceTerms(res: Resource) {
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
-        return Ajax.put(Constants.API_PREFIX + "/resources/resource/terms",
+        const resourceIri = VocabularyUtils.create(res.iri);
+        return Ajax.put(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/terms",
             content(res.terms!.map(t => t.iri))
-                .params({iri: res.iri}).contentType("application/json"))
+                .params({namespace: resourceIri.namespace}).contentType("application/json"))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
                 return dispatch(publishMessage(new Message({messageId: "resource.updated.message"}, MessageType.SUCCESS)));
