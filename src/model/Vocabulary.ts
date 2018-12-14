@@ -1,5 +1,5 @@
 import User, {CONTEXT as USER_CONTEXT, UserData} from "./User";
-import OntologicalVocabulary from '../util/VocabularyUtils';
+import OntologicalVocabulary from "../util/VocabularyUtils";
 import Asset, {AssetData} from "./Asset";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import Utils from "../util/Utils";
@@ -17,7 +17,7 @@ const ctx = {
 
 export const CONTEXT = Object.assign(ctx, USER_CONTEXT);
 
-const MAPPED_PROPERTIES = ['@context', 'iri', 'label', "created", "author", "document", "types", "glossary", "model"];
+const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "document", "types", "glossary", "model"];
 
 export interface VocabularyData extends AssetData {
     label: string;
@@ -69,6 +69,7 @@ export default class Vocabulary extends Asset implements VocabularyData {
 }
 
 export const EMPTY_VOCABULARY = new Vocabulary({
-    iri: 'http://empty',
-    label: ''
+    iri: "http://empty",
+    label: "",
+    created: Date.now()
 });

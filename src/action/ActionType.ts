@@ -4,6 +4,7 @@ import AsyncActionStatus from "./AsyncActionStatus";
 import Term from "../model/Term";
 import {Action} from "redux";
 import SearchResult from "../model/SearchResult";
+import AppNotification from "../model/AppNotification";
 
 export interface AsyncAction extends Action {
     status: AsyncActionStatus;
@@ -58,6 +59,11 @@ export interface SearchResultAction extends Action {
     searchResults: SearchResult[]
 }
 
+export interface NotificationAction extends Action {
+    notification: AppNotification;
+}
+
+
 export default {
     FETCH_USER: 'FETCH_USER',
     LOGIN: 'LOGIN',
@@ -69,6 +75,9 @@ export default {
     DISMISS_MESSAGE: 'DISMISS_MESSAGE',
     SWITCH_LANGUAGE: 'SWITCH_LANGUAGE',
 
+    PUBLISH_NOTIFICATION: "PUBLISH_NOTIFICATION",
+    CONSUME_NOTIFICATION: "CONSUME_NOTIFICATION",
+
     CREATE_VOCABULARY: 'CREATE_VOCABULARY',
     LOAD_VOCABULARY: 'LOAD_VOCABULARY',
     SELECT_VOCABULARY_TERM: 'SELECT_VOCABULARY_TERM',
@@ -78,6 +87,7 @@ export default {
     CREATE_VOCABULARY_TERM: 'CREATE_VOCABULARY_TERM',
     FETCH_VOCABULARY_TERMS: 'FETCH_VOCABULARY_TERMS',
     LOAD_DEFAULT_TERMS: 'LOAD_DEFAULT_TERMS',
+    FETCH_TERM: 'FETCH_TERM',
     LOAD_TERM: 'LOAD_TERM',
     UPDATE_TERM: 'UPDATE_TERM',
     LOAD_TERM_ASSIGNMENTS: "LOAD_TERM_ASSIGNMENTS",
@@ -100,7 +110,6 @@ export default {
     REMOVE_SEARCH_LISTENER: 'REMOVE_SEARCH_LISTENER',
 
     LOAD_DOCUMENT: 'LOAD_DOCUMENT',
-    SELECT_FILE: 'SELECT_FILE',
     LOAD_FILE_CONTENT: 'LOAD_FILE_CONTENT',
     SAVE_FILE_CONTENT: 'SAVE_FILE_CONTENT',
 

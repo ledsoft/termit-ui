@@ -19,7 +19,7 @@ const Statistics = (props: HasI18n) => {
         {i: 'topright', x: 0, y: 0, w: 4, h: 2, isDraggable:false},
         {i: 'topcenter', x: 4, y: 0, w: 4, h: 2, isDraggable:false},
         {i: 'topleft', x: 8, y: 0, w: 4, h: 2, isDraggable:false},
-        {i: 'centerleft', x: 0, y: 1, w: 6, h: 4, isDraggable:false},
+        {i: 'centerleft', x: 0, y: 1, w: 12, h: 4, isDraggable:false},
     ];
 
     const layouts = {lg, md: lg, sm:lg, xs: sm, xxs: sm};
@@ -30,7 +30,7 @@ const Statistics = (props: HasI18n) => {
             className="layout"
             layouts={layouts}
             cols={cols}
-        rowHeight={100}>
+        rowHeight={80}>
             <div key="topright"><AssetCount
                 title={props.i18n('statistics.vocabulary.count')}
                 typeIri={Vocabulary.VOCABULARY}/>

@@ -1,0 +1,15 @@
+/**
+ Customize Bootstrap default values.
+ */
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+$font-size-base: 0.9rem;
+$line-height-base: 1.25;
+
+$theme-colors: (
+        "primary": $purple,
+        "info": $blue,
+        "secondary": $gray-400
+)

@@ -2,8 +2,6 @@ import * as React from "react";
 import {Annotation} from "../Annotation";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Term from "../../../model/Term";
-import Vocabulary from "../../../model/Vocabulary";
-import Generator from "../../../__tests__/environment/Generator";
 import {ComponentClass, ReactWrapper, shallow} from "enzyme";
 import {mountWithIntlAttached} from "./AnnotationUtil";
 import SimplePopupWithActions from "../SimplePopupWithActions";
@@ -46,29 +44,12 @@ describe('Annotation', () => {
     // @ts-ignore
     const popupComponentClass: ComponentClass<any> = SimplePopupWithActions;
 
-    let selectedTerm: Term | null;
-    let defaultTerms: Term[];
-    let vocabulary: Vocabulary;
-    let selectVocabularyTerm: (selectedTerm: Term | null) => Promise<object>;
     let mockedVocabularyProps: {
-        selectedTerm: Term | null,
-        defaultTerms: Term[],
-        vocabulary: Vocabulary,
-        selectVocabularyTerm: (selectedTerm: Term | null) => Promise<object>;
+        onFetchTerm: (termIri: string) => Promise<Term>;
     };
     beforeEach(() => {
-        selectedTerm = null;
-        defaultTerms = [term];
-        vocabulary = new Vocabulary({
-            iri: Generator.generateUri(),
-            label: 'Test vocabulary'
-        });
-        selectVocabularyTerm = jest.fn();
         mockedVocabularyProps = {
-            selectedTerm,
-            defaultTerms,
-            vocabulary,
-            selectVocabularyTerm
+            onFetchTerm : () => Promise.resolve(term)
         }
     });
 
@@ -93,20 +74,20 @@ describe('Annotation', () => {
                 {...assignedOccProps}
             />);
 
+        wrapper.setState({term, termFetchFinished: true}); // TODO not very good way
         expect(wrapper.find(".assigned-term-occurrence").exists()).toBeTruthy();
     });
 
     it('recognizes invalid occurrence', () => {
-        // noinspection JSMismatchedCollectionQueryUpdate
-        const emptyDefaultTerms: Term[] = [];
+        const fetchTermReject = (termIri: string) => Promise.reject("Term not found.");
         const wrapper = shallow(
             <Annotation
                 {...intlFunctions()}
-                defaultTerms={emptyDefaultTerms}
-                selectedTerm={selectedTerm} vocabulary={vocabulary} selectVocabularyTerm={selectVocabularyTerm}
+                onFetchTerm={fetchTermReject}
                 {...assignedOccProps}
             />);
 
+        wrapper.setState({term: undefined, termFetchFinished: true}); // TODO not very good way
         expect(wrapper.find(".invalid-term-occurrence").exists()).toBeTruthy();
     });
 

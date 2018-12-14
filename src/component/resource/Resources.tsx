@@ -1,6 +1,6 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import withI18n, {HasI18n} from '../hoc/withI18n';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import ResourceList from "./ResourceList";
 import PanelWithActions from "../misc/PanelWithActions";
 import {GoPlus} from "react-icons/go";
@@ -15,7 +15,7 @@ class Resources extends React.Component<HasI18n> {
         actions.push(<Link key='resource.management.add' className="btn btn-info btn-sm"
                            to={Routes.createVocabulary.link()}><GoPlus/> {i18n('resource.management.add')}</Link>);
         return (<PanelWithActions
-                    title={i18n('resource.management.resources')}
+                    title={i18n("resource.management.resources")}
                     component={<ResourceList/>}
                     actions={actions}
             />);

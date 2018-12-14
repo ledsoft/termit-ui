@@ -26,6 +26,7 @@ import VocabularyEdit from "./VocabularyEdit";
 import Utils from "../../util/Utils";
 import "./VocabularySummary.scss";
 import ExportType from "../../util/ExportType";
+import OutgoingLink from "../misc/OutgoingLink";
 
 interface VocabularySummaryProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary;
@@ -87,13 +88,13 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
     };
 
     public render() {
-        const buttons = [<Button key='vocabulary.summary.detail' color='info' size='sm'
+        const buttons = [<Button key='vocabulary.summary.detail' color='primary' size='sm'
                                  title={this.props.i18n('vocabulary.summary.gotodetail.label')}
                                  onClick={this.openTerms}>
             <GoThreeBars/>
         </Button>];
         if (!this.state.edit) {
-            buttons.push(<Button key='vocabulary.summary.edit' size='sm' color='info' title={this.props.i18n('edit')}
+            buttons.push(<Button key='vocabulary.summary.edit' size='sm' color='primary' title={this.props.i18n('edit')}
                                  onClick={this.onEdit}><GoPencil/></Button>);
         }
         buttons.push(this.renderExportDropdown());
@@ -103,7 +104,10 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
             <VocabularyMetadata vocabulary={this.props.vocabulary}/>;
         return <div>
             <PanelWithActions
-                title={this.props.vocabulary.label}
+                title={<OutgoingLink
+                    label={this.props.vocabulary.label}
+                    iri={this.props.vocabulary.iri as string}
+                />}
                 actions={actions}
                 component={component}/>
         </div>;
@@ -113,7 +117,7 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
         const i18n = this.props.i18n;
         return <UncontrolledButtonDropdown key="vocabulary.summary.export"
                                            size="sm" title={i18n("vocabulary.summary.export.title")}>
-            <DropdownToggle caret={true} color="info"><GoCloudDownload/></DropdownToggle>
+            <DropdownToggle caret={true} color="primary"><GoCloudDownload/></DropdownToggle>
             <DropdownMenu className="glossary-export-menu">
                 <DropdownItem className="btn-sm" onClick={this.onExportToCsv}
                               title={i18n("vocabulary.summary.export.csv.title")}>{i18n('vocabulary.summary.export.csv')}</DropdownItem>

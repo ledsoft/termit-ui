@@ -1,18 +1,30 @@
-import * as React from 'react';
+import * as React from "react";
 import AssetLink from "../misc/AssetLink";
 import Term from "../../model/Term";
-import Vocabulary from "../../model/Vocabulary";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import {HasI18n} from "../hoc/withI18n";
+import {injectIntl} from "react-intl";
+import withI18n from "../hoc/withI18n";
+import {Routing} from "../../util/Routing";
+import Routes from "../../util/Routes";
 
-interface TermLinkProps {
-    asset: Term,
-    vocabulary : Vocabulary
+interface TermLinkProps extends HasI18n {
+    term: Term
 }
 
-export default (props : TermLinkProps) => {
-    const vocIri = VocabularyUtils.create(props.vocabulary.iri);
-    const termIri = VocabularyUtils.create(props.asset.iri);
-    return ((vocIri.namespace+"/pojem") === termIri.namespace) ?
-        <AssetLink asset={props.asset} assetContextPath={"/vocabulary/"+vocIri.fragment+"/term"}/> :
-        <div>Invalid term {termIri}</div> ;
+export const TermLink: React.SFC<TermLinkProps> = (props) => {
+    const vocIri = VocabularyUtils.create(props.term.vocabulary!.iri!);
+    const iri = VocabularyUtils.create(props.term.iri);
+    const path = Routing.getTransitionPath(Routes.vocabularyTermDetail,
+        {
+            params: new Map([["name", vocIri.fragment],["termName", iri.fragment]]),
+            query: new Map([["namespace", vocIri.namespace!]])
+        });
+
+    return <AssetLink
+        asset={props.term}
+        path={path}
+        tooltip={props.i18n("search.results.item.term.tooltip")}/>
 }
+
+export default injectIntl(withI18n(TermLink));

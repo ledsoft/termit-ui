@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {VocabularyEdit} from "../VocabularyEdit";
 import Vocabulary from "../../../model/Vocabulary";
 import Generator from "../../../__tests__/environment/Generator";
@@ -6,7 +6,7 @@ import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {shallow} from "enzyme";
 
-describe('VocabularyEdit', () => {
+describe("VocabularyEdit", () => {
 
     let onSave: (vocabulary: Vocabulary) => void;
     let onCancel: () => void;
@@ -17,18 +17,18 @@ describe('VocabularyEdit', () => {
         onCancel = jest.fn();
         vocabulary = new Vocabulary({
             iri: Generator.generateUri(),
-            label: 'Test vocabulary'
+            label: "Test vocabulary"
         });
     });
 
-    it('passes updated vocabulary to onSave', () => {
+    it("passes updated vocabulary to onSave", () => {
         const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
                                                       {...intlFunctions()}/>);
-        const nameInput = wrapper.find('input[name="vocabulary-edit-label"]');
-        const newName = 'Metropolitan plan';
+        const nameInput = wrapper.find("input[name='vocabulary-edit-label']");
+        const newName = "Metropolitan plan";
         (nameInput.getDOMNode() as HTMLInputElement).value = newName;
-        nameInput.simulate('change', nameInput);
-        wrapper.find('.btn-success').simulate('click');
+        nameInput.simulate("change", nameInput);
+        wrapper.find(".btn-success").simulate("click");
         expect(onSave).toHaveBeenCalled();
         const arg = (onSave as jest.Mock).mock.calls[0][0];
         expect(arg).not.toEqual(vocabulary);
@@ -36,10 +36,23 @@ describe('VocabularyEdit', () => {
         expect(arg.label).toEqual(newName);
     });
 
-    it('closes editing view on when clicking on cancel', () => {
+    it("supports updating comment on vocabulary", () => {
         const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
                                                       {...intlFunctions()}/>);
-        wrapper.find('.btn-secondary').simulate('click');
+        const commentInput = wrapper.find("textarea[name='vocabulary-edit-comment']");
+        const newComment = "Updated comment";
+        (commentInput.getDOMNode() as HTMLInputElement).value = newComment;
+        commentInput.simulate("change", commentInput);
+        wrapper.find(".btn-success").simulate("click");
+        expect(onSave).toHaveBeenCalled();
+        const arg = (onSave as jest.Mock).mock.calls[0][0];
+        expect(arg.comment).toEqual(newComment);
+    });
+
+    it("closes editing view on when clicking on cancel", () => {
+        const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
+                                                      {...intlFunctions()}/>);
+        wrapper.find(".btn-secondary").simulate("click");
         expect(onCancel).toHaveBeenCalled();
     });
 

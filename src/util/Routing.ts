@@ -9,14 +9,14 @@ export class Routing {
 
     private static setPathParams(path: string, params: Map<string, string>) {
         for (const pair of Array.from(params.entries())) {
-            path = path.replace(':' + pair[0], pair[1]);
+            path = path.replace(":" + pair[0], pair[1]);
         }
         return path;
     }
 
     private static setQueryParams(path: string, params: Map<string, string>) {
         const paramValuePairs = Array.from(params.entries()).map((pair) => pair[0] + "=" + pair[1]);
-        return paramValuePairs.length > 0 ? path + '?' + paramValuePairs.join('&') : path;
+        return paramValuePairs.length > 0 ? path + "?" + paramValuePairs.join("&") : path;
     }
 
     public static buildUrl(route: Route, options: { params?: Map<string, string>, query?: Map<string, string> } = {}) {
@@ -45,12 +45,21 @@ export class Routing {
     };
 
     /**
+     * Creates the transition path to the specified route
+     * @param route Route object
+     * @param options Transition options, can specify path parameters and query parameters.
+     */
+    public static getTransitionPath = (route: Route, options: { params?: Map<string, string>, query?: Map<string, string> } = {}) => {
+        return Routing.buildUrl(route, options);
+    };
+
+    /**
      * Transitions to the specified route
      * @param route Route object
      * @param options Transition options, can specify path parameters and query parameters.
      */
     public transitionTo = (route: Route, options: { params?: Map<string, string>, query?: Map<string, string> } = {}) => {
-        this.mHistory.push(Routing.buildUrl(route, options));
+        this.mHistory.push(Routing.getTransitionPath(route, options));
     };
 
     public transitionToHome = () => {

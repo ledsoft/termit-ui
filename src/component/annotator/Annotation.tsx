@@ -1,68 +1,86 @@
 import * as React from 'react';
 import {connect} from "react-redux";
 import Term from "../../model/Term";
-import {selectVocabularyTerm} from "../../action/SyncActions";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button} from "reactstrap";
 import SimplePopupWithActions from "./SimplePopupWithActions";
 import "./Annotation.scss";
 import TermItState from "../../model/TermItState";
-import Vocabulary from "../../model/Vocabulary";
 import OutgoingLink from "../misc/OutgoingLink";
 import {ThunkDispatch} from "../../util/Types";
 import AnnotationTerms from "./AnnotationTerms";
-
-export interface AnnotationSpanProps {
-    about?: string
-    property?: string
-    resource?: string
-    typeof?: string
-    score?: string
-}
+import {AnnotationSpanProps} from "./Annotator";
 
 interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     about: string
     property: string
-    resource?: string
+    resource?: string // TODO rename to initialResource (we don't use it directly to render) !!!
     typeof: string
     score?: string
     text: string
-    selectedTerm: Term | null
-    defaultTerms: Term[];
-    vocabulary: Vocabulary
     sticky?: boolean;
     onRemove?: (annId: string) => void;
-    selectVocabularyTerm: (selectedTerm: Term | null) => Promise<object>;
+    onUpdate?: (annotation: AnnotationSpanProps) => void;
+    onFetchTerm: (termIri: string) => Promise<Term>;
 }
 
 interface AnnotationState {
     detailOpened: boolean
     detailEditable: boolean
     detailPinned: boolean
+    term: Term | null | undefined;
+    termFetchFinished: boolean
 }
 
 const TermOccurrenceState = {
     INVALID: 'invalid-term-occurrence',
     ASSIGNED: 'assigned-term-occurrence',
     SUGGESTED: 'suggested-term-occurrence',
+    LOADING: 'loading-term-occurrence',
 };
+
+const TermOccurrenceCreatorState = {
+    PROPOSED: 'proposed-occurrence',
+    SELECTED: 'selected-occurrence'
+}
 
 export class Annotation extends React.Component<AnnotationProps, AnnotationState> {
 
-    constructor(props: any) {
+    constructor(props: any) { // TODO use props: AnnotationProps !!! (does not work)
         super(props);
-
+        const resourceAssigned = (props.resource && (props.resource !== ""));
         this.state = {
             detailOpened: false,
             detailEditable: false,
-            detailPinned: false
+            detailPinned: false,
+            term: resourceAssigned ? undefined : null,
+            termFetchFinished: false
         };
     }
 
     public componentDidMount() {
         if (this.props.resource) {
-            this.findTermByIri(this.props.resource);
+            this.props
+                .onFetchTerm(this.props.resource).then(
+                t => this.setState(
+                    {
+                        term: t,
+                        termFetchFinished: true
+                    })
+            ).catch(
+                (reason) => this.setState(
+                    {
+                        term: undefined,
+                        termFetchFinished: true
+                    })
+            );
+        } else {
+            this.setState(
+                {
+                    term: null,
+                    termFetchFinished: true
+                })
         }
     }
 
@@ -88,14 +106,31 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         }
     };
 
-    private toggleEditDetail = () => {
-        if (!this.state.detailEditable) {
-            if (this.props.resource) {
-                this.props.selectVocabularyTerm(this.findTermByIri(this.props.resource));
-            } else {
-                this.props.selectVocabularyTerm(null);
+    private onSaveDetail = () => {
+        this.setState({
+            detailEditable: false,
+            detailPinned: false,
+            detailOpened: false
+        });
+        // TODO -- start only if state changes
+        if (this.props.onUpdate) {
+            const newSpan: AnnotationSpanProps = {
+                about: this.props.about,
+                property: this.props.property,
+                typeof: this.props.typeof
             }
+            const res = this.getCurrentResource();
+            if (res) {
+                newSpan.resource = res;
+            }
+            this.props.onUpdate(newSpan);
         }
+
+    };
+
+
+
+    private toggleEditDetail = () => {
         this.setState({
             detailEditable: !this.state.detailEditable
         });
@@ -111,7 +146,8 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     private onCloseDetail = () => {
         this.setState({
             detailPinned: false,
-            detailOpened: !this.state.detailOpened
+            detailOpened: !this.state.detailOpened,
+            detailEditable: false
         });
     };
 
@@ -139,24 +175,23 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 
     private getReadOnlyComponent = () => {
         const i18n = this.props.i18n;
-        const term = (this.props.resource) ? this.findTermByIri(this.props.resource) : null;
         const score = this.props.score;
         const scoreRow = (score) ? <tr>
             <td>{i18n('annotation.term.occurrence.scoreLabel')}</td>
             <td>{score}</td>
         </tr> : null;
-        const labelRow = (term) ? <tr>
-            <td>{i18n('annotation.term.assigned-occurrence.termLabel')}</td>
+        const labelRow = (this.state.term) ? <tr>
+            <td className={"label"}>{i18n('annotation.term.assigned-occurrence.termLabel')}</td>
             <td><OutgoingLink
-                label={term!.label}
-                iri={term!.iri}/></td>
+                label={this.state.term!.label}
+                iri={this.state.term!.iri}/></td>
         </tr> : null;
         let outputComponent = <div/>;
         switch (this.getTermState()) {
             case TermOccurrenceState.ASSIGNED:
-                const termCommentRow = (term!.comment) ? <tr>
+                const termCommentRow = (this.state.term!.comment) ? <tr>
                     <td>{i18n('annotation.form.assigned-occurrence.termInfoLabel')}</td>
-                    <td>{term!.comment}</td>
+                    <td>{this.state.term!.comment}</td>
                 </tr> : null;
                 outputComponent = <table>
                     <tbody>
@@ -172,7 +207,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                     </span>
                 break;
             case TermOccurrenceState.INVALID:
-                const errorLine = i18n('annotation.form.invalid-occurrence.message').replace('%', this.props.resource!)
+                const errorLine = i18n('annotation.form.invalid-occurrence.message').replace('%', this.getCurrentResource()!)
 
                 outputComponent = <div>
                     <span className={'an-error'}>
@@ -190,17 +225,19 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         return outputComponent;
     };
 
+    private onTermChange = (term: Term | null) => {
+
+        this.setState(
+            { term }
+        )
+    };
+
     private getEditableComponent = () => <div>
-        <AnnotationTerms/>
+        <AnnotationTerms selectedTerm={this.state.term ? this.state.term : null} onChange={this.onTermChange}/>
     </div>;
 
     private getComponent = () => {
         if (this.state.detailEditable) {
-            const res = this.props.resource;
-            if (res) {
-                const t = this.findTermByIri(res!);
-                this.props.selectVocabularyTerm(t);
-            }
             return this.getEditableComponent();
         } else {
             return this.getReadOnlyComponent();
@@ -208,57 +245,82 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     }
 
     private getTermState = () => {
-        if (!this.props.resource) {
+        if (!this.state.termFetchFinished) {
+            return TermOccurrenceState.LOADING;
+        }
+        if (this.state.term === null) {
             return TermOccurrenceState.SUGGESTED;
         }
-        if (this.findTermByIri(this.props.resource)) {
+        if (this.state.term) {
             return TermOccurrenceState.ASSIGNED
         }
         return TermOccurrenceState.INVALID;
     }
 
+    private getTermCreatorState = () => {
+        if (this.props.score) {
+            return TermOccurrenceCreatorState.PROPOSED;
+        }
+        return TermOccurrenceCreatorState.SELECTED;
+    }
+
+    private getCurrentResource = () => {
+        if (this.state.term) {
+            return this.state.term.iri;
+        }
+        if ((this.state.term === undefined) && (this.props.resource !== "")) {
+            return this.props.resource;
+        }
+        return;
+    }
+
 
     public render() {
+        const i18n = this.props.i18n;
         const id = 'id' + this.props.about.substring(2);
         const termClassName = this.getTermState();
+        const termCreatorClassName = this.getTermCreatorState();
         const actions = [];
         if (this.state.detailPinned || this.props.sticky) {
+            if (this.props.onUpdate && (this.state.detailEditable || termCreatorClassName === TermOccurrenceCreatorState.PROPOSED)) {
+                actions.push(<Button key='annotation.save'
+                                     color='secondary'
+                                     title={i18n("save")}
+                                     size='sm'
+                                     onClick={this.onSaveDetail}>{"✓"}</Button>);
+            }
             if (!this.state.detailEditable) {
                 actions.push(<Button key='annotation.edit'
                                      color='secondary'
-                                     title={"edit"}
+                                     title={i18n("edit")}
                                      size='sm'
                                      onClick={this.toggleEditDetail}>{"✎"}</Button>);
-            }
-            if (this.state.detailEditable) {
-                actions.push(<Button key='annotation.save'
-                                     color='secondary'
-                                     title={"save"}
-                                     size='sm'
-                                     onClick={this.toggleEditDetail}>{"✓"}</Button>);
             }
             if (this.props.onRemove) {
                 actions.push(<Button key='annotation.remove'
                                      color='secondary'
-                                     title={"remove"}
+                                     title={i18n("annotation.remove")}
                                      size='sm'
                                      onClick={this.onRemoveAnnotation}>{"🚮"}</Button>);
             }
             actions.push(<Button key='annotation.close'
                                  color='secondary'
-                                 title={"close"}
+                                 title={i18n("annotation.close")}
                                  size='sm'
                                  onClick={this.onCloseDetail}>{"x"}</Button>);
         }
+        const resourceProps = this.getCurrentResource() ? {resource: this.getCurrentResource()} : {};
+        const scoreProps = this.props.score ? {score: this.props.score.toString()} : {};
         return <span id={id}
                      onMouseEnter={this.onMouseEnter}
                      onMouseLeave={this.onMouseLeave}
                      onClick={this.onClick}
                      about={this.props.about}
                      property={this.props.property}
-                     resource={this.props.resource}
+                     {...resourceProps}
                      typeof={this.props.typeof}
-                     className={termClassName}
+                     {...scoreProps}
+                     className={termClassName + " " + termCreatorClassName}
         >
         {this.props.text}
             <SimplePopupWithActions isOpen={this.state.detailOpened} isEditable={this.state.detailEditable}
@@ -267,28 +329,11 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 
         </span>;
     }
-
-    private findTermByIri(iri: string): Term | null {
-        return this.undefinedToNull(this.props.defaultTerms.filter((t, i) => (t.iri === iri)).pop());
-    }
-
-    private undefinedToNull(value: any) {
-        if (value === undefined) {
-            return null;
-        }
-        return value;
-    }
 }
 
 
 export default connect((state: TermItState) => {
-    return {
-        vocabulary: state.vocabulary,
-        selectedTerm: state.selectedTerm,
-        defaultTerms: state.defaultTerms
-    };
+    return {};
 }, (dispatch: ThunkDispatch) => {
-    return {
-        selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
-    };
+    return {};
 })(injectIntl(withI18n(Annotation)));

@@ -31,6 +31,7 @@ export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearch
     private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             this.openSearchView();
+            this.setState({results: []});
         }
     };
 

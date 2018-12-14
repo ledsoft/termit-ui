@@ -1,11 +1,11 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import withI18n, {HasI18n} from '../hoc/withI18n';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import ResourceLink from "./ResourceLink";
 import {Table} from "reactstrap";
-import {ThunkDispatch} from '../../util/Types';
+import {ThunkDispatch} from "../../util/Types";
 import Resource from "../../model/Resource";
 import {loadResources} from "../../action/AsyncActions";
 

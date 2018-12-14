@@ -16,6 +16,11 @@
   border-left: 1px solid rgba(0,0,0, 0.15) !important;
 }
 
+.search-result-assetlink-item {
+  @extend .search-result-item;
+  padding-right: 0;
+}
+
 .search-result-item:first-child {
   margin-left: 0;
 }

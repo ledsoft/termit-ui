@@ -9,6 +9,7 @@ import Term from "./Term";
 import Document, {EMPTY_DOCUMENT} from "./Document";
 import Resource, {EMPTY_RESOURCE} from "./Resource";
 import RdfsResource from "./RdfsResource";
+import AppNotification from "./AppNotification";
 import SearchResult from "./SearchResult";
 import SearchQuery from "./SearchQuery";
 
@@ -24,7 +25,6 @@ export default class TermItState {
     public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
     public document: Document;
-    public fileIri: string | null;
     public fileContent: string | null;
     public error: ErrorInfo;
     public messages: Message[];
@@ -39,6 +39,8 @@ export default class TermItState {
     public searchResults: SearchResult[] | null;
     public types: { [key: string]: Term };
     public properties: RdfsResource[];
+    // Represents a queue of inter-component notifications
+    public notifications: AppNotification[];
 
     // FIXME: WTF: This constructor is never called?
     constructor() {
@@ -50,7 +52,6 @@ export default class TermItState {
         this.defaultTerms = [];
         this.vocabularies = {};
         this.document = EMPTY_DOCUMENT;
-        this.fileIri = null;
         this.fileContent = null;
         this.error = EMPTY_ERROR;
         this.messages = [];
@@ -65,5 +66,6 @@ export default class TermItState {
         this.searchResults = null;
         this.types = {};
         this.properties = [];
+        this.notifications = [];
     }
 }

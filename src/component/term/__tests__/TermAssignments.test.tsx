@@ -44,7 +44,8 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: Generator.generateUri(),
-                    label: "Test resource"
+                    label: "Test resource",
+                    terms: []
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT]
@@ -54,7 +55,7 @@ describe("TermAssignments", () => {
                                                        loadTermAssignments={loadTermAssignments} {...intlFunctions()}/>);
         return Promise.resolve().then(() => {
             wrapper.update();
-            expect(wrapper.find(".additional-metadata").exists()).toBeTruthy();
+            expect(wrapper.find(".additional-metadata-container").exists()).toBeTruthy();
         });
     });
 
@@ -89,7 +90,8 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: Generator.generateUri(),
-                    label: "Test resource"
+                    label: "Test resource",
+                    terms: []
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT]
@@ -114,7 +116,8 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: fileIri,
-                    label: fileName
+                    label: fileName,
+                    terms: []
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT]
@@ -124,7 +127,8 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: fileIri,
-                    label: fileName
+                    label: fileName,
+                    terms: []
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT]
@@ -148,7 +152,8 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: fileIri,
-                    label: fileName
+                    label: fileName,
+                    terms: []
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT]
@@ -158,7 +163,8 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: fileIri,
-                    label: fileName
+                    label: fileName,
+                    terms: []
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT]

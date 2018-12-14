@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import {FormattedDate, FormattedTime, injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Col, Row} from 'reactstrap';
 import {Route, RouteComponentProps, Switch} from "react-router";
@@ -16,6 +16,8 @@ import {ThunkDispatch} from '../../util/Types';
 import CreateTerm from "../term/CreateTerm";
 import TermDetail from "../term/TermDetail";
 import NoTermSelected from "../term/NoTermSelected";
+import BreadcrumbRoute from "../breadcrumb/BreadcrumbRoute";
+import DynamicBreadcrumbRoute from "../breadcrumb/DynamicBreadcrumbRoute";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
@@ -37,7 +39,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
     public render() {
         const label = this.props.vocabulary.label;
         const author = this.props.vocabulary.author && this.props.vocabulary.author.fullName;
-        const created = new Date(this.props.vocabulary.created as number).toLocaleString();
+        const dateCreated = new Date(this.props.vocabulary.created as number);
 
         return <div>
             <h2 className='page-header'>
@@ -46,15 +48,23 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
                     iri={this.props.vocabulary.iri as string}
                 />
             </h2>
-            <h6>{this.props.formatMessage('vocabulary.detail.subtitle', {author, created})}</h6>
+            <h6>
+                {this.props.formatMessage('vocabulary.detail.subtitle', {author})}
+                <FormattedDate value={dateCreated}/>
+                {", "}
+                <FormattedTime value={dateCreated}/>
+            </h6>
             <Row className='detail-row'>
                 <Col md={4}>
                     <Terms/>
                 </Col>
                 <Col md={8}>
                     <Switch>
-                        <Route path={Routes.vocabularyTermDetail.path} component={TermDetail}/>
-                        <Route path={Routes.createVocabularyTerm.path} component={CreateTerm}/>
+                        <BreadcrumbRoute title={this.props.i18n("glossary.createTerm.breadcrumb")}
+                                         path={Routes.createVocabularyTerm.path} component={CreateTerm}
+                                         includeSearch={true}/>
+                        <DynamicBreadcrumbRoute asset="selectedTerm" path={Routes.vocabularyTermDetail.path}
+                                                component={TermDetail} includeSearch={true}/>
                         <Route path={Routes.vocabularyDetail.path} component={NoTermSelected} exact={true}/>
                     </Switch>
                 </Col>

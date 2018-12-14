@@ -10,6 +10,7 @@ class RequestConfigBuilder {
     private mContent?: any;
     private mContentType: string;
     private mParams?: {};
+    private mFormData?: {};
     private mAccept: string;
     private mResponseType?: 'arraybuffer'| 'blob'| 'document'| 'json'| 'text' | 'stream';
 
@@ -31,6 +32,11 @@ class RequestConfigBuilder {
 
     public params(value: {}): RequestConfigBuilder {
         this.mParams = value;
+        return this;
+    }
+
+    public formData(value: {}): RequestConfigBuilder {
+        this.mFormData = value;
         return this;
     }
 
@@ -67,6 +73,10 @@ class RequestConfigBuilder {
         return this.mAccept;
     }
 
+    public getFormData() {
+        return this.mFormData;
+    }
+
     /**
      * This should be used sparsely.
      *
@@ -79,6 +89,10 @@ class RequestConfigBuilder {
 
 export function content(value: any): RequestConfigBuilder {
     return new RequestConfigBuilder().content(value);
+}
+
+export function contentType(value: string): RequestConfigBuilder {
+    return new RequestConfigBuilder().contentType(value);
 }
 
 export function params(value: {}): RequestConfigBuilder {
@@ -174,8 +188,12 @@ export class Ajax {
         const paramData: object = config.getParams() !== undefined ? config.getParams() : {};
         Object.keys(paramData).forEach(n => par.append(n, paramData[n]));
 
+        const formData: object = config.getFormData() !== undefined ? config.getFormData()!: {};
+
         if (config.getContentType() === Constants.X_WWW_FORM_URLENCODED) {
             return this.axiosInstance.post(path, par, conf);
+        } else if (config.getContentType() === Constants.MULTIPART_FORM_DATA) {
+            return this.axiosInstance.post(path, formData, conf);
         } else {
             const query: string = config.getParams() ? "?" + par.toString() : "";
             return this.axiosInstance.post(path + query, config.getContent(), conf);
@@ -273,6 +291,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         }
         return [404, undefined, header];
     });
+    // Mock term creation
+    mock.onPost(/\/rest\/vocabularies\/.+\/terms/).reply(201, null, Object.assign({}, header, {
+        'location': 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/metropolitan-plan/terms/test-term'
+    }));
 
     // Mock term update
     mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);

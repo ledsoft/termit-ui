@@ -63,7 +63,7 @@ SELECT * WHERE {
 
 #    OPTIONAL {
         ?id a-popis-dat:je-pojmem-ze-slovniku ?slovnik__id .
-        BIND(iri(concat(replace(str(?slovnik__id),"http://data.iprpraha.cz/zdroj/slovnik/","http://localhost:3001/#/vocabulary/"),"/detail")) AS ?slovnik__link)
+        BIND(iri(concat(replace(str(?slovnik__id),"http://onto.fel.cvut.cz/ontologies/slovnik/","http://kbss.felk.cvut.cz/termit-dev/#/vocabularies/"),"?namespace=http://onto.fel.cvut.cz/ontologies/slovnik/")) AS ?slovnik__link)
         OPTIONAL {
             ?slovnik__id rdfs:label ?slovnik__nazev
             FILTER(lang(?slovnik__nazev)="" || lang(?slovnik__nazev) = ?lang)

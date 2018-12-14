@@ -6,6 +6,7 @@ import Namespaces from "../../util/Namespaces";
 
 interface AssetLabelProps {
     iri: string;
+    shrinkFullIri?: boolean;
     getLabel: (iri: string) => Promise<string>;
 }
 
@@ -22,6 +23,10 @@ interface AssetLabelState {
  * suitable container (span, div, etc.).
  */
 export class AssetLabel extends React.Component<AssetLabelProps, AssetLabelState> {
+    public static defaultProps: Partial<AssetLabelProps> = {
+        shrinkFullIri: false
+    };
+
     constructor(props: AssetLabelProps) {
         super(props);
         this.state = {
@@ -34,7 +39,16 @@ export class AssetLabel extends React.Component<AssetLabelProps, AssetLabelState
     }
 
     public render() {
-        return this.state.label ? this.state.label : Namespaces.getPrefixedOrDefault(this.props.iri);
+        return this.state.label ? this.state.label : this.shrinkFullIri(Namespaces.getPrefixedOrDefault(this.props.iri));
+    }
+
+    private shrinkFullIri(iri: string): string {
+        if (!this.props.shrinkFullIri || iri.indexOf("://") === -1) {
+            return iri; // It is prefixed
+        }
+        const lastSlashIndex = iri.lastIndexOf("/");
+        const lastHashIndex = iri.lastIndexOf(("#"));
+        return "..." + iri.substring(lastHashIndex > lastSlashIndex ? lastHashIndex: lastSlashIndex);
     }
 }
 

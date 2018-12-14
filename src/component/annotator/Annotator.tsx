@@ -5,11 +5,13 @@ import IntlData from "../../model/IntlData";
 import {fromRange, toRange} from "xpath-range";
 import HtmlParserUtils from "./HtmlParserUtils";
 import AnnotationDomHelper from "./AnnotationDomHelper";
+import Term from "../../model/Term";
 
 interface AnnotatorProps {
     html: string
     intl: IntlData
     onUpdate(newHtml :string): void
+    onFetchTerm(termIri: string): Promise<Term>
 }
 
 interface AnnotatorState {
@@ -17,9 +19,17 @@ interface AnnotatorState {
     stickyAnnotationId : string
 }
 
+export interface AnnotationSpanProps { // TODO remove
+    about?: string
+    property?: string
+    resource?: string
+    typeof?: string
+    score?: string
+}
+
 export const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
 export const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
-const ANNOTATION_MINIMUM_SCORE_TRASHOLD = 0;
+const ANNOTATION_MINIMUM_SCORE_THRESHOLD = 0.65;
 
 interface HtmlSplit {
     prefix: string,
@@ -84,6 +94,22 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
             AnnotationDomHelper.removeAnnotation(ann);
             const newInternalHtml = HtmlParserUtils.dom2html(dom);
             this.setState(
+                { internalHtml: newInternalHtml,
+                        stickyAnnotationId: ""
+                }
+            )
+            this.props.onUpdate(this.reconstructHtml(newInternalHtml));
+        }
+    };
+
+    private onUpdate = (annotationSpan : AnnotationSpanProps) => {
+        const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
+        const ann = AnnotationDomHelper.findAnnotation(dom, annotationSpan.about!);
+        if (ann) {
+            ann.attribs.resource = annotationSpan.resource;
+            delete ann.attribs.score;
+            const newInternalHtml = HtmlParserUtils.dom2html(dom);
+            this.setState(
                 { internalHtml: newInternalHtml }
             )
             this.props.onUpdate(this.reconstructHtml(newInternalHtml));
@@ -105,12 +131,12 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                     // padding: 0px 4px;'})
 
                     // filter annotations by score
-                    if (! AnnotationDomHelper.isAnnotationWithMinimumScore(node, ANNOTATION_MINIMUM_SCORE_TRASHOLD)){
+                    if (! AnnotationDomHelper.isAnnotationWithMinimumScore(node, ANNOTATION_MINIMUM_SCORE_THRESHOLD)){
                          // return AnnotationDomHelper.createTextualNode(node);
                          return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
                     }
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
-                    return <Annotation onRemove={this.onRemove} sticky={sticky} text={node.children[0].data} {...node.attribs} />
+                    return <Annotation onRemove={this.onRemove} onUpdate={this.onUpdate} onFetchTerm={this.props.onFetchTerm} sticky={sticky} text={node.children[0].data} {...node.attribs} />
                     // return node.data.toUpperCase();
                 }
             }, {

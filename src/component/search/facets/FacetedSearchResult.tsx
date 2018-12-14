@@ -4,6 +4,8 @@ import {default as withI18n, HasI18n} from "../../hoc/withI18n";
 import TermItState from "../../../model/TermItState";
 import {connect} from "react-redux";
 import {Row, Table} from "reactstrap";
+import VocabularyLink from "../../vocabulary/VocabularyLink";
+import Vocabulary from "../../../model/Vocabulary";
 
 interface Props extends HasI18n {
     data: object
@@ -61,8 +63,8 @@ export class FacetedSearchResult extends React.Component<Props> {
                         {/*</ul>*/}
                         {/*</p>*/}
                     </td>
-                    <td><a href={pojem.slovnik.link}>{this.getLabel(pojem.slovnik)}</a>
-                        <a href={pojem.slovnik.id}>↱</a></td>
+                    <td><VocabularyLink
+                        vocabulary={new Vocabulary({iri: pojem.slovnik.id, label:this.getLabel(pojem.slovnik)})}/></td>
                 </tr>);
 
         return (

@@ -13,16 +13,24 @@ import Routing from '../../util/Routing';
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import AssetLabel from "../misc/AssetLabel";
 import TermAssignments from "./TermAssignments";
+import Tabs from "../misc/Tabs";
 
 interface TermMetadataProps extends HasI18n {
     vocabulary: Vocabulary;
     term: Term;
 }
 
-export class TermMetadata extends React.Component<TermMetadataProps> {
+interface TermMetadataState {
+    activeTab: string;
+}
+
+export class TermMetadata extends React.Component<TermMetadataProps, TermMetadataState> {
 
     constructor(props: TermMetadataProps) {
         super(props);
+        this.state = {
+            activeTab: 'properties.edit.title'
+        };
     }
 
     public openSubTerm = (term: Term) => {
@@ -31,32 +39,20 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
         });
     };
 
+    private onTabSelect = (tabId: string) => {
+        this.setState({activeTab: tabId});
+    };
+
     public render() {
         const i18n = this.props.i18n;
         const term = this.props.term;
         return <div className='metadata-panel'>
             <Row>
                 <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.identifier')}</Label>
+                    <Label className='attribute-label'>{i18n('term.metadata.types')}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    <OutgoingLink iri={term.iri} label={term.iri}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.label')}</Label>
-                </Col>
-                <Col xl={10} md={8}>
-                    <Label>{term.label}</Label>
-                </Col>
-            </Row>
-            <Row>
-                <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.comment')}</Label>
-                </Col>
-                <Col xl={10} md={8}>
-                    <Label>{term.comment}</Label>
+                    {this.renderItems(term.types)}
                 </Col>
             </Row>
             <Row>
@@ -69,10 +65,10 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
             </Row>
             <Row>
                 <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.types')}</Label>
+                    <Label className='attribute-label'>{i18n('term.metadata.comment')}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    {this.renderItems(term.types)}
+                    <Label>{term.comment}</Label>
                 </Col>
             </Row>
             <Row>
@@ -85,12 +81,10 @@ export class TermMetadata extends React.Component<TermMetadataProps> {
             </Row>
             <Row>
                 <Col xs={12}>
-                    <UnmappedProperties properties={term.unmappedProperties}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={12}>
-                    <TermAssignments term={term}/>
+                    <Tabs activeTabLabelKey={this.state.activeTab} changeTab={this.onTabSelect} tabs={{
+                        'properties.edit.title': <UnmappedProperties properties={term.unmappedProperties} showInfoOnEmpty={true}/>,
+                        'term.metadata.assignments.title': <TermAssignments term={term}/>
+                    }}/>
                 </Col>
             </Row>
         </div>;

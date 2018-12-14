@@ -6,8 +6,7 @@ import ActionType, {
     ExecuteQueryAction,
     FacetedSearchAction,
     FailureAction,
-    FileSelectingAction,
-    MessageAction,
+    MessageAction, NotificationAction,
     SearchAction,
     SearchResultAction,
     SelectingTermsAction,
@@ -26,6 +25,7 @@ import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import Term from "../model/Term";
 import Document, {EMPTY_DOCUMENT} from "../model/Document";
 import RdfsResource from "../model/RdfsResource";
+import AppNotification from "../model/AppNotification";
 import SearchResult from "../model/SearchResult";
 import SearchQuery from "../model/SearchQuery";
 
@@ -237,15 +237,6 @@ function fileContent(state: string | null = null, action: AsyncActionSuccess<str
     }
 }
 
-function fileIri(state: string | null = null, action: FileSelectingAction): string | null {
-    switch (action.type) {
-        case ActionType.SELECT_FILE:
-            return action.fileIri;
-        default:
-            return state;
-    }
-}
-
 function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<Document>): Document {
     switch (action.type) {
         case ActionType.LOAD_DOCUMENT:
@@ -329,6 +320,23 @@ function properties(state: RdfsResource[] = [], action: AsyncActionSuccess<RdfsR
     }
 }
 
+function notifications(state: AppNotification[] = [], action: NotificationAction) {
+    switch (action.type) {
+        case ActionType.PUBLISH_NOTIFICATION:
+            return [...state, action.notification];
+        case ActionType.CONSUME_NOTIFICATION:
+            const index = state.indexOf(action.notification);
+            if (index >= 0) {
+                const newState = state.slice();
+                newState.splice(index, 1);
+                return newState;
+            }
+            return state;
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers<TermItState>({
     user,
     loading,
@@ -344,7 +352,6 @@ const rootReducer = combineReducers<TermItState>({
     queryResults,
     createdTermsCounter,
     document,
-    fileIri,
     fileContent,
     facetedSearchResult,
     searchQuery,
@@ -352,7 +359,8 @@ const rootReducer = combineReducers<TermItState>({
     searchListenerCount,
     searchInProgress,
     types,
-    properties
+    properties,
+    notifications
 });
 
 export default rootReducer;

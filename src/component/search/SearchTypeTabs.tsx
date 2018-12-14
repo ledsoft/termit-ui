@@ -53,7 +53,7 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
         if (activeTab !== null) {
             return <Nav tabs={true}>
                 {tabs.map((tab) => (
-                    <NavItem>
+                    <NavItem key={tab.route.name}>
                         <NavLink active={tab === activeTab} href={'#' + tab.route.link()}>{tab.label}</NavLink>
                     </NavItem>)
                 )}

@@ -3,10 +3,12 @@ import {injectIntl} from 'react-intl';
 import {Col} from 'reactstrap';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabularies from "./Vocabularies";
-import {Route, Switch} from "react-router";
+import {Switch} from "react-router";
 import Routes from '../../util/Routes';
 import CreateVocabulary from "./CreateVocabulary";
 import VocabularySummary from "./VocabularySummary";
+import BreadcrumbRoute from "../breadcrumb/BreadcrumbRoute";
+import DynamicBreadcrumbRoute from "../breadcrumb/DynamicBreadcrumbRoute";
 
 class VocabularyManagement extends React.Component<HasI18n> {
     constructor(props: HasI18n) {
@@ -23,8 +25,10 @@ class VocabularyManagement extends React.Component<HasI18n> {
                 </Col>
                 <Col md={8}>
                     <Switch>
-                        <Route path={Routes.createVocabulary.path} component={CreateVocabulary}/>
-                        <Route path={Routes.vocabularySummary.path} component={VocabularySummary} exact={true}/>
+                        <BreadcrumbRoute title={i18n("vocabulary.create.title")} path={Routes.createVocabulary.path}
+                                         component={CreateVocabulary}/>
+                        <DynamicBreadcrumbRoute asset="vocabulary" path={Routes.vocabularySummary.path}
+                                                includeSearch={true} component={VocabularySummary} exact={true}/>
                     </Switch>
                 </Col>
             </div>

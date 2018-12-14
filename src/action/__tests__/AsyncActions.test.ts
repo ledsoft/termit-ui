@@ -265,6 +265,27 @@ describe('Async actions', () => {
                 expect(data['@context']).toEqual(TERM_CONTEXT);
             });
         });
+
+        it("publishes notification on successful creation", () => {
+            const term = new Term(
+                {
+                    label: 'Test term 1',
+                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
+                },
+            );
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({
+                headers: {
+                    'location': 'http://test'
+                }
+            }));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabularyTerm(term, 'test-vocabulary'))).then(() => {
+                const actions = store.getActions();
+                const action = actions[actions.length - 1];
+                expect(action.type).toEqual(ActionType.PUBLISH_NOTIFICATION);
+                expect(action.notification.source.type).toEqual(ActionType.CREATE_VOCABULARY_TERM);
+                expect(action.notification.source.status).toEqual(AsyncActionStatus.SUCCESS);
+            });
+        });
     });
 
     describe('fetch terms', () => {
@@ -612,19 +633,19 @@ describe('Async actions', () => {
         });
     });
 
-    describe('update resource', () => {
-        it('sends put request to correct endpoint using resource IRI and term IRIs', () => {
-            const namespace = 'http://onto.fel.cvut.cz/ontologies/termit/vocabularies/';
-            const normalizedResourceName = 'test-resource';
-            const normalizedTermName = 'test-term';
+    describe("update resource terms", () => {
+        it("sends put request to correct endpoint using resource IRI and term IRIs", () => {
+            const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
+            const normalizedResourceName = "test-resource";
+            const normalizedTermName = "test-term";
             const term: Term = new Term({
-                iri: namespace + 'pojem/' + normalizedTermName,
-                label: 'Test',
-                comment: 'Test term'
+                iri: namespace + "pojem/" + normalizedTermName,
+                label: "Test",
+                comment: "Test term"
             });
             const resource = new Resource({
                 iri: namespace + normalizedResourceName,
-                label: 'Test resource',
+                label: "Test resource",
                 terms: [term]
             });
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
@@ -632,9 +653,10 @@ describe('Async actions', () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(updateResourceTerms(resource))).then(() => {
                 expect(Ajax.put).toHaveBeenCalled();
                 const requestUri = mock.mock.calls[0][0];
-                expect(requestUri).toEqual(Constants.API_PREFIX + '/resources/resource/terms');
+                expect(requestUri).toEqual(Constants.API_PREFIX + "/resources/" + normalizedResourceName + "/terms");
                 const params = mock.mock.calls[0][1].getParams();
-                expect(params.iri).toBeDefined();
+                expect(params.namespace).toBeDefined();
+                expect(params.namespace).toEqual(namespace);
                 const content = mock.mock.calls[0][1].getContent();
                 expect(content).toBeDefined();
             });

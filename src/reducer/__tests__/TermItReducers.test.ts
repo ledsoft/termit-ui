@@ -8,8 +8,10 @@ import {
     asyncActionSuccessWithPayload,
     clearError,
     clearProperties,
+    consumeNotification,
     dismissMessage,
     publishMessage,
+    publishNotification,
     selectVocabularyTerm,
     switchLanguage,
     userLogout
@@ -22,6 +24,7 @@ import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import Term, {TermData} from "../../model/Term";
 import RdfsResource from "../../model/RdfsResource";
+import AppNotification from "../../model/AppNotification";
 
 function stateToPlainObject(state: TermItState) {
     return {
@@ -37,13 +40,13 @@ function stateToPlainObject(state: TermItState) {
         defaultTerms: state.defaultTerms,
         createdTermsCounter: state.createdTermsCounter,
         document: state.document,
-        fileIri: state.fileIri,
         fileContent: state.fileContent,
         facetedSearchResult: state.facetedSearchResult,
         types: state.types,
         resource: state.resource,
         resources: state.resources,
-        properties: state.properties
+        properties: state.properties,
+        notifications: state.notifications
     };
 }
 
@@ -336,4 +339,43 @@ describe('Reducers', () => {
             expect(reducers(stateToPlainObject(initialState), clearProperties())).toEqual(Object.assign({}, initialState, {properties: []}));
         });
     });
+
+    describe("notifications", () => {
+        it("appends notification into queue on publish notification action", () => {
+            const notification: AppNotification = {
+                source: {
+                    type: ActionType.CREATE_VOCABULARY_TERM,
+                    status: AsyncActionStatus.SUCCESS
+                }
+            };
+            expect(reducers(stateToPlainObject(initialState), publishNotification(notification)))
+                .toEqual(Object.assign({}, initialState, {notifications: [notification]}));
+        });
+
+        it("removes notification from queue on consume notification action", () => {
+            const notification: AppNotification = {
+                source: {
+                    type: ActionType.CREATE_VOCABULARY_TERM,
+                    status: AsyncActionStatus.SUCCESS
+                }
+            };
+            initialState.notifications = [notification];
+            expect(reducers(stateToPlainObject(initialState), consumeNotification(notification)))
+                .toEqual(Object.assign({}, initialState, {notifications: []}));
+        });
+
+        it("does nothing when unknown notification is consumed", () => {
+            const notification: AppNotification = {
+                source: {
+                    type: ActionType.CREATE_VOCABULARY_TERM,
+                    status: AsyncActionStatus.SUCCESS
+                }
+            };
+            initialState.notifications = [notification];
+            const another: AppNotification = {
+                source: {type: ActionType.SWITCH_LANGUAGE}
+            };
+            expect(reducers(stateToPlainObject(initialState), consumeNotification(another))).toEqual(initialState);
+        });
+    })
 });
