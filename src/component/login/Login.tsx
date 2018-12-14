@@ -4,7 +4,6 @@ import {injectIntl} from 'react-intl';
 import {Alert, Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from 'reactstrap';
 import HorizontalInput from '../misc/HorizontalInput';
 import Routing from '../../util/Routing';
-import './Login.scss';
 import Routes from "../../util/Routes";
 import Mask from "../misc/Mask";
 import {connect} from 'react-redux';
@@ -13,8 +12,8 @@ import {login} from "../../action/AsyncActions";
 import ErrorInfo from "../../model/ErrorInfo";
 import ActionType from "../../action/ActionType";
 import {clearError} from "../../action/SyncActions";
-import Footer from "../Footer";
 import {ThunkDispatch} from "../../util/Types";
+import PublicLayout from "../layout/PublicLayout";
 
 interface LoginProps extends HasI18n {
     loading: boolean,
@@ -71,9 +70,8 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
     public render() {
         const i18n = this.props.i18n;
-        const panelCls = 'login-panel';
-        return <div className='app-container'>
-            <Card className={panelCls}>
+        return <PublicLayout title={i18n('login.title')}>
+            <Card className="modal-panel">
                 <CardHeader color='info'>
                     <h5>{i18n('login.title')}</h5>
                 </CardHeader>
@@ -102,8 +100,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                     </Form>
                 </CardBody>
             </Card>
-            <Footer className='footer-login'/>
-        </div>;
+        </PublicLayout>;
     }
 
     private renderMask() {

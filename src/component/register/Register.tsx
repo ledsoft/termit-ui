@@ -1,10 +1,9 @@
 import * as React from 'react';
 import {injectIntl} from 'react-intl';
-import {Alert, Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from 'reactstrap';
+import {Alert, Button, Card, CardBody, CardHeader, Col, Form, Row} from 'reactstrap';
 import withI18n, {HasI18n} from '../hoc/withI18n';
 import ErrorInfo from '../../model/ErrorInfo';
 import HorizontalInput from '../misc/HorizontalInput';
-import './Register.scss';
 import Routes from '../../util/Routes';
 import Routing from '../../util/Routing';
 import Mask from '../misc/Mask';
@@ -13,11 +12,11 @@ import TermItState from '../../model/TermItState';
 import {clearError} from '../../action/SyncActions';
 import ActionType from '../../action/ActionType';
 import {register} from '../../action/AsyncActions';
-import Footer from '../Footer';
 import Ajax, {params} from "../../util/Ajax";
 import Constants from '../../util/Constants';
 import {ThunkDispatch} from "../../util/Types";
 import Authentication from "../../util/Authentication";
+import PublicLayout from "../layout/PublicLayout";
 
 interface RegisterProps extends HasI18n {
     loading: boolean,
@@ -105,53 +104,52 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
 
     public render() {
         const i18n = this.props.i18n;
-        return <div className='app-container'>
-            <Card className='register-panel'>
+        return <PublicLayout title={i18n('login.title')}>
+            <Card  className="modal-panel wide">
                 <CardHeader color='info'>
                     <h5>{i18n('register.title')}</h5>
                 </CardHeader>
                 <CardBody>
                     {this.renderMask()}
-                    <Form className='register-form'>
+                    <Form>
                         {this.renderAlert()}
                         <Row>
-                            <Col md={6}>
+                            <Col lg={6}>
                                 <HorizontalInput type='text' name='firstName' label={i18n('register.first-name')}
                                                  value={this.state.firstName}
                                                  labelWidth={4} inputWidth={8} onChange={this.onChange}/>
                             </Col>
-                            <Col md={6}>
+                            <Col lg={6}>
                                 <HorizontalInput type='text' name='lastName' label={i18n('register.last-name')}
                                                  value={this.state.lastName}
                                                  labelWidth={4} inputWidth={8} onChange={this.onChange}/>
                             </Col>
                         </Row>
                         <Row>
-                            <Col md={6}>
+                            <Col lg={6}>
                                 {this.renderUsername()}
                             </Col>
                         </Row>
                         <Row>
-                            <Col md={6}>
+                            <Col lg={6}>
                                 <HorizontalInput type='password' name='password' label={i18n('register.password')}
                                                  labelWidth={4} inputWidth={8} onChange={this.onChange}
                                                  value={this.state.password}/>
                             </Col>
-                            <Col md={6}>
+                            <Col lg={6}>
                                 {this.renderPasswordConfirm()}
                             </Col>
                         </Row>
-                        <ButtonToolbar className='register-buttons'>
-                            <Button color='success' size='sm' disabled={!this.isValid() || this.props.loading}
-                                    onClick={this.onRegister}>{i18n('register.submit')}</Button>
-                            <Button size='sm' className='register-cancel' color='secondary'
-                                    onClick={this.onCancel}>{i18n('cancel')}</Button>
-                        </ButtonToolbar>
+                        <Row className="justify-content-center">
+                            <Button className="m-2" color="success" disabled={!this.isValid() || this.props.loading}
+                                    onClick={this.onRegister}>{i18n("register.submit")}</Button>
+                            <Button className="m-2 register-cancel" color="secondary"
+                                    onClick={this.onCancel}>{i18n("cancel")}</Button>
+                        </Row>
                     </Form>
                 </CardBody>
             </Card>
-            <Footer className='footer-login'/>
-        </div>;
+        </PublicLayout>;
     }
 
     private renderMask() {

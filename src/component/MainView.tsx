@@ -57,8 +57,6 @@ interface MainViewState {
 export class MainView extends React.Component<MainViewProps, MainViewState> {
 
     public static defaultProps: Partial<MainViewProps> = {
-        backgroundColor: "#777",
-        backgroundIsLight: false,
     };
 
     constructor(props: MainViewProps) {
@@ -93,7 +91,10 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         }
         return <>
             <header>
-                <Navbar light={this.props.backgroundIsLight} expand={"lg"} className={"navbar-dark d-flex"} style={{background: this.props.backgroundColor}}>
+                <Navbar light={Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT}
+                        expand={"lg"}
+                        className={(Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT ? "navbar-light" : "navbar-dark") + " d-flex"}
+                        style={{background: Constants.LAYOUT_NAVBAR_BACKGROUND}}>
                     <NavbarBrand href={MainView.hashPath(Routes.search.path)}>
                         {Constants.APP_NAME}
                     </NavbarBrand>
@@ -133,8 +134,8 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         </Nav>
                     </Collapse>
                 </Navbar>
-                <SearchTypeTabs />
                 <Breadcrumbs className="breadcrumb-bar"/>
+                <SearchTypeTabs />
             </header>
             <Messages/>
             <Container fluid={true} className="mt-5 mb-5 flex-grow-1">

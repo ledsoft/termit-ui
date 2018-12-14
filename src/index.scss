@@ -30,6 +30,24 @@ header .nav-tabs {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.main-container {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.modal-panel {
+  margin: 5% auto;
+  max-width: 35em;
+  box-shadow: 0em 0.5em 1.5em rgba(0, 0, 0, 0.15);
+}
+
+.modal-panel.wide {
+  max-width: 65em;
 }
 
 .italics {

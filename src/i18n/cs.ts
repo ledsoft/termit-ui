@@ -19,7 +19,7 @@ export default {
         'footer.copyright': 'KBSS FEL ČVUT v Praze',
         'footer.version': 'Verze {version}',
 
-        'login.title': Constants.APP_NAME + ' - Přihlášení',
+        'login.title': 'Přihlášení',
         'login.username': 'Uživatelské jméno',
         'login.password': 'Heslo',
         'login.submit': 'Přihlásit',
@@ -29,7 +29,7 @@ export default {
         'login.locked': 'Účet je zablokován.',
         'login.disabled': 'Účet byl deaktivován.',
 
-        'register.title': Constants.APP_NAME + ' - Nový uživatel',
+        'register.title': 'Nový uživatel',
         'register.first-name': 'Jméno',
         'register.last-name': 'Příjmení',
         'register.username': 'Uživatelské jméno',

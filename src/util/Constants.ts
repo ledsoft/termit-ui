@@ -32,7 +32,15 @@ const constants = {
     // How many messages should be displayed at one moment
     MESSAGE_DISPLAY_COUNT: 5,
     // For how long should a message be displayed
-    MESSAGE_DISPLAY_TIMEOUT: 5000
+    MESSAGE_DISPLAY_TIMEOUT: 5000,
+
+    // Layout customization
+    LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT: false,
+    LAYOUT_NAVBAR_BACKGROUND: "#777",
+
+    // Wallpaper: ~60% color saturation + some blur + JPEG compression to <100KB.
+    // LAYOUT_WALLPAPER: null,
+    LAYOUT_WALLPAPER: "/background/Magnetic_Termite_Mounds.small-blur.jpg",
 };
 
 constants.STORAGE_JWT_KEY = constants.APP_NAME + '-' + constants.AUTHORIZATION_HEADER;

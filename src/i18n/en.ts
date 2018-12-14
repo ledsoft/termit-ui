@@ -19,7 +19,7 @@ export default {
         'footer.copyright': 'KBSS at FEE CTU in Prague',
         'footer.version': 'Version {version}',
 
-        'login.title': Constants.APP_NAME + ' - Log in',
+        'login.title': 'Log in',
         'login.username': 'Username',
         'login.password': 'Password',
         'login.submit': 'Login',
@@ -29,7 +29,7 @@ export default {
         'login.locked': 'Account locked.',
         'login.disabled': 'Account disabled.',
 
-        'register.title': Constants.APP_NAME + ' - Registration',
+        'register.title': 'Registration',
         'register.first-name': 'First name',
         'register.last-name': 'Last name',
         'register.username': 'Username',
