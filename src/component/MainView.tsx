@@ -89,7 +89,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         if (user === EMPTY_USER) {
             return this.renderPlaceholder();
         }
-        return <>
+        return <div className="main-container">
             <header>
                 <Navbar light={Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT}
                         expand={"lg"}
@@ -157,7 +157,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                 </Switch>
             </Container>
             <Footer/>
-        </>;
+        </div>;
     }
 
     private renderPlaceholder() {

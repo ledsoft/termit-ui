@@ -35,6 +35,9 @@ header .nav-tabs {
 }
 
 .main-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -42,11 +45,13 @@ header .nav-tabs {
 
 .modal-panel {
   margin: 5% auto;
-  max-width: 35em;
+  width: 100%;
+  max-width: 40em;
   box-shadow: 0em 0.5em 1.5em rgba(0, 0, 0, 0.15);
 }
 
 .modal-panel.wide {
+  width: 100%;
   max-width: 65em;
 }
 

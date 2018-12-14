@@ -11,7 +11,7 @@ interface PublicLayoutProps extends HasI18n {
 }
 
 const PublicLayout: React.SFC<PublicLayoutProps> = (props) => {
-    return <>
+    return <div className="main-container" style={Constants.LAYOUT_WALLPAPER ? {backgroundImage: "url(" + Constants.LAYOUT_WALLPAPER + ")"} : {}}>
         <header>
             <Navbar light={Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT}
                     expand={"lg"}
@@ -22,11 +22,11 @@ const PublicLayout: React.SFC<PublicLayoutProps> = (props) => {
                 </NavbarBrand>
             </Navbar>
         </header>
-        <Container fluid={true} className="pt-5 pb-5 flex-grow-1 main-container" style={Constants.LAYOUT_WALLPAPER ? {"background-image": "url(" + Constants.LAYOUT_WALLPAPER + ")"} : {}}>
+        <Container fluid={true} className="pt-5 pb-5 flex-grow-1 main-container">
             {props.children}
         </Container>
         <Footer />
-    </>;
+    </div>;
 };
 
 export default injectIntl(withI18n(PublicLayout));
