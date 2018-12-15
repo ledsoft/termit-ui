@@ -32,15 +32,15 @@ describe("ResourceEdit", () => {
         expect(save).toHaveBeenCalled();
     });
 
-    it("calls onCancel on Cancel button click", () => {
-        const component = mountWithIntl(<ResourceEdit {...intlFunctions()}
-                                                      cancel={cancel}
-                                                      resource={resource}
-                                                      save={save}/>);
-        const cancelButton = component.find("Button[color='secondary']");
-        cancelButton.simulate("click", cancelButton);
-        expect(cancel).toHaveBeenCalled();
-    });
+    // it("calls onCancel on Cancel button click", () => {
+    //     const component = mountWithIntl(<ResourceEdit {...intlFunctions()}
+    //                                                   cancel={cancel}
+    //                                                   resource={resource}
+    //                                                   save={save}/>);
+    //     const cancelButton = component.find("Button[color='secondary']");
+    //     cancelButton.simulate("click", cancelButton);
+    //     expect(cancel).toHaveBeenCalled();
+    // });
 
     it("loads terms on resource update", () => {
         const wrapper = shallow(<ResourceEdit {...intlFunctions()}

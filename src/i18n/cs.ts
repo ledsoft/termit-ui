@@ -96,6 +96,7 @@ export default {
         'vocabulary.metadata.identifier': 'Identifikátor',
         'vocabulary.metadata.author': 'Autor',
         'vocabulary.metadata.created': 'Datum vytvoření',
+        'vocabulary.select-vocabulary' : 'Vyber slovník',
 
         'resource.management.resources': 'Zdroje',
         'resource.updated.message': 'Zdroj úspěšně uložen.',
@@ -104,6 +105,7 @@ export default {
         'resource.metadata.label' : 'Popisek',
         'resource.metadata.comment' : 'Komentář',
         'resource.metadata.terms' : 'Související pojmy',
+        'resource.metadata-edit.terms' : 'Související pojmy ze slovníku',
 
         'term.metadata.identifier': 'Identifikátor',
         'term.metadata.label': 'Název',

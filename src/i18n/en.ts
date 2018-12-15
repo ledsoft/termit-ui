@@ -96,6 +96,7 @@ export default {
         'vocabulary.metadata.identifier': 'Identifier',
         'vocabulary.metadata.author': 'Author',
         'vocabulary.metadata.created': 'Created',
+        'vocabulary.select-vocabulary' : 'Select a Vocabulary',
 
         'resource.management.resources': 'Resources',
         'resource.updated.message': 'Resource successfully updated.',
@@ -104,6 +105,7 @@ export default {
         'resource.metadata.label' : 'Label',
         'resource.metadata.comment' : 'Comment',
         'resource.metadata.terms' : 'Related Terms',
+        'resource.metadata-edit.terms' : 'Related Terms from the Vocabulary',
 
         'term.metadata.identifier': 'Identifier',
         'term.metadata.label': 'Label',
