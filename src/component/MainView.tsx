@@ -134,13 +134,13 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         </Nav>
                     </Collapse>
                 </Navbar>
-                <Breadcrumbs className="breadcrumb-bar"/>
-                <SearchTypeTabs />
+                <SearchTypeTabs>
+                    <Breadcrumbs className="breadcrumb-bar"/>
+                </SearchTypeTabs>
             </header>
             <Messages/>
             <Container fluid={true} className="mt-5 mb-5 flex-grow-1">
                 <Switch>
-
                     <BreadcrumbRoute title={i18n("main.nav.resources")} path={Routes.resources.path}
                                      component={ResourceManagement}/>
                     <BreadcrumbRoute title={i18n("main.nav.vocabularies")} path={Routes.annotateFile.path}
@@ -151,8 +151,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                      component={Statistics}/>
                     <BreadcrumbRoute title={i18n("main.nav.searchTerms")} path={Routes.searchTerms.path} component={SearchTerms}/>
                     <BreadcrumbRoute title={i18n("main.nav.search")} path={Routes.search.path} component={Search}/>
-                    <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path}
-                                     component={FacetedSearch}/>
+                    <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path} component={FacetedSearch}/>
                     <Route component={Search}/>
                 </Switch>
             </Container>

@@ -19,8 +19,13 @@ body {
   flex-grow: 1;
 }
 
-header .nav-tabs {
+header .nav-tabs,
+header .breadcrumb-bar {
   background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid #dee2e6;
+}
+
+header .nav-tabs {
   text-align: center;
   justify-content: center;
   padding-top: 0.3em;
@@ -95,3 +100,4 @@ header .nav-tabs {
     margin-bottom: 0;
   }
 }
+

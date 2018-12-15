@@ -59,7 +59,7 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
                 )}
             </Nav>;
         } else {
-            return null;
+            return this.props.children;
         }
     }
 
