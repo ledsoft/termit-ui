@@ -2,7 +2,6 @@ import * as React from 'react';
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Col, Row} from "reactstrap";
-import './Dashboard.scss';
 import Vocabularies from "../vocabulary/Vocabularies";
 import Resources from "../resource/Resources";
 
