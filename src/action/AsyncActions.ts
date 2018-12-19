@@ -261,11 +261,10 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
             url = Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms";
         }
         return Ajax.get(url,
-            params({
+            params(Object.assign({
                 searchString: fetchOptions.searchString,
-                limit: fetchOptions.limit,
-                offset: fetchOptions.offset
-            }).param("namespace", namespace))
+                namespace
+            }, Utils.createPagingParams(fetchOptions.offset, fetchOptions.limit))))
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: TermData[]) => data.map(d => new Term(d)))

@@ -347,6 +347,19 @@ describe('Async actions', () => {
                 expect(callConfig.getParams()).toEqual({});
             });
         });
+
+        it("specifies correct paging params for offset and limit", () => {
+            const terms = require("../../rest-mock/terms");
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
+            const params: FetchOptionsFunction = {
+                offset: 88,
+                limit: 100
+            };
+            return Promise.resolve((store.dispatch as ThunkDispatch)(fetchVocabularyTerms(params, 'test-vocabulary'))).then(() => {
+                const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
+                expect(callConfig.getParams()).toEqual({page: 1, size: 100});
+            });
+        });
     });
     describe('load types', () => {
         it('loads types from the incoming JSON-LD', () => {
