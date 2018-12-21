@@ -1,11 +1,11 @@
 import * as React from "react";
-import Widget from "./Widget";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {QueryResultIF} from "../../model/QueryResult";
 import {executeQuery} from "../../action/AsyncActions";
 import * as _ from "lodash";
 import {ThunkDispatch} from "../../util/Types";
+import FullscreenablePanelWithActions from "../misc/FullscreenablePanelWithActions";
 
 interface Props {
     title: string;
@@ -40,12 +40,10 @@ export class SparqlWidget extends React.Component<Props & InternalProps & Intern
     }
 
     public render() {
-        return (<div>
-            <Widget title={this.props.title}
-                    component={
-                        <div>{this.props.componentFunction(this.props.queryResults[this.props.sparqlQuery])}</div>}
-                    actions={[]}/>
-        </div>);
+        return <FullscreenablePanelWithActions
+                title={this.props.title}
+                actions={[]}
+                component={this.props.componentFunction(this.props.queryResults[this.props.sparqlQuery])}/>;
     }
 };
 
