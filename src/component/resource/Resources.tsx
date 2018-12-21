@@ -10,9 +10,9 @@ class Resources extends React.Component<HasI18n> {
         const i18n = this.props.i18n;
         return (<PanelWithActions
                     title={i18n("resource.management.resources")}
-                    component={<ResourceList/>}
-                    actions={[]}
-            />);
+                    actions={[]}>
+            <ResourceList/>
+        </PanelWithActions>);
     }
 }
 

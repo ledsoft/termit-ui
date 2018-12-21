@@ -8,6 +8,8 @@ import DashboardQuickAccessTile from "./DashboardQuickAccessTile";
 import Routing from '../../util/Routing';
 import Routes from '../../util/Routes';
 import TermFrequency from "../statistics/termfrequency/TermFrequency";
+import PanelWithActions from "../misc/PanelWithActions";
+import templateQuery from "../statistics/termfrequency/TermFrequency.rq";
 
 export class Dashboard extends React.Component<HasI18n> {
 
@@ -41,9 +43,13 @@ export class Dashboard extends React.Component<HasI18n> {
                     {this.renderQuickAccessDashboard()}
                 </Jumbotron>
             </Col>
-            <TermFrequency
-                title={this.props.i18n("statistics.types.frequency")}
-                lang={this.props.locale}/>
+            <Col lg={4} xs={4}>
+                <PanelWithActions title={this.props.i18n("dashboard.type-frequency")}>
+                    <TermFrequency
+                        sparqlQuery={templateQuery}
+                        lang={this.props.locale}/>
+                </PanelWithActions>
+            </Col>
         </Row>;
     }
 

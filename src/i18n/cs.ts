@@ -2,7 +2,6 @@ import Constants from '../util/Constants';
 
 export default {
     locale: Constants.LANG.CS,
-
     messages: {
         'please-wait': 'Prosím, čekejte...',
         'save': 'Uložit',
@@ -63,6 +62,7 @@ export default {
         'dashboard.create-vocabulary.tile' : 'Vytvořit slovník',
         'dashboard.add-document.tile' : 'Přidat dokument',
         'dashboard.resources.tile' : 'Zdroje',
+        'dashboard.type-frequency' : 'Počet pojmů ve slovníku',
 
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',

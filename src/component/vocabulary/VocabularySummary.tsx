@@ -108,8 +108,9 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
                     label={this.props.vocabulary.label}
                     iri={this.props.vocabulary.iri as string}
                 />}
-                actions={actions}
-                component={component}/>
+                actions={actions}>
+                {component}
+            </PanelWithActions>
         </div>;
     }
 

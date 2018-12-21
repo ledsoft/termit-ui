@@ -24,9 +24,8 @@ class Vocabularies extends React.Component<HasI18n> {
                              onClick={Vocabularies.onCreateVocabularyClick}><GoPlus/></Button>);
         return (<PanelWithActions
                     title={i18n('vocabulary.management.vocabularies')}
-                    component={<VocabularyList/>}
                     actions={actions}
-            />);
+        ><VocabularyList/></PanelWithActions>);
     }
 }
 

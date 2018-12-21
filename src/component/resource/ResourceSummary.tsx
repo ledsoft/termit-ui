@@ -72,12 +72,11 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
                 save={this.onSave}
                 cancel={this.onCloseEdit}/> :
             <ResourceMetadata resource={this.props.resource}/>;
-        return <div>
-            <PanelWithActions
+        return <PanelWithActions
                 title={this.props.resource.label}
-                actions={actions}
-                component={component}/>
-        </div>;
+                actions={actions}>
+                {component}
+            </PanelWithActions>;
     }
 }
 

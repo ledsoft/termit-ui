@@ -77,9 +77,8 @@ export class TermSelect extends React.Component<TermSelectProps> {
 
         return (<PanelWithActions
             title={i18n('glossary.title')}
-            component={component}
             actions={actions}
-        />);
+        >{component}</PanelWithActions>);
 
     }
 }
