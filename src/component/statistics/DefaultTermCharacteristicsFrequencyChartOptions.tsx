@@ -1,6 +1,6 @@
 export default {
     chart: {
-        id: 'types',
+        id: "types",
         stacked: true,
     },
     plotOptions: {

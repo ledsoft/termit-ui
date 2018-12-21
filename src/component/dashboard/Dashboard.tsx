@@ -7,6 +7,7 @@ import DashboardTile from "./DashboardTile";
 import DashboardQuickAccessTile from "./DashboardQuickAccessTile";
 import Routing from '../../util/Routing';
 import Routes from '../../util/Routes';
+import TermFrequency from "../statistics/termfrequency/TermFrequency";
 
 export class Dashboard extends React.Component<HasI18n> {
 
@@ -40,6 +41,9 @@ export class Dashboard extends React.Component<HasI18n> {
                     {this.renderQuickAccessDashboard()}
                 </Jumbotron>
             </Col>
+            <TermFrequency
+                title={this.props.i18n("statistics.types.frequency")}
+                lang={this.props.locale}/>
         </Row>;
     }
 

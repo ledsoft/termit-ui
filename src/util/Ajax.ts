@@ -342,6 +342,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/query/).reply((config) => {
         if (config.params.query.includes("?asset")) {
             return [200, require('../rest-mock/assetCount'), header]
+        } else if (config.params.query.includes("DISTINCT ?pojem")) {
+            return [200, require('../rest-mock/termFrequency'), header]
         } else if (config.params.query.includes("?typ")) {
             return [200, require('../rest-mock/termTypeFrequency'), header]
         } else {

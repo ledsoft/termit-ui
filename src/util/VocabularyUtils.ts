@@ -7,20 +7,26 @@ export interface IRI {
     fragment: string,
 }
 
-const _PREFIX = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/";
+const _NS_POPIS_DAT = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/";
+const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/";
+const _NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const _NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
 
 export default {
-    PREFIX: _PREFIX,
-    VOCABULARY: _PREFIX + "slovnik",
-    TERM: _PREFIX + "term",
-    FILE: _PREFIX + "soubor",
-    DOCUMENT: _PREFIX + "document",
-    JE_POJMEM_ZE_SLOVNIKU: _PREFIX + "je-pojmem-ze-slovniku",
-    RESOURCE: _PREFIX + "zdroj",
-    TERM_ASSIGNMENT: _PREFIX + "prirazeni-termu",
-    USER: "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu",
-    RDFS_RESOURCE: "http://www.w3.org/2000/01/rdf-schema#Resource",
-    RDF_PROPERTY: "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+    PREFIX: _NS_POPIS_DAT,
+    VOCABULARY: _NS_POPIS_DAT + "slovnik",
+    TERM: _NS_POPIS_DAT + "term",
+    FILE: _NS_POPIS_DAT + "soubor",
+    DOCUMENT: _NS_POPIS_DAT + "document",
+    JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovniku",
+    RESOURCE: _NS_POPIS_DAT + "zdroj",
+    TERM_ASSIGNMENT: _NS_POPIS_DAT + "prirazeni-termu",
+    NS_TERMIT: _NS_TERMIT,
+    USER: _NS_TERMIT + "uzivatel-termitu",
+    HAS_COUNT: _NS_TERMIT + "has-count",
+    RDFS_LABEL: _NS_RDFS + "label",
+    RDFS_RESOURCE: _NS_RDFS + "Resource",
+    RDF_PROPERTY: _NS_RDF + "Property",
 
     getFragment(iri: string): string {
         return this.create(iri).fragment;
