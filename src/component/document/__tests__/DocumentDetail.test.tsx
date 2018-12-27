@@ -3,8 +3,8 @@ import {DocumentDetail} from "../DocumentDetail";
 import Document from "../../../model/Document";
 import FileList from "../../file/FileList";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
-import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
+import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {MemoryRouter} from "react-router";
 import {shallow} from "enzyme";
 
@@ -29,7 +29,7 @@ describe('DocumentDetail', () => {
                     iri={documentIri}
                     document={document}
                     loadDocument={loadDocument}
-                    i18n={i18n} formatMessage={formatMessage}/>
+                    {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.find(FileList).exists()).toBeTruthy();
@@ -40,7 +40,7 @@ describe('DocumentDetail', () => {
             iri={documentIri}
             document={document}
             loadDocument={loadDocument}
-            i18n={i18n} formatMessage={formatMessage}/>
+            {...intlFunctions()} {...intlDataForShallow()}/>
         );
         expect(loadDocument).toHaveBeenCalledWith(documentIri);
     });

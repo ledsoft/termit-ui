@@ -1,30 +1,27 @@
 import * as React from "react";
-import {FileList} from "../../file/FileList";
+import {FileList} from "../FileList";
 import File from "../../../model/File";
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
-import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {MemoryRouter} from "react-router";
 import FileLink from "../FileLink";
 import {Button} from "reactstrap";
-import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 
 
 describe('FileList', () => {
-
-    const documentIri = VocabularyUtils.create("http://ex.org/document");
     let files: File[];
     let file: File;
-    let startFileTextAnalysis: (documentIri: IRI, name: string) => void
+    let startFileTextAnalysis: (file: File) => void;
     beforeEach(() => {
         files = [
             new File({
                 iri: "http://ex.org/file1",
-                name: "fileName1",
+                label: "fileName1",
                 comment: "comment1"
             }),
             new File({
                 iri: "http://ex.org/file2",
-                name: "fileName2",
+                label: "fileName2",
             })
         ];
         file = files[0];
@@ -35,10 +32,9 @@ describe('FileList', () => {
 
         const wrapper = mountWithIntl(<MemoryRouter>
                 <FileList
-                    documentIri={documentIri}
                     files={files}
                     startFileTextAnalysis={startFileTextAnalysis}
-                    i18n={i18n} formatMessage={formatMessage} locale={'en'}/>
+                    {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.find(FileLink).exists()).toBeTruthy();
@@ -49,10 +45,9 @@ describe('FileList', () => {
 
         const wrapper = mountWithIntl(<MemoryRouter>
                 <FileList
-                    documentIri={documentIri}
                     files={files}
                     startFileTextAnalysis={startFileTextAnalysis}
-                    i18n={i18n} formatMessage={formatMessage} locale={'en'}/>
+                    {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.text()).toContain("comment1");
@@ -64,10 +59,9 @@ describe('FileList', () => {
 
         const wrapper = mountWithIntl(<MemoryRouter>
                 <FileList
-                    documentIri={documentIri}
                     files={[file]}
                     startFileTextAnalysis={startFileTextAnalysis}
-                    i18n={i18n} formatMessage={formatMessage} locale={'en'}/>
+                    {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.find(Button).exists()).toBeTruthy();
@@ -77,15 +71,14 @@ describe('FileList', () => {
 
         const wrapper = mountWithIntl(<MemoryRouter>
                 <FileList
-                    documentIri={documentIri}
                     files={[file]}
                     startFileTextAnalysis={startFileTextAnalysis}
-                    i18n={i18n} formatMessage={formatMessage} locale={'en'}/>
+                    {...intlFunctions()}/>
             </MemoryRouter>
         );
 
         expect(startFileTextAnalysis).not.toBeCalled();
         wrapper.find(Button).simulate("click");
-        expect(startFileTextAnalysis).toBeCalledWith(documentIri, file.name)
+        expect(startFileTextAnalysis).toBeCalledWith(file);
     });
 });

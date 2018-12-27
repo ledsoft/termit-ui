@@ -19,14 +19,15 @@ import {ThunkDispatch} from "../../util/Types";
 import {Annotator} from "../annotator/Annotator";
 import Term from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
+import Utils from "../../util/Utils";
 
 
 interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
     document: Document,
     fileContent: string | null
-    loadFileContent: (documentIri: IRI, fileName: string) => void,
-    saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => void
+    loadFileContent: (fileIri: IRI) => void,
+    saveFileContent: (fileIri: IRI, fileContent: string) => void
     loadDefaultTerms: (normalizedName: string, namespace?: string) => void
     intl: IntlData
     fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>
@@ -46,7 +47,10 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     public componentDidMount(): void {
         const normalizedFileName = this.props.match.params.name;
-        this.props.loadFileContent(VocabularyUtils.create(this.props.document.iri), normalizedFileName);
+        this.props.loadFileContent({
+            fragment: normalizedFileName,
+            namespace: Utils.extractQueryParam(this.props.location.search, "namespace")
+        });
         // TODO should not be responsibility of file detail
         if (this.props.defaultTerms.length === 0) {
             this.props.loadDefaultTerms(VocabularyUtils.create(this.props.vocabulary.iri).fragment, VocabularyUtils.create(this.props.vocabulary.iri).namespace);
@@ -58,7 +62,10 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     private onUpdate = (newFileContent: string) => {
         const normalizedFileName = this.props.match.params.name;
-        this.props.saveFileContent(VocabularyUtils.create(this.props.document.iri), normalizedFileName, newFileContent);
+        this.props.saveFileContent({
+            fragment: normalizedFileName,
+            namespace: Utils.extractQueryParam(this.props.location.search, "namespace")
+        }, newFileContent);
     };
 
     private updateTerms(retrievedTerms: Term[]) {
@@ -72,7 +79,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
             }, (d) => d);
     }
 
-    private getVocabularyNormalizedName():string {
+    private getVocabularyNormalizedName(): string {
         return VocabularyUtils.create(this.props.vocabulary.iri).fragment;
     }
 
@@ -140,8 +147,8 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        loadFileContent: (documentIri: IRI, fileName: string) => dispatch(loadFileContent(documentIri, fileName)),
-        saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => dispatch(saveFileContent(documentIri, fileName, fileContent)),
+        loadFileContent: (fileIri: IRI) => dispatch(loadFileContent(fileIri)),
+        saveFileContent: (fileIri: IRI, fileContent: string) => dispatch(saveFileContent(fileIri, fileContent)),
         loadDefaultTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
         fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => dispatch(fetchVocabularyTerm(termNormalizedName, vocabularyNormalizedName, namespace))

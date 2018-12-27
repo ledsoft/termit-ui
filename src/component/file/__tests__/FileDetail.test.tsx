@@ -2,7 +2,8 @@ import * as React from "react";
 import Document from "../../../model/Document";
 import {FileDetail} from "../FileDetail";
 import Vocabulary from "../../../model/Vocabulary";
-import OntologicalVocabulary, {IRI} from "../../../util/VocabularyUtils";
+import OntologicalVocabulary from "../../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {intl, intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import createMemoryHistory from "history/createMemoryHistory";
 import {shallow} from "enzyme";
@@ -11,7 +12,6 @@ import Generator from "../../../__tests__/environment/Generator";
 import {Annotator} from "../../annotator/Annotator";
 import FetchOptionsFunction from "../../../model/Functions";
 import Term from "../../../model/Term";
-import VocabularyUtils from "../../../util/VocabularyUtils";
 
 function generateTerm(i: number): Term {
     return new Term({
@@ -41,8 +41,8 @@ describe('FileDetail', () => {
         state: {}
     };
     let mockedFunctionLikeProps: {
-        loadFileContent: (documentIri: IRI, fileName: string) => void
-        saveFileContent: (documentIri: IRI, fileName: string, fileContent: string) => void
+        loadFileContent: (fileIri: IRI) => void
+        saveFileContent: (fileIri: IRI, fileContent: string) => void
         loadDefaultTerms: (normalizedName: string, namespace?: string) => void
         fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
         fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => Promise<Term>
@@ -126,7 +126,7 @@ describe('FileDetail', () => {
     });
 
     it('fetches root terms within initialization', () => {
-        const terms: Term[] = [1,2,3].map(i => generateTerm(i));
+        const terms: Term[] = [1, 2, 3].map(i => generateTerm(i));
         mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve(terms))
 
         shallow(<FileDetail
@@ -144,7 +144,7 @@ describe('FileDetail', () => {
     });
 
     it('onFetchTerm returns cached root term', async () => {
-        const terms: Term[] = [0,1,2,3].map(i => generateTerm(i));
+        const terms: Term[] = [0, 1, 2, 3].map(i => generateTerm(i));
         mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve(terms))
 
         const wrapper = shallow(<FileDetail
@@ -167,7 +167,7 @@ describe('FileDetail', () => {
     });
 
     it('onFetchTerm fetches non-root term', async () => {
-        const terms: Term[] = [0,1,2,3].map(i => generateTerm(i));
+        const terms: Term[] = [0, 1, 2, 3].map(i => generateTerm(i));
         const term4 = generateTerm(4);
         mockedFunctionLikeProps.fetchTerms = jest.fn()
             .mockImplementationOnce(() => Promise.resolve(terms));

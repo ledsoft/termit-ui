@@ -1,33 +1,26 @@
-import OntologicalVocabulary from '../util/VocabularyUtils';
+import OntologicalVocabulary from "../util/VocabularyUtils";
 import File, {CONTEXT as FILE_CONTEXT} from "./File";
+import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "./Resource";
 
 const ctx = {
-    "iri": "@id",
-    "name": "http://www.w3.org/2000/01/rdf-schema#label",
-    "description": "http://purl.org/dc/elements/1.1/description",
     "files": {
         "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-soubor",
         "@container": "@set"
     }
 };
 
-export const CONTEXT = Object.assign(ctx, FILE_CONTEXT);
+export const CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx, FILE_CONTEXT);
 
-export interface DocumentData {
-    iri: string,
-    name: string,
-    description?: string,
+export interface DocumentData extends ResourceData {
     files: File[],
 }
 
-export default class Document implements DocumentData {
-    public iri: string;
-    public name: string;
-    public description: string;
+export default class Document extends Resource implements DocumentData {
     public files: File[];
 
     constructor(data: DocumentData) {
-        Object.assign(this, data);
+        super(data);
+        this.files = data.files;
     }
 
     public toJsonLd(): {} {
@@ -36,8 +29,9 @@ export default class Document implements DocumentData {
 }
 
 export const EMPTY_DOCUMENT = new Document({
-    iri: 'http://empty',
-    name: '',
+    iri: "http://empty",
+    label: "",
+    terms: [],
     files: []
 });
 

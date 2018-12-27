@@ -6,8 +6,7 @@ import {
     exportGlossary,
     fetchVocabularyTerms,
     getLabel,
-    getProperties,
-    loadDocument,
+    getProperties, loadDocument,
     loadFileContent,
     loadResources,
     loadTermAssignments,
@@ -188,7 +187,7 @@ describe('Async actions', () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(fileContent));
             return Promise.resolve(
                 (store.dispatch as ThunkDispatch)
-                (loadFileContent({fragment: 'metropolitan-plan'}, "metropolitan-plan-p1.html"))
+                (loadFileContent({fragment: 'metropolitan-plan'}))
             ).then(() => {
                 const loadSuccessAction: AsyncActionSuccess<string> = store.getActions()[1];
                 expect(loadSuccessAction.payload).toContain("html");
