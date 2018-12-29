@@ -4,12 +4,13 @@ import Vocabulary from "../../../../util/VocabularyUtils";
 import {mountWithIntl} from "../../../../__tests__/environment/Environment";
 import {formatMessage, i18n} from "../../../../__tests__/environment/IntlUtil";
 import * as React from "react";
+import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
 import {MAX_RENDERED_RESULTS, SearchResultsOverlay} from "../SearchResultsOverlay";
-import {Simulate} from 'react-dom/test-utils';
+import {Simulate} from "react-dom/test-utils";
 import {ReactWrapper} from "enzyme";
 import {generateResults} from "./Search.test";
 
-describe('SearchResultsOverlay', () => {
+describe("SearchResultsOverlay", () => {
 
     let onClose: () => void;
     let onClick: (r: SearchResult) => void;
@@ -22,8 +23,8 @@ describe('SearchResultsOverlay', () => {
         onClose = jest.fn();
         onOpenSearch = jest.fn();
         onClick = jest.fn();
-        element = document.createElement('div');
-        element.id = 'root';
+        element = document.createElement("div");
+        element.id = "root";
         document.body.appendChild(element);
         jest.useFakeTimers();
     });
@@ -34,66 +35,66 @@ describe('SearchResultsOverlay', () => {
         document.body.removeChild(element);
     });
 
-    it.skip('shows only first x search results, others can be viewed on dedicated search page', () => {
+    it.skip("shows only first x search results, others can be viewed on dedicated search page", () => {
         const results = generateResults(Vocabulary.TERM, MAX_RENDERED_RESULTS + 5);
-        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId="div" show={true} searchResults={results}
                                                       onClose={onClose} onClick={onClick}
                                                       onOpenSearch={onOpenSearch} i18n={i18n}
-                                                      formatMessage={formatMessage}/>, {attachTo: element});
-        const items = document.getElementsByClassName('search-result-link');
+                                                      formatMessage={formatMessage} {...intlFunctions()}/>, {attachTo: element});
+        const items = document.getElementsByClassName("search-result-link");
         expect(items.length).toEqual(MAX_RENDERED_RESULTS);
     });
 
-    it.skip('renders info message about no results when empty results are provided', () => {
-        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={[]}
+    it.skip("renders info message about no results when empty results are provided", () => {
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId="div" show={true} searchResults={[]}
                                                       onClose={onClose} onClick={onClick}
                                                       onOpenSearch={onOpenSearch} i18n={i18n}
-                                                      formatMessage={formatMessage}/>, {attachTo: element});
-        const items = document.getElementsByClassName('search-result-link');
+                                                      formatMessage={formatMessage} {...intlFunctions()}/>, {attachTo: element});
+        const items = document.getElementsByClassName("search-result-link");
         expect(items.length).toEqual(0);
-        expect(document.getElementsByClassName('search-result-no-results').length).toEqual(1);
+        expect(document.getElementsByClassName("search-result-no-results").length).toEqual(1);
     });
 
-    it.skip('renders count info when more results than displayable count are provided', () => {
+    it.skip("renders count info when more results than displayable count are provided", () => {
         const results = generateResults(Vocabulary.TERM, MAX_RENDERED_RESULTS + 5);
-        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId="div" show={true} searchResults={results}
                                                       onClose={onClose} onClick={onClick}
                                                       onOpenSearch={onOpenSearch} i18n={i18n}
-                                                      formatMessage={formatMessage}/>, {attachTo: element});
-        expect(document.getElementsByClassName('search-result-link').length).toEqual(MAX_RENDERED_RESULTS);
-        expect(document.getElementsByClassName('search-result-info').length).toEqual(1);
+                                                      formatMessage={formatMessage} {...intlFunctions()}/>, {attachTo: element});
+        expect(document.getElementsByClassName("search-result-link").length).toEqual(MAX_RENDERED_RESULTS);
+        expect(document.getElementsByClassName("search-result-info").length).toEqual(1);
     });
 
-    it.skip('invokes onClick with correct result when result link is clicked', () => {
+    it.skip("invokes onClick with correct result when result link is clicked", () => {
         const results = generateResults(Vocabulary.TERM, MAX_RENDERED_RESULTS);
-        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId="div" show={true} searchResults={results}
                                                       onClose={onClose} onClick={onClick}
                                                       onOpenSearch={onOpenSearch} i18n={i18n}
-                                                      formatMessage={formatMessage}/>, {attachTo: element});
+                                                      formatMessage={formatMessage} {...intlFunctions()}/>, {attachTo: element});
         const index = Generator.randomInt(0, MAX_RENDERED_RESULTS);
-        const item = document.getElementsByClassName('search-result-link')[index];
+        const item = document.getElementsByClassName("search-result-link")[index];
         Simulate.click(item);
         expect(onClick).toHaveBeenCalled();
         expect((onClick as jest.Mock).mock.calls[0][0]).toEqual(results[index]);
     });
 
-    it.skip('invokes search open when no results info link is clicked', () => {
-        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={[]}
+    it.skip("invokes search open when no results info link is clicked", () => {
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId="div" show={true} searchResults={[]}
                                                       onClose={onClose} onClick={onClick}
                                                       onOpenSearch={onOpenSearch} i18n={i18n}
-                                                      formatMessage={formatMessage}/>, {attachTo: element});
-        const noResultsInfo = document.getElementsByClassName('search-result-no-results')[0];
+                                                      formatMessage={formatMessage} {...intlFunctions()}/>, {attachTo: element});
+        const noResultsInfo = document.getElementsByClassName("search-result-no-results")[0];
         Simulate.click(noResultsInfo);
         expect(onOpenSearch).toHaveBeenCalled();
     });
 
-    it.skip('invokes search open when count info link is clicked', () => {
+    it.skip("invokes search open when count info link is clicked", () => {
         const results = generateResults(Vocabulary.TERM, MAX_RENDERED_RESULTS + 5);
-        wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
+        wrapper = mountWithIntl(<SearchResultsOverlay targetId="div" show={true} searchResults={results}
                                                       onClose={onClose} onClick={onClick}
                                                       onOpenSearch={onOpenSearch} i18n={i18n}
-                                                      formatMessage={formatMessage}/>, {attachTo: element});
-        const infoLink = document.getElementsByClassName('search-result-info')[0];
+                                                      formatMessage={formatMessage} {...intlFunctions()}/>, {attachTo: element});
+        const infoLink = document.getElementsByClassName("search-result-info")[0];
         Simulate.click(infoLink);
         expect(onOpenSearch).toHaveBeenCalled();
     });
