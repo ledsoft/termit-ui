@@ -26,7 +26,7 @@ import Term, {TermData} from "../../model/Term";
 import RdfsResource from "../../model/RdfsResource";
 import AppNotification from "../../model/AppNotification";
 
-function stateToPlainObject(state: TermItState) {
+function stateToPlainObject(state: TermItState): TermItState {
     return {
         loading: state.loading,
         user: state.user,
@@ -42,6 +42,10 @@ function stateToPlainObject(state: TermItState) {
         document: state.document,
         fileContent: state.fileContent,
         facetedSearchResult: state.facetedSearchResult,
+        searchListenerCount: state.searchListenerCount,
+        searchInProgress: state.searchInProgress,
+        searchQuery: state.searchQuery,
+        searchResults: state.searchResults,
         types: state.types,
         resource: state.resource,
         resources: state.resources,
