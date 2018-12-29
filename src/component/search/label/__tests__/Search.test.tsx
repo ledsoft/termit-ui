@@ -5,7 +5,7 @@ import SearchResult, {SearchResultData} from "../../../../model/SearchResult";
 import {Search} from "../Search";
 import {Button} from "reactstrap";
 import {createMemoryHistory, Location} from "history";
-import {match} from "react-router";
+import {match, MemoryRouter} from "react-router";
 import Generator from "../../../../__tests__/environment/Generator";
 import VocabularyUtils from "../../../../util/VocabularyUtils";
 import Routing from '../../../../util/Routing';
@@ -65,8 +65,8 @@ describe('Search', () => {
     it('invokes search when location contains search query parameter', () => {
         const value = 'test';
         location.search = 'searchString=' + value;
-        mountWithIntl(<Search search={search} location={location} history={history}
-                              match={routeMatch} {...intlFunctions()}/>);
+        mountWithIntl(<MemoryRouter><Search search={search} location={location} history={history}
+                                            match={routeMatch} {...intlFunctions()}/></MemoryRouter>);
         expect(search).toHaveBeenCalledWith(value);
     });
 

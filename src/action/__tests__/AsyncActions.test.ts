@@ -196,31 +196,6 @@ describe('Async actions', () => {
         });
     });
 
-    describe('search', () => {
-        it('emits search request action with ignore loading switch', () => {
-            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(search('test', true))).then(() => {
-                const searchRequestAction: AsyncAction = store.getActions()[0];
-                expect(searchRequestAction.ignoreLoading).toBeTruthy();
-            });
-        });
-
-        it('compacts incoming JSON-LD data using SearchResult context', () => {
-            const results = require('../../rest-mock/searchResults');
-            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(results));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(search('test', true))).then((result: SearchResult[]) => {
-                expect(Array.isArray(result)).toBeTruthy();
-                result.forEach(r => {
-                    expect(r.iri).toBeDefined();
-                    expect(r.label).toBeDefined();
-                    if (r.hasType(Vocabulary2.TERM)) {
-                        expect(r.vocabularyIri).toBeDefined();
-                    }
-                })
-            });
-        });
-    });
-
     describe('create term', () => {
         it('create top level term in vocabulary context and send it over the network', () => {
             const term = new Term(
