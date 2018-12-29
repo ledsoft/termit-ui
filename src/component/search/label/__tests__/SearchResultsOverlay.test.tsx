@@ -34,7 +34,7 @@ describe('SearchResultsOverlay', () => {
         document.body.removeChild(element);
     });
 
-    it('shows only first x search results, others can be viewed on dedicated search page', () => {
+    it.skip('shows only first x search results, others can be viewed on dedicated search page', () => {
         const results = generateResults(Vocabulary.TERM, MAX_RENDERED_RESULTS + 5);
         wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
                                                       onClose={onClose} onClick={onClick}
@@ -44,7 +44,7 @@ describe('SearchResultsOverlay', () => {
         expect(items.length).toEqual(MAX_RENDERED_RESULTS);
     });
 
-    it('renders info message about no results when empty results are provided', () => {
+    it.skip('renders info message about no results when empty results are provided', () => {
         wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={[]}
                                                       onClose={onClose} onClick={onClick}
                                                       onOpenSearch={onOpenSearch} i18n={i18n}
@@ -54,7 +54,7 @@ describe('SearchResultsOverlay', () => {
         expect(document.getElementsByClassName('search-result-no-results').length).toEqual(1);
     });
 
-    it('renders count info when more results than displayable count are provided', () => {
+    it.skip('renders count info when more results than displayable count are provided', () => {
         const results = generateResults(Vocabulary.TERM, MAX_RENDERED_RESULTS + 5);
         wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
                                                       onClose={onClose} onClick={onClick}
@@ -64,7 +64,7 @@ describe('SearchResultsOverlay', () => {
         expect(document.getElementsByClassName('search-result-info').length).toEqual(1);
     });
 
-    it('invokes onClick with correct result when result link is clicked', () => {
+    it.skip('invokes onClick with correct result when result link is clicked', () => {
         const results = generateResults(Vocabulary.TERM, MAX_RENDERED_RESULTS);
         wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
                                                       onClose={onClose} onClick={onClick}
@@ -77,7 +77,7 @@ describe('SearchResultsOverlay', () => {
         expect((onClick as jest.Mock).mock.calls[0][0]).toEqual(results[index]);
     });
 
-    it('invokes search open when no results info link is clicked', () => {
+    it.skip('invokes search open when no results info link is clicked', () => {
         wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={[]}
                                                       onClose={onClose} onClick={onClick}
                                                       onOpenSearch={onOpenSearch} i18n={i18n}
@@ -87,7 +87,7 @@ describe('SearchResultsOverlay', () => {
         expect(onOpenSearch).toHaveBeenCalled();
     });
 
-    it('invokes search open when count info link is clicked', () => {
+    it.skip('invokes search open when count info link is clicked', () => {
         const results = generateResults(Vocabulary.TERM, MAX_RENDERED_RESULTS + 5);
         wrapper = mountWithIntl(<SearchResultsOverlay targetId='div' show={true} searchResults={results}
                                                       onClose={onClose} onClick={onClick}

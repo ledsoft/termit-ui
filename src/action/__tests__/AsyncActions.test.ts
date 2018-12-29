@@ -17,7 +17,6 @@ import {
     loadVocabulary,
     loadVocabularyTerm,
     login,
-    search,
     updateResourceTerms,
     updateTerm,
     updateVocabulary
@@ -34,7 +33,6 @@ import VocabularyUtils from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
 import ActionType, {AsyncAction, AsyncActionSuccess, MessageAction,} from "../ActionType";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
-import SearchResult from "../../model/SearchResult";
 import {ErrorData} from "../../model/ErrorInfo";
 import Generator from "../../__tests__/environment/Generator";
 import {ThunkDispatch} from "../../util/Types";
