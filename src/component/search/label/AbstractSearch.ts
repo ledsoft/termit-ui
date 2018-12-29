@@ -20,7 +20,7 @@ export class AbstractSearch<P, T extends SearchState = SearchState> extends Reac
                 query: new Map([['namespace', iri.namespace!]])
             });
         } else {
-            const vocabularyIri = Vocabulary.create(result.vocabularyIri!);
+            const vocabularyIri = Vocabulary.create(result.vocabulary!);
             Routing.transitionTo(Routes.vocabularyTermDetail, {
                 params: new Map([['name', vocabularyIri.fragment], ['termName', Vocabulary.getFragment(result.iri)]]),
                 query: new Map([['namespace', vocabularyIri.namespace!]])

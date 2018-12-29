@@ -213,7 +213,7 @@ describe('Async actions', () => {
                     expect(r.iri).toBeDefined();
                     expect(r.label).toBeDefined();
                     if (r.hasType(Vocabulary2.TERM)) {
-                        expect(r.vocabularyIri).toBeDefined();
+                        expect(r.vocabulary).toBeDefined();
                     }
                 })
             });

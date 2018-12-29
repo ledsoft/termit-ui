@@ -3,14 +3,14 @@ import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../../hoc/withI18n";
 import {RouteComponentProps, withRouter} from "react-router";
 import {connect} from "react-redux";
-import {Button, Card, CardBody, CardHeader, Col, Form, FormGroup, Input, Row} from "reactstrap";
+import {Button, Col, Form, FormGroup, Input, Row} from "reactstrap";
 import SearchResult from "../../../model/SearchResult";
 import './Search.scss';
 import {search} from "../../../action/AsyncActions";
-import Vocabulary from "../../../util/VocabularyUtils";
 import {ThunkDispatch} from '../../../util/Types';
 import {AbstractSearch} from "./AbstractSearch";
 import Utils from "../../../util/Utils";
+import SearchResults from "./SearchResults";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     search: (searchString: string) => Promise<object>;
@@ -84,48 +84,10 @@ export class Search extends AbstractSearch<SearchProps> {
         }
         const title =
             <h5>{this.props.formatMessage('search.results.title', {searchString: this.state.searchString})}</h5>;
-        let content;
-        if (this.state.results.length === 0) {
-            content = <Row><Col md={6}>
-                <div className='italics'>{this.props.i18n('main.search.no-results')}</div>
-            </Col></Row>;
-        } else {
-            content = <div>
-                <Row><Col md={12}>{this.renderVocabularies()}</Col></Row>
-                <Row><Col md={12}>{this.renderTerms()}</Col></Row>
-            </div>;
-        }
-        return <div className='container-fluid'>
-            <hr/>
+        return <div className='container-fluid mt-4'>
             {title}
-            {content}
+            <SearchResults results={this.state.results}/>
         </div>;
-    }
-
-    private renderVocabularies() {
-        return <Card className='search-result-container'>
-            <CardHeader tag='h4' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
-            <CardBody>
-                {this.state.results!.filter(r => r.hasType(Vocabulary.VOCABULARY)).map(r => {
-                    return <span key={r.iri} className='search-result-item search-result-link btn-link'
-                                 title={this.props.i18n('search.results.item.vocabulary.tooltip')}
-                                 onClick={this.openResult.bind(null, r)}>{r.label}</span>;
-                })}
-            </CardBody>
-        </Card>;
-    }
-
-    private renderTerms() {
-        return <Card className='search-result-container'>
-            <CardHeader tag='h4' color='info'>{this.props.i18n('search.pojem')}</CardHeader>
-            <CardBody>
-                {this.state.results!.filter(r => r.hasType(Vocabulary.TERM)).map(r => {
-                    return <span key={r.iri} className='search-result-item search-result-link btn-link'
-                                 title={this.props.i18n('search.results.item.term.tooltip')}
-                                 onClick={this.openResult.bind(null, r)}>{r.label}</span>;
-                })}
-            </CardBody>
-        </Card>;
     }
 }
 
