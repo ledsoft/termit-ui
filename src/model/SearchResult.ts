@@ -31,7 +31,11 @@ export default class SearchResult {
 
     constructor(data: SearchResultData) {
         Object.assign(this, data);
-        this.vocabulary = data.vocabulary ? data.vocabulary.iri: undefined;
+        this.vocabulary = data.vocabulary ? data.vocabulary.iri : undefined;
+    }
+
+    public copy(): SearchResult {
+        return new SearchResult(Object.assign({}, this, {vocabulary: this.vocabulary ? {iri: this.vocabulary} : undefined}));
     }
 
     public get typeNameId(): string {
