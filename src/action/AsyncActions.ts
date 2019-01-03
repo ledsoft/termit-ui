@@ -261,7 +261,8 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
         if (fetchOptions.optionID) {
             url = Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms/" + VocabularyUtils.getFragment(fetchOptions.optionID) + "/subterms"
         } else {
-            url = Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms";
+            // Fetching roots only
+            url = Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms/roots";
         }
         return Ajax.get(url,
             params(Object.assign({

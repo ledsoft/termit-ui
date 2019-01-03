@@ -346,7 +346,8 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                                 childrenKey="plainSubTerms"
                                 filterOptions={this.filterParentOptions}
                                 expanded={true}
-                                renderAsTree={false}
+                                simpleTreeData={true}
+                                renderAsTree={true}
                         />
 
                         <TextInput field="optionSource" id="optionSource"

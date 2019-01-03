@@ -309,61 +309,61 @@ describe('Async actions', () => {
         });
     });
 
-    describe('fetch terms', () => {
-        it('extracts terms from incoming JSON-LD', () => {
-            const terms = require('../../rest-mock/terms');
+    describe("fetch terms", () => {
+        it("extracts terms from incoming JSON-LD", () => {
+            const terms = require("../../rest-mock/terms");
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
             return Promise.resolve((store.dispatch as ThunkDispatch)(fetchVocabularyTerms({
                 searchString: "",
                 limit: 5,
                 offset: 0,
                 optionID: ""
-            }, 'test-vocabulary')))
+            }, "test-vocabulary")))
                 .then((data: Term[]) => {
                     expect(data.length).toEqual(terms.length);
                     data.sort((a, b) => a.iri.localeCompare(b.iri));
-                    terms.sort((a: object, b: object) => a['@id'].localeCompare(b['@id']));
+                    terms.sort((a: object, b: object) => a["@id"].localeCompare(b["@id"]));
                     for (let i = 0; i < terms.length; i++) {
-                        expect(data[i].iri).toEqual(terms[i]['@id']);
+                        expect(data[i].iri).toEqual(terms[i]["@id"]);
                     }
                 });
         });
 
-        it('provides parameters with request', () => {
-            const terms = require('../../rest-mock/terms');
+        it("provides parameters with request", () => {
+            const terms = require("../../rest-mock/terms");
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
             const params: FetchOptionsFunction = {
-                searchString: 'test'
+                searchString: "test"
             };
-            return Promise.resolve((store.dispatch as ThunkDispatch)(fetchVocabularyTerms(params, 'test-vocabulary'))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(fetchVocabularyTerms(params, "test-vocabulary"))).then(() => {
                 const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
                 expect(callConfig.getParams()).toEqual(params);
             });
         });
 
-        it('gets all terms when parent option is not specified', () => {
-            const terms = require('../../rest-mock/terms');
+        it("gets all root terms when parent option is not specified", () => {
+            const terms = require("../../rest-mock/terms");
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
-            const vocabName = 'test-vocabulary';
+            const vocabName = "test-vocabulary";
             return Promise.resolve((store.dispatch as ThunkDispatch)(fetchVocabularyTerms({}, vocabName))).then(() => {
                 const targetUri = (Ajax.get as jest.Mock).mock.calls[0][0];
-                expect(targetUri).toEqual(Constants.API_PREFIX + '/vocabularies/' + vocabName + '/terms');
+                expect(targetUri).toEqual(Constants.API_PREFIX + "/vocabularies/" + vocabName + "/terms/roots");
                 const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
                 expect(callConfig.getParams()).toEqual({});
             });
         });
 
-        it('gets subterms when parent option is specified', () => {
-            const terms = require('../../rest-mock/terms');
+        it("gets subterms when parent option is specified", () => {
+            const terms = require("../../rest-mock/terms");
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
-            const parentUri = 'http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-3';
+            const parentUri = "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-3";
             const params: FetchOptionsFunction = {
                 optionID: parentUri
             };
-            const vocabName = 'test-vocabulary';
+            const vocabName = "test-vocabulary";
             return Promise.resolve((store.dispatch as ThunkDispatch)(fetchVocabularyTerms(params, vocabName))).then(() => {
                 const targetUri = (Ajax.get as jest.Mock).mock.calls[0][0];
-                expect(targetUri).toEqual(Constants.API_PREFIX + '/vocabularies/' + vocabName + '/terms/pojem-3/subterms');
+                expect(targetUri).toEqual(Constants.API_PREFIX + "/vocabularies/" + vocabName + "/terms/pojem-3/subterms");
                 const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
                 expect(callConfig.getParams()).toEqual({});
             });
