@@ -220,69 +220,91 @@ describe('Async actions', () => {
         });
     });
 
-    describe('create term', () => {
-        it('create top level term in vocabulary context and send it over the network', () => {
+    describe("create term", () => {
+        it("create top level term in vocabulary context and send it over the network", () => {
+            const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary");
             const term = new Term(
                 {
-                    label: 'Test term 1',
-                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
+                    label: "Test term 1",
+                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/test-term-1"
                 },
             );
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
             Ajax.post = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabularyTerm(term, 'test-vocabulary'))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabularyTerm(term, vocabularyIri))).then(() => {
                 expect(Ajax.post).toHaveBeenCalled();
+                expect(mock.mock.calls[0][0]).toEqual(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms");
                 const config = mock.mock.calls[0][1];
                 expect(config.getContentType()).toEqual(Constants.JSON_LD_MIME_TYPE);
                 const data = config.getContent();
-                expect(data['@context']).toBeDefined();
-                expect(data['@context']).toEqual(TERM_CONTEXT);
+                expect(data["@context"]).toBeDefined();
+                expect(data["@context"]).toEqual(TERM_CONTEXT);
             });
         });
-        it('create child term in vocabulary context and send it over the network', () => {
+        it("create child term in vocabulary context and send it over the network", () => {
+            const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary");
+            const parentFragment = "test-term-1";
             const parentTerm = new Term(
                 {
-                    label: 'Test term 1',
-                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
+                    label: "Test term 1",
+                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/" + parentFragment,
                 },
             );
             const childTerm = new Term(
                 {
-                    label: 'Test term 2',
-                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-2',
+                    label: "Test term 2",
+                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/test-term-2",
                     parent: parentTerm.iri
                 },
             );
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
             Ajax.post = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabularyTerm(childTerm, 'test-vocabulary'))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabularyTerm(childTerm, vocabularyIri))).then(() => {
                 expect(Ajax.post).toHaveBeenCalled();
+                expect(mock.mock.calls[0][0]).toEqual(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/" + parentFragment + "/subterms");
                 const config = mock.mock.calls[0][1];
                 expect(config.getContentType()).toEqual(Constants.JSON_LD_MIME_TYPE);
                 const data = config.getContent();
-                expect(data['@context']).toBeDefined();
-                expect(data['@context']).toEqual(TERM_CONTEXT);
+                expect(data["@context"]).toBeDefined();
+                expect(data["@context"]).toEqual(TERM_CONTEXT);
             });
         });
 
         it("publishes notification on successful creation", () => {
+            const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary");
             const term = new Term(
                 {
-                    label: 'Test term 1',
-                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
+                    label: "Test term 1",
+                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/test-term-1"
                 },
             );
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({
                 headers: {
-                    'location': 'http://test'
+                    "location": "http://test"
                 }
             }));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabularyTerm(term, 'test-vocabulary'))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabularyTerm(term, vocabularyIri))).then(() => {
                 const actions = store.getActions();
                 const action = actions[actions.length - 1];
                 expect(action.type).toEqual(ActionType.PUBLISH_NOTIFICATION);
                 expect(action.notification.source.type).toEqual(ActionType.CREATE_VOCABULARY_TERM);
                 expect(action.notification.source.status).toEqual(AsyncActionStatus.SUCCESS);
+            });
+        });
+
+        it("provides vocabulary namespace in as request parameter", () => {
+            const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary");
+            const term = new Term(
+                {
+                    label: "Test term 1",
+                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/test-term-1"
+                },
+            );
+            const mock = jest.fn().mockImplementation(() => Promise.resolve());
+            Ajax.post = mock;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabularyTerm(term, vocabularyIri))).then(() => {
+                const config = mock.mock.calls[0][1];
+                expect(config.getParams().namespace).toEqual(vocabularyIri.namespace);
             });
         });
     });

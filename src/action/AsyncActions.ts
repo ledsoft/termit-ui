@@ -117,14 +117,17 @@ export function createVocabulary(vocabulary: Vocabulary) {
     };
 }
 
-export function createVocabularyTerm(term: Term, normalizedName: string) {
+export function createVocabularyTerm(term: Term, vocabularyIri: IRI) {
     const action = {
         type: ActionType.CREATE_VOCABULARY_TERM
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
-        return Ajax.post(Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms",
-            content(term.toJsonLd()).params({parentTermUri: term.parent}).contentType(Constants.JSON_LD_MIME_TYPE))
+        let url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
+        if (term.parent) {
+            url += "/" + VocabularyUtils.create(term.parent).fragment + "/subterms";
+        }
+        return Ajax.post(url, content(term.toJsonLd()).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIri.namespace))
             .then((resp: AxiosResponse) => {
                 const asyncSuccessAction = asyncActionSuccess(action);
                 dispatch(asyncSuccessAction);

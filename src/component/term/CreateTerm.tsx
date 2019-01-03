@@ -44,6 +44,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        createTerm: (term: Term, vocabularyIri: IRI) => dispatch(createVocabularyTerm(term, vocabularyIri.fragment))
+        createTerm: (term: Term, vocabularyIri: IRI) => dispatch(createVocabularyTerm(term, vocabularyIri))
     };
 })(CreateTerm);
