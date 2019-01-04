@@ -10,11 +10,7 @@ export class Dashboard extends React.Component<HasI18n> {
 
     public render() {
         return <>
-            <Row>
-                <Col>
-                    <WidgetToolbar />
-                </Col>
-            </Row>
+            <WidgetToolbar />
             <Row>
                 <Col>
                     <Vocabularies />

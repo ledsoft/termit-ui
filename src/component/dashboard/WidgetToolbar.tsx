@@ -3,16 +3,24 @@ import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Routes from "../../util/Routes";
 import LinkWidget from "./LinkWidget";
+import {Nav, NavItem} from "reactstrap";
+import "./WidgetToolbar.scss";
 
 class WidgetToolbar extends React.Component<HasI18n> {
     public render() {
-        // const i18n = this.props.i18n;
+        const i18n = this.props.i18n;
 
-        return <nav className="widget-toolbar container-fluid row justify-content-center mb-3">
-            <LinkWidget to={Routes.createVocabulary.link()}>Foo</LinkWidget>
-            <LinkWidget to={Routes.createVocabulary.link()}>Bar</LinkWidget>
-            <LinkWidget to={Routes.createVocabulary.link()}>Baz</LinkWidget>
-        </nav>;
+        return <Nav className="widget-toolbar justify-content-center mb-3">
+            <NavItem className="card mx-1">
+                <LinkWidget to={Routes.vocabularies.link()}>{i18n("main.nav.vocabularies")}</LinkWidget>
+            </NavItem>
+            <NavItem className="card mx-1">
+                <LinkWidget to={Routes.resources.link()}>{i18n("main.nav.resources")}</LinkWidget>
+            </NavItem>
+            <NavItem className="card mx-1">
+                <LinkWidget to={Routes.statistics.link()}>{i18n("main.nav.statistics")}</LinkWidget>
+            </NavItem>
+        </Nav>;
     }
 }
 
