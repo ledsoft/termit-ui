@@ -13,10 +13,11 @@ describe('DocumentDetail', () => {
     let document: Document;
     let loadDocument: (iri: IRI) => void
     let documentIri: IRI;
+    const newDocumentIri = VocabularyUtils.create("http://ex.org/new-document-iri");
     beforeEach(() => {
         document = new Document({
             iri: "http://ex.org/document1",
-            name: "Document1",
+            label: "Document1",
             files: []
         });
         documentIri = VocabularyUtils.create(document.iri);
@@ -35,14 +36,26 @@ describe('DocumentDetail', () => {
         expect(wrapper.find(FileList).exists()).toBeTruthy();
     });
 
-    it('loads document on mount', () => {
+    it('does not load document on mount if already loaded', () => {
         shallow(<DocumentDetail
             iri={documentIri}
             document={document}
             loadDocument={loadDocument}
             {...intlFunctions()} {...intlDataForShallow()}/>
         );
-        expect(loadDocument).toHaveBeenCalledWith(documentIri);
+        expect(loadDocument).not.toHaveBeenCalled();
     });
+
+    it('loads document on mount if not loaded', () => {
+        shallow(<DocumentDetail
+            iri={newDocumentIri}
+            document={document}
+            loadDocument={loadDocument}
+            {...intlFunctions()} {...intlDataForShallow()}/>
+        );
+        expect(loadDocument).toHaveBeenCalledWith(newDocumentIri);
+    });
+
+
 
 });

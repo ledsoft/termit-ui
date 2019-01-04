@@ -451,7 +451,7 @@ export function loadDocument(iri: IRI) {
         type: ActionType.LOAD_DOCUMENT
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action, true));
+        dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) =>

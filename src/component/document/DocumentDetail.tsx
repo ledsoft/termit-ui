@@ -11,8 +11,8 @@ import TermItState from "../../model/TermItState";
 
 
 interface DocumentDetailOwnProps {
-    document: Document,
     iri: IRI, // TODO remove
+    document: Document,
 }
 
 interface DocumentDetailDispatchProps {
@@ -23,12 +23,27 @@ type DocumentDetailProps = DocumentDetailOwnProps & DocumentDetailDispatchProps 
 
 export class DocumentDetail extends React.Component<DocumentDetailProps> {
 
-    public componentDidMount() {
-        this.props.loadDocument(this.props.iri);
+    public componentDidMount(): void {
+        this.synchronizeDocument();
+    }
+
+    public componentDidUpdate(): void {
+        this.synchronizeDocument();
+    }
+
+    private synchronizeDocument(): void {
+        if (DocumentDetail.isDifferent(this.props.iri,this.props.document.iri)) {
+            this.props.loadDocument(this.props.iri);
+        }
     }
 
     public render() {
         return <FileList files={this.props.document.files}/>;
+    }
+
+    private static isDifferent(iri1: IRI, iri2: string): boolean {
+        const iri1str = iri1.namespace + iri1.fragment;
+        return iri1str !== iri2;
     }
 }
 
