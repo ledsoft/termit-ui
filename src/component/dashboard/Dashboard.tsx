@@ -5,6 +5,7 @@ import {Col, Row} from "reactstrap";
 import Vocabularies from "../vocabulary/Vocabularies";
 import Resources from "../resource/Resources";
 import WidgetToolbar from "./WidgetToolbar";
+import NewsMd from "./NewsMd";
 
 export class Dashboard extends React.Component<HasI18n> {
 
@@ -17,6 +18,9 @@ export class Dashboard extends React.Component<HasI18n> {
                 </Col>
                 <Col>
                     <Resources />
+                </Col>
+                <Col>
+                    <NewsMd />
                 </Col>
             </Row>
             </>;

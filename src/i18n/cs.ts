@@ -63,6 +63,7 @@ export default {
         'dashboard.create-vocabulary.tile' : 'Vytvořit slovník',
         'dashboard.add-document.tile' : 'Přidat dokument',
         'dashboard.resources.tile' : 'Zdroje',
+        'dashboard.news.tile': 'Novinky',
 
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',

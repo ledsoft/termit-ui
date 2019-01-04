@@ -63,6 +63,7 @@ export default {
         'dashboard.search.tile': 'Search',
         'dashboard.create-vocabulary.tile': 'Create Vocabulary',
         'dashboard.add-document.tile': 'Add Document',
+        'dashboard.news.tile': 'News',
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
