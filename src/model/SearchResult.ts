@@ -14,7 +14,7 @@ export interface SearchResultData {
     iri: string;
     label: string;
     snippetText: string;
-    snippetField?: string;
+    snippetField: string;
     score?: number;
     types: string[];
     vocabulary?: { iri: string };
@@ -24,7 +24,7 @@ export default class SearchResult {
     public readonly iri: string;
     public readonly label: string;
     public readonly snippetText: string;
-    public readonly snippetField?: string;
+    public readonly snippetField: string;
     public readonly score?: number;
     public readonly types: string[];
     public readonly vocabulary?: string;

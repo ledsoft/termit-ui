@@ -19,6 +19,16 @@
   font-weight: bold;
 }
 
+.search-result-match-row {
+  margin-bottom: 0.25rem;
+}
+
+.search-result-field-badge {
+  border: 1px solid #007bff;
+  color: #000000;
+  background: #fafaff !important;
+}
+
 .search-result-score-container {
   display: inline-block;
   line-height: 1;
