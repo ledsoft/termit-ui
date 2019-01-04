@@ -8,6 +8,9 @@ import VocabularyBadge from "../../badge/VocabularyBadge";
 import TermBadge from "../../badge/TermBadge";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
+import FTSSnippetText from "./FTSSnippetText";
+
+const MULTIPLE_FIELDS_MATCH_FACTOR = 1.33;
 
 interface SearchResultsProps extends HasI18n {
     results: SearchResult[];
@@ -67,10 +70,11 @@ export class SearchResults extends React.Component<SearchResultsProps> {
             return <tr key={r.iri}>
                 <td className="align-middle search-result-type">{SearchResults.renderTypeBadge(r)}</td>
                 <td className="align-middle search-result-label"><Button color="link"
+                                                                         title={this.props.i18n("search.results.table.label.tooltip")}
                                                                          className="search-result-assetlink"
                                                                          onClick={this.onItemClick.bind(null, r)}>{r.label}</Button>
                 </td>
-                <td className="align-middle search-result-match">{r.snippetText}</td>
+                <td className="align-middle search-result-match"><FTSSnippetText text={r.snippetText}/></td>
                 <td className="align-middle search-result-field">{r.snippetField}</td>
                 <td className="align-middle text-center search-result-score">
                     {SearchResults.renderScore(r.score, maxScore)}
@@ -92,7 +96,7 @@ export class SearchResults extends React.Component<SearchResultsProps> {
                 if (existing.snippetField !== r.snippetField) {
                     snippetField += "; " + r.snippetField;
                     snippetText += "; " + r.snippetText;
-                    score = score ? score * 2 : score;
+                    score = score ? score * MULTIPLE_FIELDS_MATCH_FACTOR : score;
                 }
                 const copy = new SearchResult({
                     iri: r.iri,

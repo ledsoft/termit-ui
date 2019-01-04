@@ -165,9 +165,8 @@ export default {
 
         'search.title': 'Vyhledávání',
         'search.results.title': 'Výsledky vyhledávání \'{searchString}\'',
-        'search.results.item.vocabulary.tooltip': 'Detail slovníku',
-        'search.results.item.term.tooltip': 'Detail pojmu',
         "search.results.table.label": "Název",
+        "search.results.table.label.tooltip": "Zobrazit detail objektu",
         "search.results.table.match": "Nalezená shoda",
         "search.results.table.field": "Atribut(y)",
         "search.results.table.score": "Skóre shody",

@@ -162,8 +162,13 @@ describe("SearchResults", () => {
         expect(rows.length).toEqual(2);
         const label = wrapper.find(Button);
         expect(label.text()).toEqual(results[0].label);
-        expect(wrapper.find(".search-result-match").text()).toEqual(results[0].snippetText);
+        expect(wrapper.find(".search-result-match").text()).toEqual(removeMarkup(results[0].snippetText));
     });
+
+    function removeMarkup(text: string) {
+        const tmp = text.replace(/<em>/g, "");
+        return tmp.replace(/<\/em>/g, "");
+    }
 
     it("merges matches of multiple fields of one asset into one result row", () => {
         const iri = Generator.generateUri();
@@ -186,7 +191,7 @@ describe("SearchResults", () => {
         expect(rows.length).toEqual(2);
         const label = wrapper.find(Button);
         expect(label.text()).toEqual(results[0].label);
-        expect(wrapper.find(".search-result-match").text()).toEqual(results[0].snippetText + "; " + results[1].snippetText);
+        expect(wrapper.find(".search-result-match").text()).toEqual(removeMarkup(results[0].snippetText + "; " + removeMarkup(results[1].snippetText)));
     });
 
     it("ensures results are sorted by score descending", () => {

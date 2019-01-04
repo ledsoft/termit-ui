@@ -166,9 +166,8 @@ export default {
 
         'search.title': 'Search',
         'search.results.title': 'Results for \'{searchString}\'',
-        'search.results.item.vocabulary.tooltip': 'Open vocabulary detail',
-        'search.results.item.term.tooltip': 'Open term detail',
         "search.results.table.label": "Label",
+        "search.results.table.label.tooltip": "Open asset detail",
         "search.results.table.match": "Match",
         "search.results.table.field": "Attribute(s)",
         "search.results.table.score": "Match score",
