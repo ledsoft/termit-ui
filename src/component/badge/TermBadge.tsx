@@ -5,7 +5,7 @@ import {Badge} from "reactstrap";
 
 
 const TermBadge: React.SFC<HasI18n> = (props: HasI18n) => <Badge
-    color="light">{props.i18n("type.term")}</Badge>;
+    color="dark">{props.i18n("type.term")}</Badge>;
 
 
 export default injectIntl(withI18n(TermBadge));

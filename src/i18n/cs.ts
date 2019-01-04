@@ -168,7 +168,7 @@ export default {
         'search.results.item.vocabulary.tooltip': 'Detail slovníku',
         'search.results.item.term.tooltip': 'Detail pojmu',
         "search.results.table.label": "Název",
-        "search.results.table.match": "Nalezaná shoda",
+        "search.results.table.match": "Nalezená shoda",
         "search.results.table.field": "Atribut(y)",
         "search.results.table.score": "Skóre shody",
         'search.slovnik' : 'Slovník',

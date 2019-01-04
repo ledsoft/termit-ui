@@ -10,21 +10,26 @@
   margin-bottom: 1rem;
 }
 
-.search-result-item {
+.search-result-assetlink {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.search-result-score-container {
   display: inline-block;
-  padding: 0 0.5rem;
-  border-left: 1px solid rgba(0,0,0, 0.15) !important;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid #ced4da;
+  background: #fff;
+  border-radius: 0.25rem;
+  width: 100px;
+  height: 16px;
 }
 
-.search-result-assetlink-item {
-  @extend .search-result-item;
-  padding-right: 0;
-}
-
-.search-result-item:first-child {
-  margin-left: 0;
-}
-
-.search-result-item:last-child {
-  border-right: 1px solid rgba(0,0,0, 0.15) !important;
+.search-result-score-bar {
+  border-radius: 0.25rem;
+  background: #6f42c1;
+  height: 14px;
+  position: absolute;
+  border-right: 1px solid #ced4da;
 }

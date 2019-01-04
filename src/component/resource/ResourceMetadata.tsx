@@ -54,7 +54,7 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
                 </Col>
                 <Col md={10}>
                     {resourceTerms.map(r =>
-                        <span key={r.iri} className="search-result-assetlink-item">
+                        <span key={r.iri} className="resource-term-link">
                             <TermLink term={r}/>
                         </span>
                     )}

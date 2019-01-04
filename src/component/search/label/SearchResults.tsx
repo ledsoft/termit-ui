@@ -51,7 +51,7 @@ export class SearchResults extends React.Component<SearchResultsProps> {
                 <th className="col-xs-3">{i18n("search.results.table.label")}</th>
                 <th className="col-xs-4">{i18n("search.results.table.match")}</th>
                 <th className="col-xs-3">{i18n("search.results.table.field")}</th>
-                <th className="col-xs-1">{i18n("search.results.table.score")}</th>
+                <th className="col-xs-1 text-center">{i18n("search.results.table.score")}</th>
             </tr>
             </thead>
             <tbody>
@@ -62,15 +62,19 @@ export class SearchResults extends React.Component<SearchResultsProps> {
 
     private renderResults() {
         const items = SearchResults.mergeDuplicates(this.props.results);
+        const maxScore = SearchResults.calculateMaxScore(items);
         return items.map(r => {
             return <tr key={r.iri}>
                 <td className="align-middle search-result-type">{SearchResults.renderTypeBadge(r)}</td>
                 <td className="align-middle search-result-label"><Button color="link"
+                                                                         className="search-result-assetlink"
                                                                          onClick={this.onItemClick.bind(null, r)}>{r.label}</Button>
                 </td>
                 <td className="align-middle search-result-match">{r.snippetText}</td>
                 <td className="align-middle search-result-field">{r.snippetField}</td>
-                <td className="align-middle search-result-score">{r.score}</td>
+                <td className="align-middle text-center search-result-score">
+                    {SearchResults.renderScore(r.score, maxScore)}
+                </td>
             </tr>;
         });
     }
@@ -105,6 +109,20 @@ export class SearchResults extends React.Component<SearchResultsProps> {
         const arr = Array.from(map.values());
         arr.sort(scoreSort);
         return arr;
+    }
+
+    private static calculateMaxScore(results: SearchResult[]) {
+        return results.reduce((accumulator, item) => item.score && item.score > accumulator ? item.score : accumulator, 0.0);
+    }
+
+    private static renderScore(score: number | undefined, maxScore: number) {
+        if (!score) {
+            return null;
+        }
+        const width = (score / maxScore) * 100;
+        return <div className="search-result-score-container" title={score.toString()}>
+            <div className="search-result-score-bar" style={{width: width + "px"}}/>
+        </div>;
     }
 
     private static renderTypeBadge(item: SearchResult) {

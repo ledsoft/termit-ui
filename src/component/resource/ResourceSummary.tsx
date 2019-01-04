@@ -15,6 +15,7 @@ import Utils from "../../util/Utils";
 import {default as Resource, EMPTY_RESOURCE} from "../../model/Resource";
 import ResourceMetadata from "./ResourceMetadata";
 import ResourceEdit from "./ResourceEdit";
+import "./Resources.scss";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
