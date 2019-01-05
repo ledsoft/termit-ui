@@ -15,6 +15,7 @@ export default {
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
+        'ajax.failed': 'Unable to load data from the server.',
 
         'footer.copyright': 'KBSS at FEE CTU in Prague',
         'footer.version': 'Version {version}',

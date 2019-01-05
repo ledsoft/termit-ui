@@ -15,6 +15,7 @@ export default {
 
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
+        'ajax.failed': 'Nepodařilo se načíst data ze serveru.',
 
         'footer.copyright': 'KBSS FEL ČVUT v Praze',
         'footer.version': 'Verze {version}',

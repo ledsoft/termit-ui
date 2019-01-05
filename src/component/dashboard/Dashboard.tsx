@@ -13,13 +13,13 @@ export class Dashboard extends React.Component<HasI18n> {
         return <>
             <WidgetToolbar />
             <Row>
-                <Col>
+                <Col className="col-4">
                     <Vocabularies />
                 </Col>
-                <Col>
+                <Col className="col-4">
                     <Resources />
                 </Col>
-                <Col>
+                <Col className="col-4">
                     <NewsMd />
                 </Col>
             </Row>

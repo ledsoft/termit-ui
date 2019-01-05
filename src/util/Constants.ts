@@ -34,6 +34,12 @@ const constants = {
     // For how long should a message be displayed
     MESSAGE_DISPLAY_TIMEOUT: 5000,
 
+    // News
+    NEWS_MD_URL: {
+        "cs": location.origin + "/NEWS.cs.md",
+        "en": location.origin + "/NEWS.en.md",
+    },
+
     // Layout customization
     LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT: false,
     LAYOUT_NAVBAR_BACKGROUND: "#777",
