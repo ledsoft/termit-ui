@@ -12,6 +12,9 @@ class WidgetToolbar extends React.Component<HasI18n> {
 
         return <Nav className="widget-toolbar justify-content-center mb-3">
             <NavItem className="card mx-1">
+                <LinkWidget to={Routes.createVocabulary.link()}>{i18n("dashboard.create-vocabulary.tile")}</LinkWidget>
+            </NavItem>
+            <NavItem className="card mx-1">
                 <LinkWidget to={Routes.vocabularies.link()}>{i18n("main.nav.vocabularies")}</LinkWidget>
             </NavItem>
             <NavItem className="card mx-1">
