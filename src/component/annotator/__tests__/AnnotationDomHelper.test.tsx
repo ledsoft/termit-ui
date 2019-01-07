@@ -1,10 +1,10 @@
 // @ts-ignore
-import {DomHandler, DomUtils, Parser as HtmlParser}  from 'htmlparser2';
+import {DomHandler, DomUtils, Parser as HtmlParser}  from "htmlparser2";
 import AnnotationDomHelper from "../AnnotationDomHelper";
 // @ts-ignore
-import {Node} from 'html-to-react';
+import {Node} from "html-to-react";
 
-describe('AnnotationDomHelper', () => {
+describe("AnnotationDomHelper", () => {
 
     const html = "<html>\n" +
         "<body>\n" +
@@ -35,12 +35,12 @@ describe('AnnotationDomHelper', () => {
         otherSpan = du.find((n: Node) =>  n.name === "span", dom, true)[1];
     });
 
-    it('isAnnotation recognizes annotation', () => {
+    it("isAnnotation recognizes annotation", () => {
         expect(ah.isAnnotation(otherSpan)).toBe(false);
         expect(ah.isAnnotation(annotationSpan)).toBe(true);
     });
 
-    it('findAnnotation finds span', () => {
+    it("findAnnotation finds span", () => {
         const about = annotationSpan.attribs.about;
 
         const foundSpan = ah.findAnnotation(dom, about);
@@ -48,7 +48,7 @@ describe('AnnotationDomHelper', () => {
         expect(foundSpan).toEqual(annotationSpan);
     });
 
-    it('removeAnnotation replaces span with text', () => {
+    it("removeAnnotation replaces span with text", () => {
         const about = annotationSpan.attribs.about;
         const text = annotationSpan.children[0].data;
 
@@ -63,22 +63,22 @@ describe('AnnotationDomHelper', () => {
         expect(newHtml).toContain(text);
     });
 
-    it('isAnnotationWithMinimumScore returns false if it is not annotation', () => {
+    it("isAnnotationWithMinimumScore returns false if it is not annotation", () => {
         expect(ah.isAnnotationWithMinimumScore(otherSpan, 0.5)).toBe(false);
     });
 
-    it('isAnnotationWithMinimumScore returns false if score is less-than trashold', () => {
+    it("isAnnotationWithMinimumScore returns false if score is less-than trashold", () => {
         annotationSpan.attribs.score = "0.4";
         expect(ah.isAnnotationWithMinimumScore(annotationSpan, 0.5)).toBe(false);
     });
 
-    it('isAnnotationWithMinimumScore returns true if score is more-than or equal trashold', () => {
+    it("isAnnotationWithMinimumScore returns true if score is more-than or equal trashold", () => {
         annotationSpan.attribs.score = "0.5";
         expect(ah.isAnnotationWithMinimumScore(annotationSpan, 0.5)).toBe(true);
         expect(ah.isAnnotationWithMinimumScore(annotationSpan, 0.4)).toBe(true);
     });
 
-    it('isAnnotationWithMinimumScore returns true if score is not defined', () => {
+    it("isAnnotationWithMinimumScore returns true if score is not defined", () => {
         expect(ah.isAnnotationWithMinimumScore(annotationSpan, 0.5)).toBe(true);
     });
 

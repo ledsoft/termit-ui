@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from 'html-to-react';
+import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from "html-to-react";
 import Annotation from "./Annotation";
 import IntlData from "../../model/IntlData";
 import {fromRange, toRange} from "xpath-range";
@@ -43,7 +43,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     constructor(props: AnnotatorProps) {
         super(props);
         this.state = {
-            internalHtml: this.matchHtml(props.html).body,
+            internalHtml: Annotator.matchHtml(props.html).body,
             stickyAnnotationId: ""
         };
     }
@@ -81,10 +81,10 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
             }
         }
         return null;
-    }
+    };
 
-    private getRDFNodeId(): string {
-        return '_:' + Math.random().toString(36).substring(8);
+    private static getRDFNodeId(): string {
+        return "_:" + Math.random().toString(36).substring(8);
     }
 
     private onRemove = (annotationId : string) => {
@@ -97,7 +97,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                 { internalHtml: newInternalHtml,
                         stickyAnnotationId: ""
                 }
-            )
+            );
             this.props.onUpdate(this.reconstructHtml(newInternalHtml));
         }
     };
@@ -111,7 +111,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
             const newInternalHtml = HtmlParserUtils.dom2html(dom);
             this.setState(
                 { internalHtml: newInternalHtml }
-            )
+            );
             this.props.onUpdate(this.reconstructHtml(newInternalHtml));
         }
     };
@@ -136,8 +136,9 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                          return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
                     }
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
-                    return <Annotation onRemove={this.onRemove} onUpdate={this.onUpdate} onFetchTerm={this.props.onFetchTerm} sticky={sticky} text={node.children[0].data} {...node.attribs} />
-                    // return node.data.toUpperCase();
+                    return <Annotation onRemove={this.onRemove} onUpdate={this.onUpdate}
+                                       onFetchTerm={this.props.onFetchTerm} sticky={sticky}
+                                       text={node.children[0].data} {...node.attribs} />
                 }
             }, {
                 // Anything else
@@ -146,11 +147,11 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                 },
                 processNode: processNodeDefinitions.processDefaultNode
             }];
-    }
+    };
 
     private handleMouseLeave = () => {
         if (this.containerElement) {
-            const about = this.getRDFNodeId();
+            const about = Annotator.getRDFNodeId();
             const newContainerElement = this.surroundSelection(this.containerElement, this.containerElement.ownerDocument, about)
             if (newContainerElement != null) {
                 this.setState(
@@ -190,7 +191,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         return nodes.map((n:any,i:number) => <React.Fragment key={i}>{n}</React.Fragment>)
     }
 
-    private matchHtml(htmlContent: string): HtmlSplit {
+    private static matchHtml(htmlContent: string): HtmlSplit {
 
         const htmlSplit = htmlContent.split(/(<body>|<\/body>)/ig);
 
@@ -210,7 +211,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     }
 
     private reconstructHtml(htmlBodyContent: string) {
-        const htmlSplit = this.matchHtml(this.props.html);
+        const htmlSplit = Annotator.matchHtml(this.props.html);
         return htmlSplit.prefix + htmlBodyContent + htmlSplit.suffix;
     }
 }

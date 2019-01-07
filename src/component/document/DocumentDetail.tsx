@@ -1,12 +1,12 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import withI18n, {HasI18n} from '../hoc/withI18n';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import FileList from "../file/FileList";
 import {connect} from "react-redux";
 import {loadDocument} from "../../action/AsyncActions";
 import {IRI} from "../../util/VocabularyUtils";
 import Document from "../../model/Document";
-import {ThunkDispatch} from '../../util/Types';
+import {ThunkDispatch} from "../../util/Types";
 import TermItState from "../../model/TermItState";
 
 

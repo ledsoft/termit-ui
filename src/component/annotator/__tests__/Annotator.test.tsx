@@ -5,6 +5,7 @@ import {Annotator} from "../Annotator";
 import {shallow} from "enzyme";
 import Annotation from "..//Annotation";
 import {createAnnotationSpan, mountWithIntlAttached, surroundWithHtml} from "./AnnotationUtil";
+import Term from "../../../model/Term";
 
 describe("Annotator", () => {
 
@@ -24,14 +25,16 @@ describe("Annotator", () => {
     };
     let mockedCallbackProps: {
         onUpdate(newHtml: string): void
+        onFetchTerm(termIri: string): Promise<Term>
     };
     beforeEach(() => {
         mockedCallbackProps = {
-            onUpdate: jest.fn()
+            onUpdate: jest.fn(),
+            onFetchTerm: jest.fn()
         }
     });
 
-    it('renders body of provided html content', () => {
+    it("renders body of provided html content", () => {
 
         const wrapper = mountWithIntl(<Annotator
             {...mockedCallbackProps}
@@ -42,7 +45,7 @@ describe("Annotator", () => {
         expect(wrapper.html().includes(sampleContent)).toBe(true);
     });
 
-    it('renders annotation of suggested occurrence of a term', () => {
+    it("renders annotation of suggested occurrence of a term", () => {
         const htmlWithOccurrence = surroundWithHtml(
             createAnnotationSpan(
                 suggestedOccProps,
@@ -62,7 +65,7 @@ describe("Annotator", () => {
             .toEqual(expect.objectContaining(expectedAnnProps))
     });
 
-    it('renders annotation of assigned occurrence of a term', () => {
+    it("renders annotation of assigned occurrence of a term", () => {
         const htmlWithOccurrence = surroundWithHtml(
             createAnnotationSpan(
                 assignedOccProps,
@@ -83,24 +86,24 @@ describe("Annotator", () => {
     });
 
     // todo rewrite it with xpath-range functions
-    xit('renders annotation over selected text on mouseup event', () => {
-        const div = document.createElement('div');
+    xit("renders annotation over selected text on mouseup event", () => {
+        const div = document.createElement("div");
         document.body.appendChild(div);
         const wrapper = mountWithIntl(<Annotator
             {...mockedCallbackProps}
             html={generalHtmlContent}
             intl={intl()}
         />, {attachTo: div});
-        const newSpan = div.querySelector('span');
+        const newSpan = div.querySelector("span");
         const annTarget = {element: newSpan, text: "some text"};
         // @ts-ignore
         wrapper.find(Annotator).instance().surroundSelection = () => annTarget;
 
-        expect(wrapper.html().includes('suggested-term')).toBeFalsy()
+        expect(wrapper.html().includes("suggested-term")).toBeFalsy();
 
-        wrapper.simulate('mouseUp')
+        wrapper.simulate("mouseUp");
 
-        expect(wrapper.html().includes('suggested-term')).toBeTruthy()
+        expect(wrapper.html().includes("suggested-term")).toBeTruthy()
     });
 
 

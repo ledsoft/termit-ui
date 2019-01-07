@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {Popover, PopoverBody, PopoverHeader} from 'reactstrap';
+import * as React from "react";
+import {Popover, PopoverBody, PopoverHeader} from "reactstrap";
 
 interface PopupWithActionsProps {
     title: string,

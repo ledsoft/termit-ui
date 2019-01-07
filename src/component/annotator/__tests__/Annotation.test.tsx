@@ -23,7 +23,7 @@ function showOccurrenceViewForm(wrapper: ReactWrapper, popupComponent: Component
     assumeProps(wrapper, popupComponent, {isOpen: true});
 }
 
-describe('Annotation', () => {
+describe("Annotation", () => {
 
     const term = new Term({
         label: "Mesto",
@@ -54,7 +54,7 @@ describe('Annotation', () => {
     });
 
     /* --- recognizes occurrence --- */
-    it('recognizes suggested occurrence', () => {
+    it("recognizes suggested occurrence", () => {
         const wrapper = shallow(
             <Annotation
                 {...mockedVocabularyProps}
@@ -66,7 +66,7 @@ describe('Annotation', () => {
         expect(wrapper.find(".suggested-term-occurrence").exists()).toBeTruthy();
     });
 
-    it('recognizes assigned occurrence', () => {
+    it("recognizes assigned occurrence", () => {
         const wrapper = shallow(
             <Annotation
                 {...mockedVocabularyProps}
@@ -78,7 +78,7 @@ describe('Annotation', () => {
         expect(wrapper.find(".assigned-term-occurrence").exists()).toBeTruthy();
     });
 
-    it('recognizes invalid occurrence', () => {
+    it("recognizes invalid occurrence", () => {
         const fetchTermReject = (termIri: string) => Promise.reject("Term not found.");
         const wrapper = shallow(
             <Annotation
@@ -92,7 +92,7 @@ describe('Annotation', () => {
     });
 
     /* --- renders on enter/leave --- */
-    it('renders occurrence view form on mouse enter', () => {
+    it("renders occurrence view form on mouse enter", () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
                 {...mockedVocabularyProps}
@@ -107,7 +107,7 @@ describe('Annotation', () => {
         expectProps(wrapper, popupComponentClass, {isOpen: true});
     });
 
-    it('hides occurrence view form on mouse leave if not sticky', () => {
+    it("hides occurrence view form on mouse leave if not sticky", () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
                 {...mockedVocabularyProps}
@@ -125,7 +125,7 @@ describe('Annotation', () => {
         expectProps(wrapper, popupComponentClass, {isOpen: false});
     });
 
-    it('renders occurrence view form on mouse leave if sticky', () => {
+    it("renders occurrence view form on mouse leave if sticky", () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
                 {...mockedVocabularyProps}
@@ -145,7 +145,7 @@ describe('Annotation', () => {
     });
 
     /* --- pinning --- */
-    it('renders occurrence view form on mouse leave if pinned', () => {
+    it("renders occurrence view form on mouse leave if pinned", () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
                 {...mockedVocabularyProps}
@@ -166,7 +166,7 @@ describe('Annotation', () => {
 
 
     /* --- registers actions --- */
-    it('registers remove action if onRemove is bound', () => {
+    it("registers remove action if onRemove is bound", () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
                 {...mockedVocabularyProps}
@@ -183,7 +183,7 @@ describe('Annotation', () => {
         ).toEqual(true);
     })
 
-    it('does not register remove action if onRemove is not bound', () => {
+    it("does not register remove action if onRemove is not bound", () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
                 {...mockedVocabularyProps}
@@ -199,7 +199,7 @@ describe('Annotation', () => {
         ).toEqual(false);
     })
 
-    it('registers edit action for occurrence view form', () => {
+    it("registers edit action for occurrence view form", () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
                 {...mockedVocabularyProps}
@@ -217,7 +217,7 @@ describe('Annotation', () => {
 
     // it('does not register edit action for occurrence edit form', () => {})
 
-    it('registers close action for occurrence form', () => {
+    it("registers close action for occurrence form", () => {
         const wrapper = mountWithIntlAttached(
             <Annotation
                 {...mockedVocabularyProps}
