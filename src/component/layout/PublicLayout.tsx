@@ -11,12 +11,29 @@ interface PublicLayoutProps extends HasI18n {
 }
 
 const PublicLayout: React.SFC<PublicLayoutProps> = (props) => {
-    return <div className="main-container" style={Constants.LAYOUT_WALLPAPER ? {backgroundImage: "url(" + Constants.LAYOUT_WALLPAPER + ")"} : {}}>
+    let wallpaperStyle;
+    let navbarBackground;
+    let navbarBackgroundIsLight;
+
+    if (Constants.LAYOUT_WALLPAPER) {
+        wallpaperStyle = {
+            backgroundImage: "url(" + Constants.LAYOUT_WALLPAPER + ")",
+            backgroundPosition: Constants.LAYOUT_WALLPAPER_POSITION || "center center",
+        };
+        navbarBackground = Constants.LAYOUT_WALLPAPER_NAVBAR_BACKGROUND;
+        navbarBackgroundIsLight = Constants.LAYOUT_WALLPAPER_NAVBAR_BACKGROUND_IS_LIGHT;
+    } else {
+        wallpaperStyle = {};
+        navbarBackground = Constants.LAYOUT_NAVBAR_BACKGROUND;
+        navbarBackgroundIsLight = Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT;
+    }
+
+    return <div className="main-container" style={wallpaperStyle}>
         <header>
-            <Navbar light={Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT}
+            <Navbar light={navbarBackgroundIsLight}
                     expand={"lg"}
-                    className={(Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT ? "navbar-light" : "navbar-dark") + " d-flex"}
-                    style={{background: Constants.LAYOUT_NAVBAR_BACKGROUND}}>
+                    className={(navbarBackgroundIsLight ? "navbar-light" : "navbar-dark") + " d-flex"}
+                    style={{background: navbarBackground}}>
                 <NavbarBrand href="/">
                     {Constants.APP_NAME}
                 </NavbarBrand>

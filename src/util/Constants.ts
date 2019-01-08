@@ -44,9 +44,16 @@ const constants = {
     LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT: false,
     LAYOUT_NAVBAR_BACKGROUND: "#777",
 
-    // Wallpaper: ~60% color saturation + some blur + JPEG compression to <100KB.
+    // Wallpaper: ~60% color saturation + some blur (~4px radius) + JPEG compression to <150KB.
     // LAYOUT_WALLPAPER: null,
-    LAYOUT_WALLPAPER: "/background/Magnetic_Termite_Mounds.small-blur.jpg",
+    // LAYOUT_WALLPAPER: "/background/Magnetic_Termite_Mounds.small-blur.jpg",
+    // LAYOUT_WALLPAPER_POSITION: "center center", // CSS background-position property
+    LAYOUT_WALLPAPER: "/background/people-on-the-bridge-with-cityscape-in-prague-czech-republic.small-blur.jpg",
+    LAYOUT_WALLPAPER_POSITION: "top center", // CSS background-position property
+
+    // Navbar background when LAYOUT_WALLPAPER is in use
+    LAYOUT_WALLPAPER_NAVBAR_BACKGROUND_IS_LIGHT: false,
+    LAYOUT_WALLPAPER_NAVBAR_BACKGROUND: "rgba(0,0,0,0.2)",
 };
 
 constants.STORAGE_JWT_KEY = constants.APP_NAME + '-' + constants.AUTHORIZATION_HEADER;
