@@ -6,6 +6,9 @@ import Vocabularies from "../vocabulary/Vocabularies";
 import Resources from "../resource/Resources";
 import WidgetToolbar from "./WidgetToolbar";
 import NewsMd from "./NewsMd";
+import TermFrequency from "../statistics/termfrequency/TermFrequency";
+import PanelWithActions from "../misc/PanelWithActions";
+import templateQuery from "../statistics/termfrequency/TermFrequency.rq";
 
 export class Dashboard extends React.Component<HasI18n> {
 
@@ -20,6 +23,11 @@ export class Dashboard extends React.Component<HasI18n> {
                     <Resources />
                 </Col>
                 <Col className="col-4">
+                    <PanelWithActions title={this.props.i18n("dashboard.type-frequency")}>
+                        <TermFrequency
+                            sparqlQuery={templateQuery}
+                            lang={this.props.locale}/>
+                    </PanelWithActions>
                     <NewsMd />
                 </Col>
             </Row>

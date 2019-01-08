@@ -1,10 +1,10 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import {Button} from 'reactstrap';
-import withI18n, {HasI18n} from '../hoc/withI18n';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import {Button} from "reactstrap";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
 // @ts-ignore
-import {IntelligentTreeSelect} from 'intelligent-tree-select';
+import {IntelligentTreeSelect} from "intelligent-tree-select";
 import "intelligent-tree-select/lib/styles.css";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
@@ -16,7 +16,7 @@ import PanelWithActions from "../misc/PanelWithActions";
 import FetchOptionsFunction from "../../model/Functions";
 import Term from "../../model/Term";
 import {fetchVocabularyTerms} from "../../action/AsyncActions";
-import {ThunkDispatch} from '../../util/Types';
+import {ThunkDispatch} from "../../util/Types";
 
 interface TermSelectProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
@@ -49,7 +49,7 @@ export class TermSelect extends React.Component<TermSelectProps> {
 
     private _onCreateClick() {
         const normalizedName = this.props.match.params.name;
-        Routing.transitionTo(Routes.createVocabularyTerm, {params: new Map([['name', normalizedName]])});
+        Routing.transitionTo(Routes.createVocabularyTerm, {params: new Map([["name", normalizedName]])});
     }
 
     public render() {
@@ -69,17 +69,16 @@ export class TermSelect extends React.Component<TermSelectProps> {
             valueRenderer={this._valueRenderer}
         />;
 
-        actions.push(<Button key='glossary.createTerm'
-                             color='primary'
-                             title={i18n('glossary.createTerm.tooltip')}
-                             size='sm'
-                             onClick={this._onCreateClick}>{'+'}</Button>);
+        actions.push(<Button key="glossary.createTerm"
+                             color="primary"
+                             title={i18n("glossary.createTerm.tooltip")}
+                             size="sm"
+                             onClick={this._onCreateClick}>{"+"}</Button>);
 
         return (<PanelWithActions
-            title={i18n('glossary.title')}
-            component={component}
+            title={i18n("glossary.title")}
             actions={actions}
-        />);
+        >{component}</PanelWithActions>);
 
     }
 }

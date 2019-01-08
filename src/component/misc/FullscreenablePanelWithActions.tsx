@@ -12,10 +12,6 @@ interface Props {
      */
     title: string,
     /**
-     * Component to render inside the panel
-     */
-    component: JSX.Element,
-    /**
      * An list of additional actions to be shown in the panel heading
      */
     actions: JSX.Element[],
@@ -28,11 +24,11 @@ class FullscreenablePanelWithActions extends React.Component<Props & Fullscreena
         components.push(<FullscreenButton key="btnFullscreen"
                                           isFullscreen={this.props.isFullscreen}
                                           toggleFullscreen={this.props.toggleFullscreen}/>);
-        return (
-            <PanelWithActions
-                title={this.props.title}
-                actions={components}
-                component={this.props.component}/>);
+        return <PanelWithActions
+            title={this.props.title}
+            actions={components}>
+            {this.props.children}
+        </PanelWithActions>;
     }
 }
 

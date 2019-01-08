@@ -66,7 +66,7 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="resource-edit-label" label={i18n("resource.metadata.comment")}
+                        <CustomInput name="resource-edit-label" label={i18n("resource.metadata.label")}
                                      value={this.state.label} onChange={this.onChange}/>
                     </Col>
                 </Row>
@@ -88,7 +88,7 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
                     <Col xl={6} md={12}>
                         <ButtonToolbar className="pull-right">
                             <Button onClick={this.onSave} color="success" size="sm">{i18n("save")}</Button>
-                            <Button onClick={this.props.cancel} color="secondary" size="sm">{i18n("cancel")}</Button>
+                            <Button onClick={this.props.cancel} key="cancel" color="secondary" size="sm">{i18n("cancel")}</Button>
                         </ButtonToolbar>
                     </Col>
                 </Row>

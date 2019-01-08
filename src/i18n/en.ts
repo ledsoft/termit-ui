@@ -65,6 +65,7 @@ export default {
         'dashboard.create-vocabulary.tile': 'Create Vocabulary',
         'dashboard.add-document.tile': 'Add Document',
         'dashboard.news.tile': 'News',
+        'dashboard.type-frequency' : 'Term Count in Vocabularies',
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
@@ -98,6 +99,7 @@ export default {
         'vocabulary.metadata.identifier': 'Identifier',
         'vocabulary.metadata.author': 'Author',
         'vocabulary.metadata.created': 'Created',
+        'vocabulary.select-vocabulary' : 'Select a Vocabulary',
 
         'resource.management': 'Resources management',
         'resource.management.resources': 'Resources',
@@ -108,6 +110,7 @@ export default {
         'resource.metadata.label' : 'Label',
         'resource.metadata.comment' : 'Comment',
         'resource.metadata.terms' : 'Related Terms',
+        'resource.metadata-edit.terms' : 'Related Terms from the Vocabulary',
 
         'term.metadata.identifier': 'Identifier',
         'term.metadata.label': 'Label',
@@ -170,6 +173,14 @@ export default {
         'search.tab.terms': 'Terms',
         'search.tab.facets': 'Faceted search',
         'search.results.title': 'Results for \'{searchString}\'',
+        "search.results.table.label": "Label",
+        "search.results.table.label.tooltip": "Open asset detail",
+        "search.results.table.match": "Match",
+        "search.results.table.score": "Match score",
+        "search.results.field.badge.tooltip": "Matched attribute",
+        "search.results.field.label": "Label",
+        "search.results.field.comment": "Comment",
+        "search.results.field.definition": "Definition",
         'search.slovnik': 'Vocabulary',
         'search.informace': 'Information',
         'search.je-instanci-typu': 'has type',

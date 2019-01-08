@@ -21,6 +21,9 @@ export function generateResults(type: string, count: number = 5): SearchResult[]
             iri: Generator.generateUri(),
             label: "Result " + i,
             types: [type],
+            snippetText: "<em>Match</em>",
+            snippetField: "label",
+            types: [type]
         };
         if (type === VocabularyUtils.TERM) {
             resData.vocabulary = {iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/vocabulary-" + i};
@@ -79,7 +82,7 @@ describe("Search", () => {
         expect(search).toHaveBeenCalledWith(value);
     });
 
-    it.skip("invokes search when location contains search query parameter", () => {
+    it("invokes search when location contains search query parameter", () => {
         const value = "test";
         location.search = "searchString=" + value;
         mountWithIntl(<MemoryRouter><Search {...searchProps()} {...searchConnections()} location={location} history={history}

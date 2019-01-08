@@ -11,33 +11,48 @@ import {ThunkDispatch} from "../../util/Types";
 import {AssetData} from "../../model/Asset";
 import FetchOptionsFunction from "../../model/Functions";
 import {fetchVocabularyTerms} from "../../action/AsyncActions";
+import Vocabulary from "../../model/Vocabulary";
+import TermItState from "../../model/TermItState";
+import VocabularyUtils from "../../util/VocabularyUtils";
+import VocabularySelect from "../vocabulary/VocabularySelect";
 
-interface ResourceRelatedTermsEditProps extends HasI18n {
+interface PropsExternal {
     terms: Term[];
     onChange: (subTerms: AssetData[]) => void;
 }
 
-interface ResourceRelatedTermsEditPropsConnected {
-    fetchTerms: (fetchOptions: FetchOptionsFunction) => Promise<Term[]>;
+interface PropsConnected {
+    vocabularies: Vocabulary[]
 }
 
-export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTermsEditProps & ResourceRelatedTermsEditPropsConnected> {
+interface DispatchConnected {
+    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabulary: Vocabulary) => Promise<Term[]>;
+}
 
-    constructor(props: ResourceRelatedTermsEditProps & ResourceRelatedTermsEditPropsConnected) {
+interface Props extends PropsExternal, PropsConnected, DispatchConnected, HasI18n {}
+
+interface State {
+    vocabulary: Vocabulary | null;
+}
+
+export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
+
+    constructor(props: Props) {
         super(props);
+        this.state = {vocabulary: null};
     }
 
     private onChange = (val: Term[]) => {
         this.props.onChange(val.map(v => Object.assign({}, {iri: v.iri})));
     };
 
-    private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
+    private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction, vocabulary: Vocabulary) => {
         return this.props.fetchTerms({
             searchString,
             optionID,
             limit,
             offset
-        });
+        }, vocabulary);
     };
 
     private valueRenderer = (option: Term) => {
@@ -48,34 +63,50 @@ export class ResourceRelatedTermsEdit extends React.Component<ResourceRelatedTer
         return this.props.terms.map(t => t.iri!);
     }
 
+    private onVocabularySet(voc: Vocabulary): void {
+        this.setState({vocabulary: voc});
+    }
+
     public render() {
         const selected = this.resolveSelectedSubTerms();
+        const onVocabularySet = this.onVocabularySet.bind(this);
+        const fetchOptions = ((fo: FetchOptionsFunction) =>
+            this.fetchOptions.bind(this)(
+                fo,this.state.vocabulary
+        ));
+        const key = this.state.vocabulary ? this.state.vocabulary.iri : "http://null";
+        const a = <IntelligentTreeSelect key={key}
+                                         className="resource-tags-edit"
+                                         onChange={this.onChange}
+                                         value={selected}
+                                         fetchOptions={fetchOptions}
+                                         valueKey="iri"
+                                         labelKey="label"
+                                         childrenKey="plainSubTerms"
+                                         simpleTreeData={true}
+                                         showSettings={false}
+                                         fetchLimit={100000}
+                                         maxHeight={150}
+                                         multi={true}
+                                         displayInfoOnHover={true}
+                                         expanded={true}
+                                         renderAsTree={true}
+                                         valueRenderer={this.valueRenderer}/>;
         return <FormGroup>
-            <Label className="attribute-label">{this.props.i18n("resource.metadata.terms")}</Label>
-            <IntelligentTreeSelect className="resource-tags-edit"
-                                   onChange={this.onChange}
-                                   value={selected}
-                                   fetchOptions={this.fetchOptions}
-                                   valueKey="iri"
-                                   labelKey="label"
-                                   childrenKey="plainSubTerms"
-                                   simpleTreeData={true}
-                                   showSettings={false}
-                                   fetchLimit={100000}
-                                   maxHeight={150}
-                                   multi={true}
-                                   displayInfoOnHover={true}
-                                   expanded={true}
-                                   renderAsTree={true}
-                                   valueRenderer={this.valueRenderer}/>
+            <Label className="attribute-label">{this.props.i18n("resource.metadata-edit.terms")}</Label>{" "}
+            <VocabularySelect vocabulary={this.state.vocabulary} onVocabularySet={onVocabularySet}/>
+            {this.state.vocabulary ? a : ""}
         </FormGroup>;
     }
 }
 
-// TODO Remove the hardcoded value
-export default connect<{},ResourceRelatedTermsEditPropsConnected>( null,((dispatch: ThunkDispatch) => {
+export default connect<PropsConnected, DispatchConnected>((state: TermItState) => {
     return {
-        fetchTerms: (fetchOptions: FetchOptionsFunction) =>
-            dispatch(fetchVocabularyTerms(fetchOptions, "legislativní-sbírka-247-1995")),
+        vocabularies: Object.keys(state.vocabularies).map(value => state.vocabularies[value]),
+    };
+}, ((dispatch: ThunkDispatch) => {
+    return {
+        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabulary: Vocabulary) =>
+            dispatch(fetchVocabularyTerms(fetchOptions, VocabularyUtils.create(vocabulary.iri).fragment)),
     }
 }))(injectIntl(withI18n(ResourceRelatedTermsEdit)));

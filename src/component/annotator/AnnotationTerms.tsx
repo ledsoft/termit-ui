@@ -1,10 +1,10 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import {Button, FormGroup, Label} from 'reactstrap';
-import withI18n, {HasI18n} from '../hoc/withI18n';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import {Button, FormGroup, Label} from "reactstrap";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
 // @ts-ignore
-import {IntelligentTreeSelect} from 'intelligent-tree-select';
+import {IntelligentTreeSelect} from "intelligent-tree-select";
 import "intelligent-tree-select/lib/styles.css";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
@@ -13,7 +13,7 @@ import {RouteComponentProps, withRouter} from "react-router";
 import FetchOptionsFunction from "../../model/Functions";
 import Term, {TermData} from "../../model/Term";
 import {fetchVocabularyTerms} from "../../action/AsyncActions";
-import {ThunkDispatch} from '../../util/Types';
+import {ThunkDispatch} from "../../util/Types";
 import Vocabulary2 from "../../util/VocabularyUtils";
 import {GoPlus} from "react-icons/go";
 import Routes from "../../util/Routes";
@@ -55,7 +55,7 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
     private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
         const vocabularyName = Vocabulary2.create(this.props.vocabulary!.iri).fragment
         return this.props.fetchTerms({searchString, optionID, limit, offset}, vocabularyName);
-    }
+    };
 
     private handleCreateClick = () =>  {
         // const normalizedName = this.props.match.params.name;
@@ -64,10 +64,10 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
         const namespace = voc.namespace;
         const normalizedName = voc.fragment;
         Routing.transitionTo(Routes.createVocabularyTerm, {
-            params: new Map([['name', normalizedName]]),
+            params: new Map([["name", normalizedName]]),
             query: namespace ? new Map([["namespace", namespace]]) : undefined
         });
-    }
+    };
 
     private handleChange = (term: TermData | null) => {
         if (term === null) {
@@ -93,7 +93,7 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
             //         query: namespace ? new Map([["namespace", namespace]]) : undefined
             //     });
         }
-    }
+    };
 
     public render() {
         const i18n = this.props.i18n;
@@ -114,10 +114,10 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
         />;
 
         actions.push(
-            <Button key='glossary.createTerm'
-                    color='primary'
-                    title={i18n('glossary.createTerm.tooltip')}
-                    size='sm'
+            <Button key="glossary.createTerm"
+                    color="primary"
+                    title={i18n("glossary.createTerm.tooltip")}
+                    size="sm"
                     onClick={this.handleCreateClick}><GoPlus/></Button>);
 
         // return (<PanelWithActions
@@ -127,7 +127,7 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
         //     actions={actions}
         // />);
         return (<FormGroup>
-        <div> <Label className='attribute-label'>{'Term:'}</Label> {actions[0]} </div>
+        <div> <Label className="attribute-label">{"Term:"}</Label> {actions[0]} </div>
         {component}
     </FormGroup>);
     }

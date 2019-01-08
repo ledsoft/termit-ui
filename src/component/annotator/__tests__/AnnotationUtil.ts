@@ -32,7 +32,7 @@ export function createAnnotationSpan(props: AnnotationSpanProps, text: string) {
  */
 
 export function mountWithIntlAttached(node: ReactElement<any>, options?: MountRendererProps) {
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     document.body.appendChild(div);
     return mountWithIntl(node, Object.assign({}, {attachTo: div}, options));
 }

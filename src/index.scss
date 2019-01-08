@@ -60,6 +60,10 @@ header .nav-tabs {
   max-width: 65em;
 }
 
+.card {
+  @extend .mb-4;
+}
+
 .italics {
   font-style: italic;
 }

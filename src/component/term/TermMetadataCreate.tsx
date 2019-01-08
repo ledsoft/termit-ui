@@ -115,7 +115,6 @@ const Select = asField(({fieldState, ...props}: any) => {
 });
 
 interface TermMetadataCreateStoreProps {
-    options?: Term[];
     types: { [key: string]: Term };
     lang: string;
     intl: IntlData;
@@ -339,8 +338,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                     <Collapse isOpen={this.state.modalAdvancedSectionVisible}>
 
                         <Select field={"parentOption"}
-                                name={"glossary-" + this.props.match.params.name}
-                                options={this.props.options}
+                                fetchOptions={this.fetchOptions}
                                 multi={false}
                                 placeholder={i18n('glossary.form.field.selectParent')}
                                 valueKey={"iri"}
@@ -348,7 +346,8 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                                 childrenKey="plainSubTerms"
                                 filterOptions={this.filterParentOptions}
                                 expanded={true}
-                                renderAsTree={false}
+                                simpleTreeData={true}
+                                renderAsTree={true}
                         />
 
                         <TextInput field="optionSource" id="optionSource"

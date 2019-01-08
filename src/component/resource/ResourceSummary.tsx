@@ -15,6 +15,7 @@ import Utils from "../../util/Utils";
 import {default as Resource, EMPTY_RESOURCE} from "../../model/Resource";
 import ResourceMetadata from "./ResourceMetadata";
 import ResourceEdit from "./ResourceEdit";
+import "./Resources.scss";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
@@ -72,12 +73,11 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
                 save={this.onSave}
                 cancel={this.onCloseEdit}/> :
             <ResourceMetadata resource={this.props.resource}/>;
-        return <div>
-            <PanelWithActions
+        return <PanelWithActions
                 title={this.props.resource.label}
-                actions={actions}
-                component={component}/>
-        </div>;
+                actions={actions}>
+                {component}
+            </PanelWithActions>;
     }
 }
 

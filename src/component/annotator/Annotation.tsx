@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {connect} from "react-redux";
 import Term from "../../model/Term";
 import {injectIntl} from "react-intl";
@@ -34,16 +34,16 @@ interface AnnotationState {
 }
 
 const TermOccurrenceState = {
-    INVALID: 'invalid-term-occurrence',
-    ASSIGNED: 'assigned-term-occurrence',
-    SUGGESTED: 'suggested-term-occurrence',
-    LOADING: 'loading-term-occurrence',
+    INVALID: "invalid-term-occurrence",
+    ASSIGNED: "assigned-term-occurrence",
+    SUGGESTED: "suggested-term-occurrence",
+    LOADING: "loading-term-occurrence",
 };
 
 const TermOccurrenceCreatorState = {
-    PROPOSED: 'proposed-occurrence',
-    SELECTED: 'selected-occurrence'
-}
+    PROPOSED: "proposed-occurrence",
+    SELECTED: "selected-occurrence"
+};
 
 export class Annotation extends React.Component<AnnotationProps, AnnotationState> {
 
@@ -177,11 +177,11 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         const i18n = this.props.i18n;
         const score = this.props.score;
         const scoreRow = (score) ? <tr>
-            <td>{i18n('annotation.term.occurrence.scoreLabel')}</td>
+            <td>{i18n("annotation.term.occurrence.scoreLabel")}</td>
             <td>{score}</td>
         </tr> : null;
         const labelRow = (this.state.term) ? <tr>
-            <td className={"label"}>{i18n('annotation.term.assigned-occurrence.termLabel')}</td>
+            <td className={"label"}>{i18n("annotation.term.assigned-occurrence.termLabel")}</td>
             <td><OutgoingLink
                 label={this.state.term!.label}
                 iri={this.state.term!.iri}/></td>
@@ -190,7 +190,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         switch (this.getTermState()) {
             case TermOccurrenceState.ASSIGNED:
                 const termCommentRow = (this.state.term!.comment) ? <tr>
-                    <td>{i18n('annotation.form.assigned-occurrence.termInfoLabel')}</td>
+                    <td>{i18n("annotation.form.assigned-occurrence.termInfoLabel")}</td>
                     <td>{this.state.term!.comment}</td>
                 </tr> : null;
                 outputComponent = <table>
@@ -202,15 +202,15 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                 </table>;
                 break;
             case TermOccurrenceState.SUGGESTED:
-                outputComponent = <span className={'an-warning'}>
-                    {i18n('annotation.form.suggested-occurrence.message')}
+                outputComponent = <span className={"an-warning"}>
+                    {i18n("annotation.form.suggested-occurrence.message")}
                     </span>
                 break;
             case TermOccurrenceState.INVALID:
-                const errorLine = i18n('annotation.form.invalid-occurrence.message').replace('%', this.getCurrentResource()!)
+                const errorLine = i18n("annotation.form.invalid-occurrence.message").replace("%", this.getCurrentResource()!)
 
                 outputComponent = <div>
-                    <span className={'an-error'}>
+                    <span className={"an-error"}>
                         {errorLine}
                     </span>
                     <table>
@@ -277,36 +277,36 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
 
     public render() {
         const i18n = this.props.i18n;
-        const id = 'id' + this.props.about.substring(2);
+        const id = "id" + this.props.about.substring(2);
         const termClassName = this.getTermState();
         const termCreatorClassName = this.getTermCreatorState();
         const actions = [];
         if (this.state.detailPinned || this.props.sticky) {
             if (this.props.onUpdate && (this.state.detailEditable || termCreatorClassName === TermOccurrenceCreatorState.PROPOSED)) {
-                actions.push(<Button key='annotation.save'
-                                     color='secondary'
+                actions.push(<Button key="annotation.save"
+                                     color="secondary"
                                      title={i18n("save")}
-                                     size='sm'
+                                     size="sm"
                                      onClick={this.onSaveDetail}>{"✓"}</Button>);
             }
             if (!this.state.detailEditable) {
-                actions.push(<Button key='annotation.edit'
-                                     color='secondary'
+                actions.push(<Button key="annotation.edit"
+                                     color="secondary"
                                      title={i18n("edit")}
-                                     size='sm'
+                                     size="sm"
                                      onClick={this.toggleEditDetail}>{"✎"}</Button>);
             }
             if (this.props.onRemove) {
-                actions.push(<Button key='annotation.remove'
-                                     color='secondary'
+                actions.push(<Button key="annotation.remove"
+                                     color="secondary"
                                      title={i18n("annotation.remove")}
-                                     size='sm'
+                                     size="sm"
                                      onClick={this.onRemoveAnnotation}>{"🚮"}</Button>);
             }
-            actions.push(<Button key='annotation.close'
-                                 color='secondary'
+            actions.push(<Button key="annotation.close"
+                                 color="secondary"
                                  title={i18n("annotation.close")}
-                                 size='sm'
+                                 size="sm"
                                  onClick={this.onCloseDetail}>{"x"}</Button>);
         }
         const resourceProps = this.getCurrentResource() ? {resource: this.getCurrentResource()} : {};

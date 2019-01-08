@@ -37,7 +37,7 @@ export class SearchResultVocabularies extends React.Component<SearchResultVocabu
                         .filter((r: SearchResult) => r.hasType(VocabularyUtils.VOCABULARY))
                         .map((r: SearchResult) => {
                             const to = Routes.vocabularyTermDetail.link({
-                                name: VocabularyUtils.getFragment(r.vocabularyIri!),
+                                name: VocabularyUtils.getFragment(r.vocabulary!),
                                 termName: VocabularyUtils.getFragment(r.iri)
                             });
                             return <Link to={to} key={r.iri} className='search-result-item search-result-link'>{r.label}</Link>;

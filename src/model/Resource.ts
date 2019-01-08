@@ -13,14 +13,14 @@ export interface ResourceData extends AssetData {
     iri: string,
     label: string,
     comment?: string,
-    terms: Term[]
+    terms?: Term[]
 }
 
 export default class Resource extends Asset implements ResourceData {
     public iri: string;
     public label: string;
     public comment?: string;
-    public terms : Term[];
+    public terms: Term[];
 
     constructor(data: ResourceData) {
         super();

@@ -1,6 +1,6 @@
 {
   "name": "termit-ui",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "private": true,
   "homepage": "https://kbss.felk.cvut.cz/termit-dev/",
   "dependencies": {
@@ -31,7 +31,7 @@
     "html-webpack-plugin": "2.29.0",
     "htmlparser2": "^3.10.0",
     "informed": "1.10.8",
-    "intelligent-tree-select": "0.6.0",
+    "intelligent-tree-select": "0.6.1",
     "jest": "23.6.0",
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",

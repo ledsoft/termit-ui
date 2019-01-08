@@ -24,13 +24,15 @@ import Term, {CONTEXT as TERM_CONTEXT, TermData} from "../model/Term";
 import FetchOptionsFunction from "../model/Functions";
 import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
-import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
+import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
 import TermAssignment, {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
 import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
+import File from "../model/File";
+import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -115,14 +117,17 @@ export function createVocabulary(vocabulary: Vocabulary) {
     };
 }
 
-export function createVocabularyTerm(term: Term, normalizedName: string) {
+export function createVocabularyTerm(term: Term, vocabularyIri: IRI) {
     const action = {
         type: ActionType.CREATE_VOCABULARY_TERM
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
-        return Ajax.post(Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms",
-            content(term.toJsonLd()).params({parentTermUri: term.parent}).contentType(Constants.JSON_LD_MIME_TYPE))
+        let url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
+        if (term.parent) {
+            url += "/" + VocabularyUtils.create(term.parent).fragment + "/subterms";
+        }
+        return Ajax.post(url, content(term.toJsonLd()).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIri.namespace))
             .then((resp: AxiosResponse) => {
                 const asyncSuccessAction = asyncActionSuccess(action);
                 dispatch(asyncSuccessAction);
@@ -203,8 +208,7 @@ export function loadResourceTerms(iri: IRI) {
         dispatch(asyncActionRequest(action));
         return Ajax
         // , params({query: queryString})
-            .get(Constants.API_PREFIX + "/resources/resource/terms", param("iri", iri.namespace + iri.fragment))
-            // .get(Constants.API_PREFIX + "/resources/resource/terms", params({iri}))
+            .get(Constants.API_PREFIX + "/resources/" + iri.fragment + "/terms", param("namespace", iri.namespace))
             .then((data: object[]) => data.length > 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: TermData[]) => {
@@ -257,14 +261,14 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
         if (fetchOptions.optionID) {
             url = Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms/" + VocabularyUtils.getFragment(fetchOptions.optionID) + "/subterms"
         } else {
-            url = Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms";
+            // Fetching roots only
+            url = Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms/roots";
         }
         return Ajax.get(url,
-            params({
+            params(Object.assign({
                 searchString: fetchOptions.searchString,
-                limit: fetchOptions.limit,
-                offset: fetchOptions.offset
-            }).param("namespace", namespace))
+                namespace
+            }, Utils.createPagingParams(fetchOptions.offset, fetchOptions.limit))))
             .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
             .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
             .then((data: TermData[]) => data.map(d => new Term(d)))
@@ -350,6 +354,25 @@ export function loadTypes(language: string) {
     };
 }
 
+export function search(searchString: string, disableLoading: boolean = false) {
+    const action = {
+        type: ActionType.SEARCH
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, disableLoading));
+        return Ajax.get(Constants.API_PREFIX + "/search/label", params({searchString}))
+            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: SearchResultData[]) => {
+                dispatch(asyncActionSuccess(action));
+                return data.map(d => new SearchResult(d));
+            }).catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function loadArrayFromCompactedGraph(compacted: object): object[] {
     if (!compacted.hasOwnProperty("@context")) {
         return []
@@ -357,22 +380,20 @@ export function loadArrayFromCompactedGraph(compacted: object): object[] {
     return compacted.hasOwnProperty("@graph") ? Object.keys(compacted["@graph"]).map(k => compacted["@graph"][k]) : [compacted]
 }
 
-export function startFileTextAnalysis(documentIri: IRI, fileName: string) {
+export function startFileTextAnalysis(file: File) {
     const action = {
         type: ActionType.START_FILE_TEXT_ANALYSIS
     };
+    const iri = VocabularyUtils.create(file.iri);
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            .put(Constants.API_PREFIX + "/documents/" + documentIri.fragment + "/text-analysis", params({
-                file: fileName,
-                namespace: documentIri.namespace
-            }))
+            .put(Constants.API_PREFIX + "/resources/" + iri.fragment + "/text-analysis", param("namespace", iri.namespace))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
                 return dispatch(publishMessage(new Message({
                     messageId: "file.text-analysis.started.message",
-                    values: {fileName}
+                    values: {"fileName": file.label}
                 }, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {
@@ -382,17 +403,14 @@ export function startFileTextAnalysis(documentIri: IRI, fileName: string) {
     };
 }
 
-export function loadFileContent(documentIri: IRI, fileName: string) {
+export function loadFileContent(fileIri: IRI) {
     const action = {
         type: ActionType.LOAD_FILE_CONTENT
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax
-            .get(Constants.API_PREFIX + "/documents/" + documentIri.fragment + "/content", params({
-                file: fileName,
-                namespace: documentIri.namespace
-            }))
+            .get(Constants.API_PREFIX + "/resources/" + fileIri.fragment + "/content", param("namespace", fileIri.namespace))
             .then((data: object) => data.toString())
             .then((data: string) => dispatch(asyncActionSuccessWithPayload(action, data)))
             .catch((error: ErrorData) => {
@@ -402,21 +420,21 @@ export function loadFileContent(documentIri: IRI, fileName: string) {
     };
 }
 
-export function saveFileContent(documentIri: IRI, fileName: string, fileContent: string) {
+export function saveFileContent(fileIri: IRI, fileContent: string) {
     const action = {
         type: ActionType.SAVE_FILE_CONTENT
     };
     const formData = new FormData();
     const fileBlob = new Blob([fileContent], {type: "text/html"});
-    formData.append("file", fileBlob, fileName);
-    if (documentIri.namespace) {
-        formData.append("namespace", documentIri.namespace);
+    formData.append("file", fileBlob, fileIri.fragment);
+    if (fileIri.namespace) {
+        formData.append("namespace", fileIri.namespace);
     }
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax
             .post(
-                Constants.API_PREFIX + "/documents/" + documentIri.fragment + "/content",
+                Constants.API_PREFIX + "/resources/" + fileIri.fragment + "/content",
                 contentType(Constants.MULTIPART_FORM_DATA).formData(formData)
             )
             .then((data: object) => fileContent)// TODO load from the service instead
@@ -433,9 +451,9 @@ export function loadDocument(iri: IRI) {
         type: ActionType.LOAD_DOCUMENT
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action, true));
+        dispatch(asyncActionRequest(action));
         return Ajax
-            .get(Constants.API_PREFIX + "/documents/" + iri.fragment, params({namespace: iri.namespace}))
+            .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) =>
                 jsonld.compact(data, DOCUMENT_CONTEXT))
             .then((data: DocumentData) =>

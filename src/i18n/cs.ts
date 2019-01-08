@@ -2,7 +2,6 @@ import Constants from '../util/Constants';
 
 export default {
     locale: Constants.LANG.CS,
-
     messages: {
         'please-wait': 'Prosím, čekejte...',
         'save': 'Uložit',
@@ -65,6 +64,7 @@ export default {
         'dashboard.add-document.tile' : 'Přidat dokument',
         'dashboard.resources.tile' : 'Zdroje',
         'dashboard.news.tile': 'Novinky',
+        'dashboard.type-frequency' : 'Počet pojmů ve slovníku',
 
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',
@@ -98,6 +98,7 @@ export default {
         'vocabulary.metadata.identifier': 'Identifikátor',
         'vocabulary.metadata.author': 'Autor',
         'vocabulary.metadata.created': 'Datum vytvoření',
+        'vocabulary.select-vocabulary' : 'Vyber slovník',
 
         'resource.management': 'Správa zdrojů',
         'resource.management.resources': 'Zdroje',
@@ -108,6 +109,7 @@ export default {
         'resource.metadata.label' : 'Popisek',
         'resource.metadata.comment' : 'Komentář',
         'resource.metadata.terms' : 'Související pojmy',
+        'resource.metadata-edit.terms' : 'Související pojmy ze slovníku',
 
         'term.metadata.identifier': 'Identifikátor',
         'term.metadata.label': 'Název',
@@ -170,6 +172,14 @@ export default {
         'search.tab.terms': 'Pojmy',
         'search.tab.facets': 'Facetové vyhledávání',
         'search.results.title': 'Výsledky vyhledávání \'{searchString}\'',
+        "search.results.table.label": "Název",
+        "search.results.table.label.tooltip": "Zobrazit detail objektu",
+        "search.results.table.match": "Nalezená shoda",
+        "search.results.table.score": "Skóre shody",
+        "search.results.field.badge.tooltip": "Shoda nalezena v atributu",
+        "search.results.field.label": "Název",
+        "search.results.field.comment": "Popis",
+        "search.results.field.definition": "Definice",
         'search.slovnik' : 'Slovník',
         'search.informace' : 'Informace',
         'search.je-instanci-typu' : 'je instancí typu',

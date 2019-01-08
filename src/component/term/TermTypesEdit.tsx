@@ -1,11 +1,11 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 // @ts-ignore
 import {IntelligentTreeSelect} from "intelligent-tree-select";
 import "intelligent-tree-select/lib/styles.css";
 import Term from "../../model/Term";
-import {connect} from 'react-redux';
+import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {FormGroup, Label} from "reactstrap";
 
@@ -42,15 +42,14 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
             Object.keys(this.props.availableTypes).map(k => this.props.availableTypes[k]) : [];
         const selected = this.resolveSelectedTypes(types);
         return <FormGroup>
-            <Label className='attribute-label'>{this.props.i18n('term.metadata.types')}</Label>
-            <IntelligentTreeSelect className='term-edit'
+            <Label className="attribute-label">{this.props.i18n("term.metadata.types")}</Label>
+            <IntelligentTreeSelect className="term-edit"
                                    onChange={this.onChange}
-                                   fetchLimit={100000}
                                    value={selected}
                                    options={types}
-                                   valueKey='iri'
-                                   labelKey='label'
-                                   childrenKey='subTerms'
+                                   valueKey="iri"
+                                   labelKey="label"
+                                   childrenKey="subTerms"
                                    filterOptions={this.filterParentOptions}
                                    showSettings={false}
                                    maxHeight={150}

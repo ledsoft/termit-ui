@@ -1,6 +1,6 @@
 // @ts-ignore
-import {DomHandler, DomUtils, Parser as HtmlParser} from 'htmlparser2';
-import {Node} from 'html-to-react';
+import {DomHandler, DomUtils, Parser as HtmlParser} from "htmlparser2";
+import {Node} from "html-to-react";
 
 export default {
 

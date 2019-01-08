@@ -12,7 +12,7 @@ class RequestConfigBuilder {
     private mParams?: {};
     private mFormData?: {};
     private mAccept: string;
-    private mResponseType?: 'arraybuffer'| 'blob'| 'document'| 'json'| 'text' | 'stream';
+    private mResponseType?: 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream';
 
     constructor() {
         this.mContentType = Constants.JSON_LD_MIME_TYPE;
@@ -52,7 +52,7 @@ class RequestConfigBuilder {
         return this;
     }
 
-    public responseType(value: 'arraybuffer'| 'blob'| 'document'| 'json'| 'text' | 'stream'): RequestConfigBuilder {
+    public responseType(value: 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream'): RequestConfigBuilder {
         this.mResponseType = value;
         return this;
     }
@@ -188,7 +188,7 @@ export class Ajax {
         const paramData: object = config.getParams() !== undefined ? config.getParams() : {};
         Object.keys(paramData).forEach(n => par.append(n, paramData[n]));
 
-        const formData: object = config.getFormData() !== undefined ? config.getFormData()!: {};
+        const formData: object = config.getFormData() !== undefined ? config.getFormData()! : {};
 
         if (config.getContentType() === Constants.X_WWW_FORM_URLENCODED) {
             return this.axiosInstance.post(path, par, conf);
@@ -324,14 +324,32 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock resources
     mock.onGet(Constants.API_PREFIX + '/resources').reply(200, require('../rest-mock/resources'), header);
 
+
+    // Mock text analysis invocation
+    mock.onPut(/\/rest\/resources\/.+\/text-analysis/).reply(202, null, header);
+
+    // Mock getting file content
+    mock.onGet(/\/rest\/resources\/.+\/content/).reply(200, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
+
+    // Mock update file content
+    mock.onPost(/\/rest\/resources\/.+\/content/).reply(204, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
+
     // Mock resource terms retrieval endpoint
-    mock.onGet(Constants.API_PREFIX + '/resources/resource/terms').reply(200, require('../rest-mock/resourceTerms'), Object.assign({}, header, {
+    mock.onGet(/\/rest\/resources\/.+\/terms/).reply(200, require('../rest-mock/resourceTerms'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE
     }));
     // Mock resource retrieval endpoint
-    mock.onGet(/\/rest\/resources\/.+/).reply(200, require('../rest-mock/resource'), Object.assign({}, header, {
-        'content-type': Constants.JSON_LD_MIME_TYPE
-    }));
+    mock.onGet(/\/rest\/resources\/.+/).reply(config => {
+        if (config.params.namespace && config.params.namespace.indexOf("document") !== -1) {
+            return [200, require('../rest-mock/document'), Object.assign({}, header, {
+                'content-type': Constants.JSON_LD_MIME_TYPE
+            })];
+        } else {
+            return [200, require('../rest-mock/resource'), Object.assign({}, header, {
+                'content-type': Constants.JSON_LD_MIME_TYPE
+            })];
+        }
+    });
 
     // Mock resource tags update
     mock.onPut('/rest/resources/resource/terms').reply(204, null, header);
@@ -342,6 +360,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/query/).reply((config) => {
         if (config.params.query.includes("?asset")) {
             return [200, require('../rest-mock/assetCount'), header]
+        } else if (config.params.query.includes("DISTINCT ?pojem")) {
+            return [200, require('../rest-mock/termFrequency'), header]
         } else if (config.params.query.includes("?typ")) {
             return [200, require('../rest-mock/termTypeFrequency'), header]
         } else {
@@ -352,17 +372,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock label search results
     mock.onGet(Constants.API_PREFIX + '/search/label').reply(200, require('../rest-mock/searchResults'), header);
 
-    // Mock get document
+    // Mock get types
     mock.onGet(/\/rest\/language\/types/).reply(200, require('../rest-mock/types'), header);
-
-    // Mock document
-    mock.onPut(/\/rest\/documents\/.+\/text-analysis/).reply(202, null, header);
-
-    // Mock get file content
-    mock.onGet(/\/rest\/documents\/.+\/content/).reply(200, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
-
-    // Mock update file content
-    mock.onPost(/\/rest\/documents\/.+\/content/).reply(204, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
 
     // Mock get document
     mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'), header);
