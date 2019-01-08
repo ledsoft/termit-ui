@@ -29,12 +29,8 @@ interface SearchResultsProps extends HasI18n {
     results: SearchResult[];
 }
 
-function scoreSort(a: SearchResult, b: SearchResult) {
-    if (a.score && b.score) {
-        return b.score - a.score;
-    } else {
-        return a.score ? a.score : b.score ? b.score : 0;
-    }
+function scoreSort(a: SearchResultItem, b: SearchResultItem) {
+    return a.totalScore ? a.totalScore : b.totalScore ? b.totalScore : 0;
 }
 
 export class SearchResults extends React.Component<SearchResultsProps> {
@@ -109,8 +105,13 @@ export class SearchResults extends React.Component<SearchResultsProps> {
                 const existing = map.get(r.iri)!;
                 existing.totalScore += r.score ? r.score : 0;
                 if (existing.snippetField !== r.snippetField) {
-                    existing.snippets.push(r.snippetText);
-                    existing.snippetFields.push(r.snippetField);
+                    if (r.snippetField === "label") {
+                        existing.snippets.unshift(r.snippetText);
+                        existing.snippetFields.unshift(r.snippetField);
+                    } else {
+                        existing.snippets.push(r.snippetText);
+                        existing.snippetFields.push(r.snippetField);
+                    }
                     existing.totalScore *= MULTIPLE_FIELDS_MATCH_FACTOR;
                 }
             }

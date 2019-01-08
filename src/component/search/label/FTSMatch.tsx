@@ -1,9 +1,11 @@
 import * as React from "react";
+import {injectIntl} from "react-intl";
 import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from "html-to-react";
 import {Badge, Col, Row} from "reactstrap";
 import classNames from "classnames";
+import withI18n, {HasI18n} from "../../hoc/withI18n";
 
-interface FTSMatchProps {
+interface FTSMatchProps extends HasI18n {
     matches: string[];
     fields: string[];
 }
@@ -28,13 +30,15 @@ const processingInstructions: Instruction[] = [{
     }
 ];
 
-const FTSMatch: React.SFC<FTSMatchProps> = (props: FTSMatchProps) => {
+export const FTSMatch: React.SFC<FTSMatchProps> = (props: FTSMatchProps) => {
     const parser = new HtmlToReactParser();
     const items = [];
     for (let i = 0, len = props.matches.length; i < len; i++) {
         const className = classNames({"search-result-match-row": i < len - 1});
+        const i18nField = props.i18n("search.results.field." + props.fields[i]);
         items.push(<Row key={props.fields[i]} className={className}>
-            <Col md={3} lg={2} xl={1}><Badge className="search-result-field-badge">{props.fields[i]}</Badge></Col>
+            <Col md={3} lg={2} xl={1}><Badge
+                className="search-result-field-badge">{i18nField ? i18nField : props.fields[i]}</Badge></Col>
             <Col md={9} lg={10} xl={11}>
                 <React.Fragment>{parser.parseWithInstructions(props.matches[i], isValidNode, processingInstructions)}</React.Fragment>
             </Col>
@@ -43,4 +47,4 @@ const FTSMatch: React.SFC<FTSMatchProps> = (props: FTSMatchProps) => {
     return <div>{items}</div>;
 };
 
-export default FTSMatch;
+export default injectIntl(withI18n(FTSMatch));

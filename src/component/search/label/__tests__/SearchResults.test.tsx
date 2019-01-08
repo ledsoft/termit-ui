@@ -11,6 +11,7 @@ import TermBadge from "../../../badge/TermBadge";
 import VocabularyBadge from "../../../badge/VocabularyBadge";
 import Routing from "../../../../util/Routing";
 import Routes from "../../../../util/Routes";
+import {FTSMatch} from "../FTSMatch";
 
 jest.mock("../../../../util/Routing");
 
@@ -124,7 +125,7 @@ describe("SearchResults", () => {
         expect((call[1].query as Map<string, string>).get("namespace")).toEqual(namespace);
     });
 
-    it.skip("merges multiple matches of one field of one asset into one result row", () => {
+    it("merges multiple matches of one field of one asset into one result row", () => {
         const iri = Generator.generateUri();
         const results = [new SearchResult({
             iri,
@@ -168,7 +169,7 @@ describe("SearchResults", () => {
         expect(rows.length).toEqual(2);
         const label = wrapper.find(Button);
         expect(label.text()).toEqual(results[0].label);
-        expect(wrapper.find(".search-result-match").text()).toEqual(results[0].snippetField + removeMarkup(results[0].snippetText));
+        expect(wrapper.find(".search-result-match").text()).toContain(removeMarkup(results[0].snippetText));
     });
 
     function removeMarkup(text: string) {
@@ -197,7 +198,9 @@ describe("SearchResults", () => {
         expect(rows.length).toEqual(2);
         const label = wrapper.find(Button);
         expect(label.text()).toEqual(results[0].label);
-        expect(wrapper.find(".search-result-match").text()).toEqual(results[0].snippetField + removeMarkup(results[0].snippetText + results[1].snippetField + removeMarkup(results[1].snippetText)));
+        const matchTextContent = wrapper.find(".search-result-match").text();
+        expect(matchTextContent).toContain(removeMarkup(results[0].snippetText));
+        expect(matchTextContent).toContain(removeMarkup(results[1].snippetText));
     });
 
     it("ensures results are sorted by score descending", () => {
@@ -222,17 +225,25 @@ describe("SearchResults", () => {
         expect(rows.at(1).text()).toEqual(results[0].label);
     });
 
-    // TODO Move into FTSMatch tests
-    it.skip("renders snippet field using i18n so that it supports localization", () => {
-        const result = new SearchResult({
-            iri: Generator.generateUri(),
+    it("renders label match before other matches of the same asset", () => {
+        const iri = Generator.generateUri();
+        // Comment before label
+        const results = [new SearchResult({
+            iri,
             label: "Test",
-            snippetText: "<em>Match</em>",
+            snippetText: "<em>Match</em> in comment",
+            snippetField: "comment",
+            types: [VocabularyUtils.TERM]
+        }), new SearchResult({
+            iri,
+            label: "Test",
+            snippetText: "<em>Match</em> in label",
             snippetField: "label",
             types: [VocabularyUtils.TERM]
-        });
-        const wrapper = mountWithIntl(<SearchResults results={[result]} {...intlFunctions()}/>);
-        const fieldElem = wrapper.find(".search-result-field");
-        expect(fieldElem.text()).toEqual(en.messages["search.results.field.label"]);
+        })];
+        const wrapper = mountWithIntl(<SearchResults results={results} {...intlFunctions()}/>);
+        const matchComponent = wrapper.find(FTSMatch);
+        expect(matchComponent.prop("matches")).toEqual([results[1].snippetText, results[0].snippetText]);
+        expect(matchComponent.prop("fields")).toEqual([results[1].snippetField, results[0].snippetField]);
     });
 });
