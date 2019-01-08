@@ -35,7 +35,7 @@ interface SearchResultsProps extends HasI18n {
  * Sorts items by total score, descending.
  */
 function scoreSort(a: SearchResultItem, b: SearchResultItem) {
-    return a.totalScore ? a.totalScore : b.totalScore ? b.totalScore : 0;
+    return b.totalScore - a.totalScore;
 }
 
 export class SearchResults extends React.Component<SearchResultsProps> {
