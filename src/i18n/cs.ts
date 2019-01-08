@@ -171,7 +171,7 @@ export default {
         'search.tab.everything': 'Hledat vše',
         'search.tab.terms': 'Pojmy',
         'search.tab.facets': 'Facetové vyhledávání',
-        'search.results.title': 'Výsledky vyhledávání \'{searchString}\'',
+        "search.results.title": "Výsledky vyhledávání „{searchString}“",
         "search.results.table.label": "Název",
         "search.results.table.label.tooltip": "Zobrazit detail objektu",
         "search.results.table.match": "Nalezená shoda",

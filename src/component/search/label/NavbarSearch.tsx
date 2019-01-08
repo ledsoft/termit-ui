@@ -48,7 +48,8 @@ export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearch
         const i18n = this.props.i18n;
         return <div className='search flex-grow-1'>
             <InputGroup>
-                <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')} autoFocus={true}
+                <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')}
+                       autoFocus={true} autocomplete="off"
                        value={this.props.searchString} onChange={this.onChange} onKeyPress={this.onKeyPress}/>
                 <InputGroupAddon addonType='append' className='search-icon' title={i18n('main.search.tooltip')}>
                     <Button color="grey" onClick={this.openSearchView}>

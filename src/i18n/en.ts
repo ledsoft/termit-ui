@@ -172,7 +172,7 @@ export default {
         'search.tab.everything': 'Search everything',
         'search.tab.terms': 'Terms',
         'search.tab.facets': 'Faceted search',
-        'search.results.title': 'Results for \'{searchString}\'',
+        "search.results.title": "Results for “{searchString}”",
         "search.results.table.label": "Label",
         "search.results.table.label.tooltip": "Open asset detail",
         "search.results.table.match": "Match",

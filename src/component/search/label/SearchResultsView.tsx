@@ -1,16 +1,13 @@
 import * as React from 'react';
 import {RouteComponentProps, withRouter} from "react-router";
-import {Card, CardBody, CardHeader} from "reactstrap";
 import {injectIntl} from 'react-intl';
 import withI18n, {HasI18n} from "../../hoc/withI18n";
 import {connect} from "react-redux";
 import * as SearchActions from "../../../action/SearchActions";
 import {ThunkDispatch} from '../../../util/Types';
-import Routes from "../../../util/Routes";
 import TermItState from "../../../model/TermItState";
 import SearchResult from "../../../model/SearchResult";
-import {Link} from "react-router-dom";
-import VocabularyUtils from "../../../util/VocabularyUtils";
+import SearchResults from "./SearchResults";
 
 interface SearchResultVocabulariesProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
@@ -18,7 +15,7 @@ interface SearchResultVocabulariesProps extends HasI18n, RouteComponentProps<any
     searchResults: SearchResult[] | null;
 }
 
-export class SearchResultVocabularies extends React.Component<SearchResultVocabulariesProps> {
+export class SearchResultsView extends React.Component<SearchResultVocabulariesProps> {
 
     public componentDidMount() {
         this.props.addSearchListener();
@@ -30,21 +27,7 @@ export class SearchResultVocabularies extends React.Component<SearchResultVocabu
 
     public render() {
         if (this.props.searchResults) {
-            return <Card className='search-result-container'>
-                <CardHeader tag='h4' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
-                <CardBody>
-                    {this.props.searchResults!
-                        .filter((r: SearchResult) => r.hasType(VocabularyUtils.VOCABULARY))
-                        .map((r: SearchResult) => {
-                            const to = Routes.vocabularyTermDetail.link({
-                                name: VocabularyUtils.getFragment(r.vocabulary!),
-                                termName: VocabularyUtils.getFragment(r.iri)
-                            });
-                            return <Link to={to} key={r.iri} className='search-result-item search-result-link'>{r.label}</Link>;
-                        })
-                    }
-                </CardBody>
-            </Card>;
+            return <SearchResults results={this.props.searchResults} />;
         } else {
             return null;
         }
@@ -61,4 +44,4 @@ export default connect((state: TermItState) => {
         addSearchListener: () => dispatch(SearchActions.addSearchListener()),
         removeSearchListener: () => dispatch(SearchActions.removeSearchListener()),
     };
-})(withRouter(injectIntl(withI18n(SearchResultVocabularies))));
+})(withRouter(injectIntl(withI18n(SearchResultsView))));
