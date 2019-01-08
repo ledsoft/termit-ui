@@ -92,7 +92,7 @@ export function searchEverything() {
     return (dispatch: ThunkDispatch, getState: () => TermItState) => {
         const state: TermItState = getState();
         if (state.searchListenerCount > 0 && !state.searchQuery.isEmpty()) {
-            window.console.info('%c 🔍 Searching ... ', 'color: black; font-weight: bold; background: yellow;');
+            window.console.info("%c 🔍 Searching ... ", "color: black; font-weight: bold; background: yellow;");
             return dispatch(search(state.searchQuery.searchQuery, true));
         } else {
             dispatch({ type: ActionType.SEARCH_FINISH });
@@ -107,7 +107,7 @@ export function search(searchString: string, disableLoading: boolean = false) {
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.asyncActionRequest(action, disableLoading));
-        return Ajax.get(Constants.API_PREFIX + '/search/label', params({searchString: encodeURI(searchString)}))
+        return Ajax.get(Constants.API_PREFIX + "/search/label", params({searchString}))
             .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
             .then((compacted: object) => AsyncActions.loadArrayFromCompactedGraph(compacted))
             .then((data: SearchResultData[]) => {

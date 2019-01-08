@@ -25,7 +25,6 @@ import FetchOptionsFunction from "../model/Functions";
 import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
-import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
 import TermAssignment, {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
 import TermItState from "../model/TermItState";
@@ -348,25 +347,6 @@ export function loadTypes(language: string) {
             })
             .then((result: Term[]) => dispatch(asyncActionSuccessWithPayload(action, result)))
             .catch((error: ErrorData) => {
-                dispatch(asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-            });
-    };
-}
-
-export function search(searchString: string, disableLoading: boolean = false) {
-    const action = {
-        type: ActionType.SEARCH
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action, disableLoading));
-        return Ajax.get(Constants.API_PREFIX + "/search/label", params({searchString}))
-            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
-            .then((data: SearchResultData[]) => {
-                dispatch(asyncActionSuccess(action));
-                return data.map(d => new SearchResult(d));
-            }).catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
