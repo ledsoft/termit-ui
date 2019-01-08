@@ -133,7 +133,7 @@ export class SearchResults extends React.Component<SearchResultsProps> {
         return results.reduce((accumulator, item) => item.totalScore > accumulator ? item.totalScore : accumulator, 0.0);
     }
 
-    private static renderTypeBadge(item: SearchResult) {
+    public static renderTypeBadge(item: SearchResult) {
         return item.hasType(VocabularyUtils.VOCABULARY) ? <VocabularyBadge/> : <TermBadge/>;
     }
 
