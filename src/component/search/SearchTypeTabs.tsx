@@ -1,11 +1,11 @@
-import * as React from 'react';
+import * as React from "react";
 import * as SearchActions from "../../action/SearchActions";
-import {injectIntl} from 'react-intl';
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps} from "react-router";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {ThunkDispatch} from '../../util/Types';
+import {ThunkDispatch} from "../../util/Types";
 import TermItState from "../../model/TermItState";
 import {Nav, NavItem, NavLink} from "reactstrap";
 import SearchQuery from "../../model/SearchQuery";
@@ -32,21 +32,34 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
         const path = this.props.location.pathname;
 
         const tabs = [
-            { route: Routes.search, label: i18n('search.tab.everything') },
-            { route: Routes.searchTerms, label: i18n('search.tab.terms') },
-            { route: Routes.facetedSearch, label: i18n('search.tab.facets') },
+            { route: Routes.search, altExactRoutes: [Routes.dashboard], label: i18n("search.tab.everything") },
+            { route: Routes.searchTerms, altExactRoutes: [], label: i18n("search.tab.terms") },
+            { route: Routes.facetedSearch, altExactRoutes: [], label: i18n("search.tab.facets") },
         ];
 
-        // Find an active tab
         let activeTab: object|null = null;
         let activeTabDepth = -1;
-        for (const tab of tabs) {
-            const isActive = (path === tab.route.path || path.startsWith(tab.route.path + "/"));
-            const slashes = tab.route.path.match('/');
-            const depth = slashes ? slashes.length : 0;
-            if (isActive && depth >= activeTabDepth) {
-                activeTab = tab;
-                activeTabDepth = depth;
+
+        // Find active tab using exact matches
+        altExactRoutesLoop: for (const tab of tabs) {
+            for (const altExactRoute of tab.altExactRoutes) {
+                if (path === altExactRoute.path) {
+                    activeTab = tab;
+                    break altExactRoutesLoop;
+                }
+            }
+        }
+
+        // Find an active tab
+        if (!activeTab) {
+            for (const tab of tabs) {
+                const isActive = (path === tab.route.path || path.startsWith(tab.route.path + "/"));
+                const slashes = tab.route.path.match("/");
+                const depth = slashes ? slashes.length : 0;
+                if (isActive && depth >= activeTabDepth) {
+                    activeTab = tab;
+                    activeTabDepth = depth;
+                }
             }
         }
 
@@ -54,7 +67,7 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
             return <Nav tabs={true}>
                 {tabs.map((tab) => (
                     <NavItem key={tab.route.name}>
-                        <NavLink active={tab === activeTab} href={'#' + tab.route.link()}>{tab.label}</NavLink>
+                        <NavLink active={tab === activeTab} href={"#" + tab.route.link()}>{tab.label}</NavLink>
                     </NavItem>)
                 )}
             </Nav>;
