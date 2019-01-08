@@ -12,10 +12,13 @@ import SearchQuery from "../../../model/SearchQuery";
 import Dashboard from "../../dashboard/Dashboard";
 import Spinner from "../../Spinner";
 import SearchResults from "./SearchResults";
+import {Button} from "reactstrap";
+import {GoTrashcan} from "react-icons/go";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
     removeSearchListener: () => void;
+    updateSearchFilter: (searchString: string) => any;
     searchQuery: SearchQuery;
     searchResults: SearchResult[] | null;
     searchInProgress: boolean;
@@ -35,6 +38,10 @@ export class Search extends React.Component<SearchProps> {
         this.props.removeSearchListener();
     }
 
+    private resetSearch = () => {
+        this.props.updateSearchFilter("");
+    };
+
     public render() {
         const loading = this.props.searchInProgress ? <Spinner/> : null;
 
@@ -45,6 +52,9 @@ export class Search extends React.Component<SearchProps> {
             </>;
         } else if (this.props.searchResults) {
             return <>
+                <Button color="danger" outline={true} size="sm" className="float-right" onClick={this.resetSearch}>
+                    <GoTrashcan/> {this.props.i18n("search.reset")}
+                    </Button>
                 <h2>{this.props.formatMessage("search.results.title", {searchString: this.props.searchQuery.searchQuery})}</h2>
                 <SearchResults results={this.props.searchResults} />
                 {loading}
@@ -65,6 +75,7 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
+        updateSearchFilter: (searchString: string) => dispatch(SearchActions.updateSearchFilter(searchString)),
         addSearchListener: () => dispatch(SearchActions.addSearchListener()),
         removeSearchListener: () => dispatch(SearchActions.removeSearchListener()),
     };
