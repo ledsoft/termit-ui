@@ -14,22 +14,27 @@ const isValidNode = () => true;
 
 const processingInstructions: Instruction[] = [{
     shouldProcessNode: node => {
+        // Process only nodes representing the mach
         return node && node.name === "em";
     },
 
     processNode: (node: any, children: any) => {
+        // Render matches in the snippet with some sort of emphasis
         return <span key={Math.random()} className="search-result-snippet-match">{children}</span>;
     }
 },
     {
         // Anything else
-        shouldProcessNode: (node: any): boolean => {
+        shouldProcessNode: (): boolean => {
             return true;
         },
         processNode: new ProcessNodeDefinitions(React).processDefaultNode
     }
 ];
 
+/**
+ * Renders the matching field and text snippet with the match(es) visualizing the match(es) in the text.
+ */
 export const FTSMatch: React.SFC<FTSMatchProps> = (props: FTSMatchProps) => {
     const parser = new HtmlToReactParser();
     const items = [];
