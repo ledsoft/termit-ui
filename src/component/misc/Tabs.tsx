@@ -15,7 +15,7 @@ interface TabsProps extends HasI18n {
     /**
      * Map of IDs to the tab badge (no badge shown if the key is missing)
      */
-    tabBadges: { [activeTabLabelKey: string]: string | null},
+    tabBadges?: { [activeTabLabelKey: string]: string | null},
     /**
      * Tab change function.
      */
@@ -41,7 +41,7 @@ export class Tabs extends React.Component<TabsProps> {
                 }
             };
 
-            const badge = id in this.props.tabBadges && this.props.tabBadges[id]
+            const badge = this.props.tabBadges && id in this.props.tabBadges && this.props.tabBadges[id]
                 ? <>{" "}<Badge>{this.props.tabBadges[id]}</Badge></>
                 : null;
 
