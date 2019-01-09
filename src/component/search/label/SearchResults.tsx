@@ -48,11 +48,14 @@ export class SearchResults extends React.Component<SearchResultsProps> {
             return Routes.vocabularySummary.link(
                 {"name": iri.fragment},
                 {"namespace": iri.namespace!});
-        } else {
-            const vocabularyIri = VocabularyUtils.create(item.vocabulary!);
+        } else if (item.vocabulary) { // FIXME: item.vocabulary should not be missing. Why?
+            const vocabularyIri = VocabularyUtils.create(item.vocabulary);
             return Routes.vocabularyTermDetail.link(
                 {"name": vocabularyIri.fragment, "termName": iri.fragment},
                 {"namespace": vocabularyIri.namespace!});
+        } else {
+            window.console.error("SearchResults::getLinkTarget(): Failed to generate a link to the following item:", item);
+            return "#";
         }
     };
 
