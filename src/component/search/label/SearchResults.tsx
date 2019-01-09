@@ -2,13 +2,15 @@ import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../../hoc/withI18n";
 import SearchResult from "../../../model/SearchResult";
-import {Button, Col, Label, Row, Table} from "reactstrap";
+import {Col, Label, Row, Table} from "reactstrap";
 import VocabularyUtils from "../../../util/VocabularyUtils";
 import VocabularyBadge from "../../badge/VocabularyBadge";
 import TermBadge from "../../badge/TermBadge";
-import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
 import FTSMatch from "./FTSMatch";
+import {Link} from "react-router-dom";
+import {History} from "history";
+import LocationDescriptor = History.LocationDescriptor;
 
 class SearchResultItem extends SearchResult {
     public totalScore: number;
@@ -40,19 +42,17 @@ function scoreSort(a: SearchResultItem, b: SearchResultItem) {
 
 export class SearchResults extends React.Component<SearchResultsProps> {
 
-    private onItemClick = (item: SearchResult) => {
+    private getLinkTarget = (item: SearchResult): LocationDescriptor => {
         const iri = VocabularyUtils.create(item.iri);
         if (item.hasType(VocabularyUtils.VOCABULARY)) {
-            Routing.transitionTo(Routes.vocabularySummary, {
-                params: new Map([["name", iri.fragment]]),
-                query: new Map([["namespace", iri.namespace!]])
-            });
+            return Routes.vocabularySummary.link(
+                {"name": iri.fragment},
+                {"namespace": iri.namespace!});
         } else {
             const vocabularyIri = VocabularyUtils.create(item.vocabulary!);
-            Routing.transitionTo(Routes.vocabularyTermDetail, {
-                params: new Map([["name", vocabularyIri.fragment], ["termName", iri.fragment]]),
-                query: new Map([["namespace", vocabularyIri.namespace!]])
-            });
+            return Routes.vocabularyTermDetail.link(
+                {"name": vocabularyIri.fragment, "termName": iri.fragment},
+                {"namespace": vocabularyIri.namespace!});
         }
     };
 
@@ -86,9 +86,7 @@ export class SearchResults extends React.Component<SearchResultsProps> {
                             {SearchResults.renderTypeBadge(r)}
                         </Col>
                         <Col md={7} lg={8} xl={9}>
-                            <Button color="link" title={this.props.i18n("search.results.table.label.tooltip")}
-                                    className="search-result-assetlink"
-                                    onClick={this.onItemClick.bind(null, r)}>{r.label}</Button>
+                            <Link to={this.getLinkTarget(r)} className="search-result-assetlink">{r.label}</Link>
                         </Col>
                     </Row>
                 </td>

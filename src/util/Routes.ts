@@ -8,8 +8,17 @@ export class Route {
         this.path = path;
     }
 
-    public link(params: object = {}): string {
-        return this.path.replace(/:([A-Za-z0-9]+)/g, (match, placeholder) => encodeURIComponent(params[placeholder] || placeholder));
+    public link(params?: object, query?: object): string {
+        const path = params
+            ? this.path.replace(/:([A-Za-z0-9]+)/g, (match, placeholder) => encodeURIComponent(params[placeholder] || placeholder))
+            : this.path;
+        if (query) {
+            // TODO: Encode URI components properly (and parse them too)
+            const queryPart = Object.keys(query).map((key) => (/*encodeURIComponent*/(key) + "=" + /*encodeURIComponent*/(query[key]))).join("&");
+            return path + "?" + queryPart;
+        } else {
+            return path;
+        }
     }
 }
 
