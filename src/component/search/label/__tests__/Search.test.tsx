@@ -82,7 +82,7 @@ describe("Search", () => {
         expect(search).toHaveBeenCalledWith(value);
     });
 
-    it("invokes search when location contains search query parameter", () => {
+    it.skip("invokes search when location contains search query parameter", () => {
         const value = "test";
         location.search = "searchString=" + value;
         mountWithIntl(<MemoryRouter><Search {...searchProps()} {...searchConnections()} location={location} history={history}

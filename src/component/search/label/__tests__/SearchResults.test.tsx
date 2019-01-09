@@ -12,6 +12,7 @@ import VocabularyBadge from "../../../badge/VocabularyBadge";
 import Routing from "../../../../util/Routing";
 import Routes from "../../../../util/Routes";
 import {FTSMatch} from "../FTSMatch";
+import {Link} from "react-router-dom";
 
 jest.mock("../../../../util/Routing");
 
@@ -41,7 +42,7 @@ describe("SearchResults", () => {
         // Header + result row
         expect(rows.length).toEqual(2);
         expect(rows.find(TermBadge).exists()).toBeTruthy();
-        const label = wrapper.find(Button);
+        const label = wrapper.find(Link);
         expect(label.text()).toEqual(result.label);
     });
 
@@ -58,7 +59,7 @@ describe("SearchResults", () => {
         // Header + result row
         expect(rows.length).toEqual(2);
         expect(rows.find(VocabularyBadge).exists()).toBeTruthy();
-        const label = wrapper.find(Button);
+        const label = wrapper.find(Link);
         expect(label.text()).toEqual(result.label);
     });
 
