@@ -16,6 +16,7 @@ import "./TermAssignments.scss";
 
 interface TermAssignmentsOwnProps {
     term: Term;
+    onAssignmentsLoad: (assignmentsCount: number) => void;
 }
 
 interface StoreDispatchProps {
@@ -37,14 +38,21 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
     }
 
     public componentDidMount(): void {
-        this.props.loadTermAssignments(this.props.term).then((assignments: TermAssignment[]) => this.setState({assignments}));
+        this.props.loadTermAssignments(this.props.term).then((assignments: TermAssignment[]) => this.setAssignments(assignments));
     }
 
     public componentDidUpdate(prevProps: Readonly<TermAssignmentsProps>): void {
         if (this.props.term.iri !== prevProps.term.iri) {
-            this.props.loadTermAssignments(this.props.term).then((assignments: TermAssignment[]) => this.setState({assignments}));
+            this.props.loadTermAssignments(this.props.term).then((assignments: TermAssignment[]) => this.setAssignments(assignments));
         }
     }
+
+    private setAssignments = (assignments: TermAssignment[]) => {
+        this.setState({assignments});
+        if (this.props.onAssignmentsLoad) {
+            this.props.onAssignmentsLoad(assignments.length);
+        }
+    };
 
     private openResource = (resourceIri: string) => {
         const iri = VocabularyUtils.create(resourceIri);
