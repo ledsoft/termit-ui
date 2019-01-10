@@ -9,14 +9,16 @@ jest.mock("../../../../util/Routing");
 describe("NavbarSearch", () => {
 
     let search: (str: string) => Promise<object>;
+    let autocompleteSearch: (str: string) => Promise<object>;
     let updateSearchFilter: () => Promise<object>;
 
     const navbarConnections = () => {
-        return {search, updateSearchFilter};
+        return {search, autocompleteSearch, updateSearchFilter};
     };
 
     beforeEach(() => {
         search = jest.fn().mockImplementation(() => Promise.resolve([]));
+        autocompleteSearch = jest.fn().mockImplementation(() => Promise.resolve([]));
         updateSearchFilter = jest.fn().mockImplementation(() => Promise.resolve([]));
     });
 
