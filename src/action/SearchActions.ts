@@ -120,6 +120,25 @@ export function search(searchString: string, disableLoading: boolean = false) {
     };
 }
 
+export function autocompleteSearch(searchString: string, disableLoading: boolean = false) {
+    const action = {
+        type: ActionType.SEARCH
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(SyncActions.asyncActionRequest(action, disableLoading));
+        return Ajax.get(Constants.API_PREFIX + "/search/label", params({searchString}))
+            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
+            .then((compacted: object) => AsyncActions.loadArrayFromCompactedGraph(compacted))
+            .then((data: SearchResultData[]) => {
+                dispatch(SyncActions.asyncActionSuccess(action));
+                return data.map(d => new SearchResult(d));
+            }).catch((error: ErrorData) => {
+                dispatch(SyncActions.asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function searchResult(searchResults: SearchResult[]) {
     return (dispatch: ThunkDispatch) => {
         dispatch({ type: ActionType.SEARCH_RESULT, searchResults });

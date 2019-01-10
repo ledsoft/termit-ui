@@ -4,6 +4,11 @@ import Vocabulary from "../../../util/VocabularyUtils";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
 
+export interface SearchState {
+    searchString: string;
+    results: SearchResult[] | null;
+}
+
 export class AbstractSearch<P, T> extends React.Component<P, T> {
 
     public openResult = (result: SearchResult) => {

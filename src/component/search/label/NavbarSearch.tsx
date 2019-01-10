@@ -4,28 +4,41 @@ import withI18n, {HasI18n} from "../../hoc/withI18n";
 import {Input, InputGroup, InputGroupAddon, Button} from "reactstrap";
 import {GoSearch} from "react-icons/go";
 import "./NavbarSearch.scss";
+import SearchResult from "../../../model/SearchResult";
 import {connect} from "react-redux";
-import {search, updateSearchFilter} from "../../../action/SearchActions";
+import {autocompleteSearch, updateSearchFilter} from "../../../action/SearchActions";
+import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
 import Routing from "../../../util/Routing";
 import {ThunkDispatch} from "../../../util/Types";
-import {AbstractSearch} from "./AbstractSearch";
+import {SearchState, AbstractSearch} from "./AbstractSearch";
 import TermItState from "../../../model/TermItState";
 
 interface NavbarSearchProps extends HasI18n {
-    search: (searchString: string) => any;
+    autocompleteSearch: (searchString: string) => any;
     updateSearchFilter: (searchString: string) => any;
     searchString: string;
 }
 
-interface NavbarSearchState {
+interface NavbarSearchState extends SearchState {
+    showResults: boolean;
 }
 
 export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearchState> {
 
+    constructor(props: NavbarSearchProps) {
+        super(props);
+        this.state = {
+            searchString: "",
+            showResults: false,
+            results: null
+        };
+    }
+
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         this.props.updateSearchFilter(value);
+        this.autocompleteSearch(value);
     };
 
     private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -40,7 +53,20 @@ export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearch
         if (searchString.length > 0) {
             query.set("searchString", encodeURI(searchString));
         }
+        this.setState({results: [], showResults: false});
         Routing.transitionTo(Routes.search, {query});
+    };
+
+    public autocompleteSearch = (str?: string) => {
+        const searchVal = str ? str : this.state.searchString;
+        if (searchVal.trim().length > 0) {
+            this.setState({results: [], showResults: false});
+            this.props.autocompleteSearch(searchVal).then((data: SearchResult[]) => this.setState({results: data, showResults: true}));
+        }
+    };
+
+    private closeResults = () => {
+        this.setState({showResults: false});
     };
 
     public render() {
@@ -56,7 +82,18 @@ export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearch
                     </Button>
                 </InputGroupAddon>
             </InputGroup>
+            {this.renderResultsOverlay()}
         </div>;
+    }
+
+    private renderResultsOverlay() {
+        if (!this.state.results) {
+            return null;
+        } else {
+            return <SearchResultsOverlay show={this.state.showResults} searchResults={this.state.results}
+                                         onClose={this.closeResults} targetId="main-search-input"
+                                         onClick={this.openResult} onOpenSearch={this.openSearchView}/>;
+        }
     }
 
 }
@@ -67,7 +104,7 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        search: (searchString: string) => dispatch(search(searchString, true)),
+        autocompleteSearch: (searchString: string) => dispatch(autocompleteSearch(searchString, true)),
         updateSearchFilter: (searchString: string) => dispatch(updateSearchFilter(searchString)),
     };
 })(injectIntl(withI18n(NavbarSearch)));
