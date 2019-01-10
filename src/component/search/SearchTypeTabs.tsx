@@ -9,7 +9,7 @@ import {ThunkDispatch} from "../../util/Types";
 import TermItState from "../../model/TermItState";
 import {Nav, NavItem, NavLink} from "reactstrap";
 import SearchQuery from "../../model/SearchQuery";
-import Routes from "../../util/Routes";
+import Routes, {Route} from "../../util/Routes";
 
 interface SearchTypeTabsProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
@@ -31,8 +31,9 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
         const i18n = this.props.i18n;
         const path = this.props.location.pathname;
 
-        const tabs = [
-            { route: Routes.search, altExactRoutes: [Routes.dashboard], label: i18n("search.tab.everything") },
+        const tabs: Array<{route: Route, altExactRoutes: Route[], label: string}> = [
+            { route: Routes.dashboard, altExactRoutes: [], label: i18n("search.tab.dashboard") },
+            { route: Routes.search, altExactRoutes: [], label: i18n("search.tab.everything") },
             { route: Routes.searchTerms, altExactRoutes: [], label: i18n("search.tab.terms") },
             { route: Routes.facetedSearch, altExactRoutes: [], label: i18n("search.tab.facets") },
         ];

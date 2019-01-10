@@ -9,11 +9,12 @@ import * as SearchActions from "../../../action/SearchActions";
 import {ThunkDispatch} from "../../../util/Types";
 import TermItState from "../../../model/TermItState";
 import SearchQuery from "../../../model/SearchQuery";
-import Dashboard from "../../dashboard/Dashboard";
 import Spinner from "../../Spinner";
 import SearchResults from "./SearchResults";
 import {Button} from "reactstrap";
 import {GoTrashcan} from "react-icons/go";
+import Routing from "../../../util/Routing";
+import Routes from "../../../util/Routes";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
@@ -42,15 +43,17 @@ export class Search extends React.Component<SearchProps> {
         this.props.updateSearchFilter("");
     };
 
+    public componentDidUpdate() {
+        // Go to dashboard if there is nothing to look for.
+        if (!this.props.searchQuery || this.props.searchQuery.isEmpty()) {
+            Routing.transitionTo(Routes.dashboard);
+        }
+    }
+
     public render() {
         const loading = this.props.searchInProgress ? <Spinner/> : null;
 
-        if (!this.props.searchQuery || this.props.searchQuery.isEmpty()) {
-            return <>
-                <Dashboard />
-                {loading}
-            </>;
-        } else if (this.props.searchResults) {
+        if (this.props.searchResults) {
             return <>
                 <Button color="danger" outline={true} size="sm" className="float-right" onClick={this.resetSearch}>
                     <GoTrashcan/> {this.props.i18n("search.reset")}

@@ -41,6 +41,7 @@ import SearchTerms from "./search/SearchTerms";
 import {Breadcrumbs} from "react-breadcrumbs";
 import BreadcrumbRoute from "./breadcrumb/BreadcrumbRoute";
 import VocabularyManagementRoute from "./vocabulary/VocabularyManagementRoute";
+import Dashboard from "./dashboard/Dashboard";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -95,7 +96,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         expand={"lg"}
                         className={(Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT ? "navbar-light" : "navbar-dark") + " d-flex"}
                         style={{background: Constants.LAYOUT_NAVBAR_BACKGROUND}}>
-                    <NavbarBrand href={MainView.hashPath(Routes.search.path)}>
+                    <NavbarBrand href={MainView.hashPath(Routes.dashboard.path)}>
                         {Constants.APP_NAME}
                     </NavbarBrand>
                     <Nav navbar={true} className={"flex-grow-1"}>
@@ -152,7 +153,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                     <BreadcrumbRoute title={i18n("main.nav.searchTerms")} path={Routes.searchTerms.path} component={SearchTerms}/>
                     <BreadcrumbRoute title={i18n("main.nav.search")} path={Routes.search.path} component={Search}/>
                     <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path} component={FacetedSearch}/>
-                    <Route component={Search}/>
+                    <Route component={Dashboard}/>
                 </Switch>
             </Container>
             <Footer/>

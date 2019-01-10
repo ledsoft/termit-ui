@@ -169,6 +169,7 @@ export default {
         'fullscreen.enter': 'Enter fullscreen',
 
         'search.title': 'Search',
+        'search.tab.dashboard': 'Dashboard',
         'search.tab.everything': 'Search everything',
         'search.tab.terms': 'Terms',
         'search.tab.facets': 'Faceted search',

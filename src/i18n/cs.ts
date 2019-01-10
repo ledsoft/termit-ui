@@ -168,6 +168,7 @@ export default {
         'fullscreen.enter' : 'Zobrazit na celou obrazovku',
 
         'search.title': 'Vyhledávání',
+        'search.tab.dashboard': 'Nástěnka',
         'search.tab.everything': 'Hledat vše',
         'search.tab.terms': 'Pojmy',
         'search.tab.facets': 'Facetové vyhledávání',
