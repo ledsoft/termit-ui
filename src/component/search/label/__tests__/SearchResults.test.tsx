@@ -166,7 +166,7 @@ describe("SearchResults", () => {
             snippetField: "comment",
             types: [VocabularyUtils.TERM]
         })];
-        const wrapper = mountWithIntl(<SearchResults results={results} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={results} {...intlFunctions()}/></MemoryRouter>);
         const rows = wrapper.find("tr");
         // Header + result row
         expect(rows.length).toEqual(2);
@@ -223,7 +223,7 @@ describe("SearchResults", () => {
             types: [VocabularyUtils.VOCABULARY]
         })];
         const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={results} {...intlFunctions()}/></MemoryRouter>);
-        const rows = wrapper.find("button.search-result-assetlink");
+        const rows = wrapper.find(Link);
         expect(rows.at(0).text()).toEqual(results[1].label);
         expect(rows.at(1).text()).toEqual(results[0].label);
     });
