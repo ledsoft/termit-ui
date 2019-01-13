@@ -64,6 +64,8 @@ export default {
         'dashboard.resources.tile' : 'Zdroje',
         'dashboard.type-frequency' : 'Počet pojmů ve slovníku',
 
+        "dashboard.widget.lastEdited.title": "Naposledy upravené záznamy",
+
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',
         'vocabulary.vocabularies.create': 'Vytvořit slovník',

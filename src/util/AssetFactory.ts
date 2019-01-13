@@ -1,4 +1,4 @@
-import {AssetData} from "../model/Asset";
+import Asset, {AssetData} from "../model/Asset";
 import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import Resource, {ResourceData} from "../model/Resource";
 import Document, {DocumentData} from "../model/Document";
@@ -14,7 +14,7 @@ export default {
      *
      * @param data Data for asset instantiation
      */
-    createAsset(data: AssetData): Term | Vocabulary | Document | File | Resource {
+    createAsset(data: AssetData): Asset {
         switch (Utils.getPrimaryAssetType(data)) {
             case VocabularyUtils.TERM:
                 return new Term(data as TermData);

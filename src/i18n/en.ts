@@ -65,6 +65,8 @@ export default {
         'dashboard.add-document.tile': 'Add Document',
         'dashboard.type-frequency' : 'Term Count in Vocabularies',
 
+        "dashboard.widget.lastEdited.title": "Last edited assets",
+
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
         'vocabulary.vocabularies.create': 'Create vocabulary',

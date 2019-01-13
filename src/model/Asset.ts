@@ -5,6 +5,7 @@ export interface AssetData {
     iri?: string;
     label?: string;
     comment?: string;
+    types?: string[] | string;
 }
 
 /**
@@ -13,7 +14,8 @@ export interface AssetData {
 export const ASSET_CONTEXT = {
     iri: "@id",
     label: OntologicalVocabulary.RDFS_LABEL,
-    comment: OntologicalVocabulary.RDFS_COMMENT
+    comment: OntologicalVocabulary.RDFS_COMMENT,
+    types: "@type"
 };
 
 export interface HasProvenanceData {

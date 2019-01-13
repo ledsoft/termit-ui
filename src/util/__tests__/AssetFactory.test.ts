@@ -16,12 +16,12 @@ describe("AssetFactory", () => {
         };
 
         it("creates correct asset instance based on data", () => {
-            expect(AssetFactory.createAsset(Object.assign({}, basicData, {"@type": VocabularyUtils.TERM}))).toBeInstanceOf(Term);
-            expect(AssetFactory.createAsset(Object.assign({}, basicData, {"@type": VocabularyUtils.VOCABULARY}))).toBeInstanceOf(Vocabulary);
-            expect(AssetFactory.createAsset(Object.assign({}, basicData, {"@type": [VocabularyUtils.DOCUMENT, VocabularyUtils.RESOURCE]}))).toBeInstanceOf(Document);
-            expect(AssetFactory.createAsset(Object.assign({}, basicData, {"@type": [VocabularyUtils.RESOURCE, VocabularyUtils.FILE]}))).toBeInstanceOf(File);
-            expect(AssetFactory.createAsset(Object.assign({}, basicData, {"@type": [VocabularyUtils.RESOURCE, VocabularyUtils.DATASET]}))).toBeInstanceOf(Resource);
-            expect(AssetFactory.createAsset(Object.assign({}, basicData, {"@type": [VocabularyUtils.RESOURCE]}))).toBeInstanceOf(Resource);
+            expect(AssetFactory.createAsset(Object.assign({}, basicData, {types: VocabularyUtils.TERM}))).toBeInstanceOf(Term);
+            expect(AssetFactory.createAsset(Object.assign({}, basicData, {types: VocabularyUtils.VOCABULARY}))).toBeInstanceOf(Vocabulary);
+            expect(AssetFactory.createAsset(Object.assign({}, basicData, {types: [VocabularyUtils.DOCUMENT, VocabularyUtils.RESOURCE]}))).toBeInstanceOf(Document);
+            expect(AssetFactory.createAsset(Object.assign({}, basicData, {types: [VocabularyUtils.RESOURCE, VocabularyUtils.FILE]}))).toBeInstanceOf(File);
+            expect(AssetFactory.createAsset(Object.assign({}, basicData, {types: [VocabularyUtils.RESOURCE, VocabularyUtils.DATASET]}))).toBeInstanceOf(Resource);
+            expect(AssetFactory.createAsset(Object.assign({}, basicData, {types: [VocabularyUtils.RESOURCE]}))).toBeInstanceOf(Resource);
         });
 
         it("throws unsupported asset type exception when data of unknown type are passed in", () => {

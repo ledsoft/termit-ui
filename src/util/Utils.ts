@@ -3,6 +3,7 @@
  */
 import Asset, {AssetData} from "../model/Asset";
 import VocabularyUtils from "./VocabularyUtils";
+import Term from "../model/Term";
 
 export default {
 
@@ -85,14 +86,14 @@ export default {
      * Determines primary asset type from the specified data.
      *
      * Primary asset type is the most specific ontological class the specified asset data carry. For instance, for a resource of type file, which would contain both
-     * file and resource in its @type definition, file is the primary one, as it is more specific than resource.
+     * file and resource in its "types" definition, file is the primary one, as it is more specific than resource.
      *
-     * The type is determined using the "@type" attribute.
+     * The type is determined using the "types" attribute.
      * @param asset Asset whose type should be determined
      * @return asset primary  type, undefined if the type is not known or it the asset does not contain type info
      */
     getPrimaryAssetType(asset: AssetData): string | undefined {
-        const types = this.sanitizeArray(asset["@type"]);
+        const types = this.sanitizeArray(asset.types);
         if (types.indexOf(VocabularyUtils.TERM) !== -1) {
             return VocabularyUtils.TERM;
         } else if (types.indexOf(VocabularyUtils.VOCABULARY) !== -1) {

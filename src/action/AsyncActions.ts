@@ -33,6 +33,8 @@ import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
 import File from "../model/File";
 import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
+import {AssetData} from "../model/Asset";
+import AssetFactory from "../util/AssetFactory";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -627,6 +629,24 @@ export function exportGlossary(vocabularyIri: IRI, type: ExportType) {
                     dispatch(asyncActionFailure(action, error));
                     return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)))
                 }
+            })
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+    }
+}
+
+export function loadLastEditedAssets() {
+    const action = {
+        type: ActionType.LOAD_LAST_EDITED
+    };
+    const context = Object.assign({}, RESOURCE_CONTEXT, TERM_CONTEXT, VOCABULARY_CONTEXT);
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(Constants.API_PREFIX + "/assets/last-edited")
+            .then((data: object) => jsonld.compact(data, context))
+            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: AssetData[]) => {
+                dispatch(asyncActionSuccess(action));
+                return data.map(item => AssetFactory.createAsset(item));
             })
             .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
     }
