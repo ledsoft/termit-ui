@@ -3,7 +3,6 @@
  */
 import Asset, {AssetData} from "../model/Asset";
 import VocabularyUtils from "./VocabularyUtils";
-import Term from "../model/Term";
 
 export default {
 
