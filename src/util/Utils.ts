@@ -1,6 +1,8 @@
 /**
  * General utility functions.
  */
+import Asset from "../model/Asset";
+import VocabularyUtils from "./VocabularyUtils";
 
 export default {
 
@@ -77,5 +79,30 @@ export default {
             size: limit,
             page: Math.ceil(offset! / limit!)
         };
+    },
+
+    /**
+     * Determines the id of the i18n message representing the label of the specified asset's type.
+     *
+     * The type resolution is based on value of the @types attribute of the specified asset.
+     * @param asset Asset whose type label id should be determined
+     */
+    getAssetTypeLabelId(asset: Asset): string | undefined {
+        const types = this.sanitizeArray(asset["@type"]);
+        if (types.indexOf(VocabularyUtils.TERM) !== -1) {
+            return "type.term";
+        } else if (types.indexOf(VocabularyUtils.VOCABULARY) !== -1) {
+            return "type.vocabulary";
+        } else if (types.indexOf(VocabularyUtils.DOCUMENT) !== -1) {
+            return "type.document";
+        } else if (types.indexOf(VocabularyUtils.FILE) !== -1) {
+            return "type.file";
+        } else if (types.indexOf(VocabularyUtils.DATASET) !== -1) {
+            return "type.dataset";
+        } else if (types.indexOf(VocabularyUtils.RESOURCE) !== -1) {
+            return "type.resource";
+        } else {
+            return undefined;
+        }
     }
 }

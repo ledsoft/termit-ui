@@ -203,7 +203,11 @@ export default {
         'properties.edit.new.label': 'Název',
         'properties.edit.new.comment': 'Popis',
 
-        'type.term': 'Pojem',
-        'type.vocabulary': 'Slovník'
+        "type.term": "Pojem",
+        "type.vocabulary": "Slovník",
+        "type.resource": "Zdroj",
+        "type.document": "Dokument",
+        "type.file": "Soubor",
+        "type.dataset": "Datová sada"
     }
 }

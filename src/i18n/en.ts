@@ -204,7 +204,11 @@ export default {
         'properties.edit.new.label': 'Label',
         'properties.edit.new.comment': 'Comment',
 
-        'type.term': 'Term',
-        'type.vocabulary': 'Vocabulary'
+        "type.term": "Term",
+        "type.vocabulary": "Vocabulary",
+        "type.resource": "Resource",
+        "type.document": "Document",
+        "type.file": "File",
+        "type.dataset": "Dataset"
     }
 }

@@ -18,6 +18,7 @@ export default {
     TERM: _NS_POPIS_DAT + "term",
     FILE: _NS_POPIS_DAT + "soubor",
     DOCUMENT: _NS_POPIS_DAT + "document",
+    DATASET: "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
     JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovniku",
     RESOURCE: _NS_POPIS_DAT + "zdroj",
     TERM_ASSIGNMENT: _NS_POPIS_DAT + "prirazeni-termu",
