@@ -52,7 +52,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     <Label className='attribute-label'>{i18n('term.metadata.types')}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    {this.renderItems(term.assignedTypes)}
+                    {this.renderItems(term.types)}
                 </Col>
             </Row>
             <Row>
@@ -82,8 +82,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
             <Row>
                 <Col xs={12}>
                     <Tabs activeTabLabelKey={this.state.activeTab} changeTab={this.onTabSelect} tabs={{
-                        'properties.edit.title': <UnmappedProperties properties={term.unmappedProperties}
-                                                                     showInfoOnEmpty={true}/>,
+                        'properties.edit.title': <UnmappedProperties properties={term.unmappedProperties} showInfoOnEmpty={true}/>,
                         'term.metadata.assignments.title': <TermAssignments term={term}/>
                     }}/>
                 </Col>
