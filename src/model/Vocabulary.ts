@@ -1,29 +1,22 @@
-import User, {CONTEXT as USER_CONTEXT, UserData} from "./User";
+import User, {CONTEXT as USER_CONTEXT} from "./User";
 import OntologicalVocabulary from "../util/VocabularyUtils";
-import Asset, {AssetData} from "./Asset";
+import Asset, {ASSET_CONTEXT, AssetData, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import Utils from "../util/Utils";
 
 // @id and @type are merged from USER_CONTEXT
 const ctx = {
-    "label": "http://www.w3.org/2000/01/rdf-schema#label",
-    "comment": "http://www.w3.org/2000/01/rdf-schema#comment",
-    "created": "http://purl.org/dc/terms/created",
-    "author": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora",
     "document": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument",
     "glossary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar",
     "model": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model"
 };
 
-export const CONTEXT = Object.assign(ctx, USER_CONTEXT);
+export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
 
 const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "document", "types", "glossary", "model"];
 
-export interface VocabularyData extends AssetData {
+export interface VocabularyData extends AssetData, HasProvenanceData {
     label: string;
-    comment?: string;
-    author?: UserData;
-    created?: number;
     document?: { iri: string };
     glossary?: AssetData;
     model?: AssetData;
@@ -32,16 +25,13 @@ export interface VocabularyData extends AssetData {
 
 export default class Vocabulary extends Asset implements VocabularyData {
     public label: string;
-    public comment: string;
-    public author?: User;
-    public created?: number;
     public document?: { iri: string };
     public glossary?: AssetData;
     public model?: AssetData;
     public types?: string[];
 
     constructor(data: VocabularyData) {
-        super();
+        super(data);
         Object.assign(this, data);
         if (data.author) {
             this.author = new User(data.author);

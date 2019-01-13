@@ -24,7 +24,7 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
         super(props);
         this.state = {
             label: this.props.vocabulary.label,
-            comment: this.props.vocabulary.comment,
+            comment: this.props.vocabulary.comment? this.props.vocabulary.comment : "",
             unmappedProperties: this.props.vocabulary.unmappedProperties
         }
     }

@@ -1,10 +1,54 @@
+import User, {UserData} from "./User";
+import OntologicalVocabulary from "../util/VocabularyUtils";
+
 export interface AssetData {
-    iri?: string
+    iri?: string;
+    comment?: string;
 }
 
-export default abstract class Asset implements AssetData {
+/**
+ * JSON-LD context definition for asset data.
+ */
+export const ASSET_CONTEXT = {
+    iri: "@id",
+    label: OntologicalVocabulary.RDFS_LABEL,
+    comment: OntologicalVocabulary.RDFS_COMMENT
+};
+
+export interface HasProvenanceData {
+    author?: UserData;
+    created?: number;
+    lastEditor?: UserData;
+    lastModified?: number;
+}
+
+/**
+ * JSON-LD context definition for provenance data.
+ */
+export const PROVENANCE_CONTEXT = {
+    author: OntologicalVocabulary.HAS_AUTHOR,
+    created: OntologicalVocabulary.CREATED,
+    lastEditor: OntologicalVocabulary.HAS_LAST_EDITOR,
+    lastModified: OntologicalVocabulary.LAST_MODIFIED
+};
+
+export default abstract class Asset implements AssetData, HasProvenanceData {
     public iri: string;
     public label: string;
+    public comment?: string;
+    public author?: User;
+    public created?: number;
+    public lastEditor?: User;
+    public lastModified?: number;
+
+    protected constructor(data: HasProvenanceData) {
+        if (data.author) {
+            this.author = new User(data.author);
+        }
+        if (data.lastEditor) {
+            this.author = new User(data.lastEditor);
+        }
+    }
 
     public abstract toJsonLd(): {};
 }

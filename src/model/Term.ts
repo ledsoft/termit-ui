@@ -1,31 +1,22 @@
 import OntologicalVocabulary from "../util/VocabularyUtils";
-import {AssetData, default as Asset} from "./Asset";
+import {ASSET_CONTEXT, AssetData, default as Asset, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
 import Utils from "../util/Utils";
 import WithUnmappedProperties from "./WithUnmappedProperties";
-import {UserData} from "./User";
-import User from "./User";
+import {CONTEXT as USER_CONTEXT} from "./User";
 
 const ctx = {
-    iri: "@id",
-    label: "http://www.w3.org/2000/01/rdf-schema#label",
-    comment: "http://www.w3.org/2000/01/rdf-schema#comment",
-    created: "http://purl.org/dc/terms/created",
-    author: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora",
     subTerms: "http://www.w3.org/2004/02/skos/core#narrower",
     sources: "http://purl.org/dc/elements/1.1/source",
     vocabulary: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku",
-    types: "@type",
+    types: "@type"
 };
 
-export const CONTEXT = Object.assign(ctx);
+export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
 
 const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "subTerms", "sources", "types", "parent", "plainSubTerms", "vocabulary"];
 
-export interface TermData extends AssetData {
+export interface TermData extends AssetData, HasProvenanceData {
     label: string;
-    comment?: string;
-    author?: UserData;
-    created?: number;
     subTerms?: AssetData[];
     sources?: string[];
     types?: string[];
@@ -35,9 +26,6 @@ export interface TermData extends AssetData {
 }
 
 export default class Term extends Asset implements TermData {
-    public comment?: string;
-    public author?: User;
-    public created?: number;
     public subTerms?: AssetData[];
     public parent?: string;
     public types?: string[];
@@ -46,16 +34,13 @@ export default class Term extends Asset implements TermData {
     public readonly vocabulary?: AssetData;
 
     constructor(termData: TermData) {
-        super();
+        super(termData);
         Object.assign(this, termData);
         const dataTypes = Utils.sanitizeArray(termData.types);
         this.types = dataTypes.filter(t => t !== OntologicalVocabulary.TERM);
         if (this.subTerms) {
             this.subTerms = Utils.sanitizeArray(this.subTerms);
             this.plainSubTerms = Utils.sanitizeArray(this.subTerms).map(st => st.iri!);
-        }
-        if (termData.author) {
-            this.author = new User(termData.author);
         }
     }
 
