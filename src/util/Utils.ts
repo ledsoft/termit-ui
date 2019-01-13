@@ -1,7 +1,7 @@
 /**
  * General utility functions.
  */
-import Asset from "../model/Asset";
+import Asset, {AssetData} from "../model/Asset";
 import VocabularyUtils from "./VocabularyUtils";
 
 export default {
@@ -82,27 +82,56 @@ export default {
     },
 
     /**
+     * Determines primary asset type from the specified data.
+     *
+     * Primary asset type is the most specific ontological class the specified asset data carry. For instance, for a resource of type file, which would contain both
+     * file and resource in its @type definition, file is the primary one, as it is more specific than resource.
+     *
+     * The type is determined using the "@type" attribute.
+     * @param asset Asset whose type should be determined
+     * @return asset primary  type, undefined if the type is not known or it the asset does not contain type info
+     */
+    getPrimaryAssetType(asset: AssetData): string | undefined {
+        const types = this.sanitizeArray(asset["@type"]);
+        if (types.indexOf(VocabularyUtils.TERM) !== -1) {
+            return VocabularyUtils.TERM;
+        } else if (types.indexOf(VocabularyUtils.VOCABULARY) !== -1) {
+            return VocabularyUtils.VOCABULARY;
+        } else if (types.indexOf(VocabularyUtils.DOCUMENT) !== -1) {
+            return VocabularyUtils.DOCUMENT;
+        } else if (types.indexOf(VocabularyUtils.FILE) !== -1) {
+            return VocabularyUtils.FILE;
+        } else if (types.indexOf(VocabularyUtils.DATASET) !== -1) {
+            return VocabularyUtils.DATASET;
+        } else if (types.indexOf(VocabularyUtils.RESOURCE) !== -1) {
+            return VocabularyUtils.RESOURCE;
+        } else {
+            return undefined;
+        }
+    },
+
+    /**
      * Determines the id of the i18n message representing the label of the specified asset's type.
      *
-     * The type resolution is based on value of the @types attribute of the specified asset.
+     * The type resolution is based on value of the @type attribute of the specified asset.
      * @param asset Asset whose type label id should be determined
      */
     getAssetTypeLabelId(asset: Asset): string | undefined {
-        const types = this.sanitizeArray(asset["@type"]);
-        if (types.indexOf(VocabularyUtils.TERM) !== -1) {
-            return "type.term";
-        } else if (types.indexOf(VocabularyUtils.VOCABULARY) !== -1) {
-            return "type.vocabulary";
-        } else if (types.indexOf(VocabularyUtils.DOCUMENT) !== -1) {
-            return "type.document";
-        } else if (types.indexOf(VocabularyUtils.FILE) !== -1) {
-            return "type.file";
-        } else if (types.indexOf(VocabularyUtils.DATASET) !== -1) {
-            return "type.dataset";
-        } else if (types.indexOf(VocabularyUtils.RESOURCE) !== -1) {
-            return "type.resource";
-        } else {
-            return undefined;
+        switch (this.getPrimaryAssetType(asset)) {
+            case VocabularyUtils.TERM:
+                return "type.term";
+            case VocabularyUtils.VOCABULARY:
+                return "type.vocabulary";
+            case VocabularyUtils.DOCUMENT:
+                return "type.document";
+            case VocabularyUtils.FILE:
+                return "type.file";
+            case VocabularyUtils.DATASET:
+                return "type.dataset";
+            case VocabularyUtils.RESOURCE:
+                return "type.resource";
+            default:
+                return undefined;
         }
     }
 }

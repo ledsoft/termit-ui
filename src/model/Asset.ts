@@ -3,6 +3,7 @@ import OntologicalVocabulary from "../util/VocabularyUtils";
 
 export interface AssetData {
     iri?: string;
+    label?: string;
     comment?: string;
 }
 
