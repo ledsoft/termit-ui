@@ -1,4 +1,3 @@
-// @ts-ignore
 import {DomUtils} from "htmlparser2";
 import {Node} from "html-to-react";
 import {DEFAULT_RDF_PROPERTY_VALUE, DEFAULT_RDF_TYPEOF_VALUE} from "./Annotator";
