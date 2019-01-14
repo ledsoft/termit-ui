@@ -130,7 +130,7 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
                 {v}
                 <Badge color="danger" title={this.props.i18n("properties.edit.remove")}
                        className="term-edit-source-remove align-middle"
-                       onClick={this.onRemove.bind(null, k, v)}><GoX/> {this.props.i18n("properties.edit.remove.text")}</Badge>
+                       onClick={this.onRemove.bind(null, k, v)}><GoX/></Badge>
             </li>);
 
             result.push(<div key={k}>
