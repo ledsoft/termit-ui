@@ -10,6 +10,7 @@ import Generator from "../../../../__tests__/environment/Generator";
 import Vocabulary from "../../../../model/Vocabulary";
 import {Link, MemoryRouter} from "react-router-dom";
 import {InjectsLoading} from "../../../hoc/withInjectableLoading";
+import VocabularyUtils from "../../../../util/VocabularyUtils";
 
 describe("LastEditedAssets", () => {
     let onLoad: () => Promise<Asset[]>;
@@ -49,8 +50,10 @@ describe("LastEditedAssets", () => {
     it("renders downloaded assets", () => {
         const assets = [new Term({
             iri: Generator.generateUri(),
-            label: "Term"
-        }), new Vocabulary({iri: Generator.generateUri(), label: "Vocabulary"})];
+            label: "Term",
+            types: [VocabularyUtils.TERM],
+            vocabulary: {iri: Generator.generateUri()}
+        }), new Vocabulary({iri: Generator.generateUri(), label: "Vocabulary", types: [VocabularyUtils.VOCABULARY]})];
         onLoad = jest.fn().mockImplementation(() => Promise.resolve(assets));
         const wrapper = mountWithIntl(<MemoryRouter>
             <LastEditedAssets loadAssets={onLoad} {...loadingInjectMock} {...intlFunctions()}/>

@@ -12,9 +12,8 @@ import Resource from "../../../model/Resource";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../../util/Types";
 import {loadLastEditedAssets} from "../../../action/AsyncActions";
-import {Link} from "react-router-dom";
-import Routes from "../../../util/Routes";
 import withInjectableLoading, {InjectsLoading} from "../../hoc/withInjectableLoading";
+import AssetLinkFactory from "../../factory/AssetLinkFactory";
 
 interface LastEditedAssetsProps extends HasI18n, InjectsLoading {
     loadAssets: () => Promise<Asset[]>;
@@ -78,7 +77,7 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
                         {LastEditedAssets.renderAssetBadge(asset)}
                     </Col>
                     <Col md={7} lg={8} xl={9}>
-                        <Link to={Routes.vocabularies.path}>{asset.label}</Link>
+                        {AssetLinkFactory.createAssetLink(asset)}
                     </Col>
                 </Row>
             </td>
