@@ -8,6 +8,7 @@ import Term from "../../model/Term";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {FormGroup, Label} from "reactstrap";
+import VocabularyUtils from "../../util/VocabularyUtils";
 
 interface TermTypesEditProps extends HasI18n {
     termTypes: string[];
@@ -17,8 +18,8 @@ interface TermTypesEditProps extends HasI18n {
 
 export class TermTypesEdit extends React.Component<TermTypesEditProps> {
 
-    private onChange = (val: Term) => {
-        this.props.onChange([val.iri]);
+    public onChange = (val: Term) => {
+        this.props.onChange([val.iri, VocabularyUtils.TERM]);
     };
 
     private filterParentOptions = (options: Term[], filter: string) => {
@@ -33,7 +34,7 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
     };
 
     private resolveSelectedTypes(types: Term[]): Term | undefined {
-        const matching = types.filter(t => this.props.termTypes.indexOf(t.iri) !== -1);
+        const matching = types.filter(t => t.iri !== VocabularyUtils.TERM && this.props.termTypes.indexOf(t.iri) !== -1);
         return matching.length > 0 ? matching[0] : undefined;
     }
 

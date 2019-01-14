@@ -1,4 +1,3 @@
-import OntologicalVocabulary from "../util/VocabularyUtils";
 import {ASSET_CONTEXT, AssetData, default as Asset, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
 import Utils from "../util/Utils";
 import WithUnmappedProperties from "./WithUnmappedProperties";
@@ -36,8 +35,7 @@ export default class Term extends Asset implements TermData {
     constructor(termData: TermData) {
         super(termData);
         Object.assign(this, termData);
-        const dataTypes = Utils.sanitizeArray(termData.types);
-        this.types = dataTypes.filter(t => t !== OntologicalVocabulary.TERM);
+        this.types = Utils.sanitizeArray(termData.types);
         if (this.subTerms) {
             this.subTerms = Utils.sanitizeArray(this.subTerms);
             this.plainSubTerms = Utils.sanitizeArray(this.subTerms).map(st => st.iri!);
@@ -46,9 +44,7 @@ export default class Term extends Asset implements TermData {
 
     public toTermData(): TermData {
         const result: any = {};
-        Object.assign(result, this, {
-            types: [...this.types || [], OntologicalVocabulary.TERM]
-        });
+        Object.assign(result, this);
         delete result.plainSubTerms;
         return result;
     }

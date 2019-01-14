@@ -69,8 +69,7 @@ describe("Utils", () => {
     });
 
     describe("getAssetTypeLabelId", () => {
-        // TODO Fix the issue with Term type missing in Term instance types
-        it.skip("returns term type label message id for term", () => {
+        it("returns term type label message id for term", () => {
             const term: Term = new Term({
                 iri: Generator.generateUri(),
                 label: "Test",

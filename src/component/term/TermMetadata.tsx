@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button, Col, Label, Row} from "reactstrap";
 import Term from "../../model/Term";
@@ -9,7 +9,7 @@ import Vocabulary from "../../model/Vocabulary";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import Routes from "../../util/Routes";
-import Routing from '../../util/Routing';
+import Routing from "../../util/Routing";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import AssetLabel from "../misc/AssetLabel";
 import TermAssignments from "./TermAssignments";
@@ -29,13 +29,13 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     constructor(props: TermMetadataProps) {
         super(props);
         this.state = {
-            activeTab: 'properties.edit.title'
+            activeTab: "properties.edit.title"
         };
     }
 
     public openSubTerm = (term: Term) => {
         Routing.transitionTo(Routes.vocabularyTermDetail, {
-            params: new Map([['name', VocabularyUtils.getFragment(this.props.vocabulary.iri)], ['termName', VocabularyUtils.getFragment(term.iri)]])
+            params: new Map([["name", VocabularyUtils.getFragment(this.props.vocabulary.iri)], ["termName", VocabularyUtils.getFragment(term.iri)]])
         });
     };
 
@@ -46,18 +46,18 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     public render() {
         const i18n = this.props.i18n;
         const term = this.props.term;
-        return <div className='metadata-panel'>
+        return <div className="metadata-panel">
             <Row>
                 <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.types')}</Label>
+                    <Label className="attribute-label">{i18n("term.metadata.types")}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    {this.renderItems(term.types)}
+                    {this.renderTypes()}
                 </Col>
             </Row>
             <Row>
                 <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.subTerms')}</Label>
+                    <Label className="attribute-label">{i18n("term.metadata.subTerms")}</Label>
                 </Col>
                 <Col xl={10} md={8}>
                     {this.renderSubTerms()}
@@ -65,7 +65,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
             </Row>
             <Row>
                 <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.comment')}</Label>
+                    <Label className="attribute-label">{i18n("term.metadata.comment")}</Label>
                 </Col>
                 <Col xl={10} md={8}>
                     <Label>{term.comment}</Label>
@@ -73,7 +73,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
             </Row>
             <Row>
                 <Col xl={2} md={4}>
-                    <Label className='attribute-label'>{i18n('term.metadata.source')}</Label>
+                    <Label className="attribute-label">{i18n("term.metadata.source")}</Label>
                 </Col>
                 <Col xl={10} md={8}>
                     {this.renderItems(term.sources)}
@@ -82,8 +82,9 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
             <Row>
                 <Col xs={12}>
                     <Tabs activeTabLabelKey={this.state.activeTab} changeTab={this.onTabSelect} tabs={{
-                        'properties.edit.title': <UnmappedProperties properties={term.unmappedProperties} showInfoOnEmpty={true}/>,
-                        'term.metadata.assignments.title': <TermAssignments term={term}/>
+                        "properties.edit.title": <UnmappedProperties properties={term.unmappedProperties}
+                                                                     showInfoOnEmpty={true}/>,
+                        "term.metadata.assignments.title": <TermAssignments term={term}/>
                     }}/>
                 </Col>
             </Row>
@@ -95,13 +96,19 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         if (source.length === 0) {
             return null;
         }
-        return <ul className='term-items'>{source.map(item => <li key={item.iri}>
+        return <ul className="term-items">{source.map(item => <li key={item.iri}>
             <OutgoingLink iri={item.iri!}
-                          label={<Button color='link' onClick={this.openSubTerm.bind(null, item)}
-                                         title={this.props.i18n('term.metadata.subterm.link')}><AssetLabel
+                          label={<Button color="link" onClick={this.openSubTerm.bind(null, item)}
+                                         title={this.props.i18n("term.metadata.subterm.link")}><AssetLabel
                               iri={item.iri!}/></Button>}/>
         </li>)}
         </ul>;
+    }
+
+    private renderTypes() {
+        // Ensures that the implicit TERM type is not rendered
+        const types = this.props.term.types;
+        return this.renderItems(types ? types.filter(t => t !== VocabularyUtils.TERM) : types);
     }
 
     private renderItems(items: string[] | string | undefined) {
@@ -109,7 +116,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
             return null;
         }
         const source = Utils.sanitizeArray(items);
-        return <ul className='term-items'>{source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
+        return <ul className="term-items">{source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
             <OutgoingLink iri={item} label={<AssetLabel iri={item}/>}/> : <Label>{item}</Label>}</li>)}</ul>;
     }
 }
