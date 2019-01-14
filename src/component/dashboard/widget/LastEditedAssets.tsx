@@ -14,8 +14,9 @@ import {ThunkDispatch} from "../../../util/Types";
 import {loadLastEditedAssets} from "../../../action/AsyncActions";
 import {Link} from "react-router-dom";
 import Routes from "../../../util/Routes";
+import withInjectableLoading, {InjectsLoading} from "../../hoc/withInjectableLoading";
 
-interface LastEditedAssetsProps extends HasI18n {
+interface LastEditedAssetsProps extends HasI18n, InjectsLoading {
     loadAssets: () => Promise<Asset[]>;
 }
 
@@ -30,7 +31,11 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
     }
 
     public componentDidMount(): void {
-        this.props.loadAssets().then((result: Asset[]) => this.setState({assets: result}));
+        this.props.loadingOn();
+        this.props.loadAssets().then((result: Asset[]) => {
+            this.setState({assets: result});
+            this.props.loadingOff();
+        });
     }
 
     public render() {
@@ -40,6 +45,7 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
                 {i18n("dashboard.widget.lastEdited.title")}
             </CardHeader>
             <CardBody>
+                {this.props.renderMask()}
                 {this.state.assets.length > 0 ? this.renderNonEmptyContent() : this.renderEmptyInfo()}
             </CardBody>
         </Card>;
@@ -95,5 +101,5 @@ export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
         loadAssets: () => dispatch(loadLastEditedAssets())
     };
-})(injectIntl(withI18n(LastEditedAssets)));
+})(injectIntl(withI18n(withInjectableLoading(LastEditedAssets))));
 

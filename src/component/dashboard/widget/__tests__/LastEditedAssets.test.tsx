@@ -9,22 +9,37 @@ import Term from "../../../../model/Term";
 import Generator from "../../../../__tests__/environment/Generator";
 import Vocabulary from "../../../../model/Vocabulary";
 import {Link, MemoryRouter} from "react-router-dom";
+import {InjectsLoading} from "../../../hoc/withInjectableLoading";
 
 describe("LastEditedAssets", () => {
     let onLoad: () => Promise<Asset[]>;
+
+    const loadingInjectMock: InjectsLoading = {
+        loadingOn(): void {
+            // Do nothing,
+        },
+        loadingOff(): void {
+            // Do nothing,
+        },
+        renderMask(): null {
+            return null;
+        },
+        loading: false
+    };
 
     beforeEach(() => {
         onLoad = jest.fn().mockImplementation(() => Promise.resolve([]));
     });
 
     it("loads last edited assets on mount", () => {
-        shallow(<LastEditedAssets loadAssets={onLoad} {...intlFunctions()} {...intlDataForShallow()}/>);
+        shallow(<LastEditedAssets
+            loadAssets={onLoad} {...loadingInjectMock} {...intlFunctions()} {...intlDataForShallow()}/>);
         expect(onLoad).toHaveBeenCalled();
     });
 
     it("renders info message when no assets were found", () => {
         const wrapper = mountWithIntl(<MemoryRouter>
-            <LastEditedAssets loadAssets={onLoad} {...intlFunctions()}/>
+            <LastEditedAssets loadAssets={onLoad} {...loadingInjectMock} {...intlFunctions()}/>
         </MemoryRouter>);
         const info = wrapper.find(".italics");
         expect(info.exists()).toBeTruthy();
@@ -38,7 +53,7 @@ describe("LastEditedAssets", () => {
         }), new Vocabulary({iri: Generator.generateUri(), label: "Vocabulary"})];
         onLoad = jest.fn().mockImplementation(() => Promise.resolve(assets));
         const wrapper = mountWithIntl(<MemoryRouter>
-            <LastEditedAssets loadAssets={onLoad} {...intlFunctions()}/>
+            <LastEditedAssets loadAssets={onLoad} {...loadingInjectMock} {...intlFunctions()}/>
         </MemoryRouter>);
         return Promise.resolve().then(() => {
             wrapper.update();
