@@ -91,11 +91,11 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
         const buttons = [<Button key='vocabulary.summary.detail' color='primary' size='sm'
                                  title={this.props.i18n('vocabulary.summary.gotodetail.label')}
                                  onClick={this.openTerms}>
-            <GoThreeBars/>
+            <GoThreeBars/> {this.props.i18n('vocabulary.summary.gotodetail.text')}
         </Button>];
         if (!this.state.edit) {
             buttons.push(<Button key='vocabulary.summary.edit' size='sm' color='primary' title={this.props.i18n('edit')}
-                                 onClick={this.onEdit}><GoPencil/></Button>);
+                                 onClick={this.onEdit}><GoPencil/> {this.props.i18n('edit')}</Button>);
         }
         buttons.push(this.renderExportDropdown());
         const actions = [<ButtonToolbar key='vocabulary.summary.actions'>{buttons}</ButtonToolbar>];
@@ -118,7 +118,7 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
         const i18n = this.props.i18n;
         return <UncontrolledButtonDropdown key="vocabulary.summary.export"
                                            size="sm" title={i18n("vocabulary.summary.export.title")}>
-            <DropdownToggle caret={true} color="primary"><GoCloudDownload/></DropdownToggle>
+            <DropdownToggle caret={true} color="primary"><GoCloudDownload/> {i18n("vocabulary.summary.export.text")}</DropdownToggle>
             <DropdownMenu className="glossary-export-menu">
                 <DropdownItem className="btn-sm" onClick={this.onExportToCsv}
                               title={i18n("vocabulary.summary.export.csv.title")}>{i18n('vocabulary.summary.export.csv')}</DropdownItem>

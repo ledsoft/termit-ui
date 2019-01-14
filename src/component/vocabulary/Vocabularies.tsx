@@ -21,7 +21,7 @@ class Vocabularies extends React.Component<HasI18n> {
                              color='primary'
                              title={i18n('vocabulary.vocabularies.create.tooltip')}
                              size='sm'
-                             onClick={Vocabularies.onCreateVocabularyClick}><GoPlus/></Button>);
+                             onClick={Vocabularies.onCreateVocabularyClick}><GoPlus/> {i18n('vocabulary.vocabularies.create.text')}</Button>);
         return (<PanelWithActions
                     title={i18n('vocabulary.management.vocabularies')}
                     actions={actions}
