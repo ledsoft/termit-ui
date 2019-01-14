@@ -648,6 +648,9 @@ export function loadLastEditedAssets() {
                 dispatch(asyncActionSuccess(action));
                 return data.map(item => AssetFactory.createAsset(item));
             })
-            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return [];
+            });
     }
 }

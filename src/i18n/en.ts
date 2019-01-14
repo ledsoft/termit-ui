@@ -66,6 +66,8 @@ export default {
         'dashboard.type-frequency' : 'Term Count in Vocabularies',
 
         "dashboard.widget.lastEdited.title": "Last edited assets",
+        "dashboard.widget.lastEdited.empty": "Found no assets to show here.",
+        "dashboard.widget.lastEdited.lastEditDate": "Last edited/created",
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
@@ -206,6 +208,7 @@ export default {
         'properties.edit.new.label': 'Label',
         'properties.edit.new.comment': 'Comment',
 
+        "type.asset": "Asset",
         "type.term": "Term",
         "type.vocabulary": "Vocabulary",
         "type.resource": "Resource",

@@ -53,5 +53,9 @@ export default abstract class Asset implements AssetData, HasProvenanceData {
         }
     }
 
+    public get lastEdited(): number | undefined {
+        return this.lastModified ? this.lastModified : this.created;
+    }
+
     public abstract toJsonLd(): {};
 }

@@ -65,6 +65,8 @@ export default {
         'dashboard.type-frequency' : 'Počet pojmů ve slovníku',
 
         "dashboard.widget.lastEdited.title": "Naposledy upravené záznamy",
+        "dashboard.widget.lastEdited.empty": "Pro tuto část nebyly nalezeny žádné záznamy.",
+        "dashboard.widget.lastEdited.lastEditDate": "Naposledy upraveno/vytvořeno",
 
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',
@@ -205,6 +207,7 @@ export default {
         'properties.edit.new.label': 'Název',
         'properties.edit.new.comment': 'Popis',
 
+        "type.asset": "Záznam",
         "type.term": "Pojem",
         "type.vocabulary": "Slovník",
         "type.resource": "Zdroj",

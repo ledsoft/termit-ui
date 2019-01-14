@@ -43,7 +43,7 @@ export class Dashboard extends React.Component<HasI18n> {
                     {this.renderQuickAccessDashboard()}
                 </Jumbotron>
             </Col>
-            <Col lg={4} xs={4}>
+            <Col lg={4} xs={12}>
                 <PanelWithActions title={this.props.i18n("dashboard.type-frequency")}>
                     <TermFrequency
                         sparqlQuery={templateQuery}
