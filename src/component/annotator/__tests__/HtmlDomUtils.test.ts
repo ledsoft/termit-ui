@@ -1,8 +1,6 @@
-// @ts-ignore
 import {XPathRange} from "xpath-range";
-import HtmlDomUtils from "../HtmlDomUtils";
 import * as xpathRange from "xpath-range";
-
+import HtmlDomUtils from "../HtmlDomUtils";
 
 function mockWindowSelection(selection: object) {
     window.getSelection = jest.fn().mockImplementation(() => {
@@ -17,7 +15,8 @@ describe("Html dom utils", () => {
 
     const htmlContent = "<html><head/><body/></html>";
     const sampleDivContent = "<div>before span<span>sample text pointer in span</span>after span</div>";
-    const textPointerSelector : XPathRange = {
+    const surroundingElementHtml = "<span>text pointer</span>";
+    const xpathTextPointerRange : XPathRange = {
         start: "/div[1]/span[1]/text()[1]",
         end: "/div[1]/span[1]/text()[1]",
         startOffset: 7,
@@ -28,6 +27,7 @@ describe("Html dom utils", () => {
     let sampleTextNode: Text;
     let getRangeAt: (i: number) => any;
     let cloneContents: () => DocumentFragment;
+    let textPointerRange;
     beforeEach(() => {
         // // @ts-ignore
         window.getSelection = jest.fn().mockImplementation(() => {
@@ -43,6 +43,10 @@ describe("Html dom utils", () => {
         getRangeAt = jest.fn().mockImplementation(() => {
             return { cloneContents }
         });
+        textPointerRange = {
+            extractContents: jest.fn(),
+            surroundContents: jest.fn()
+        }
         const parser = new DOMParser();
         doc = parser.parseFromString(htmlContent, "text/html");
         sampleDiv = doc.createElement("div");
@@ -51,33 +55,27 @@ describe("Html dom utils", () => {
         doc.body.appendChild(sampleDiv);
     });
 
-
     describe("get selection range", () => {
 
         it("returns range for a text node", () => {
 
-            let ret: XPathRange | null;
+            let ret: Range | null;
 
             mockWindowSelection({
                 isCollapsed: false,
                 rangeCount: 1,
                 getRangeAt
             });
-            xpathRange.fromRange = jest.fn().mockImplementation(() => {
-                return textPointerSelector;
-            });
             ret = HtmlDomUtils.getSelectionRange(sampleDiv);
             expect(window.getSelection).toHaveBeenCalled();
             expect(getRangeAt).toHaveBeenCalledWith(0);
-            expect(cloneContents).toHaveBeenCalled();
-            expect(xpathRange.fromRange).toHaveBeenCalledWith( expect.any(Object), sampleDiv);
-            expect(ret).toEqual(textPointerSelector);
+            expect(ret.cloneContents).toEqual(cloneContents);
         });
 
 
         it("returns null if nothing is selected", () => {
 
-            let ret: XPathRange | null;
+            let ret: Range | null;
 
             mockWindowSelection({isCollapsed: true});
             ret = HtmlDomUtils.getSelectionRange(sampleDiv);
@@ -90,56 +88,29 @@ describe("Html dom utils", () => {
             expect(window.getSelection).toHaveBeenCalledTimes(1);
             expect(ret).toEqual(null);
         });
-
-        it("returns null if not a text node", () => {
-
-            let ret: XPathRange | null;
-
-            mockWindowSelection({isCollapsed: true});
-            ret = HtmlDomUtils.getSelectionRange(sampleDiv);
-            expect(window.getSelection).toHaveBeenCalledTimes(1);
-            expect(ret).toEqual(null);
-
-
-            mockWindowSelection({isCollapsed: false, rangeCount: 0});
-            ret = HtmlDomUtils.getSelectionRange(sampleDiv, true);
-            expect(window.getSelection).toHaveBeenCalledTimes(1);
-            expect(ret).toEqual(null);
-        });
-
     });
 
+    describe("replace range", () => {
 
+        it("returns clone of input element", () => {
 
-    // let doc: Document;
-    // let sampleDiv: HTMLElement;
-
-
-    // });
-
-    // it("getSelectionRange returns xpath range of window selection", () => {
-    //     const x = window.getSelection();
-    //     console.log(x);
-    //     mountDOM(`<div id="foo"><h1>Just HTML</h1></div>`);
-    //
-    //     const myDiv = document.getElementById('foo');
-    //     console.log(myDiv);
-    //
-    //
-    //     const range = doc.createRange();
-    //     range.selectNode(sampleDiv);
-    //     const xpathRange = fromRange(range, sampleDiv);
-    //     console.log(xpathRange);
-    //     // const range = toRange(
-    //     //     textPointerSelector.start,
-    //     //     textPointerSelector.startOffset,
-    //     //     textPointerSelector.end,
-    //     //     textPointerSelector.endOffset,
-    //     //     sampleDiv
-    //     // );
-    //     console.log(range);
-    //    // expect(wrapper.html().includes(sampleContent)).toBe(true);
-    // });
-
-
+            let ret: HTMLElement | null;
+            xpathRange.fromRange = jest.fn().mockImplementation(() => {
+                return xpathTextPointerRange;
+            });
+            xpathRange.toRange = jest.fn().mockImplementation(() => {
+                return textPointerRange;
+            });
+            ret = HtmlDomUtils.replaceRange(sampleDiv, null, surroundingElementHtml);
+            expect(xpathRange.fromRange).toHaveBeenCalledWith( expect.any(Object), sampleDiv);
+            expect(xpathRange.toRange).toHaveBeenCalledWith(
+                xpathTextPointerRange.start, xpathTextPointerRange.startOffset,
+                xpathTextPointerRange.end, xpathTextPointerRange.endOffset,
+                expect.any(Object)
+            );
+            expect(ret === sampleDiv).toBe(false);
+            expect(ret.childNodes[0].childNodes[0].nodeValue)
+                .toEqual(sampleDiv.childNodes[0].childNodes[0].nodeValue);
+        });
+    });
 });

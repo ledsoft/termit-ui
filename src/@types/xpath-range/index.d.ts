@@ -1,7 +1,7 @@
 /**
  * Type declarations for xpath-range library.
  */
-declare module 'xpath-range' {
+declare module "xpath-range" {
 
     interface XPathRange {
         start: string,
