@@ -194,6 +194,7 @@ export default {
         'search.pojem': 'Term',
         'search.typ': 'Type',
 
+        'annotator.annotate-content': 'Annotate Content',
         'annotation.form.suggested-occurrence.message': 'Phrase is not assigned to a vocabulary term.',
         'annotation.form.invalid-occurrence.message': 'Term \'%\' not found in vocabulary.',
         'annotation.form.assigned-occurrence.termInfoLabel': 'Term info : ',

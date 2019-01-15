@@ -28,7 +28,7 @@ export class FileList extends React.Component<FileListProps> {
             const rows = this.props.files.map(v =>
                 <tr key={v.iri}>
                     <td className="align-middle">
-                        <FileLink file={v}/>
+                        <FileLink resource={v}/>
                     </td>
                     <td className="align-middle">
                         {v.comment}

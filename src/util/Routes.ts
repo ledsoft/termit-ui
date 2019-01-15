@@ -22,8 +22,8 @@ export default {
     createVocabulary: new Route('createVocabulary', '/vocabularies/create'),
     vocabularyDetail: new Route('vocabularyDetail', '/vocabularies/:name/terms'),
     vocabularySummary: new Route('vocabularySummary', '/vocabularies/:name'),
+    annotateFile: new Route("annotateFile", '/resources/:name/annotate'),
     resourceSummary: new Route('resourceSummary', '/resources/:name'),
     createVocabularyTerm: new Route('createVocabularyTerm', '/vocabularies/:name/terms/create'),
     vocabularyTermDetail: new Route('vocabularyTermDetail', '/vocabularies/:name/terms/:termName'),
-    annotateFile: new Route("annotateFile", '/file/:name')
 }

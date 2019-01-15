@@ -193,6 +193,7 @@ export default {
         'search.pojem' : 'Pojem',
         'search.typ' : 'Typ',
 
+        'annotator.annotate-content': 'Anotovat obsah',
         'annotation.form.suggested-occurrence.message': 'Fráze není přiřazena žádnemu termínu.',
         'annotation.form.invalid-occurrence.message': 'Termín "%" nebyl nalezen v slovníku. ',
         'annotation.form.assigned-occurrence.termInfoLabel': 'Informace o termínu:',
