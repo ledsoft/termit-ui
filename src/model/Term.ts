@@ -12,7 +12,7 @@ const ctx = {
 
 export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
 
-const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "subTerms", "sources", "types", "parent", "plainSubTerms", "vocabulary"];
+const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "lastEditor", "lastModified", "subTerms", "sources", "types", "parent", "plainSubTerms", "vocabulary"];
 
 export interface TermData extends AssetData, HasProvenanceData {
     label: string;
