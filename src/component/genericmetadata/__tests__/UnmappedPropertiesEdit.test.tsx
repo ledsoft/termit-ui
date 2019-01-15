@@ -32,7 +32,7 @@ describe("UnmappedPropertiesEdit", () => {
                                                               clearProperties={clearProperties} {...intlFunctions()}/>);
         const value = wrapper.find("li");
         expect(value.length).toEqual(1);
-        expect(value.text()).toEqual(existing.get(property)![0]);
+        expect(value.text()).toContain(existing.get(property)![0]);
     });
 
     it('removes prop value when delete button is clicked', () => {
