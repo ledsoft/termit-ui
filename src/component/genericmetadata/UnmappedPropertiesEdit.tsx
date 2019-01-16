@@ -174,7 +174,8 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
 
 export default connect((state: TermItState) => {
     return {
-        knownProperties: state.properties
+        knownProperties: state.properties,
+        intl: state.intl // Pass intl in props to force UI re-render on language switch
     };
 }, (dispatch: ThunkDispatch) => {
     return {
