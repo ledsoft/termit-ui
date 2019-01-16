@@ -6,8 +6,10 @@ import {
     exportGlossary,
     fetchVocabularyTerms,
     getLabel,
-    getProperties, loadDocument,
-    loadFileContent, loadLastEditedAssets,
+    getProperties,
+    loadDocument,
+    loadFileContent,
+    loadLastEditedAssets,
     loadResources,
     loadTermAssignments,
     loadTypes,
@@ -16,7 +18,6 @@ import {
     loadVocabulary,
     loadVocabularyTerm,
     login,
-    search,
     updateResourceTerms,
     updateTerm,
     updateVocabulary
@@ -33,7 +34,6 @@ import VocabularyUtils from "../../util/VocabularyUtils";
 import Routes from '../../util/Routes';
 import ActionType, {AsyncAction, AsyncActionSuccess, MessageAction,} from "../ActionType";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
-import SearchResult from "../../model/SearchResult";
 import {ErrorData} from "../../model/ErrorInfo";
 import Generator from "../../__tests__/environment/Generator";
 import {ThunkDispatch} from "../../util/Types";
@@ -193,31 +193,6 @@ describe('Async actions', () => {
             ).then(() => {
                 const loadSuccessAction: AsyncActionSuccess<string> = store.getActions()[1];
                 expect(loadSuccessAction.payload).toContain("html");
-            });
-        });
-    });
-
-    describe('search', () => {
-        it.skip('emits search request action with ignore loading switch', () => {
-            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(search('test', true))).then(() => {
-                const searchRequestAction: AsyncAction = store.getActions()[0];
-                expect(searchRequestAction.ignoreLoading).toBeTruthy();
-            });
-        });
-
-        it.skip('compacts incoming JSON-LD data using SearchResult context', () => {
-            const results = require('../../rest-mock/searchResults');
-            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(results));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(search('test', true))).then((result: SearchResult[]) => {
-                expect(Array.isArray(result)).toBeTruthy();
-                result.forEach(r => {
-                    expect(r.iri).toBeDefined();
-                    expect(r.label).toBeDefined();
-                    if (r.hasType(Vocabulary2.TERM)) {
-                        expect(r.vocabulary).toBeDefined();
-                    }
-                })
             });
         });
     });
