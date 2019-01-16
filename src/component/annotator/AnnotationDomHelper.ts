@@ -1,7 +1,6 @@
-// @ts-ignore
 import {DomUtils} from "htmlparser2";
 import {Node} from "html-to-react";
-import {DEFAULT_RDF_TYPEOF_VALUE} from "./Annotator";
+import {DEFAULT_RDF_PROPERTY_VALUE, DEFAULT_RDF_TYPEOF_VALUE} from "./Annotator";
 
 export default {
 
@@ -23,8 +22,17 @@ export default {
     replaceAnnotation(oldAnnotation: Node, newAnnotation: Node): void {
         DomUtils.replaceElement(oldAnnotation, newAnnotation)
     },
-    createNewAnnotation(): any {
-        return {type: "tag", name: "span"}
+    createNewAnnotation(about: string, text: string): Node {
+        return {
+            type: "tag",
+            name: "span",
+            attribs: {
+                about,
+                property: DEFAULT_RDF_PROPERTY_VALUE,
+                typeof: DEFAULT_RDF_TYPEOF_VALUE
+            },
+            children: [{data: text, type: "text"}]
+        };
     },
     createTextualNode(annotation: Node): any {
         return {data: annotation.children![0].data, type: "text"}

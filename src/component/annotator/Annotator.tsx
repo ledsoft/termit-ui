@@ -2,10 +2,10 @@ import * as React from "react";
 import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from "html-to-react";
 import Annotation from "./Annotation";
 import IntlData from "../../model/IntlData";
-import {fromRange, toRange} from "xpath-range";
 import HtmlParserUtils from "./HtmlParserUtils";
 import AnnotationDomHelper from "./AnnotationDomHelper";
 import Term from "../../model/Term";
+import HtmlDomUtils from "./HtmlDomUtils";
 
 interface AnnotatorProps {
     html: string
@@ -16,7 +16,7 @@ interface AnnotatorProps {
 
 interface AnnotatorState {
     internalHtml: string // TODO use htmlparser2 dom instead
-    stickyAnnotationId : string
+    stickyAnnotationId: string
 }
 
 export interface AnnotationSpanProps { // TODO remove
@@ -37,6 +37,8 @@ interface HtmlSplit {
     suffix: string
 }
 
+type RangeFilterCallback = (range: Range) => boolean;
+
 export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     private containerElement: HTMLDivElement | null;
 
@@ -48,61 +50,27 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         };
     }
 
-    // TODO extract to separate class
-    public surroundSelection = (element: any, document: any, about: string): HTMLDivElement | null => {
-
-        const sel = window.getSelection();
-
-        if (!sel.isCollapsed) {
-
-            if (sel.rangeCount) {
-                const rangeOriginal = sel.getRangeAt(0);
-
-                const xpathSelection = fromRange(rangeOriginal, element);
-                const clonedElement = element.cloneNode(true);
-                const range = toRange(xpathSelection.start, xpathSelection.startOffset, xpathSelection.end, xpathSelection.endOffset, clonedElement);
-
-                const fragment = range.cloneContents();
-                if ((fragment.childNodes.length === 1) && (fragment.childNodes[0].nodeType === Node.TEXT_NODE)) {
-                    const span = document.createElement("span");
-                    const text = fragment.childNodes[0].nodeValue!;
-
-                    span.setAttribute("about", about);
-                    span.setAttribute("property", DEFAULT_RDF_PROPERTY_VALUE);
-                    span.setAttribute("typeof", DEFAULT_RDF_TYPEOF_VALUE);
-
-                    // replace
-                    range.extractContents();
-                    range.surroundContents(span);
-                    span.append(document.createTextNode(text));
-
-                    return clonedElement;
-                }
-            }
-        }
-        return null;
-    };
-
     private static getRDFNodeId(): string {
         return "_:" + Math.random().toString(36).substring(8);
     }
 
-    private onRemove = (annotationId : string) => {
+    private onRemove = (annotationId: string) => {
         const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
         const ann = AnnotationDomHelper.findAnnotation(dom, annotationId);
         if (ann) {
             AnnotationDomHelper.removeAnnotation(ann);
             const newInternalHtml = HtmlParserUtils.dom2html(dom);
             this.setState(
-                { internalHtml: newInternalHtml,
-                        stickyAnnotationId: ""
+                {
+                    internalHtml: newInternalHtml,
+                    stickyAnnotationId: ""
                 }
             );
             this.props.onUpdate(this.reconstructHtml(newInternalHtml));
         }
     };
 
-    private onUpdate = (annotationSpan : AnnotationSpanProps) => {
+    private onUpdate = (annotationSpan: AnnotationSpanProps) => {
         const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
         const ann = AnnotationDomHelper.findAnnotation(dom, annotationSpan.about!);
         if (ann) {
@@ -110,13 +78,13 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
             delete ann.attribs.score;
             const newInternalHtml = HtmlParserUtils.dom2html(dom);
             this.setState(
-                { internalHtml: newInternalHtml }
+                {internalHtml: newInternalHtml}
             );
             this.props.onUpdate(this.reconstructHtml(newInternalHtml));
         }
     };
 
-    private getProcessingInstructions = ():Instruction[] => {
+    private getProcessingInstructions = (): Instruction[] => {
         // Order matters. Instructions are processed in the order they're defined
         const processNodeDefinitions = new ProcessNodeDefinitions(React);
         return [
@@ -131,9 +99,9 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                     // padding: 0px 4px;'})
 
                     // filter annotations by score
-                    if (! AnnotationDomHelper.isAnnotationWithMinimumScore(node, ANNOTATION_MINIMUM_SCORE_THRESHOLD)){
-                         // return AnnotationDomHelper.createTextualNode(node);
-                         return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
+                    if (!AnnotationDomHelper.isAnnotationWithMinimumScore(node, ANNOTATION_MINIMUM_SCORE_THRESHOLD)) {
+                        // return AnnotationDomHelper.createTextualNode(node);
+                        return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
                     }
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
                     return <Annotation onRemove={this.onRemove} onUpdate={this.onUpdate}
@@ -152,7 +120,9 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     private handleMouseLeave = () => {
         if (this.containerElement) {
             const about = Annotator.getRDFNodeId();
-            const newContainerElement = this.surroundSelection(this.containerElement, this.containerElement.ownerDocument, about)
+            // const newContainerElement = this.surroundSelection(this.containerElement, this.containerElement.ownerDocument, about)
+            const newContainerElement = Annotator.getSurroundedSelection(this.containerElement, about);
+
             if (newContainerElement != null) {
                 this.setState(
                     {
@@ -186,9 +156,45 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         </div>
     }
 
+    private reconstructHtml(htmlBodyContent: string) {
+        const htmlSplit = Annotator.matchHtml(this.props.html);
+        return htmlSplit.prefix + htmlBodyContent + htmlSplit.suffix;
+    }
+
     // TODO generation of keys might be issue if page dynamically changes content
     private static attachKeys(nodes: any[]) {
-        return nodes.map((n:any,i:number) => <React.Fragment key={i}>{n}</React.Fragment>)
+        return nodes.map((n: any, i: number) => <React.Fragment key={i}>{n}</React.Fragment>)
+    }
+
+    private static getSelection(rootElement: HTMLElement): Range | null{
+        const range = HtmlDomUtils.getSelectionRange(
+            rootElement
+        );
+        const selectionFilter = Annotator.composeRangeFilters(
+            Annotator.isTextNode,
+            Annotator.isNotInsideAnnotation
+        );
+
+        if (range && selectionFilter(range)) {
+            return range;
+        }
+        return null;
+    }
+
+
+    private static getSurroundedSelection(rootElement: HTMLElement, about: string): HTMLElement | null {
+        const originalRange = Annotator.getSelection(rootElement);
+        if (originalRange) {
+            const text = HtmlDomUtils.getText(originalRange);
+            const newAnnotationNode = AnnotationDomHelper.createNewAnnotation(about, text);
+            const newContainerElement = HtmlDomUtils.replaceRange(
+                rootElement,
+                originalRange,
+                HtmlParserUtils.dom2html([newAnnotationNode])
+            );
+            return newContainerElement;
+        }
+        return null;
     }
 
     private static matchHtml(htmlContent: string): HtmlSplit {
@@ -210,8 +216,26 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
 
     }
 
-    private reconstructHtml(htmlBodyContent: string) {
-        const htmlSplit = Annotator.matchHtml(this.props.html);
-        return htmlSplit.prefix + htmlBodyContent + htmlSplit.suffix;
+    private static composeRangeFilters(...filters: RangeFilterCallback[]): RangeFilterCallback {
+        return (range: Range): boolean => {
+            return [range].filter(v => filters.every(f => f(v))).length !== 0;
+        }
+    }
+
+    private static isTextNode(range: Range): boolean {
+        return (range.startContainer === range.endContainer)
+            && (range.startContainer === range.commonAncestorContainer)
+            && (range.commonAncestorContainer.nodeType === Node.TEXT_NODE);
+    }
+
+    private static isNotInsideAnnotation(range: Range): boolean {
+        if (!range.commonAncestorContainer.parentElement) {
+            return true;
+        }
+        const dom = HtmlParserUtils.html2dom(range.commonAncestorContainer.parentElement!.outerHTML);
+        if (dom.length !== 1) {
+            return true;
+        }
+        return !AnnotationDomHelper.isAnnotation(dom[0]);
     }
 }

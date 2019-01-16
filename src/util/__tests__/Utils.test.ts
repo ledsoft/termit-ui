@@ -1,4 +1,11 @@
 import Utils from "../Utils";
+import Term from "../../model/Term";
+import Generator from "../../__tests__/environment/Generator";
+import VocabularyUtils from "../VocabularyUtils";
+import Vocabulary from "../../model/Vocabulary";
+import Resource from "../../model/Resource";
+import Document from "../../model/Document";
+import File from "../../model/File";
 
 describe("Utils", () => {
 
@@ -58,6 +65,80 @@ describe("Utils", () => {
         it("returns empty object when either limit or offset is missing", () => {
             expect(Utils.createPagingParams(117)).toEqual({});
             expect(Utils.createPagingParams(undefined, 100)).toEqual({});
+        });
+    });
+
+    describe("getAssetTypeLabelId", () => {
+        it("returns term type label message id for term", () => {
+            const term: Term = new Term({
+                iri: Generator.generateUri(),
+                label: "Test",
+                types: [VocabularyUtils.TERM]
+            });
+            expect(Utils.getAssetTypeLabelId(term)).toEqual("type.term");
+        });
+
+        it("returns vocabulary type label message id for vocabulary", () => {
+            const vocabulary: Vocabulary = new Vocabulary({
+                iri: Generator.generateUri(),
+                label: "Test",
+                types: [VocabularyUtils.VOCABULARY]
+            });
+            expect(Utils.getAssetTypeLabelId(vocabulary)).toEqual("type.vocabulary");
+        });
+
+        it("returns resource type label message id for resource", () => {
+            const resource: Resource = new Resource({
+                iri: Generator.generateUri(),
+                label: "Test",
+                types: VocabularyUtils.RESOURCE
+            });
+            expect(Utils.getAssetTypeLabelId(resource)).toEqual("type.resource");
+        });
+
+        it("returns document type label message id for document", () => {
+            const doc: Document = new Document({
+                iri: Generator.generateUri(),
+                label: "Test",
+                files: [],
+                types: [VocabularyUtils.DOCUMENT, VocabularyUtils.RESOURCE]
+            });
+            expect(Utils.getAssetTypeLabelId(doc)).toEqual("type.document");
+        });
+
+        it("returns file type label message id for file", () => {
+            const file: File = new File({
+                iri: Generator.generateUri(),
+                label: "Test",
+                types: [VocabularyUtils.FILE, VocabularyUtils.RESOURCE]
+            });
+            expect(Utils.getAssetTypeLabelId(file)).toEqual("type.file");
+        });
+
+        it("returns dataset type label message id for dataset", () => {
+            const dataset: Resource = new Resource({
+                iri: Generator.generateUri(),
+                label: "Test",
+                types: [VocabularyUtils.DATASET, VocabularyUtils.RESOURCE]
+            });
+            expect(Utils.getAssetTypeLabelId(dataset)).toEqual("type.dataset");
+        });
+
+        it("returns undefined for asset without type definition", () => {
+            const term: Term = new Term({
+                iri: Generator.generateUri(),
+                label: "Test"
+            });
+            expect(Utils.getAssetTypeLabelId(term)).not.toBeDefined();
+        });
+
+        it("returns undefined for asset with unknown type definition", () => {
+            const resource: Resource = new Resource({
+                iri: Generator.generateUri(),
+                label: "Test",
+                types: VocabularyUtils.RDFS_RESOURCE
+            });
+            expect(Utils.getAssetTypeLabelId(resource)).not.toBeDefined();
         });
     });
 });

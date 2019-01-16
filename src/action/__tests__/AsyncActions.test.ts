@@ -7,7 +7,7 @@ import {
     fetchVocabularyTerms,
     getLabel,
     getProperties, loadDocument,
-    loadFileContent,
+    loadFileContent, loadLastEditedAssets,
     loadResources,
     loadTermAssignments,
     loadTypes,
@@ -46,6 +46,8 @@ import Utils from "../../util/Utils";
 import AsyncActionStatus from "../AsyncActionStatus";
 import ExportType from "../../util/ExportType";
 import fileContent from "../../rest-mock/file";
+import Asset from "../../model/Asset";
+import File from "../../model/File";
 
 jest.mock('../../util/Routing');
 jest.mock('../../util/Ajax', () => ({
@@ -853,6 +855,33 @@ describe('Async actions', () => {
                 const successAction = store.getActions()[1];
                 expect(successAction.type).toEqual(ActionType.EXPORT_GLOSSARY);
                 expect(successAction.status).toEqual(AsyncActionStatus.FAILURE);
+            });
+        });
+    });
+
+    describe("loadLastEditedAssets", () => {
+        it("returns correct instances of received asset data", () => {
+            const data = [{
+                "@id": Generator.generateUri(),
+                "http://www.w3.org/2000/01/rdf-schema#label": "Test file",
+                "@type": [VocabularyUtils.FILE, VocabularyUtils.RESOURCE]
+            }, {
+                "@id": Generator.generateUri(),
+                "http://www.w3.org/2000/01/rdf-schema#label": "Test vocabulary",
+                "@type": [VocabularyUtils.VOCABULARY]
+            }, {
+                "@id": Generator.generateUri(),
+                "http://www.w3.org/2000/01/rdf-schema#label": "Test term",
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {"@id": Generator.generateUri()},
+                "@type": [VocabularyUtils.TERM]
+            }];
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadLastEditedAssets())).then((result: Asset[]) => {
+                expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + "/assets/last-edited");
+                expect(result.length).toEqual(data.length);
+                expect(result[0]).toBeInstanceOf(File);
+                expect(result[1]).toBeInstanceOf(Vocabulary);
+                expect(result[2]).toBeInstanceOf(Term);
             });
         });
     });

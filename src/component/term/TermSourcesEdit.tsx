@@ -57,7 +57,7 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
                        placeholder={i18n('term.metadata.source.add.placeholder')}/>
                 <InputGroupAddon addonType='append'>
                     <Button color='primary' size='sm' onClick={this.onAdd} className='term-edit-source-add-button'
-                            title={i18n('term.metadata.source.add.placeholder')}><GoPlus/></Button>
+                            title={i18n('term.metadata.source.add.placeholder')}><GoPlus/> {i18n('term.metadata.source.add.placeholder.text')}</Button>
                 </InputGroupAddon>
             </InputGroup>
         </div>;
@@ -73,7 +73,7 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
                 {s}
                 <Badge color='danger' title={this.props.i18n('term.metadata.source.remove.title')}
                        className='term-edit-source-remove align-middle'
-                       onClick={this.onRemove.bind(null, s)}><GoX/></Badge>
+                       onClick={this.onRemove.bind(null, s)}><GoX/> {this.props.i18n('term.metadata.source.remove.text')}</Badge>
             </li>)}
         </ul>;
     }

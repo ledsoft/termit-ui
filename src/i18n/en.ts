@@ -67,10 +67,15 @@ export default {
         'dashboard.news.tile': 'News',
         'dashboard.type-frequency' : 'Term Count in Vocabularies',
 
+        "dashboard.widget.lastEdited.title": "Last edited assets",
+        "dashboard.widget.lastEdited.empty": "Found no assets to show here.",
+        "dashboard.widget.lastEdited.lastEditDate": "Last edited/created",
+
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
         'vocabulary.vocabularies.create': 'Create vocabulary',
         'vocabulary.vocabularies.create.tooltip': 'Create new vocabulary',
+        'vocabulary.vocabularies.create.text': 'Create',
         'vocabulary.create.title': 'Create Vocabulary',
         'vocabulary.create.submit': 'Create',
         'vocabulary.create.iri.help': 'Identifier will be automatically generated based on the specified name. Or you can set it manually.',
@@ -79,7 +84,9 @@ export default {
         'vocabulary.comment': 'Comment',
         'vocabulary.summary.title': '{name} - Summary',
         'vocabulary.summary.gotodetail.label': 'View terms in this vocabulary',
+        'vocabulary.summary.gotodetail.text': 'View',
         'vocabulary.summary.export.title': 'Export glossary terms from this vocabulary',
+        'vocabulary.summary.export.text': 'Export',
         'vocabulary.summary.export.csv': 'CSV',
         'vocabulary.summary.export.csv.title': 'Export to CSV',
         'vocabulary.summary.export.excel': 'Excel',
@@ -121,7 +128,9 @@ export default {
         'term.updated.message': 'Term successfully updated.',
         'term.metadata.labelExists.message': 'Term with label \'{label}\' already exists in this vocabulary',
         'term.metadata.source.add.placeholder': 'Add source',
+        'term.metadata.source.add.placeholder.text': 'Add',
         'term.metadata.source.remove.title': 'Remove source',
+        'term.metadata.source.remove.text': 'Remove',
         'term.metadata.subterm.link': 'View detail of this term',
         'term.metadata.assignments.title': 'Annotated resources',
         'term.metadata.assignments.empty': 'This term is not assigned to any resources.',
@@ -134,6 +143,7 @@ export default {
         'glossary.title': 'Terms',
         'glossary.createTerm': 'Create new term',
         'glossary.createTerm.tooltip': "Create new vocabulary's term",
+        'glossary.createTerm.text': "Create",
         'glossary.createTerm.breadcrumb': 'Create term',
         'glossary.form.header': 'Create new term',
         'glossary.form.tooltipLabel': 'Didn\'t find your term? Create new one.',
@@ -158,6 +168,7 @@ export default {
 
         'file.text-analysis.started.message': 'File \'{fileName}\' successfully queued for text analysis',
         'file.metadata.startTextAnalysis': 'Start text analysis',
+        'file.metadata.startTextAnalysis.text': 'Analyze',
 
         'statistics.vocabulary.count': 'Vocabulary Count',
         'statistics.term.count': 'Term Count',
@@ -192,6 +203,7 @@ export default {
         'search.pojem': 'Term',
         'search.typ': 'Type',
 
+        'annotator.annotate-content': 'Annotate Content',
         'annotation.form.suggested-occurrence.message': 'Phrase is not assigned to a vocabulary term.',
         'annotation.form.invalid-occurrence.message': 'Term \'%\' not found in vocabulary.',
         'annotation.form.assigned-occurrence.termInfoLabel': 'Term info : ',
@@ -205,15 +217,22 @@ export default {
         'properties.edit.title': 'Additional properties',
         'properties.empty': 'There are no additional properties here.',
         'properties.edit.remove': 'Remove this property value',
+        'properties.edit.remove.text': 'Remove',
         'properties.edit.property': 'Property',
         'properties.edit.value': 'Value',
         'properties.edit.add.title': 'Add property value',
+        'properties.edit.add.text': 'Add',
         'properties.edit.new': 'Create property',
         'properties.edit.new.iri': 'Identifier',
         'properties.edit.new.label': 'Label',
         'properties.edit.new.comment': 'Comment',
 
-        'type.term': 'Term',
-        'type.vocabulary': 'Vocabulary'
+        "type.asset": "Asset",
+        "type.term": "Term",
+        "type.vocabulary": "Vocabulary",
+        "type.resource": "Resource",
+        "type.document": "Document",
+        "type.file": "File",
+        "type.dataset": "Dataset"
     }
 }

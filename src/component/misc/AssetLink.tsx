@@ -4,10 +4,9 @@ import Asset from "../../model/Asset";
 import OutgoingLink from "./OutgoingLink";
 
 interface AssetLinkProps<T extends Asset> {
-    asset: T,
-    path: string,
-    namespace?: string,
-    tooltip?: string
+    asset: T;
+    path: string;
+    tooltip?: string;
 }
 
 interface AssetLinkState {

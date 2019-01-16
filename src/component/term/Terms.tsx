@@ -115,7 +115,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                             color='primary'
                             title={i18n('glossary.createTerm.tooltip')}
                             size='sm'
-                            onClick={this.onCreateClick}><GoPlus/></Button>
+                            onClick={this.onCreateClick}><GoPlus/> {i18n('glossary.createTerm.text')}</Button>
                 </div>
             </CardHeader>
             <CardBody className="p-0">

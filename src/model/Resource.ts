@@ -1,29 +1,20 @@
-import Asset, {AssetData} from "./Asset";
+import Asset, {ASSET_CONTEXT, AssetData, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
 import Term from "./Term";
+import {CONTEXT as USER_CONTEXT} from "./User";
 
-const ctx = {
-    "iri": "@id",
-    "label": "http://www.w3.org/2000/01/rdf-schema#label",
-    "comment": "http://www.w3.org/2000/01/rdf-schema#comment"
-};
+export const CONTEXT = Object.assign({}, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
 
-export const CONTEXT = Object.assign(ctx);
-
-export interface ResourceData extends AssetData {
+export interface ResourceData extends AssetData, HasProvenanceData {
     iri: string,
     label: string,
-    comment?: string,
     terms?: Term[]
 }
 
 export default class Resource extends Asset implements ResourceData {
-    public iri: string;
-    public label: string;
-    public comment?: string;
     public terms: Term[];
 
     constructor(data: ResourceData) {
-        super();
+        super(data);
         this.terms = [];
         Object.assign(this, data);
     }
@@ -34,7 +25,7 @@ export default class Resource extends Asset implements ResourceData {
 }
 
 export const EMPTY_RESOURCE = new Resource({
-    iri: 'http://empty',
-    label: '',
+    iri: "http://empty",
+    label: "",
     terms: []
 });

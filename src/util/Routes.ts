@@ -8,6 +8,7 @@ export class Route {
         this.path = path;
     }
 
+    // TODO Possibly remove, as AssetLinks can be used directly
     public link(params?: object, query?: object): string {
         const path = params
             ? this.path.replace(/:([A-Za-z0-9]+)/g, (match, placeholder) => encodeURIComponent(params[placeholder] || placeholder))
@@ -36,8 +37,8 @@ export default {
     createVocabulary: new Route('createVocabulary', '/vocabularies/create'),
     vocabularyDetail: new Route('vocabularyDetail', '/vocabularies/:name/terms'),
     vocabularySummary: new Route('vocabularySummary', '/vocabularies/:name'),
+    annotateFile: new Route("annotateFile", '/resources/:name/annotate'),
     resourceSummary: new Route('resourceSummary', '/resources/:name'),
     createVocabularyTerm: new Route('createVocabularyTerm', '/vocabularies/:name/terms/create'),
     vocabularyTermDetail: new Route('vocabularyTermDetail', '/vocabularies/:name/terms/:termName'),
-    annotateFile: new Route("annotateFile", '/file/:name')
 }

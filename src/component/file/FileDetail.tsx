@@ -45,12 +45,15 @@ export class FileDetail extends React.Component<FileDetailProps> {
         super(props);
     }
 
-    public componentDidMount(): void {
+    private loadFileContentData = (): void => {
         const normalizedFileName = this.props.match.params.name;
         this.props.loadFileContent({
             fragment: normalizedFileName,
             namespace: Utils.extractQueryParam(this.props.location.search, "namespace")
         });
+    }
+
+    private initializeTermFetching = (): void => {
         // TODO should not be responsibility of file detail
         if (this.props.defaultTerms.length === 0) {
             this.props.loadDefaultTerms(VocabularyUtils.create(this.props.vocabulary.iri).fragment, VocabularyUtils.create(this.props.vocabulary.iri).namespace);
@@ -59,6 +62,17 @@ export class FileDetail extends React.Component<FileDetailProps> {
             this.updateTerms(this.props.defaultTerms)
         }
     }
+
+    public componentDidMount(): void {
+        this.loadFileContentData();
+        this.initializeTermFetching();
+
+    }
+
+    public componentDidUpdate(): void {
+        this.initializeTermFetching();
+    }
+
 
     private onUpdate = (newFileContent: string) => {
         const normalizedFileName = this.props.match.params.name;
@@ -73,10 +87,12 @@ export class FileDetail extends React.Component<FileDetailProps> {
     }
 
     private createInitialFetchTermPromise() {
-        this.lastExecutedPromise = this.props.fetchTerms({}, this.getVocabularyNormalizedName())
-            .then((terms: Term[]) => {
-                this.updateTerms(terms);
-            }, (d) => d);
+        if (!this.lastExecutedPromise) {
+            this.lastExecutedPromise = this.props.fetchTerms({}, this.getVocabularyNormalizedName())
+                .then((terms: Term[]) => {
+                    this.updateTerms(terms);
+                }, (d) => d);
+        }
     }
 
     private getVocabularyNormalizedName(): string {
@@ -120,6 +136,9 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
         const term = this.terms[termIri];
         if (!term) {
+            if (!this.lastExecutedPromise) { // TODO should be initialized here already
+                this.createInitialFetchTermPromise();
+            }
             this.lastExecutedPromise = this.lastExecutedPromise!
                 .then((d) => d, (d) => d)
                 .then(this.fetchTermPromiseCreator(termIri));

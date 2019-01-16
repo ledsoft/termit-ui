@@ -279,6 +279,17 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         }
     });
 
+    // Mock term creation
+    mock.onPost(/\/rest\/vocabularies\/.+\/terms/).reply(201, null, Object.assign({}, header, {
+        'location': 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/metropolitan-plan/terms/test-term'
+    }));
+
+    // Mock getting vocabulary terms
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms\/roots/).reply(200, require("../rest-mock/terms"), header);
+
+    // Mock term update
+    mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
+
     // Mock getting vocabulary term
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/.+/).reply((config) => {
         const url: string = config.url!;
@@ -291,23 +302,6 @@ function mockRestApi(axiosInst: AxiosInstance): void {
         }
         return [404, undefined, header];
     });
-    // Mock term creation
-    mock.onPost(/\/rest\/vocabularies\/.+\/terms/).reply(201, null, Object.assign({}, header, {
-        'location': 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/metropolitan-plan/terms/test-term'
-    }));
-
-    // Mock term update
-    mock.onPut(/\/rest\/vocabularies\/.+\/terms\/.+/).reply(204, null, header);
-    // Mock get vocabulary terms
-    mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply((config: AxiosRequestConfig) => {
-        if (config.headers.Accept === Constants.CSV_MIME_TYPE) {
-            const exportData = "IRI,Label,Comment,Types,Sources,SubTerms\nhttp://test.org,Test,Test comment,,,";
-            const attachmentHeader = {};
-            attachmentHeader[Constants.CONTENT_DISPOSITION_HEADER] = "attachment; filename=\"export.csv\"";
-            return [200, exportData, Object.assign({}, header, attachmentHeader)];
-        }
-        return [200, require('../rest-mock/terms'), header];
-    });
 
     // Mock term label uniqueness in vocabulary check
     mock.onGet(/\/rest\/vocabularies\/.+\/terms\/name/).reply((config: AxiosRequestConfig) => {
@@ -317,6 +311,18 @@ function mockRestApi(axiosInst: AxiosInstance): void {
             return [200, false];
         }
     });
+
+    // Mock vocabulary terms export
+    mock.onGet(/\/rest\/vocabularies\/.+\/terms/).reply((config: AxiosRequestConfig) => {
+        if (config.headers.Accept === Constants.CSV_MIME_TYPE) {
+            const exportData = "IRI,Label,Comment,Types,Sources,SubTerms\nhttp://test.org,Test,Test comment,,,";
+            const attachmentHeader = {};
+            attachmentHeader[Constants.CONTENT_DISPOSITION_HEADER] = "attachment; filename=\"export.csv\"";
+            return [200, exportData, Object.assign({}, header, attachmentHeader)];
+        }
+        return [415, null];
+    });
+
     // Mock vocabulary retrieval endpoint
     mock.onGet(/\/rest\/vocabularies\/.+/).reply(200, require('../rest-mock/vocabulary'), Object.assign({}, header, {
         'content-type': Constants.JSON_LD_MIME_TYPE
@@ -394,6 +400,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onPost(Constants.API_PREFIX + "/data/properties").reply(201, undefined, Object.assign({}, header, {
         'location': 'http://kbss.felk.cvut.cz/termit/rest/data/properties'
     }));
+    // Mock getting last edited assets
+    mock.onGet(Constants.API_PREFIX + "/assets/last-edited").reply(200, require("../rest-mock/lastEditedAssets")), Object.assign({}, header, {
+        'content-type': Constants.JSON_LD_MIME_TYPE
+    });
 }
 
 const instance = new Ajax();

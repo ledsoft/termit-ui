@@ -117,7 +117,7 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
                 </Col>
                 <Col md={1} className="form-group align-self-end">
                     <Button color="primary" size="sm" title={i18n("properties.edit.add.title")}
-                            onClick={this.onAdd} disabled={!this.isValid()}><GoPlus/></Button>
+                            onClick={this.onAdd} disabled={!this.isValid()}><GoPlus/> {i18n("properties.edit.add.text")}</Button>
                 </Col>
             </Row>
         </div>;
@@ -130,7 +130,7 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
                 {v}
                 <Badge color="danger" title={this.props.i18n("properties.edit.remove")}
                        className="term-edit-source-remove align-middle"
-                       onClick={this.onRemove.bind(null, k, v)}><GoX/></Badge>
+                       onClick={this.onRemove.bind(null, k, v)}><GoX/>{this.props.i18n("properties.edit.remove.text")}</Badge>
             </li>);
 
             result.push(<div key={k}>
@@ -174,7 +174,8 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
 
 export default connect((state: TermItState) => {
     return {
-        knownProperties: state.properties
+        knownProperties: state.properties,
+        intl: state.intl // Pass intl in props to force UI re-render on language switch
     };
 }, (dispatch: ThunkDispatch) => {
     return {

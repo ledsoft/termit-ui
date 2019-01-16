@@ -33,7 +33,6 @@ import Statistics from "./statistics/Statistics";
 import NavbarSearch from "./search/label/NavbarSearch";
 import Search from "./search/label/Search";
 import FacetedSearch from "./search/facets/FacetedSearch";
-import FileDetail from "./file/FileDetail";
 import {ThunkDispatch} from "../util/Types";
 import ResourceManagement from "./resource/ResourceManagement";
 import SearchTypeTabs from "./search/SearchTypeTabs";
@@ -144,8 +143,6 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                 <Switch>
                     <BreadcrumbRoute title={i18n("main.nav.resources")} path={Routes.resources.path}
                                      component={ResourceManagement}/>
-                    <BreadcrumbRoute title={i18n("main.nav.vocabularies")} path={Routes.annotateFile.path}
-                                     component={FileDetail} exact={true}/>
                     <BreadcrumbRoute title={i18n("main.nav.vocabularies")} path={Routes.vocabularies.path}
                                      component={VocabularyManagementRoute}/>
                     <BreadcrumbRoute title={i18n("main.nav.statistics")} path={Routes.statistics.path}

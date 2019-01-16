@@ -1,0 +1,58 @@
+[
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/application/termit/randomInstance-1529066498",
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/zdroj",
+    "http://www.w3.org/2000/01/rdf-schema#label": "Resource test 1529066498",
+    "http://www.w3.org/2000/01/rdf-schema#comment": "Resource test description 1529066498",
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "Catherine",
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "Halsey",
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "halsey@unsc.org",
+      "@type": [
+        "http://onto.fel.cvut.cz/ontologies/termit/user",
+        "http://onto.fel.cvut.cz/ontologies/termit/admin"
+      ]
+    },
+    "http://purl.org/dc/terms/created": 1534429897893
+  },
+  {
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4",
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+    ],
+    "http://www.w3.org/2004/02/skos/core#narrower": [
+      {
+        "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6"
+      },
+      {
+        "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-7"
+      }
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": "pojem 4",
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
+      "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"
+    },
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey"
+    },
+    "http://purl.org/dc/terms/created": 1534429896893
+  },
+  {
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan",
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik",
+    "http://www.w3.org/2000/01/rdf-schema#label": "Metropolitan plan",
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/termit/glossary/instance12345",
+      "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosar"
+    },
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/termit/model/instance54321",
+      "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
+    },
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey"
+    },
+    "http://purl.org/dc/terms/created": 1534429895893
+  }
+]
