@@ -5,13 +5,13 @@ import {Card, CardBody, CardHeader} from "reactstrap";
 import * as ReactMarkdown from "react-markdown";
 import Constants from "../../util/Constants";
 import Ajax from "../../util/Ajax";
-import SpinnerPlaceholder from "../SpinnerPlaceholder";
+import ContainerMask from "../misc/ContainerMask";
 
 interface NewsMdProps extends HasI18n {
 }
 
 interface NewsMdState {
-    newsMd: string|null;
+    newsMd: string | null;
 }
 
 class NewsMd extends React.Component<NewsMdProps, NewsMdState> {
@@ -52,9 +52,9 @@ class NewsMd extends React.Component<NewsMdProps, NewsMdState> {
                 {i18n("dashboard.news.tile")}
             </CardHeader>
             <CardBody>
-                {this.state.newsMd ? <ReactMarkdown source={this.state.newsMd} /> : <SpinnerPlaceholder/>}
+                {this.state.newsMd ? <ReactMarkdown source={this.state.newsMd}/> : <ContainerMask/>}
             </CardBody>
-            </Card>;
+        </Card>;
     }
 }
 

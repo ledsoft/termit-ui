@@ -1,7 +1,7 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../../hoc/withI18n";
-import {Input, InputGroup, InputGroupAddon, Button} from "reactstrap";
+import {Button, Input, InputGroup, InputGroupAddon} from "reactstrap";
 import {GoSearch} from "react-icons/go";
 import "./NavbarSearch.scss";
 import SearchResult from "../../../model/SearchResult";
@@ -10,7 +10,6 @@ import {autocompleteSearch, updateSearchFilter} from "../../../action/SearchActi
 import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
 import {ThunkDispatch} from "../../../util/Types";
-import {SearchState, AbstractSearch} from "./AbstractSearch";
 import TermItState from "../../../model/TermItState";
 import Routing from "../../../util/Routing";
 
@@ -20,11 +19,13 @@ interface NavbarSearchProps extends HasI18n {
     searchString: string;
 }
 
-interface NavbarSearchState extends SearchState {
+interface NavbarSearchState {
+    searchString: string;
+    results: SearchResult[] | null;
     showResults: boolean;
 }
 
-export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearchState> {
+export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearchState> {
 
     constructor(props: NavbarSearchProps) {
         super(props);
@@ -61,7 +62,10 @@ export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearch
         const searchVal = str ? str : this.state.searchString;
         if (searchVal.trim().length > 0) {
             this.setState({results: [], showResults: false});
-            this.props.autocompleteSearch(searchVal).then((data: SearchResult[]) => this.setState({results: data, showResults: true}));
+            this.props.autocompleteSearch(searchVal).then((data: SearchResult[]) => this.setState({
+                results: data,
+                showResults: true
+            }));
         }
     };
 
@@ -91,7 +95,8 @@ export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearch
             return null;
         } else {
             return <SearchResultsOverlay show={this.state.showResults} searchResults={this.state.results}
-                                         onClose={this.closeResults} targetId="main-search-input" onOpenSearch={this.openSearchView}/>;
+                                         onClose={this.closeResults} targetId="main-search-input"
+                                         onOpenSearch={this.openSearchView}/>;
         }
     }
 
