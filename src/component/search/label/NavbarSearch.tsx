@@ -100,7 +100,8 @@ export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearch
 
 export default connect((state: TermItState) => {
     return {
-        searchString: state.searchQuery.searchQuery
+        searchString: state.searchQuery.searchQuery,
+        intl: state.intl        // Pass intl in props to force UI re-render on language switch
     };
 }, (dispatch: ThunkDispatch) => {
     return {
