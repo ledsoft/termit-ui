@@ -14,7 +14,7 @@ class Vocabularies extends React.Component<HasI18n> {
         const actions = [];
         actions.push(<Link key="vocabulary.vocabularies.create" className="btn btn-primary btn-sm"
                            title={i18n("vocabulary.vocabularies.create.tooltip")}
-                           to={Routes.createVocabulary.link()}><GoPlus/> {i18n("vocabulary.vocabularies.create")}</Link>);
+                           to={Routes.createVocabulary.link()}><GoPlus/> {i18n("vocabulary.vocabularies.create.text")}</Link>);
         return (<PanelWithActions
                     title={i18n("vocabulary.management.vocabularies")}
                     actions={actions}

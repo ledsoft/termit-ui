@@ -6,11 +6,9 @@ import {Col, Label, Row, Table} from "reactstrap";
 import VocabularyUtils from "../../../util/VocabularyUtils";
 import VocabularyBadge from "../../badge/VocabularyBadge";
 import TermBadge from "../../badge/TermBadge";
-import Routes from "../../../util/Routes";
 import FTSMatch from "./FTSMatch";
-import {Link} from "react-router-dom";
-import {History} from "history";
-import LocationDescriptor = History.LocationDescriptor;
+import AssetLinkFactory from "../../factory/AssetLinkFactory";
+import AssetFactory from "../../../util/AssetFactory";
 
 class SearchResultItem extends SearchResult {
     public totalScore: number;
@@ -18,7 +16,7 @@ class SearchResultItem extends SearchResult {
     public snippetFields: string[];
 
     constructor(data: SearchResult) {
-        super(Object.assign({}, data, {vocabulary: data.vocabulary ? {iri: data.vocabulary} : undefined}));
+        super(data);
         this.totalScore = data.score ? data.score : 0;
         this.snippets = [data.snippetText];
         this.snippetFields = [data.snippetField];
@@ -41,23 +39,6 @@ function scoreSort(a: SearchResultItem, b: SearchResultItem) {
 }
 
 export class SearchResults extends React.Component<SearchResultsProps> {
-
-    private getLinkTarget = (item: SearchResult): LocationDescriptor => {
-        const iri = VocabularyUtils.create(item.iri);
-        if (item.hasType(VocabularyUtils.VOCABULARY)) {
-            return Routes.vocabularySummary.link(
-                {"name": iri.fragment},
-                {"namespace": iri.namespace!});
-        } else if (item.vocabulary) { // FIXME: item.vocabulary should not be missing. Why?
-            const vocabularyIri = VocabularyUtils.create(item.vocabulary);
-            return Routes.vocabularyTermDetail.link(
-                {"name": vocabularyIri.fragment, "termName": iri.fragment},
-                {"namespace": vocabularyIri.namespace!});
-        } else {
-            window.console.error("SearchResults::getLinkTarget(): Failed to generate a link to the following item:", item);
-            return "#";
-        }
-    };
 
     public render() {
         const i18n = this.props.i18n;
@@ -89,7 +70,7 @@ export class SearchResults extends React.Component<SearchResultsProps> {
                             {SearchResults.renderTypeBadge(r)}
                         </Col>
                         <Col md={7} lg={8} xl={9}>
-                            <Link to={this.getLinkTarget(r)} className="search-result-assetlink">{r.label}</Link>
+                            {AssetLinkFactory.createAssetLink(AssetFactory.createAsset(r))}
                         </Col>
                     </Row>
                 </td>

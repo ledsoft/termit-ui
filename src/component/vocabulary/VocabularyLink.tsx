@@ -4,12 +4,14 @@ import AssetLink from "../misc/AssetLink";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import {Routing} from "../../util/Routing";
 import Routes from "../../util/Routes";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 
-interface VocabularyLinkProps {
+interface VocabularyLinkProps extends HasI18n {
     vocabulary: Vocabulary
 }
 
-export default (props: VocabularyLinkProps) => {
+export const VocabularyLink = (props: VocabularyLinkProps) => {
     const iri = VocabularyUtils.create(props.vocabulary.iri);
     const path = Routing.getTransitionPath(Routes.vocabularySummary,
         {
@@ -18,5 +20,8 @@ export default (props: VocabularyLinkProps) => {
         });
     return <AssetLink
         asset={props.vocabulary}
-        path={path}/>;
-}
+        path={path}
+        tooltip={props.i18n("asset.link.tooltip")}/>;
+};
+
+export default injectIntl(withI18n(VocabularyLink));

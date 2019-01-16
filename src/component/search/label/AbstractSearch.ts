@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import SearchResult from "../../../model/SearchResult";
 import Vocabulary from "../../../util/VocabularyUtils";
 import Routing from "../../../util/Routing";
@@ -19,7 +19,7 @@ export class AbstractSearch<P, T> extends React.Component<P, T> {
                 query: new Map([['namespace', iri.namespace!]])
             });
         } else {
-            const vocabularyIri = Vocabulary.create(result.vocabulary!);
+            const vocabularyIri = Vocabulary.create(result.vocabulary!.iri);
             Routing.transitionTo(Routes.vocabularyTermDetail, {
                 params: new Map([['name', vocabularyIri.fragment], ['termName', Vocabulary.getFragment(result.iri)]]),
                 query: new Map([['namespace', vocabularyIri.namespace!]])

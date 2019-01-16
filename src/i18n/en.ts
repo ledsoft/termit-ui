@@ -71,9 +71,10 @@ export default {
         "dashboard.widget.lastEdited.empty": "Found no assets to show here.",
         "dashboard.widget.lastEdited.lastEditDate": "Last edited/created",
 
+        "asset.link.tooltip": "View detail of this asset",
+
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
-        'vocabulary.vocabularies.create': 'Create vocabulary',
         'vocabulary.vocabularies.create.tooltip': 'Create new vocabulary',
         'vocabulary.vocabularies.create.text': 'Create',
         'vocabulary.create.title': 'Create Vocabulary',

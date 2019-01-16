@@ -9,18 +9,14 @@ import Generator from "../../../../__tests__/environment/Generator";
 import VocabularyUtils from "../../../../util/VocabularyUtils";
 import TermBadge from "../../../badge/TermBadge";
 import VocabularyBadge from "../../../badge/VocabularyBadge";
-import Routing from "../../../../util/Routing";
-import Routes from "../../../../util/Routes";
 import {FTSMatch} from "../FTSMatch";
 import {Link, MemoryRouter} from "react-router-dom";
+import VocabularyLink from "../../../vocabulary/VocabularyLink";
+import {TermLink} from "../../../term/TermLink";
 
 jest.mock("../../../../util/Routing");
 
 describe("SearchResults", () => {
-
-    afterEach(() => {
-        jest.resetAllMocks();
-    });
 
     it("render no results info when no results are found", () => {
         const wrapper = mountWithIntl(<SearchResults results={[]} {...intlFunctions()}/>);
@@ -29,15 +25,22 @@ describe("SearchResults", () => {
         expect(label.text()).toContain(en.messages["main.search.no-results"]);
     });
 
-    it("renders term results", () => {
-        const result = new SearchResult({
+    function generateTermResult(score?: number) {
+        return new SearchResult({
             iri: Generator.generateUri(),
             label: "Test",
             snippetText: "<em>Match</em>",
             snippetField: "label",
+            score,
+            vocabulary: {iri: Generator.generateUri()},
             types: [VocabularyUtils.TERM]
         });
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={[result]} {...intlFunctions()}/></MemoryRouter>);
+    }
+
+    it("renders term results", () => {
+        const result = generateTermResult();
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={[result]} {...intlFunctions()}/></MemoryRouter>);
         const rows = wrapper.find("tr");
         // Header + result row
         expect(rows.length).toEqual(2);
@@ -46,15 +49,21 @@ describe("SearchResults", () => {
         expect(label.text()).toEqual(result.label);
     });
 
-    it("renders vocabulary results", () => {
-        const result = new SearchResult({
+    function generateVocabularyResult(score?: number) {
+        return new SearchResult({
             iri: Generator.generateUri(),
             label: "Test",
             snippetText: "<em>Match</em>",
             snippetField: "label",
+            score,
             types: [VocabularyUtils.VOCABULARY]
         });
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={[result]} {...intlFunctions()}/></MemoryRouter>);
+    }
+
+    it("renders vocabulary results", () => {
+        const result = generateVocabularyResult();
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={[result]} {...intlFunctions()}/></MemoryRouter>);
         const rows = wrapper.find("tr");
         // Header + result row
         expect(rows.length).toEqual(2);
@@ -64,20 +73,9 @@ describe("SearchResults", () => {
     });
 
     it("renders both vocabulary and term results", () => {
-        const results = [new SearchResult({
-            iri: Generator.generateUri(),
-            label: "Test term",
-            snippetText: "<em>Match</em>",
-            snippetField: "label",
-            types: [VocabularyUtils.TERM]
-        }), new SearchResult({
-            iri: Generator.generateUri(),
-            label: "Test vocabulary",
-            snippetText: "<em>Match</em>",
-            snippetField: "label",
-            types: [VocabularyUtils.VOCABULARY]
-        })];
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={results} {...intlFunctions()}/></MemoryRouter>);
+        const results = [generateTermResult(), generateVocabularyResult()];
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={results} {...intlFunctions()}/></MemoryRouter>);
         const rows = wrapper.find("tr");
         // Header + result row
         expect(rows.length).toEqual(3);
@@ -85,65 +83,40 @@ describe("SearchResults", () => {
         expect(rows.find(VocabularyBadge).length).toEqual(1);
     });
 
-    it.skip("transitions to vocabulary detail when vocabulary result label is clicked", () => {
-        const normalizedName = "test-vocabulary";
-        const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
-        const result = new SearchResult({
-            iri: namespace + normalizedName,
-            label: "Test",
-            snippetText: "<em>Match</em>",
-            snippetField: "label",
-            types: [VocabularyUtils.VOCABULARY]
-        });
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={[result]} {...intlFunctions()}/></MemoryRouter>);
-        wrapper.find(Link).simulate("click");
-        // FIXME: transitionTo() is not called when we navigate properly via links
-        expect(Routing.transitionTo).toHaveBeenCalled();
-        const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
-        expect(call[0]).toEqual(Routes.vocabularySummary);
-        expect((call[1].params as Map<string, string>).get("name")).toEqual(normalizedName);
-        expect((call[1].query as Map<string, string>).get("namespace")).toEqual(namespace);
+    it("renders VocabularyLink for vocabulary result", () => {
+        const result = generateVocabularyResult();
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={[result]} {...intlFunctions()}/></MemoryRouter>);
+        expect(wrapper.find(VocabularyLink).exists()).toBeTruthy();
     });
 
-    it.skip("transitions to term detail when term result label is clicked", () => {
-        const normalizedName = "test-term";
-        const normalizedVocabularyName = "test-vocabulary";
-        const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
-        const result = new SearchResult({
-            iri: namespace + normalizedVocabularyName + "/terms/" + normalizedName,
-            label: "Test",
-            snippetText: "<em>Match</em>",
-            snippetField: "label",
-            vocabulary: {iri: namespace + normalizedVocabularyName},
-            types: [VocabularyUtils.TERM]
-        });
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={[result]} {...intlFunctions()}/></MemoryRouter>);
-        wrapper.find(Link).simulate("click");
-        // FIXME: transitionTo() is not called when we navigate properly via links
-        expect(Routing.transitionTo).toHaveBeenCalled();
-        const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
-        expect(call[0]).toEqual(Routes.vocabularyTermDetail);
-        expect((call[1].params as Map<string, string>).get("name")).toEqual(normalizedVocabularyName);
-        expect((call[1].params as Map<string, string>).get("termName")).toEqual(normalizedName);
-        expect((call[1].query as Map<string, string>).get("namespace")).toEqual(namespace);
+    it("renders TermLink for term result", () => {
+        const result = generateTermResult();
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={[result]} {...intlFunctions()}/></MemoryRouter>);
+        expect(wrapper.find(TermLink).exists()).toBeTruthy();
     });
 
     it("merges multiple matches of one field of one asset into one result row", () => {
         const iri = Generator.generateUri();
+        const vocabularyIri = Generator.generateUri();
         const results = [new SearchResult({
             iri,
             label: "Test",
             snippetText: "<em>Match</em> and another <em>match</em>",
             snippetField: "comment",
+            vocabulary: {iri: vocabularyIri},
             types: [VocabularyUtils.TERM]
         }), new SearchResult({
             iri,
             label: "Test",
             snippetText: "<em>Match</em> and another <em>match</em>",
             snippetField: "comment",
+            vocabulary: {iri: vocabularyIri},
             types: [VocabularyUtils.TERM]
         })];
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={results} {...intlFunctions()}/></MemoryRouter>);
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={results} {...intlFunctions()}/></MemoryRouter>);
         const rows = wrapper.find("tr");
         // Header + result row
         expect(rows.length).toEqual(2);
@@ -153,20 +126,24 @@ describe("SearchResults", () => {
 
     it("merges multiple matches of one field of one asset into one result row", () => {
         const iri = Generator.generateUri();
+        const vocabularyIri = Generator.generateUri();
         const results = [new SearchResult({
             iri,
             label: "Test",
             snippetText: "<em>Match</em> and another <em>match</em>",
             snippetField: "comment",
+            vocabulary: {iri: vocabularyIri},
             types: [VocabularyUtils.TERM]
         }), new SearchResult({
             iri,
             label: "Test",
             snippetText: "<em>Match</em> and another <em>match</em>",
             snippetField: "comment",
+            vocabulary: {iri: vocabularyIri},
             types: [VocabularyUtils.TERM]
         })];
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={results} {...intlFunctions()}/></MemoryRouter>);
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={results} {...intlFunctions()}/></MemoryRouter>);
         const rows = wrapper.find("tr");
         // Header + result row
         expect(rows.length).toEqual(2);
@@ -182,20 +159,24 @@ describe("SearchResults", () => {
 
     it("merges matches of multiple fields of one asset into one result row", () => {
         const iri = Generator.generateUri();
+        const vocabularyIri = Generator.generateUri();
         const results = [new SearchResult({
             iri,
             label: "Test",
             snippetText: "<em>Match</em> in label",
             snippetField: "label",
+            vocabulary: {iri: vocabularyIri},
             types: [VocabularyUtils.TERM]
         }), new SearchResult({
             iri,
             label: "Test",
             snippetText: "<em>Match</em> in comment",
             snippetField: "comment",
+            vocabulary: {iri: vocabularyIri},
             types: [VocabularyUtils.TERM]
         })];
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={results} {...intlFunctions()}/></MemoryRouter>);
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={results} {...intlFunctions()}/></MemoryRouter>);
         const rows = wrapper.find("tr");
         // Header + result row
         expect(rows.length).toEqual(2);
@@ -207,22 +188,9 @@ describe("SearchResults", () => {
     });
 
     it("ensures results are sorted by score descending", () => {
-        const results = [new SearchResult({
-            iri: Generator.generateUri(),
-            label: "Test term",
-            snippetText: "<em>Match</em>",
-            snippetField: "label",
-            score: 1.1,
-            types: [VocabularyUtils.TERM]
-        }), new SearchResult({
-            iri: Generator.generateUri(),
-            label: "Test vocabulary",
-            snippetText: "<em>Match</em>",
-            snippetField: "label",
-            score: 2.5,
-            types: [VocabularyUtils.VOCABULARY]
-        })];
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={results} {...intlFunctions()}/></MemoryRouter>);
+        const results = [generateTermResult(1.1), generateVocabularyResult(2.5)];
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={results} {...intlFunctions()}/></MemoryRouter>);
         const rows = wrapper.find(Link);
         expect(rows.at(0).text()).toEqual(results[1].label);
         expect(rows.at(1).text()).toEqual(results[0].label);
@@ -236,15 +204,16 @@ describe("SearchResults", () => {
             label: "Test",
             snippetText: "<em>Match</em> in comment",
             snippetField: "comment",
-            types: [VocabularyUtils.TERM]
+            types: [VocabularyUtils.VOCABULARY]
         }), new SearchResult({
             iri,
             label: "Test",
             snippetText: "<em>Match</em> in label",
             snippetField: "label",
-            types: [VocabularyUtils.TERM]
+            types: [VocabularyUtils.VOCABULARY]
         })];
-        const wrapper = mountWithIntl(<MemoryRouter><SearchResults results={results} {...intlFunctions()}/></MemoryRouter>);
+        const wrapper = mountWithIntl(<MemoryRouter><SearchResults
+            results={results} {...intlFunctions()}/></MemoryRouter>);
         const matchComponent = wrapper.find(FTSMatch);
         expect(matchComponent.prop("matches")).toEqual([results[1].snippetText, results[0].snippetText]);
         expect(matchComponent.prop("fields")).toEqual([results[1].snippetField, results[0].snippetField]);

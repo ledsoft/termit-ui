@@ -70,9 +70,10 @@ export default {
         "dashboard.widget.lastEdited.empty": "Pro tuto část nebyly nalezeny žádné záznamy.",
         "dashboard.widget.lastEdited.lastEditDate": "Naposledy upraveno/vytvořeno",
 
+        "asset.link.tooltip": "Zobrazit detail záznamu",
+
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',
-        'vocabulary.vocabularies.create': 'Vytvořit slovník',
         'vocabulary.vocabularies.create.tooltip': 'Vytvořit nový slovník',
         'vocabulary.vocabularies.create.text': 'Vytvořit',
         'vocabulary.create.title': 'Nový slovník',
@@ -189,7 +190,7 @@ export default {
         "search.results.table.label.tooltip": "Zobrazit detail objektu",
         "search.results.table.match": "Nalezená shoda",
         "search.results.table.score": "Skóre shody",
-        "search.results.field.badge.tooltip": "Shoda nalezena v atributu",
+        "search.results.field.badge.tooltip": "Shoda nalezena v tomto atributu",
         "search.results.field.label": "Název",
         "search.results.field.comment": "Popis",
         "search.results.field.definition": "Definice",

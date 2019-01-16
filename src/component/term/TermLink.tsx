@@ -24,7 +24,7 @@ export const TermLink: React.SFC<TermLinkProps> = (props) => {
     return <AssetLink
         asset={props.term}
         path={path}
-        tooltip={props.i18n("search.results.item.term.tooltip")}/>
+        tooltip={props.i18n("asset.link.tooltip")}/>
 };
 
 export default injectIntl(withI18n(TermLink));

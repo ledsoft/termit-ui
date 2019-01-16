@@ -38,7 +38,7 @@ export default class AssetLink<T extends Asset> extends React.Component<AssetLin
             onMouseOver={setVisible}>
             <OutgoingLink label=
                               {<Link
-                                  title={this.props.tooltip ? this.props.tooltip:undefined}
+                                  title={this.props.tooltip ? this.props.tooltip : undefined}
                                   to={props.path}>
                                   {props.asset.label}</Link>}
                           iri={props.asset.iri}

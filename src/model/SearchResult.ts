@@ -1,4 +1,5 @@
 import Vocabulary from "../util/VocabularyUtils";
+import {AssetData} from "./Asset";
 
 export const CONTEXT = {
     "iri": "@id",
@@ -10,7 +11,7 @@ export const CONTEXT = {
     "types": "@type"
 };
 
-export interface SearchResultData {
+export interface SearchResultData extends AssetData {
     iri: string;
     label: string;
     snippetText: string;
@@ -20,22 +21,21 @@ export interface SearchResultData {
     vocabulary?: { iri: string };
 }
 
-export default class SearchResult {
+export default class SearchResult implements AssetData {
     public readonly iri: string;
     public readonly label: string;
     public readonly snippetText: string;
     public readonly snippetField: string;
     public readonly score?: number;
     public readonly types: string[];
-    public readonly vocabulary?: string;
+    public readonly vocabulary?: { iri: string };
 
     constructor(data: SearchResultData) {
         Object.assign(this, data);
-        this.vocabulary = data.vocabulary ? data.vocabulary.iri : undefined;
     }
 
     public copy(): SearchResult {
-        return new SearchResult(Object.assign({}, this, {vocabulary: this.vocabulary ? {iri: this.vocabulary} : undefined}));
+        return new SearchResult(Object.assign({}, this));
     }
 
     public get typeNameId(): string {
