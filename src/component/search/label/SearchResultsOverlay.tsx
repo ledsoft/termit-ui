@@ -4,13 +4,14 @@ import withI18n, {HasI18n} from "../../hoc/withI18n";
 import SearchResult from "../../../model/SearchResult";
 import {Popover, PopoverBody} from "reactstrap";
 import {SearchResults} from "./SearchResults";
+import AssetLinkFactory from "../../factory/AssetLinkFactory";
+import AssetFactory from "../../../util/AssetFactory";
 
 interface SearchResultsOverlayProps extends HasI18n {
     show: boolean;
     searchResults: SearchResult[];
     targetId: string;
     onClose: () => void;
-    onClick: (r: SearchResult) => void;
     onOpenSearch: () => void;
 }
 
@@ -34,10 +35,9 @@ export const SearchResultsOverlay: React.SFC<SearchResultsOverlayProps> = (props
             }
             counter++;
             visited.add(item.iri);
-            items.push(<li key={item.iri} className="search-result-link"
-                           onClick={props.onClick.bind(null, item)}>
+            items.push(<li key={item.iri} className="search-result-link">
                 {SearchResults.renderTypeBadge(item)}
-                <span className="btn-link">{item.label}</span>
+                <span onClick={props.onClose}>{AssetLinkFactory.createAssetLink(AssetFactory.createAsset(item))}</span>
             </li>);
         }
         if (i < props.searchResults.length) {

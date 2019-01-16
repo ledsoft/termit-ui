@@ -9,10 +9,10 @@ import {connect} from "react-redux";
 import {autocompleteSearch, updateSearchFilter} from "../../../action/SearchActions";
 import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
-import Routing from "../../../util/Routing";
 import {ThunkDispatch} from "../../../util/Types";
 import {SearchState, AbstractSearch} from "./AbstractSearch";
 import TermItState from "../../../model/TermItState";
+import Routing from "../../../util/Routing";
 
 interface NavbarSearchProps extends HasI18n {
     autocompleteSearch: (searchString: string) => any;
@@ -91,8 +91,7 @@ export class NavbarSearch extends AbstractSearch<NavbarSearchProps, NavbarSearch
             return null;
         } else {
             return <SearchResultsOverlay show={this.state.showResults} searchResults={this.state.results}
-                                         onClose={this.closeResults} targetId="main-search-input"
-                                         onClick={this.openResult} onOpenSearch={this.openSearchView}/>;
+                                         onClose={this.closeResults} targetId="main-search-input" onOpenSearch={this.openSearchView}/>;
         }
     }
 

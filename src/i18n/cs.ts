@@ -52,7 +52,7 @@ export default {
         'main.user-profile': 'Profil uživatele',
         'main.logout': 'Odhlásit se',
         'main.search.placeholder': 'Hledat',
-        'main.search.tooltip': 'Hledat daný výraz ve všech slovnících a pojmech',
+        'main.search.tooltip': 'Přejít na stránku hledání',
         'main.search.count-info-and-link': 'Zobrazeno {displayed} z {count} výsledků. Zobrazit všechny.',
         'main.search.no-results': 'Nenalezeny žádné výsledky.',
 

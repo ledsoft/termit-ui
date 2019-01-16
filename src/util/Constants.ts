@@ -8,7 +8,7 @@ const constants = {
     APP_NAME: 'TermIt',
     // Will be replaced with actual version during build
     VERSION: '__VERSION__',
-    HOME_ROUTE: Routes.search,
+    HOME_ROUTE: Routes.dashboard,
     LANG: {
         CS: 'cs',
         EN: 'en'

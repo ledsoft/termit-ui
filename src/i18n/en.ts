@@ -54,7 +54,7 @@ export default {
         'main.user-profile': 'User profile',
         'main.logout': 'Log out',
         'main.search.placeholder': 'Search',
-        'main.search.tooltip': 'Search in all vocabularies and terms',
+        'main.search.tooltip': 'Go to the search screen',
         'main.search.count-info-and-link': 'Showing {displayed} of {count} results. See all results.',
         'main.search.no-results': 'No results found.',
 

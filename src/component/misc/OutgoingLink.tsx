@@ -8,18 +8,19 @@ interface OutgoingLinkProps extends HasI18n {
     label: string | JSX.Element,
     iri: string,
     showLink?: boolean;
+    className?: string;
 }
 
 export const OutgoingLink: React.SFC<OutgoingLinkProps> = (props: OutgoingLinkProps) => {
     return <span>{props.label}
-        <a href={props.iri} target="_blank" style={{color: "gray"}}
+        <a href={props.iri} target="_blank" style={{color: "gray"}} className={props.className}
            title={props.formatMessage("link.external.title", {url: props.iri})}>
             <span className={props.showLink ? "" : "hidden"}>↱</span></a>
     </span>;
 };
 
-OutgoingLink.defaultProps= {
-    showLink : true
-}
+OutgoingLink.defaultProps = {
+    showLink: true
+};
 
 export default injectIntl(withI18n(OutgoingLink));

@@ -9,12 +9,11 @@ import * as SearchActions from "../../../action/SearchActions";
 import {ThunkDispatch} from "../../../util/Types";
 import TermItState from "../../../model/TermItState";
 import SearchQuery from "../../../model/SearchQuery";
-import Spinner from "../../Spinner";
 import SearchResults from "./SearchResults";
 import {Button} from "reactstrap";
 import {GoTrashcan} from "react-icons/go";
 import Routing from "../../../util/Routing";
-import Routes from "../../../util/Routes";
+import Mask from "../../misc/Mask";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
@@ -46,20 +45,20 @@ export class Search extends React.Component<SearchProps> {
     public componentDidUpdate() {
         // Go to dashboard if there is nothing to look for.
         if (!this.props.searchQuery || this.props.searchQuery.isEmpty()) {
-            Routing.transitionTo(Routes.dashboard);
+            Routing.transitionToHome();
         }
     }
 
     public render() {
-        const loading = this.props.searchInProgress ? <Spinner/> : null;
+        const loading = this.props.searchInProgress ? <Mask/> : null;
 
         if (this.props.searchResults) {
             return <>
                 <Button color="danger" outline={true} size="sm" className="float-right" onClick={this.resetSearch}>
                     <GoTrashcan/> {this.props.i18n("search.reset")}
-                    </Button>
+                </Button>
                 <h2>{this.props.formatMessage("search.results.title", {searchString: this.props.searchQuery.searchQuery})}</h2>
-                <SearchResults results={this.props.searchResults} />
+                <SearchResults results={this.props.searchResults}/>
                 {loading}
             </>;
         } else {

@@ -33,16 +33,17 @@ export default class AssetLink<T extends Asset> extends React.Component<AssetLin
         const setInvisible = this.setInvisible.bind(this);
         const setVisible = this.setVisible.bind(this);
 
+        // "asset-link" is a marker class, it contains no styling
         return <span
             onMouseOut={setInvisible}
             onMouseOver={setVisible}>
-            <OutgoingLink label=
-                              {<Link
-                                  title={this.props.tooltip ? this.props.tooltip : undefined}
-                                  to={props.path}>
-                                  {props.asset.label}</Link>}
+            <OutgoingLink label={<Link
+                title={this.props.tooltip ? this.props.tooltip : undefined}
+                to={props.path}>
+                {props.asset.label}</Link>}
                           iri={props.asset.iri}
-                          showLink={this.state.showLink}/>
+                          showLink={this.state.showLink}
+                          className="asset-link"/>
         </span>
     }
 }
