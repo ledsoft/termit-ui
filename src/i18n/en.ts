@@ -5,6 +5,7 @@ export default {
 
     messages: {
         'please-wait': 'Please wait...',
+        "create": "Create",
         'save': 'Save',
         'cancel': 'Cancel',
         'not-implemented': 'Not implemented, yet!',
@@ -112,9 +113,8 @@ export default {
         'resource.updated.message': 'Resource successfully updated.',
         'resource.management.add': 'Add resource',
 
-        'resource.metadata.identifier' : 'Identifier',
-        'resource.metadata.label' : 'Label',
-        'resource.metadata.comment' : 'Comment',
+        "resource.create.title": "Create resource",
+        'resource.metadata.description' : 'Popis',
         'resource.metadata.terms' : 'Related Terms',
         'resource.metadata-edit.terms' : 'Related Terms from the Vocabulary',
 

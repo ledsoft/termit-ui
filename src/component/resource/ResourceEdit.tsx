@@ -60,19 +60,19 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput label={i18n("resource.metadata.identifier")} value={this.props.resource.iri}
+                        <CustomInput label={i18n("asset.iri")} value={this.props.resource.iri}
                                      disabled={true}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="resource-edit-label" label={i18n("resource.metadata.label")}
+                        <CustomInput name="resource-edit-label" label={i18n("asset.label")}
                                      value={this.state.label} onChange={this.onChange}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TextArea name="resource-edit-comment" label={i18n("resource.metadata.comment")} rows={3}
+                        <TextArea name="resource-edit-comment" label={i18n("resource.metadata.description")} rows={3}
                                   value={this.state.comment} onChange={this.onChange}/>
                     </Col>
                 </Row>

@@ -111,9 +111,8 @@ export default {
         'resource.updated.message': 'Zdroj úspěšně uložen.',
         'resource.management.add': 'Přidat zdroj',
 
-        'resource.metadata.identifier': 'Identifikátor',
-        'resource.metadata.label': 'Popisek',
-        'resource.metadata.comment': 'Komentář',
+        "resource.create.title": "Vytvořit zdroj",
+        'resource.metadata.description': 'Popis',
         'resource.metadata.terms': 'Související pojmy',
         'resource.metadata-edit.terms': 'Související pojmy ze slovníku',
 
