@@ -2,6 +2,7 @@ import {ASSET_CONTEXT, AssetData, default as Asset, HasProvenanceData, PROVENANC
 import Utils from "../util/Utils";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import {CONTEXT as USER_CONTEXT} from "./User";
+import VocabularyUtils from "../util/VocabularyUtils";
 
 const ctx = {
     subTerms: "http://www.w3.org/2004/02/skos/core#narrower",
@@ -36,6 +37,9 @@ export default class Term extends Asset implements TermData {
         super(termData);
         Object.assign(this, termData);
         this.types = Utils.sanitizeArray(termData.types);
+        if (this.types.indexOf(VocabularyUtils.TERM) === -1) {
+            this.types.push(VocabularyUtils.TERM);
+        }
         if (this.subTerms) {
             this.subTerms = Utils.sanitizeArray(this.subTerms);
             this.plainSubTerms = Utils.sanitizeArray(this.subTerms).map(st => st.iri!);

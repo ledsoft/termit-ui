@@ -1,5 +1,6 @@
 import OntologicalVocabulary from "../../util/VocabularyUtils";
 import Term, {TermData} from "../Term";
+import Generator from "../../__tests__/environment/Generator";
 
 describe("Term tests", () => {
 
@@ -28,10 +29,20 @@ describe("Term tests", () => {
         expect(termData).toEqual(new Term(termData).toTermData());
     });
 
+    it("adds term type in constructor when it is missing in specified data", () => {
+        const data = {
+            iri: Generator.generateUri(),
+            label: "New term"
+        };
+        const result = new Term(data);
+        expect(result.types).toBeDefined();
+        expect(result.types!.indexOf(OntologicalVocabulary.TERM)).not.toEqual(-1);
+    });
+
     describe("get unmappedProperties", () => {
         it("returns map of unmapped properties with values in term", () => {
             const extraProperty = "http://onto.fel.cvut.cz/ontologies/termit/extra-one";
-            const data:TermData = {
+            const data: TermData = {
                 "iri": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-5",
                 "label": "pojem 5",
                 "sources": [
@@ -49,7 +60,7 @@ describe("Term tests", () => {
 
         it("returns map of unmapped properties with values containing multiple values per property", () => {
             const extraProperty = "http://onto.fel.cvut.cz/ontologies/termit/extra-one";
-            const data:TermData = {
+            const data: TermData = {
                 "iri": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-5",
                 "label": "pojem 5",
                 "sources": [

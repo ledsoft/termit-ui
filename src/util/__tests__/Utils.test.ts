@@ -125,11 +125,11 @@ describe("Utils", () => {
         });
 
         it("returns undefined for asset without type definition", () => {
-            const term: Term = new Term({
+            const asset: Vocabulary = new Vocabulary({
                 iri: Generator.generateUri(),
                 label: "Test"
             });
-            expect(Utils.getAssetTypeLabelId(term)).not.toBeDefined();
+            expect(Utils.getAssetTypeLabelId(asset)).not.toBeDefined();
         });
 
         it("returns undefined for asset with unknown type definition", () => {
