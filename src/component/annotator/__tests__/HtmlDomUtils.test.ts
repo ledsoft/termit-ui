@@ -1,3 +1,4 @@
+// @ts-ignore
 import {XPathRange} from "xpath-range";
 import * as xpathRange from "xpath-range";
 import HtmlDomUtils from "../HtmlDomUtils";
@@ -27,7 +28,7 @@ describe("Html dom utils", () => {
     let sampleTextNode: Text;
     let getRangeAt: (i: number) => any;
     let cloneContents: () => DocumentFragment;
-    let textPointerRange;
+    let textPointerRange: any;
     beforeEach(() => {
         // // @ts-ignore
         window.getSelection = jest.fn().mockImplementation(() => {
@@ -43,10 +44,13 @@ describe("Html dom utils", () => {
         getRangeAt = jest.fn().mockImplementation(() => {
             return { cloneContents }
         });
-        textPointerRange = {
-            extractContents: jest.fn(),
-            surroundContents: jest.fn()
-        }
+        textPointerRange = jest.fn().mockImplementation(() => {
+            return {
+                extractContents: jest.fn(),
+                surroundContents: jest.fn(),};
+        });
+
+
         const parser = new DOMParser();
         doc = parser.parseFromString(htmlContent, "text/html");
         sampleDiv = doc.createElement("div");
@@ -69,7 +73,8 @@ describe("Html dom utils", () => {
             ret = HtmlDomUtils.getSelectionRange(sampleDiv);
             expect(window.getSelection).toHaveBeenCalled();
             expect(getRangeAt).toHaveBeenCalledWith(0);
-            expect(ret.cloneContents).toEqual(cloneContents);
+            expect(ret).not.toBeNull();
+            expect(ret!.cloneContents).toEqual(cloneContents);
         });
 
 
@@ -84,7 +89,7 @@ describe("Html dom utils", () => {
 
 
             mockWindowSelection({isCollapsed: false, rangeCount: 0});
-            ret = HtmlDomUtils.getSelectionRange(sampleDiv, true);
+            ret = HtmlDomUtils.getSelectionRange(sampleDiv);
             expect(window.getSelection).toHaveBeenCalledTimes(1);
             expect(ret).toEqual(null);
         });
@@ -95,13 +100,15 @@ describe("Html dom utils", () => {
         it("returns clone of input element", () => {
 
             let ret: HTMLElement | null;
+            // @ts-ignore
             xpathRange.fromRange = jest.fn().mockImplementation(() => {
                 return xpathTextPointerRange;
             });
+            // @ts-ignore
             xpathRange.toRange = jest.fn().mockImplementation(() => {
                 return textPointerRange;
             });
-            ret = HtmlDomUtils.replaceRange(sampleDiv, null, surroundingElementHtml);
+            ret = HtmlDomUtils.replaceRange(sampleDiv, textPointerRange, surroundingElementHtml);
             expect(xpathRange.fromRange).toHaveBeenCalledWith( expect.any(Object), sampleDiv);
             expect(xpathRange.toRange).toHaveBeenCalledWith(
                 xpathTextPointerRange.start, xpathTextPointerRange.startOffset,

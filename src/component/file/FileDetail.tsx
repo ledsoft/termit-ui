@@ -51,7 +51,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
             fragment: normalizedFileName,
             namespace: Utils.extractQueryParam(this.props.location.search, "namespace")
         });
-    }
+    };
 
     private initializeTermFetching = (): void => {
         // TODO should not be responsibility of file detail
@@ -61,7 +61,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
         } else {
             this.updateTerms(this.props.defaultTerms)
         }
-    }
+    };
 
     public componentDidMount(): void {
         this.loadFileContentData();
@@ -147,7 +147,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
         } else {
             return Promise.resolve(term)
         }
-    }
+    };
 
     public render() {
         return (this.props.fileContent) ?

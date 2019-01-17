@@ -47,7 +47,7 @@ const TermOccurrenceCreatorState = {
 
 export class Annotation extends React.Component<AnnotationProps, AnnotationState> {
 
-    constructor(props: any) { // TODO use props: AnnotationProps !!! (does not work)
+    constructor(props: AnnotationProps) {
         super(props);
         const resourceAssigned = (props.resource && (props.resource !== ""));
         this.state = {

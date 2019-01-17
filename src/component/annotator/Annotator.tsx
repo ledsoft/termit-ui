@@ -104,7 +104,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                         return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
                     }
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
-                    return <Annotation onRemove={this.onRemove} onUpdate={this.onUpdate}
+                    return <Annotation key={node.attribs.about} onRemove={this.onRemove} onUpdate={this.onUpdate}
                                        onFetchTerm={this.props.onFetchTerm} sticky={sticky}
                                        text={node.children[0].data} {...node.attribs} />
                 }
@@ -120,7 +120,6 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     private handleMouseLeave = () => {
         if (this.containerElement) {
             const about = Annotator.getRDFNodeId();
-            // const newContainerElement = this.surroundSelection(this.containerElement, this.containerElement.ownerDocument, about)
             const newContainerElement = Annotator.getSurroundedSelection(this.containerElement, about);
 
             if (newContainerElement != null) {
