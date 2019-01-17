@@ -1,28 +1,32 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {Button, Col, Label, Row} from "reactstrap";
+import {Col, Label, Row} from "reactstrap";
 import Term from "../../model/Term";
 import OutgoingLink from "../misc/OutgoingLink";
 import "./TermMetadata.scss";
 import Vocabulary from "../../model/Vocabulary";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
-import Routes from "../../util/Routes";
-import Routing from "../../util/Routing";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import AssetLabel from "../misc/AssetLabel";
 import TermAssignments from "./TermAssignments";
 import Tabs from "../misc/Tabs";
+import TermLink from "./TermLink";
+import {connect} from "react-redux";
+import {ThunkDispatch} from "../../util/Types";
+import {fetchVocabularyTerms} from "../../action/AsyncActions";
 
 interface TermMetadataProps extends HasI18n {
     vocabulary: Vocabulary;
     term: Term;
+    loadSubTerms: (term: Term, vocabulary: Vocabulary) => Promise<Term[]>;
 }
 
 interface TermMetadataState {
     activeTab: string;
     assignmentsCount: number | null;
+    subTerms: Term[];
 }
 
 export class TermMetadata extends React.Component<TermMetadataProps, TermMetadataState> {
@@ -32,14 +36,19 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         this.state = {
             activeTab: "properties.edit.title",
             assignmentsCount: null,
+            subTerms: []
         };
     }
 
-    public openSubTerm = (term: Term) => {
-        Routing.transitionTo(Routes.vocabularyTermDetail, {
-            params: new Map([["name", VocabularyUtils.getFragment(this.props.vocabulary.iri)], ["termName", VocabularyUtils.getFragment(term.iri)]])
-        });
-    };
+    public componentDidMount(): void {
+        this.props.loadSubTerms(this.props.term, this.props.vocabulary).then((data: Term[]) => this.setState({subTerms: data}));
+    }
+
+    public componentDidUpdate(prevProps: Readonly<TermMetadataProps>): void {
+        if (prevProps.term.iri !== this.props.term.iri) {
+            this.props.loadSubTerms(this.props.term, this.props.vocabulary).then((data: Term[]) => this.setState({subTerms: data}));
+        }
+    }
 
     private onTabSelect = (tabId: string) => {
         this.setState({activeTab: tabId});
@@ -88,11 +97,13 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
             <Row>
                 <Col xs={12}>
                     <Tabs activeTabLabelKey={this.state.activeTab} changeTab={this.onTabSelect} tabs={{
-                        'properties.edit.title': <UnmappedProperties properties={term.unmappedProperties} showInfoOnEmpty={true}/>,
-                        'term.metadata.assignments.title': <TermAssignments term={term} onAssignmentsLoad={this.setAssignmentsCount}/>
+                        "properties.edit.title": <UnmappedProperties properties={term.unmappedProperties}
+                                                                     showInfoOnEmpty={true}/>,
+                        "term.metadata.assignments.title": <TermAssignments term={term}
+                                                                            onAssignmentsLoad={this.setAssignmentsCount}/>
                     }} tabBadges={{
-                        'properties.edit.title': term.unmappedProperties.size.toFixed(),
-                        'term.metadata.assignments.title': this.state.assignmentsCount !== null ? this.state.assignmentsCount.toFixed() : null
+                        "properties.edit.title": term.unmappedProperties.size.toFixed(),
+                        "term.metadata.assignments.title": this.state.assignmentsCount !== null ? this.state.assignmentsCount.toFixed() : null
                     }}/>
                 </Col>
             </Row>
@@ -100,15 +111,12 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     }
 
     private renderSubTerms() {
-        const source = Utils.sanitizeArray(this.props.term.subTerms);
+        const source = Utils.sanitizeArray(this.state.subTerms);
         if (source.length === 0) {
             return null;
         }
         return <ul className="term-items">{source.map(item => <li key={item.iri}>
-            <OutgoingLink iri={item.iri!}
-                          label={<Button color="link" onClick={this.openSubTerm.bind(null, item)}
-                                         title={this.props.i18n("term.metadata.subterm.link")}><AssetLabel
-                              iri={item.iri!}/></Button>}/>
+            <TermLink term={item}/>
         </li>)}
         </ul>;
     }
@@ -129,4 +137,11 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     }
 }
 
-export default injectIntl(withI18n(TermMetadata));
+export default connect(undefined, (dispatch: ThunkDispatch) => {
+    return {
+        loadSubTerms: (term: Term, vocabulary: Vocabulary) => {
+            const vocabularyIri = VocabularyUtils.create(vocabulary.iri);
+            return dispatch(fetchVocabularyTerms({optionID: term.iri}, vocabularyIri.fragment, vocabularyIri.namespace));
+        }
+    }
+})(injectIntl(withI18n(TermMetadata)));
