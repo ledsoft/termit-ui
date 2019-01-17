@@ -72,6 +72,11 @@ export default {
         "dashboard.widget.lastEdited.lastEditDate": "Last edited/created",
 
         "asset.link.tooltip": "View detail of this asset",
+        "asset.iri": "Identifier",
+        "asset.label": "Label",
+        "asset.create.iri.help": "Identifier will be automatically generated based on the specified name. Or you can set it manually.",
+        "asset.author": "Author",
+        "asset.created": "Created",
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
@@ -79,9 +84,6 @@ export default {
         'vocabulary.vocabularies.create.text': 'Create',
         'vocabulary.create.title': 'Create Vocabulary',
         'vocabulary.create.submit': 'Create',
-        'vocabulary.create.iri.help': 'Identifier will be automatically generated based on the specified name. Or you can set it manually.',
-        'vocabulary.name': 'Label',
-        'vocabulary.iri': 'Identifier',
         'vocabulary.comment': 'Comment',
         'vocabulary.summary.title': '{name} - Summary',
         'vocabulary.summary.gotodetail.label': 'View terms in this vocabulary',
@@ -103,10 +105,6 @@ export default {
         'vocabulary.detail.noTermSelected': 'Start by selecting a term in the tree on the left.',
 
         'vocabulary.term.created.message': 'Term successfully created.',
-
-        'vocabulary.metadata.identifier': 'Identifier',
-        'vocabulary.metadata.author': 'Author',
-        'vocabulary.metadata.created': 'Created',
         'vocabulary.select-vocabulary' : 'Select a Vocabulary',
 
         'resource.management': 'Resources management',

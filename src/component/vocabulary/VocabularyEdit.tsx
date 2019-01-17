@@ -54,13 +54,13 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput label={i18n("vocabulary.iri")} value={this.props.vocabulary.iri}
+                        <CustomInput label={i18n("asset.iri")} value={this.props.vocabulary.iri}
                                      disabled={true}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="vocabulary-edit-label" label={i18n("vocabulary.name")}
+                        <CustomInput name="vocabulary-edit-label" label={i18n("asset.label")}
                                      value={this.state.label} onChange={this.onChange}/>
                     </Col>
                 </Row>

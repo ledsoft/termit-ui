@@ -1,9 +1,9 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
 import {Col, Label, Row} from "reactstrap";
-import VocabularyDocument from '../document/VocabularyDocument';
+import VocabularyDocument from "../document/VocabularyDocument";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 
 interface VocabularyMetadataProps extends HasI18n {
@@ -18,10 +18,10 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
     public render() {
         const i18n = this.props.i18n;
         const vocabulary = this.props.vocabulary;
-        return <div className='metadata-panel'>
+        return <div className="metadata-panel">
             <Row>
                 <Col md={2}>
-                    <Label className='attribute-label'>{i18n('vocabulary.metadata.author')}</Label>
+                    <Label className="attribute-label">{i18n("asset.author")}</Label>
                 </Col>
                 <Col md={10}>
                     {vocabulary.author && vocabulary.author.fullName}
@@ -29,7 +29,7 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
             </Row>
             <Row>
                 <Col md={2}>
-                    <Label className='attribute-label'>{i18n('vocabulary.metadata.created')}</Label>
+                    <Label className="attribute-label">{i18n("asset.created")}</Label>
                 </Col>
                 <Col md={10}>
                     {vocabulary.created && new Date(vocabulary.created).toLocaleString()}
@@ -37,7 +37,7 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
             </Row>
             <Row>
                 <Col md={2}>
-                    <Label className='attribute-label'>{i18n('vocabulary.comment')}</Label>
+                    <Label className="attribute-label">{i18n("vocabulary.comment")}</Label>
                 </Col>
                 <Col md={10}>
                     <Label>{vocabulary.comment}</Label>
