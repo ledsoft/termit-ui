@@ -68,7 +68,7 @@ export default {
 
         "dashboard.widget.lastEdited.title": "Naposledy upravené záznamy",
         "dashboard.widget.lastEdited.empty": "Pro tuto část nebyly nalezeny žádné záznamy.",
-        "dashboard.widget.lastEdited.lastEditDate": "Naposledy upraveno/vytvořeno",
+        "dashboard.widget.lastEdited.lastEditDate": "Naposledy upraven/vytvořen",
 
         "asset.link.tooltip": "Zobrazit detail záznamu",
 
