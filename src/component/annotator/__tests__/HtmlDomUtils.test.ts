@@ -1,5 +1,6 @@
 // @ts-ignore
 import {XPathRange} from "xpath-range";
+// @ts-ignore
 import * as xpathRange from "xpath-range";
 import HtmlDomUtils from "../HtmlDomUtils";
 
@@ -44,12 +45,10 @@ describe("Html dom utils", () => {
         getRangeAt = jest.fn().mockImplementation(() => {
             return { cloneContents }
         });
-        textPointerRange = jest.fn().mockImplementation(() => {
-            return {
-                extractContents: jest.fn(),
-                surroundContents: jest.fn(),};
-        });
-
+        textPointerRange = {
+            extractContents: jest.fn(),
+            surroundContents: jest.fn()
+        };
 
         const parser = new DOMParser();
         doc = parser.parseFromString(htmlContent, "text/html");
