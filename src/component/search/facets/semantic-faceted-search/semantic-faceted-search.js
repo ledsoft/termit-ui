@@ -2120,6 +2120,7 @@ angular.module('seco.facetedSearch').run(['$templateCache', function($templateCa
     "<seco-facet-wrapper>\n" +
     "  <p class=\"input-group\">\n" +
     "    <input type=\"text\" class=\"form-control\"\n" +
+      "placeholder=\"Filter by term\"\n" +
     "      ng-change=\"vm.changed()\"\n" +
     "      ng-disabled=\"vm.isLoading()\"\n" +
     "      ng-model=\"vm.facet.selectedValue\"\n" +
@@ -2130,7 +2131,7 @@ angular.module('seco.facetedSearch').run(['$templateCache', function($templateCa
     "        ng-disabled=\"vm.isDisabled()\"\n" +
     "        ng-click=\"vm.clear()\">\n" +
     "        <i class=\"glyphicon glyphicon-remove\"></i>\n" +
-    "      </button>\n" +
+    "       clear</button>\n" +
     "    </span>\n" +
     "  </p>\n" +
     "</seco-facet-wrapper>\n"

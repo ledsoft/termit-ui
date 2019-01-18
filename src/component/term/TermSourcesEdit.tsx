@@ -71,7 +71,7 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
         return <ul className='term-items'>
             {sources.map(s => <li key={s}>
                 {s}
-                <Badge color='danger' title={this.props.i18n('term.metadata.source.remove.title')}
+                <Badge title={this.props.i18n('term.metadata.source.remove.title')}
                        className='term-edit-source-remove align-middle'
                        onClick={this.onRemove.bind(null, s)}><GoX/> {this.props.i18n('term.metadata.source.remove.text')}</Badge>
             </li>)}

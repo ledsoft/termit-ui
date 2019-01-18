@@ -128,7 +128,7 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
         this.props.properties.forEach((values, k) => {
             const items = values.map(v => <li key={v}>
                 {v}
-                <Badge color="danger" title={this.props.i18n("properties.edit.remove")}
+                <Badge title={this.props.i18n("properties.edit.remove")}
                        className="term-edit-source-remove align-middle"
                        onClick={this.onRemove.bind(null, k, v)}><GoX/>{this.props.i18n("properties.edit.remove.text")}</Badge>
             </li>);
