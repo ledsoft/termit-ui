@@ -100,6 +100,7 @@ describe("AssetLinkFactory", () => {
                 iri: Generator.generateUri(),
                 label: "Dataset",
             });
+            resource.types = undefined;
             const result = mountWithIntl(<MemoryRouter>{AssetLinkFactory.createAssetLink(resource)}</MemoryRouter>);
             expect(result.find(Link).exists()).toBeFalsy();
             expect(result.find(Label).exists()).toBeTruthy();

@@ -11,6 +11,7 @@ import CustomInput from "../misc/CustomInput";
 import TextArea from "../misc/TextArea";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
+import {createResource} from "../../action/AsyncActions";
 
 interface CreateResourceProps extends HasI18n {
     onCreate: (resource: Resource) => void;
@@ -95,6 +96,7 @@ export class CreateResource extends AbstractCreateAsset<CreateResourceProps, Cre
 }
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {
-    // TODO
-    return {};
+    return {
+        onCreate: (resource: Resource) => dispatch(createResource(resource))
+    };
 })(injectIntl(withI18n(CreateResource)));

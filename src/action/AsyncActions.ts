@@ -222,6 +222,26 @@ export function loadResourceTerms(iri: IRI) {
     };
 }
 
+export function createResource(resource: Resource) {
+    const action = {
+        type: ActionType.CREATE_RESOURCE
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.post(Constants.API_PREFIX + "/resources", content(resource.toJsonLd()))
+            .then((resp: AxiosResponse) => {
+                dispatch(asyncActionSuccess(action));
+                const location = resp.headers[Constants.LOCATION_HEADER];
+                Routing.transitionTo(Routes.resourceSummary, IdentifierResolver.routingOptionsFromLocation(location));
+                return dispatch(SyncActions.publishMessage(new Message({messageId: "resource.created.message"}, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function loadVocabularies() {
     const action = {
         type: ActionType.LOAD_VOCABULARIES

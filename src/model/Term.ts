@@ -19,7 +19,6 @@ export interface TermData extends AssetData, HasProvenanceData {
     label: string;
     subTerms?: AssetData[];
     sources?: string[];
-    types?: string[];
     parent?: string;
     plainSubTerms?: string[];   // Introduced in order to support the Intelligent Tree Select component
     vocabulary?: AssetData;
@@ -28,7 +27,6 @@ export interface TermData extends AssetData, HasProvenanceData {
 export default class Term extends Asset implements TermData {
     public subTerms?: AssetData[];
     public parent?: string;
-    public types?: string[];
     public sources?: string[];
     public plainSubTerms?: string[];
     public readonly vocabulary?: AssetData;

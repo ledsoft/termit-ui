@@ -108,9 +108,10 @@ export default {
 
         'resource.management': 'Správa zdrojů',
         'resource.management.resources': 'Zdroje',
+        "resource.created.message": "Zdroj úspěšně vytvořen.",
         'resource.updated.message': 'Zdroj úspěšně uložen.',
-        'resource.management.add': 'Přidat zdroj',
 
+        'resource.management.add': 'Přidat zdroj',
         "resource.create.title": "Vytvořit zdroj",
         'resource.metadata.description': 'Popis',
         'resource.metadata.terms': 'Související pojmy',

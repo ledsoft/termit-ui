@@ -20,7 +20,6 @@ export interface VocabularyData extends AssetData, HasProvenanceData {
     document?: { iri: string };
     glossary?: AssetData;
     model?: AssetData;
-    types?: string[];
 }
 
 export default class Vocabulary extends Asset implements VocabularyData {
@@ -28,7 +27,6 @@ export default class Vocabulary extends Asset implements VocabularyData {
     public document?: { iri: string };
     public glossary?: AssetData;
     public model?: AssetData;
-    public types?: string[];
 
     constructor(data: VocabularyData) {
         super(data);

@@ -135,9 +135,9 @@ describe("Utils", () => {
         it("returns undefined for asset with unknown type definition", () => {
             const resource: Resource = new Resource({
                 iri: Generator.generateUri(),
-                label: "Test",
-                types: VocabularyUtils.RDFS_RESOURCE
+                label: "Test"
             });
+            resource.types = [VocabularyUtils.RDFS_RESOURCE];
             expect(Utils.getAssetTypeLabelId(resource)).not.toBeDefined();
         });
     });

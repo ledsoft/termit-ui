@@ -1,6 +1,7 @@
 import configureMockStore, {MockStoreEnhanced} from 'redux-mock-store';
 import {
     createProperty,
+    createResource,
     createVocabulary,
     createVocabularyTerm,
     exportGlossary,
@@ -41,7 +42,7 @@ import FetchOptionsFunction from "../../model/Functions";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT} from "../../model/RdfsResource";
 import TermItState from "../../model/TermItState";
 import TermAssignment from "../../model/TermAssignment";
-import Resource from "../../model/Resource";
+import Resource, {CONTEXT as RESOURCE_CONTEXT} from "../../model/Resource";
 import Utils from "../../util/Utils";
 import AsyncActionStatus from "../AsyncActionStatus";
 import ExportType from "../../util/ExportType";
@@ -65,6 +66,7 @@ describe('Async actions', () => {
     let store: MockStoreEnhanced<TermItState>;
 
     beforeEach(() => {
+        jest.clearAllMocks();
         store = mockStore(new TermItState());
     });
 
@@ -857,6 +859,42 @@ describe('Async actions', () => {
                 expect(result[0]).toBeInstanceOf(File);
                 expect(result[1]).toBeInstanceOf(Vocabulary);
                 expect(result[2]).toBeInstanceOf(Term);
+            });
+        });
+    });
+
+    describe("create resource", () => {
+        it("adds context definition to resource data and sends it over network", () => {
+            const resource = new Resource({
+                iri: Generator.generateUri(),
+                label: "Test resource"
+            });
+            const mock = jest.fn().mockImplementation(() => Promise.resolve());
+            Ajax.post = mock;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createResource(resource))).then(() => {
+                expect(Ajax.post).toHaveBeenCalled();
+                const config = mock.mock.calls[0][1];
+                expect(config.getContentType()).toEqual(Constants.JSON_LD_MIME_TYPE);
+                const data = config.getContent();
+                expect(data["@context"]).toBeDefined();
+                expect(data["@context"]).toEqual(RESOURCE_CONTEXT);
+            });
+        });
+
+        it("transitions to resource detail on success", () => {
+            const resource = new Resource({
+                iri: "http://onto.fel.cvut.cz/ontologies/termit/resources/test-resource",
+                label: "Test resource"
+            });
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({headers: {location: resource.iri}}));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createResource(resource))).then(() => {
+                expect(Routing.transitionTo).toHaveBeenCalled();
+                const args = (Routing.transitionTo as jest.Mock).mock.calls[0];
+                expect(args[0]).toEqual(Routes.resourceSummary);
+                expect(args[1]).toEqual({
+                    params: new Map([["name", "test-resource"]]),
+                    query: new Map()
+                });
             });
         });
     });

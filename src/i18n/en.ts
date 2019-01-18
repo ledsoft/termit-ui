@@ -110,9 +110,10 @@ export default {
 
         'resource.management': 'Resources management',
         'resource.management.resources': 'Resources',
+        "resource.created.message": "Resource successfully created.",
         'resource.updated.message': 'Resource successfully updated.',
-        'resource.management.add': 'Add resource',
 
+        'resource.management.add': 'Add resource',
         "resource.create.title": "Create resource",
         'resource.metadata.description' : 'Popis',
         'resource.metadata.terms' : 'Related Terms',

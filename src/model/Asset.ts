@@ -43,6 +43,7 @@ export default abstract class Asset implements AssetData, HasProvenanceData {
     public created?: number;
     public lastEditor?: User;
     public lastModified?: number;
+    public types?: string[];
 
     protected constructor(data: HasProvenanceData) {
         if (data.author) {
