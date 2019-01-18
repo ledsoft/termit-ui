@@ -14,6 +14,22 @@ describe("Vocabulary", () => {
         };
     });
 
+    describe("constructor", () => {
+        it("adds vocabulary type when it is missing", () => {
+            const testVocabulary = new Vocabulary(data);
+            expect(testVocabulary.types).toBeDefined();
+            expect(testVocabulary.types!.indexOf(VocabularyUtils.VOCABULARY)).not.toEqual(-1);
+        });
+
+        it("does not add vocabulary type when it is already present", () => {
+            data.types = [VocabularyUtils.VOCABULARY];
+            const testVocabulary = new Vocabulary(data);
+            expect(testVocabulary.types).toBeDefined();
+            expect(testVocabulary.types!.indexOf(VocabularyUtils.VOCABULARY)).not.toEqual(-1);
+            expect(testVocabulary.types!.lastIndexOf(VocabularyUtils.VOCABULARY)).toEqual(testVocabulary.types!.indexOf(VocabularyUtils.VOCABULARY));
+        });
+    });
+
     describe('get unmappedProperties', () => {
         it('returns map of unmapped properties with values in vocabulary', () => {
             const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
@@ -73,20 +89,6 @@ describe("Vocabulary", () => {
     });
 
     describe("toJsonLd", () => {
-        it("adds vocabulary type when it is missing", () => {
-            const testVocabulary = new Vocabulary(data);
-            const jsonLd = testVocabulary.toJsonLd();
-            expect(jsonLd.types).toBeDefined();
-            expect(jsonLd.types).toEqual([VocabularyUtils.VOCABULARY]);
-        });
-
-        it("does not add vocabulary type when it is already present", () => {
-            data.types = [VocabularyUtils.VOCABULARY];
-            const testVocabulary = new Vocabulary(data);
-            const jsonLd = testVocabulary.toJsonLd();
-            expect(jsonLd.types).toBeDefined();
-            expect(jsonLd.types).toEqual([VocabularyUtils.VOCABULARY]);
-        });
 
         it("correctly interprets author", () => {
             data.author = {

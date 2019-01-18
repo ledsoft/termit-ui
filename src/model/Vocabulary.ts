@@ -34,17 +34,14 @@ export default class Vocabulary extends Asset implements VocabularyData {
         if (data.author) {
             this.author = new User(data.author);
         }
+        this.types = Utils.sanitizeArray(data.types);
+        if (this.types.indexOf(OntologicalVocabulary.VOCABULARY) === -1) {
+            this.types.push(OntologicalVocabulary.VOCABULARY);
+        }
     }
 
     public toJsonLd(): VocabularyData {
-        const result = Object.assign({}, this, {
-            "@context": CONTEXT,
-            types: Utils.sanitizeArray(this.types)
-        });
-        if (result.types.indexOf(OntologicalVocabulary.VOCABULARY) === -1) {
-            result.types.push(OntologicalVocabulary.VOCABULARY);
-        }
-        return result;
+        return Object.assign({}, this, {"@context": CONTEXT});
     }
 
     public get unmappedProperties(): Map<string, string[]> {

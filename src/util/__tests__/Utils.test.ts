@@ -129,6 +129,7 @@ describe("Utils", () => {
                 iri: Generator.generateUri(),
                 label: "Test"
             });
+            asset.types = undefined;
             expect(Utils.getAssetTypeLabelId(asset)).not.toBeDefined();
         });
 

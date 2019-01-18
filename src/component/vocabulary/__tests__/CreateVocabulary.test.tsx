@@ -49,13 +49,13 @@ describe("Create vocabulary view", () => {
     it("calls onCreate on submit click", () => {
         const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate}  {...intlFunctions()}/>);
         const nameInput = wrapper.find("input[name=\"create-vocabulary.label\"]");
-        const name = "Metropolitan Plan";
-        (nameInput.getDOMNode() as HTMLInputElement).value = name;
+        const label = "Metropolitan Plan";
+        (nameInput.getDOMNode() as HTMLInputElement).value = label;
         nameInput.simulate("change", nameInput);
         return Ajax.get(Constants.API_PREFIX + "/vocabularies/identifier").then(() => {
             const submitButton = wrapper.find(Button).first();
             submitButton.simulate("click");
-            expect(onCreate).toHaveBeenCalledWith({label: name, iri});
+            expect(onCreate).toHaveBeenCalledWith(new Vocabulary({iri, label}));
         });
     });
 
