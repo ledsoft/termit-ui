@@ -1,10 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {TermSourcesEdit} from "../TermSourcesEdit";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {Button} from "reactstrap";
+import {Badge, Button} from "reactstrap";
 
-describe('TermSourcesEdit', () => {
+describe("TermSourcesEdit", () => {
 
     let onChange: (sources: string[]) => void;
 
@@ -12,49 +12,49 @@ describe('TermSourcesEdit', () => {
         onChange = jest.fn();
     });
 
-    it('adds current input value to sources and invokes onChange on add click', () => {
+    it("adds current input value to sources and invokes onChange on add click", () => {
         const wrapper = mountWithIntl(<TermSourcesEdit onChange={onChange} sources={[]} {...intlFunctions()}/>);
-        const input = wrapper.find('input');
-        const value = 'new source';
+        const input = wrapper.find("input");
+        const value = "new source";
         (input.getDOMNode() as HTMLInputElement).value = value;
-        input.simulate('change', input);
-        wrapper.find(Button).simulate('click');
+        input.simulate("change", input);
+        wrapper.find(Button).simulate("click");
         expect(onChange).toHaveBeenCalledWith([value]);
     });
 
-    it('clears input value after adding new source', () => {
+    it("clears input value after adding new source", () => {
         const wrapper = mountWithIntl(<TermSourcesEdit onChange={onChange} sources={[]} {...intlFunctions()}/>);
-        const input = wrapper.find('input');
-        (input.getDOMNode() as HTMLInputElement).value = 'new source';
-        input.simulate('change', input);
-        wrapper.find(Button).simulate('click');
+        const input = wrapper.find("input");
+        (input.getDOMNode() as HTMLInputElement).value = "new source";
+        input.simulate("change", input);
+        wrapper.find(Button).simulate("click");
         wrapper.update();
-        expect((wrapper.find('input').getDOMNode() as HTMLInputElement).value).toEqual('');
+        expect((wrapper.find("input").getDOMNode() as HTMLInputElement).value).toEqual("");
     });
 
-    it('supports adding input value as source on enter', () => {
+    it("supports adding input value as source on enter", () => {
         const wrapper = mountWithIntl(<TermSourcesEdit onChange={onChange} sources={[]} {...intlFunctions()}/>);
-        const input = wrapper.find('input');
-        const value = 'new source';
+        const input = wrapper.find("input");
+        const value = "new source";
         (input.getDOMNode() as HTMLInputElement).value = value;
-        input.simulate('change', input);
-        input.simulate('keyPress', {key: 'Enter'});
+        input.simulate("change", input);
+        input.simulate("keyPress", {key: "Enter"});
         expect(onChange).toHaveBeenCalledWith([value]);
     });
 
-    it('does nothing on add when input is empty', () => {
+    it("does nothing on add when input is empty", () => {
         const wrapper = mountWithIntl(<TermSourcesEdit onChange={onChange} sources={[]} {...intlFunctions()}/>);
-        const input = wrapper.find('input');
-        (input.getDOMNode() as HTMLInputElement).value = '';
-        input.simulate('change', input);
-        wrapper.find(Button).simulate('click');
+        const input = wrapper.find("input");
+        (input.getDOMNode() as HTMLInputElement).value = "";
+        input.simulate("change", input);
+        wrapper.find(Button).simulate("click");
         expect(onChange).not.toHaveBeenCalled();
     });
 
-    it('removes source and calls onChange with updated sources when source remove button is clicked', () => {
-        const sources = ['first', 'second'];
+    it("removes source and calls onChange with updated sources when source remove button is clicked", () => {
+        const sources = ["first", "second"];
         const wrapper = mountWithIntl(<TermSourcesEdit onChange={onChange} sources={sources} {...intlFunctions()}/>);
-        wrapper.find('[color="danger"]').at(0).simulate('click');
+        wrapper.find(Badge).at(0).simulate("click");
         expect(onChange).toHaveBeenCalledWith([sources[1]]);
     });
 });
