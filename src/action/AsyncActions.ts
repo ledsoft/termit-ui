@@ -14,7 +14,6 @@ import Constants from "../util/Constants";
 import User, {CONTEXT as USER_CONTEXT, UserData} from "../model/User";
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT, VocabularyData} from "../model/Vocabulary";
 import Routes from "../util/Routes";
-import IdentifierResolver from "../util/IdentifierResolver";
 import {ErrorData} from "../model/ErrorInfo";
 import {AxiosResponse} from "axios";
 import * as jsonld from "jsonld";
@@ -107,8 +106,11 @@ export function createVocabulary(vocabulary: Vocabulary) {
         return Ajax.post(Constants.API_PREFIX + "/vocabularies", content(vocabulary.toJsonLd()))
             .then((resp: AxiosResponse) => {
                 dispatch(asyncActionSuccess(action));
-                const location = resp.headers[Constants.LOCATION_HEADER];
-                Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
+                const vocabularyIri = VocabularyUtils.create(resp.headers[Constants.LOCATION_HEADER]);
+                Routing.transitionTo(Routes.vocabularyDetail, {
+                    params: new Map([["name", vocabularyIri.fragment]]),
+                    query: new Map([["namespace", vocabularyIri.namespace!]])
+                });
                 return dispatch(SyncActions.publishMessage(new Message({messageId: "vocabulary.created.message"}, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {
@@ -231,8 +233,11 @@ export function createResource(resource: Resource) {
         return Ajax.post(Constants.API_PREFIX + "/resources", content(resource.toJsonLd()))
             .then((resp: AxiosResponse) => {
                 dispatch(asyncActionSuccess(action));
-                const location = resp.headers[Constants.LOCATION_HEADER];
-                Routing.transitionTo(Routes.resourceSummary, IdentifierResolver.routingOptionsFromLocation(location));
+                const resourceIri = VocabularyUtils.create(resp.headers[Constants.LOCATION_HEADER]);
+                Routing.transitionTo(Routes.resourceSummary, {
+                    params: new Map([["name", resourceIri.fragment]]),
+                    query: new Map([["namespace", resourceIri.namespace!]])
+                });
                 return dispatch(SyncActions.publishMessage(new Message({messageId: "resource.created.message"}, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {

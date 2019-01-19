@@ -119,10 +119,10 @@ describe('Async actions', () => {
             });
         });
 
-        it('transitions to vocabulary detail on success', () => {
+        it("transitions to vocabulary detail on success", () => {
             const vocabulary = new Vocabulary({
-                label: 'Test',
-                iri: 'http://kbss.felk.cvut.cz/termit/rest/vocabularies/test'
+                label: "Test",
+                iri: "http://kbss.felk.cvut.cz/termit/rest/vocabularies/test"
             });
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({headers: {location: vocabulary.iri}}));
             return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabulary(vocabulary))).then(() => {
@@ -130,8 +130,8 @@ describe('Async actions', () => {
                 const args = (Routing.transitionTo as jest.Mock).mock.calls[0];
                 expect(args[0]).toEqual(Routes.vocabularyDetail);
                 expect(args[1]).toEqual({
-                    params: new Map([['name', 'test']]),
-                    query: new Map()
+                    params: new Map([["name", "test"]]),
+                    query: new Map([["namespace", "http://kbss.felk.cvut.cz/termit/rest/vocabularies/"]])
                 });
             });
         });
@@ -893,7 +893,7 @@ describe('Async actions', () => {
                 expect(args[0]).toEqual(Routes.resourceSummary);
                 expect(args[1]).toEqual({
                     params: new Map([["name", "test-resource"]]),
-                    query: new Map()
+                    query: new Map([["namespace", "http://onto.fel.cvut.cz/ontologies/termit/resources/"]])
                 });
             });
         });

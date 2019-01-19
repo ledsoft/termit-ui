@@ -330,6 +330,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     // Mock resources
     mock.onGet(Constants.API_PREFIX + '/resources').reply(200, require('../rest-mock/resources'), header);
 
+    // Mock resource IRI generator
+    mock.onGet(Constants.API_PREFIX + "/resources/identifier").reply(200, "http://onto.fel.cvut.cz/ontologies/termit/resource/test-resource", header);
 
     // Mock text analysis invocation
     mock.onPut(/\/rest\/resources\/.+\/text-analysis/).reply(202, null, header);
@@ -356,6 +358,10 @@ function mockRestApi(axiosInst: AxiosInstance): void {
             })];
         }
     });
+    // Mock resource creation
+    mock.onPost(Constants.API_PREFIX + "/resources").reply(201, null, Object.assign({}, header, {
+        "location": "http://onto.fel.cvut.cz/ontologies/application/termit/randomInstance-1529066498"
+    }));
 
     // Mock resource tags update
     mock.onPut('/rest/resources/resource/terms').reply(204, null, header);
@@ -380,9 +386,6 @@ function mockRestApi(axiosInst: AxiosInstance): void {
 
     // Mock get types
     mock.onGet(/\/rest\/language\/types/).reply(200, require('../rest-mock/types'), header);
-
-    // Mock get document
-    mock.onGet(/\/rest\/documents\/.+/).reply(200, require('../rest-mock/document'), header);
 
     // Mock get label
     mock.onGet(Constants.API_PREFIX + '/data/label').reply(config => {
