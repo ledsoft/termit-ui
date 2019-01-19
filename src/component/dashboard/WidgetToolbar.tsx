@@ -19,15 +19,6 @@ class WidgetToolbar extends React.Component<HasI18n> {
                 <LinkWidget to={Routes.createResource.path}
                             title={i18n("resource.management.create.tooltip")}>{i18n("dashboard.create-resource.tile")}</LinkWidget>
             </NavItem>
-            <NavItem className="card mx-1">
-                <LinkWidget to={Routes.vocabularies.path}>{i18n("main.nav.vocabularies")}</LinkWidget>
-            </NavItem>
-            <NavItem className="card mx-1">
-                <LinkWidget to={Routes.resources.path}>{i18n("main.nav.resources")}</LinkWidget>
-            </NavItem>
-            <NavItem className="card mx-1">
-                <LinkWidget to={Routes.statistics.path}>{i18n("main.nav.statistics")}</LinkWidget>
-            </NavItem>
         </Nav>;
     }
 }
