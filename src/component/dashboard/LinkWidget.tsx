@@ -5,10 +5,11 @@ import {Link} from "react-router-dom";
 
 interface LinkWidgetProps extends HasI18n {
     to: any;
-    children: any
+    title?: string;
+    children: any;
 }
 
-const LinkWidget: React.SFC<LinkWidgetProps> = (props: LinkWidgetProps) => <Link to={props.to}
+const LinkWidget: React.SFC<LinkWidgetProps> = (props: LinkWidgetProps) => <Link to={props.to} title={props.title}
                                                                                  className="widget card-body text-center">{props.children}</Link>;
 
 export default injectIntl(withI18n(LinkWidget));

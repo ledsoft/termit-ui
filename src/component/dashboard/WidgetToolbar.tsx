@@ -12,16 +12,21 @@ class WidgetToolbar extends React.Component<HasI18n> {
 
         return <Nav className="widget-toolbar justify-content-center mb-3">
             <NavItem className="card mx-1">
-                <LinkWidget to={Routes.createVocabulary.link()}>{i18n("dashboard.create-vocabulary.tile")}</LinkWidget>
+                <LinkWidget to={Routes.createVocabulary.path}
+                            title={i18n("vocabulary.vocabularies.create.tooltip")}>{i18n("dashboard.create-vocabulary.tile")}</LinkWidget>
             </NavItem>
             <NavItem className="card mx-1">
-                <LinkWidget to={Routes.vocabularies.link()}>{i18n("main.nav.vocabularies")}</LinkWidget>
+                <LinkWidget to={Routes.createResource.path}
+                            title={i18n("resource.management.create.tooltip")}>{i18n("dashboard.create-resource.tile")}</LinkWidget>
             </NavItem>
             <NavItem className="card mx-1">
-                <LinkWidget to={Routes.resources.link()}>{i18n("main.nav.resources")}</LinkWidget>
+                <LinkWidget to={Routes.vocabularies.path}>{i18n("main.nav.vocabularies")}</LinkWidget>
             </NavItem>
             <NavItem className="card mx-1">
-                <LinkWidget to={Routes.statistics.link()}>{i18n("main.nav.statistics")}</LinkWidget>
+                <LinkWidget to={Routes.resources.path}>{i18n("main.nav.resources")}</LinkWidget>
+            </NavItem>
+            <NavItem className="card mx-1">
+                <LinkWidget to={Routes.statistics.path}>{i18n("main.nav.statistics")}</LinkWidget>
             </NavItem>
         </Nav>;
     }

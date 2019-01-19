@@ -49,7 +49,7 @@ class NewsMd extends React.Component<NewsMdProps, NewsMdState> {
 
         return <Card>
             <CardHeader tag="h4">
-                {i18n("dashboard.news.tile")}
+                {i18n("dashboard.widget.news")}
             </CardHeader>
             <CardBody>
                 {this.state.newsMd ? <ReactMarkdown source={this.state.newsMd}/> : <ContainerMask/>}

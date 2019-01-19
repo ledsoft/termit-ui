@@ -19,7 +19,7 @@ export class Dashboard extends React.Component<HasI18n> {
                     <LastEditedAssets/>
                 </Col>
                 <Col className="col-4">
-                    <PanelWithActions title={this.props.i18n("dashboard.type-frequency")}>
+                    <PanelWithActions title={this.props.i18n("dashboard.widget.typeFrequency.title")}>
                         <TermFrequency
                             sparqlQuery={templateQuery}
                             lang={this.props.locale}/>
@@ -31,7 +31,6 @@ export class Dashboard extends React.Component<HasI18n> {
             </Row>
         </>;
     }
-
 }
 
 export default injectIntl(withI18n(Dashboard));

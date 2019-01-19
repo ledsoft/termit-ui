@@ -7,19 +7,15 @@ import PanelWithActions from "../misc/PanelWithActions";
 import {GoPlus} from "react-icons/go";
 import {Link} from "react-router-dom";
 
-class Vocabularies extends React.Component<HasI18n> {
-
-    public render() {
-        const i18n = this.props.i18n;
-        const actions = [];
-        actions.push(<Link key="vocabulary.vocabularies.create" className="btn btn-primary btn-sm"
+const Vocabularies: React.SFC<HasI18n> = props => {
+    const i18n = props.i18n;
+    const actions = [<Link key="vocabulary.vocabularies.create" className="btn btn-primary btn-sm"
                            title={i18n("vocabulary.vocabularies.create.tooltip")}
-                           to={Routes.createVocabulary.link()}><GoPlus/> {i18n("vocabulary.vocabularies.create.text")}</Link>);
-        return (<PanelWithActions
-                    title={i18n("vocabulary.management.vocabularies")}
-                    actions={actions}
-        ><VocabularyList/></PanelWithActions>);
-    }
-}
+                           to={Routes.createVocabulary.path}><GoPlus/>&nbsp;{i18n("asset.create.button.text")}</Link>];
+
+    return <PanelWithActions title={i18n("vocabulary.management.vocabularies")} actions={actions}>
+        <VocabularyList/>
+    </PanelWithActions>;
+};
 
 export default injectIntl(withI18n(Vocabularies));

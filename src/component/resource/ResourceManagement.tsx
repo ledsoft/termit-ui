@@ -9,6 +9,7 @@ import ResourceSummary from "./ResourceSummary";
 import DynamicBreadcrumbRoute from "../breadcrumb/DynamicBreadcrumbRoute";
 import BreadcrumbRoute from "../breadcrumb/BreadcrumbRoute";
 import FileDetail from "../file/FileDetail";
+import CreateResource from "./CreateResource";
 
 class ResourceManagement extends React.Component<HasI18n> {
     constructor(props: HasI18n) {
@@ -18,7 +19,8 @@ class ResourceManagement extends React.Component<HasI18n> {
     public render() {
         const i18n = this.props.i18n;
         return <Switch>
-            <BreadcrumbRoute title={i18n("annotator.annotate-content")} path={Routes.annotateFile.path} component={FileDetail}/>
+            <BreadcrumbRoute title={i18n("annotator.annotate-content")} path={Routes.annotateFile.path}
+                             component={FileDetail}/>
             <div>
                 <h2 className="page-header">{i18n("resource.management")}</h2>
                 <div className="row">
@@ -27,6 +29,8 @@ class ResourceManagement extends React.Component<HasI18n> {
                     </Col>
                     <Col md={8}>
                         <Switch>
+                            <BreadcrumbRoute title={i18n("resource.create.title")} path={Routes.createResource.path}
+                                             component={CreateResource}/>
                             <DynamicBreadcrumbRoute asset="resource" path={Routes.resourceSummary.path}
                                                     component={ResourceSummary} exact={true} includeSearch={true}/>
                         </Switch>
