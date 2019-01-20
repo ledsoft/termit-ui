@@ -111,6 +111,7 @@ export default {
         'resource.updated.message': 'Resource successfully updated.',
 
         "resource.create.title": "Create resource",
+        "resource.create.type": "Type",
         'resource.metadata.description': 'Description',
         'resource.metadata.terms': 'Related Terms',
         'resource.metadata-edit.terms': 'Related Terms from the Vocabulary',

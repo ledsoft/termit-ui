@@ -109,6 +109,7 @@ export default {
         'resource.updated.message': 'Zdroj úspěšně uložen.',
 
         "resource.create.title": "Vytvořit zdroj",
+        "resource.create.type": "Typ zdroje",
         "resource.management.create.text": "Vytvořit",
         "resource.management.create.tooltip": "Vytvořit či zaregistrovat zdroj",
         'resource.metadata.description': 'Popis',
