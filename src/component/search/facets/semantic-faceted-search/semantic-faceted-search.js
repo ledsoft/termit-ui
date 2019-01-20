@@ -2126,12 +2126,12 @@ angular.module('seco.facetedSearch').run(['$templateCache', function($templateCa
     "      ng-model=\"vm.facet.selectedValue\"\n" +
     "      ng-model-options=\"{ debounce: 1000 }\">\n" +
     "    </input>\n" +
-    "    <span class=\"input-group-btn\">\n" +
+    "    <span class=\"input-group-append\">\n" +
     "      <button type=\"button\" class=\"btn btn-default\"\n" +
     "        ng-disabled=\"vm.isDisabled()\"\n" +
     "        ng-click=\"vm.clear()\">\n" +
     "        <i class=\"glyphicon glyphicon-remove\"></i>\n" +
-    "       clear</button>\n" +
+    "       Clear</button>\n" +
     "    </span>\n" +
     "  </p>\n" +
     "</seco-facet-wrapper>\n"
