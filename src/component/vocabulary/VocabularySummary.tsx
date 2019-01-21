@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
@@ -17,10 +17,10 @@ import {
 } from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
-import {GoCloudDownload, GoPencil, GoThreeBars} from 'react-icons/go';
+import {GoCloudDownload, GoPencil, GoThreeBars} from "react-icons/go";
 import {ThunkDispatch} from "../../util/Types";
 import EditableComponent from "../misc/EditableComponent";
-import Routing from '../../util/Routing';
+import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
 import VocabularyEdit from "./VocabularyEdit";
 import Utils from "../../util/Utils";
@@ -57,9 +57,9 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
 
     private loadVocabulary(): void {
         const normalizedName = this.props.match.params.name;
-        const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
+        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         const iri = VocabularyUtils.create(this.props.vocabulary.iri);
-        if (iri.fragment !== normalizedName || iri.namespace !== namespace) {
+        if (iri.fragment !== normalizedName || (namespace && iri.namespace !== namespace)) {
             this.props.loadVocabulary({fragment: normalizedName, namespace});
         }
     }
@@ -67,8 +67,8 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
     private openTerms = () => {
         const iri = VocabularyUtils.create(this.props.vocabulary.iri);
         Routing.transitionTo(Routes.vocabularyDetail, {
-            params: new Map([['name', iri.fragment]]),
-            query: new Map([['namespace', iri.namespace!]])
+            params: new Map([["name", iri.fragment]]),
+            query: new Map([["namespace", iri.namespace!]])
         });
     };
 
@@ -88,17 +88,17 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
     };
 
     public render() {
-        const buttons = [<Button key='vocabulary.summary.detail' color='primary' size='sm'
-                                 title={this.props.i18n('vocabulary.summary.gotodetail.label')}
+        const buttons = [<Button key="vocabulary.summary.detail" color="primary" size="sm"
+                                 title={this.props.i18n("vocabulary.summary.gotodetail.label")}
                                  onClick={this.openTerms}>
-            <GoThreeBars/> {this.props.i18n('vocabulary.summary.gotodetail.text')}
+            <GoThreeBars/> {this.props.i18n("vocabulary.summary.gotodetail.text")}
         </Button>];
         if (!this.state.edit) {
-            buttons.push(<Button key='vocabulary.summary.edit' size='sm' color='primary' title={this.props.i18n('edit')}
-                                 onClick={this.onEdit}><GoPencil/> {this.props.i18n('edit')}</Button>);
+            buttons.push(<Button key="vocabulary.summary.edit" size="sm" color="primary" title={this.props.i18n("edit")}
+                                 onClick={this.onEdit}><GoPencil/> {this.props.i18n("edit")}</Button>);
         }
         buttons.push(this.renderExportDropdown());
-        const actions = [<ButtonToolbar key='vocabulary.summary.actions'>{buttons}</ButtonToolbar>];
+        const actions = [<ButtonToolbar key="vocabulary.summary.actions">{buttons}</ButtonToolbar>];
         const component = this.state.edit ?
             <VocabularyEdit save={this.onSave} cancel={this.onCloseEdit} vocabulary={this.props.vocabulary}/> :
             <VocabularyMetadata vocabulary={this.props.vocabulary}/>;
@@ -118,12 +118,13 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
         const i18n = this.props.i18n;
         return <UncontrolledButtonDropdown key="vocabulary.summary.export"
                                            size="sm" title={i18n("vocabulary.summary.export.title")}>
-            <DropdownToggle caret={true} color="primary"><GoCloudDownload/> {i18n("vocabulary.summary.export.text")}</DropdownToggle>
+            <DropdownToggle caret={true} color="primary"><GoCloudDownload/> {i18n("vocabulary.summary.export.text")}
+            </DropdownToggle>
             <DropdownMenu className="glossary-export-menu">
                 <DropdownItem className="btn-sm" onClick={this.onExportToCsv}
-                              title={i18n("vocabulary.summary.export.csv.title")}>{i18n('vocabulary.summary.export.csv')}</DropdownItem>
+                              title={i18n("vocabulary.summary.export.csv.title")}>{i18n("vocabulary.summary.export.csv")}</DropdownItem>
                 <DropdownItem className="btn-sm" onClick={this.onExportToExcel}
-                              title={i18n("vocabulary.summary.export.excel.title")}>{i18n('vocabulary.summary.export.excel')}</DropdownItem>
+                              title={i18n("vocabulary.summary.export.excel.title")}>{i18n("vocabulary.summary.export.excel")}</DropdownItem>
             </DropdownMenu>
         </UncontrolledButtonDropdown>;
     }

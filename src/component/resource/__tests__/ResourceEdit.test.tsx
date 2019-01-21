@@ -27,20 +27,19 @@ describe("ResourceEdit", () => {
                                                       cancel={cancel}
                                                       resource={resource}
                                                       save={save}/>);
-        const saveButton = component.find("Button[color='success']");
+        const saveButton = component.find("button[name=\"edit-resource.submit\"]");
         saveButton.simulate("click", saveButton);
         expect(save).toHaveBeenCalled();
     });
 
-    // it("calls onCancel on Cancel button click", () => {
-    //     const component = mountWithIntl(<ResourceEdit {...intlFunctions()}
-    //                                                   cancel={cancel}
-    //                                                   resource={resource}
-    //                                                   save={save}/>);
-    //     const cancelButton = component.find("Button[color='secondary']");
-    //     cancelButton.simulate("click", cancelButton);
-    //     expect(cancel).toHaveBeenCalled();
-    // });
+    it("calls onCancel on Cancel button click", () => {
+        const component = mountWithIntl(<ResourceEdit {...intlFunctions()}
+                                                      cancel={cancel}
+                                                      resource={resource}
+                                                      save={save}/>);
+        component.find("button[name=\"edit-resource.cancel\"]").simulate("click");
+        expect(cancel).toHaveBeenCalled();
+    });
 
     it("loads terms on resource update", () => {
         const wrapper = shallow(<ResourceEdit {...intlFunctions()}
@@ -66,16 +65,16 @@ describe("ResourceEdit", () => {
         const newLabel = "New label";
         (labelInput.getDOMNode() as HTMLInputElement).value = newLabel;
         labelInput.simulate("change", labelInput);
-        const commentInput = component.find("textarea[name='resource-edit-comment']");
-        const newComment = "New comment";
-        (commentInput.getDOMNode() as HTMLInputElement).value = newComment;
-        commentInput.simulate("change", commentInput);
+        const descriptionInput = component.find("textarea[name='resource-edit-description']");
+        const newDescription = "New description";
+        (descriptionInput.getDOMNode() as HTMLInputElement).value = newDescription;
+        descriptionInput.simulate("change", descriptionInput);
         component.find("Button[color='success']").simulate("click");
         expect(save).toHaveBeenCalled();
         const update = (save as jest.Mock).mock.calls[0][0];
         expect(update).not.toEqual(resource);
         expect(update.label).toEqual(newLabel);
-        expect(update.comment).toEqual(newComment);
+        expect(update.description).toEqual(newDescription);
         expect(update.terms).toEqual(resource.terms);
     });
 });

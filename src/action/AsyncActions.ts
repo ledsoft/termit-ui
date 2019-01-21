@@ -33,6 +33,7 @@ import File from "../model/File";
 import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 import {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
+import IdentifierResolver from "../util/IdentifierResolver";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -106,11 +107,8 @@ export function createVocabulary(vocabulary: Vocabulary) {
         return Ajax.post(Constants.API_PREFIX + "/vocabularies", content(vocabulary.toJsonLd()))
             .then((resp: AxiosResponse) => {
                 dispatch(asyncActionSuccess(action));
-                const vocabularyIri = VocabularyUtils.create(resp.headers[Constants.LOCATION_HEADER]);
-                Routing.transitionTo(Routes.vocabularyDetail, {
-                    params: new Map([["name", vocabularyIri.fragment]]),
-                    query: new Map([["namespace", vocabularyIri.namespace!]])
-                });
+                const location = resp.headers[Constants.LOCATION_HEADER];
+                Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
                 return dispatch(SyncActions.publishMessage(new Message({messageId: "vocabulary.created.message"}, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {
@@ -233,11 +231,8 @@ export function createResource(resource: Resource) {
         return Ajax.post(Constants.API_PREFIX + "/resources", content(resource.toJsonLd()))
             .then((resp: AxiosResponse) => {
                 dispatch(asyncActionSuccess(action));
-                const resourceIri = VocabularyUtils.create(resp.headers[Constants.LOCATION_HEADER]);
-                Routing.transitionTo(Routes.resourceSummary, {
-                    params: new Map([["name", resourceIri.fragment]]),
-                    query: new Map([["namespace", resourceIri.namespace!]])
-                });
+                const location = resp.headers[Constants.LOCATION_HEADER];
+                Routing.transitionTo(Routes.resourceSummary, IdentifierResolver.routingOptionsFromLocation(location));
                 return dispatch(SyncActions.publishMessage(new Message({messageId: "resource.created.message"}, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {

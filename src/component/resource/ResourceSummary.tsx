@@ -42,7 +42,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
             const iri = VocabularyUtils.create(this.props.resource.iri);
             const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
             const normalizedName = this.props.match.params.name;
-            if (iri.fragment !== normalizedName || iri.namespace !== namespace) {
+            if (iri.fragment !== normalizedName || (namespace && iri.namespace !== namespace)) {
                 this.forceReload();
             }
         }

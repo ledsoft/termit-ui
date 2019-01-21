@@ -131,7 +131,7 @@ describe('Async actions', () => {
                 expect(args[0]).toEqual(Routes.vocabularyDetail);
                 expect(args[1]).toEqual({
                     params: new Map([["name", "test"]]),
-                    query: new Map([["namespace", "http://kbss.felk.cvut.cz/termit/rest/vocabularies/"]])
+                    query: new Map()
                 });
             });
         });
@@ -893,7 +893,7 @@ describe('Async actions', () => {
                 expect(args[0]).toEqual(Routes.resourceSummary);
                 expect(args[1]).toEqual({
                     params: new Map([["name", "test-resource"]]),
-                    query: new Map([["namespace", "http://onto.fel.cvut.cz/ontologies/termit/resources/"]])
+                    query: new Map()
                 });
             });
         });

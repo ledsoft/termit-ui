@@ -16,7 +16,7 @@ interface ResourceEditProps extends HasI18n {
 
 interface ResourceEditState {
     label: string;
-    comment?: string;
+    description?: string;
     terms: Term[];
 }
 
@@ -25,7 +25,7 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
         super(props);
         this.state = {
             label: props.resource.label,
-            comment: props.resource.comment,
+            description: props.resource.description,
             terms: props.resource.terms
         };
     }
@@ -38,7 +38,7 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const change = {};
-        change[e.currentTarget.name.endsWith("label") ? "label" : "comment"] = e.currentTarget.value;
+        change[e.currentTarget.name.endsWith("label") ? "label" : "description"] = e.currentTarget.value;
         this.setState(change);
     };
 
@@ -49,7 +49,7 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
     public onSave = () => {
         const newResource = new Resource(this.props.resource);
         newResource.label = this.state.label;
-        newResource.comment = this.state.comment;
+        newResource.description = this.state.description;
         newResource.terms = this.state.terms;
         this.props.save(newResource);
     };
@@ -72,8 +72,8 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TextArea name="resource-edit-comment" label={i18n("resource.metadata.description")} rows={3}
-                                  value={this.state.comment} onChange={this.onChange}/>
+                        <TextArea name="resource-edit-description" label={i18n("resource.metadata.description")} rows={3}
+                                  value={this.state.description} onChange={this.onChange}/>
                     </Col>
                 </Row>
                 <Row>
@@ -87,8 +87,8 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className="pull-right">
-                            <Button onClick={this.onSave} color="success" size="sm">{i18n("save")}</Button>
-                            <Button onClick={this.props.cancel} key="cancel" color="secondary" size="sm">{i18n("cancel")}</Button>
+                            <Button name="edit-resource.submit" onClick={this.onSave} color="success" size="sm">{i18n("save")}</Button>
+                            <Button name="edit-resource.cancel" onClick={this.props.cancel} key="cancel" color="secondary" size="sm">{i18n("cancel")}</Button>
                         </ButtonToolbar>
                     </Col>
                 </Row>

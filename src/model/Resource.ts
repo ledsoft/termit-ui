@@ -4,15 +4,21 @@ import {CONTEXT as USER_CONTEXT} from "./User";
 import Utils from "../util/Utils";
 import VocabularyUtils from "../util/VocabularyUtils";
 
-export const CONTEXT = Object.assign({}, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
+const ctx = {
+    description: "http://purl.org/dc/elements/1.1/description"
+};
+
+export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
 
 export interface ResourceData extends AssetData, HasProvenanceData {
     iri: string,
     label: string,
+    description?: string,
     terms?: Term[]
 }
 
 export default class Resource extends Asset implements ResourceData {
+    public description?: string;
     public terms: Term[];
 
     constructor(data: ResourceData) {

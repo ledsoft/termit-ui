@@ -45,7 +45,7 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
                     <Label className="attribute-label">{i18n("resource.metadata.description")}</Label>
                 </Col>
                 <Col md={10}>
-                    {resource.comment}
+                    {resource.description}
                 </Col>
             </Row>
             <Row>
