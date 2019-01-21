@@ -17,6 +17,9 @@ describe("ResourceSummary", () => {
     let loadResource: (iri: IRI) => Promise<any>;
     let loadResourceTerms: (iri: IRI) => Promise<any>;
     let saveResource: (resource: Resource) => Promise<any>;
+    let clearResource: () => void;
+
+    let resourceHandlers: any;
 
     let location: Location;
     const history = createMemoryHistory();
@@ -26,6 +29,8 @@ describe("ResourceSummary", () => {
         loadResource = jest.fn().mockImplementation(() => Promise.resolve());
         loadResourceTerms = jest.fn().mockImplementation(() => Promise.resolve());
         saveResource = jest.fn().mockImplementation(() => Promise.resolve());
+        clearResource = jest.fn();
+        resourceHandlers = {loadResource, loadResourceTerms, saveResource, clearResource};
 
         location = {
             pathname: "/resource/" + resourceName,
@@ -45,9 +50,7 @@ describe("ResourceSummary", () => {
 
     it("loads resource on mount", () => {
         shallow(<ResourceSummary
-            loadResource={loadResource} loadResourceTerms={loadResourceTerms}
-            resource={EMPTY_RESOURCE}
-            saveResource={saveResource} {...intlFunctions()} {...intlDataForShallow()}
+            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
             history={history}
             location={location}
             match={match}/>);
@@ -55,10 +58,9 @@ describe("ResourceSummary", () => {
     });
 
     it("does not attempt to reload resource on update when it is empty resource", () => {
-        const wrapper = shallow(<ResourceSummary loadResource={loadResource} loadResourceTerms={loadResourceTerms}
-                                                 resource={EMPTY_RESOURCE}
-                                                 saveResource={saveResource} {...intlFunctions()} {...intlDataForShallow()}
-                                                 history={history} location={location} match={match}/>);
+        const wrapper = shallow(<ResourceSummary
+            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history} location={location} match={match}/>);
         wrapper.setProps({resource: EMPTY_RESOURCE});
         wrapper.update();
         expect(loadResource).toHaveBeenCalledTimes(1);
@@ -66,10 +68,9 @@ describe("ResourceSummary", () => {
 
     it("reloads resource when new resource identifier is passed in location props", () => {
         const oldResource = new Resource({iri: Generator.generateUri(), label: resourceName, terms: []});
-        const wrapper = shallow(<ResourceSummary loadResource={loadResource} loadResourceTerms={loadResourceTerms}
-                                                 resource={oldResource}
-                                                 saveResource={saveResource} {...intlFunctions()} {...intlDataForShallow()}
-                                                 history={history} location={location} match={match}/>);
+        const wrapper = shallow(<ResourceSummary
+            resource={oldResource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history} location={location} match={match}/>);
         const newFragment = "another-resource";
         const newMatch = Object.assign({}, match);
         newMatch.params.name = newFragment;
@@ -80,10 +81,9 @@ describe("ResourceSummary", () => {
     it("uses namespace for resource loading when it is present in URL", () => {
         const namespace = "http://onto.fel.cvut.cz/ontologies/termit/resources/";
         location.search = "?namespace=" + namespace;
-        shallow(<ResourceSummary loadResource={loadResource} loadResourceTerms={loadResourceTerms}
-                                 resource={EMPTY_RESOURCE}
-                                 saveResource={saveResource} {...intlFunctions()} {...intlDataForShallow()}
-                                 history={history} location={location} match={match}/>);
+        shallow(<ResourceSummary
+            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history} location={location} match={match}/>);
         expect(loadResource).toHaveBeenCalledWith({fragment: resourceName, namespace});
     });
 
@@ -92,12 +92,23 @@ describe("ResourceSummary", () => {
             iri: "http://onto.fel.cvut.cz/ontologies/termit/resources/" + resourceName,
             label: resourceName
         });
-        const wrapper = shallow(<ResourceSummary loadResource={loadResource} loadResourceTerms={loadResourceTerms}
-                                                 resource={EMPTY_RESOURCE}
-                                                 saveResource={saveResource} {...intlFunctions()} {...intlDataForShallow()}
-                                                 history={history} location={location} match={match}/>);
+        const wrapper = shallow(<ResourceSummary
+            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history} location={location} match={match}/>);
         wrapper.setProps({resource});
         wrapper.update();
         expect(loadResource).toHaveBeenCalledTimes(1);
+    });
+
+    it("clears resource on unmnount", () => {
+        const resource = new Resource({
+            iri: "http://onto.fel.cvut.cz/ontologies/termit/resources/" + resourceName,
+            label: resourceName
+        });
+        const wrapper = shallow(<ResourceSummary
+            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history} location={location} match={match}/>);
+        wrapper.unmount();
+        expect(clearResource).toHaveBeenCalled();
     });
 });

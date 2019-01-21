@@ -11,7 +11,7 @@ import ActionType, {
     SearchResultAction,
     SelectingTermsAction,
     SwitchLanguageAction
-} from '../action/ActionType';
+} from "../action/ActionType";
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
 import ErrorInfo, {EMPTY_ERROR} from "../model/ErrorInfo";
@@ -124,6 +124,8 @@ function resource(state: Resource = EMPTY_RESOURCE, action: AsyncActionSuccess<a
     switch (action.type) {
         case ActionType.LOAD_RESOURCE:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        case ActionType.CLEAR_RESOURCE:
+            return EMPTY_RESOURCE;
         case ActionType.LOAD_RESOURCE_TERMS:
             if (action.status === AsyncActionStatus.SUCCESS) {
                 const r = new Resource(state);
@@ -246,8 +248,7 @@ function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<D
     }
 }
 
-function searchQuery(state: SearchQuery | undefined, action: SearchAction): SearchQuery
-{
+function searchQuery(state: SearchQuery | undefined, action: SearchAction): SearchQuery {
     switch (action.type) {
         case ActionType.UPDATE_SEARCH_FILTER:
             const newState = new SearchQuery(state);
@@ -258,8 +259,7 @@ function searchQuery(state: SearchQuery | undefined, action: SearchAction): Sear
     }
 }
 
-function searchResults(state: SearchResult[]|null = null, action: SearchResultAction): SearchResult[]|null
-{
+function searchResults(state: SearchResult[] | null = null, action: SearchResultAction): SearchResult[] | null {
     switch (action.type) {
         case ActionType.SEARCH_RESULT:
             return action.searchResults;
@@ -267,8 +267,7 @@ function searchResults(state: SearchResult[]|null = null, action: SearchResultAc
     return state;
 }
 
-function searchListenerCount(state: number = 0, action: Action): number
-{
+function searchListenerCount(state: number = 0, action: Action): number {
     switch (action.type) {
         case ActionType.ADD_SEARCH_LISTENER:
             return state + 1;
@@ -279,8 +278,7 @@ function searchListenerCount(state: number = 0, action: Action): number
     }
 }
 
-function searchInProgress(state: boolean = false, action: Action): boolean
-{
+function searchInProgress(state: boolean = false, action: Action): boolean {
     switch (action.type) {
         case ActionType.SEARCH_START:
             return true;

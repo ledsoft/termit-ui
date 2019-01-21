@@ -8,13 +8,13 @@ import ActionType, {
     NotificationAction,
     SelectingTermsAction,
     SwitchLanguageAction,
-} from './ActionType';
+} from "./ActionType";
 import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
 import {saveLanguagePreference} from "../util/IntlUtil";
 import Term, {TermData} from "../model/Term";
-import {Action} from 'redux';
+import {Action} from "redux";
 import AppNotification from "../model/AppNotification";
 
 export function asyncActionRequest(a: Action, ignoreLoading: boolean = false): AsyncAction {
@@ -113,5 +113,11 @@ export function consumeNotification(notification: AppNotification): Notification
     return {
         type: ActionType.CONSUME_NOTIFICATION,
         notification
+    };
+}
+
+export function clearResource() {
+    return {
+        type: ActionType.CLEAR_RESOURCE
     };
 }

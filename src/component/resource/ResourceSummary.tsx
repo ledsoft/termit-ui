@@ -16,12 +16,14 @@ import {default as Resource, EMPTY_RESOURCE} from "../../model/Resource";
 import ResourceMetadata from "./ResourceMetadata";
 import ResourceEdit from "./ResourceEdit";
 import "./Resources.scss";
+import {clearResource} from "../../action/SyncActions";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
     loadResource: (iri: IRI) => Promise<any>;
     loadResourceTerms: (iri: IRI) => Promise<any>;
     saveResource: (resource: Resource) => Promise<any>;
+    clearResource: () => void;
 }
 
 export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
@@ -46,6 +48,10 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
                 this.forceReload();
             }
         }
+    }
+
+    public componentWillUnmount(): void {
+        this.props.clearResource();
     }
 
     public onSave = (resource: Resource) => {
@@ -89,6 +95,7 @@ export default connect((state: TermItState) => {
     return {
         loadResource: (iri: IRI) => dispatch(loadResource(iri)),
         loadResourceTerms: (iri: IRI) => dispatch(loadResourceTerms(iri)),
-        saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource))
+        saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
+        clearResource: () => dispatch(clearResource())
     };
 })(injectIntl(withI18n(ResourceSummary)));
