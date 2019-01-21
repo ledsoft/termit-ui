@@ -80,9 +80,9 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className="pull-right">
-                            <Button onClick={this.onSave} color="success" size="sm"
+                            <Button name="vocabulary-edit-submit" onClick={this.onSave} color="success" size="sm"
                                     disabled={this.state.label.trim().length === 0}>{i18n("save")}</Button>
-                            <Button onClick={this.props.cancel} color="secondary" size="sm">{i18n("cancel")}</Button>
+                            <Button name="vocabulary-edit-cancel" onClick={this.props.cancel} color="secondary" size="sm">{i18n("cancel")}</Button>
                         </ButtonToolbar>
                     </Col>
                 </Row>

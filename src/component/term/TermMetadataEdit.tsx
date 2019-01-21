@@ -132,9 +132,10 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className='pull-right term-edit-buttons'>
-                            <Button size='sm' color='success' disabled={!this.isValid()}
+                            <Button name="edit-term.submit" size='sm' color='success' disabled={!this.isValid()}
                                     onClick={this.onSave}>{i18n('save')}</Button>
-                            <Button size='sm' color='secondary' onClick={this.props.cancel}>{i18n('cancel')}</Button>
+                            <Button name="edit-termi.cancel" size='sm' color='secondary'
+                                    onClick={this.props.cancel}>{i18n('cancel')}</Button>
                         </ButtonToolbar>
                     </Col>
                 </Row>
