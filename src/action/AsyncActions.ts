@@ -231,6 +231,7 @@ export function createResource(resource: Resource) {
         return Ajax.post(Constants.API_PREFIX + "/resources", content(resource.toJsonLd()))
             .then((resp: AxiosResponse) => {
                 dispatch(asyncActionSuccess(action));
+                dispatch(loadResources());
                 const location = resp.headers[Constants.LOCATION_HEADER];
                 Routing.transitionTo(Routes.resourceSummary, IdentifierResolver.routingOptionsFromLocation(location));
                 return dispatch(SyncActions.publishMessage(new Message({messageId: "resource.created.message"}, MessageType.SUCCESS)));

@@ -897,5 +897,17 @@ describe('Async actions', () => {
                 });
             });
         });
+
+        it("refreshes resource list on success", () => {
+            const resource = new Resource({
+                iri: Generator.generateUri(),
+                label: "Test resource"
+            });
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createResource(resource))).then(() => {
+                const actions = store.getActions();
+                expect(actions.find(a => a.type === ActionType.LOAD_RESOURCES)).toBeDefined();
+            });
+        });
     });
 });
