@@ -9,6 +9,7 @@ export default {
         'cancel': 'Zrušit',
         'not-implemented': 'Zatím není naimplementováno!',
         'edit': 'Upravit',
+        "remove": "Odebrat",
         'optional': 'Nepovinné',
         'actions': 'Akce',
         'description': 'Popis',
@@ -73,6 +74,9 @@ export default {
         "asset.create.iri.help": "Identifikátor bude vygenerován automaticky na základě názvu. Můžete ho však též zadat ručně.",
         "asset.author": "Autor",
         "asset.created": "Vytvořeno",
+        "asset.remove.tooltip": "Odebrat tento záznam",
+        "asset.remove.dialog.title": "Odebrat {type} {label}?",
+        "asset.remove.dialog.text": "Určitě chcete odebrat {type} {label}?",
 
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',

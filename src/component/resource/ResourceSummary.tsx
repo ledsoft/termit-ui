@@ -8,15 +8,16 @@ import {loadResource, loadResourceTerms, updateResourceTerms} from "../../action
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
-import {GoPencil} from "react-icons/go";
+import {GoPencil, GoX} from "react-icons/go";
 import {ThunkDispatch} from "../../util/Types";
-import EditableComponent from "../misc/EditableComponent";
+import EditableComponent, {EditableComponentState} from "../misc/EditableComponent";
 import Utils from "../../util/Utils";
 import {default as Resource, EMPTY_RESOURCE} from "../../model/Resource";
 import ResourceMetadata from "./ResourceMetadata";
 import ResourceEdit from "./ResourceEdit";
 import "./Resources.scss";
 import {clearResource} from "../../action/SyncActions";
+import RemoveAssetDialog from "../asset/RemoveAssetDialog";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
@@ -26,12 +27,17 @@ interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     clearResource: () => void;
 }
 
-export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
+interface ResourceSummaryState extends EditableComponentState {
+    showRemoveDialog: boolean;
+}
+
+export class ResourceSummary extends EditableComponent<ResourceSummaryProps, ResourceSummaryState> {
 
     constructor(props: ResourceSummaryProps) {
         super(props);
         this.state = {
-            edit: false
+            edit: false,
+            showRemoveDialog: false
         };
     }
 
@@ -62,15 +68,31 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         const normalizedName = this.props.match.params.name;
         this.props.loadResource({fragment: normalizedName, namespace}).then(() =>
-        this.props.loadResourceTerms({fragment: normalizedName, namespace}));
+            this.props.loadResourceTerms({fragment: normalizedName, namespace}));
     }
 
+    private onRemoveClick = () => {
+        this.setState({showRemoveDialog: true});
+    };
+
+    private onRemove = () => {
+        // TODO invoke removal action
+    };
+
+    private onRemoveCancel = () => {
+        this.setState({showRemoveDialog: false});
+    };
+
     public render() {
+        const i18n = this.props.i18n;
         const buttons = [];
         if (!this.state.edit) {
-            buttons.push(<Button key="resource.summary.edit" size="sm" color="primary" title={this.props.i18n("edit")}
-                                 onClick={this.onEdit}><GoPencil/> {this.props.i18n("edit")}</Button>);
+            buttons.push(<Button key="resource.summary.edit" size="sm" color="primary" title={i18n("edit")}
+                                 onClick={this.onEdit}><GoPencil/>&nbsp;{i18n("edit")}</Button>);
         }
+        buttons.push(<Button key="resource.summary.remove" size="sm" color="secondary"
+                             title={i18n("asset.remove.tooltip")}
+                             onClick={this.onRemoveClick}><GoX/>&nbsp;{i18n("remove")}</Button>);
         const actions = [<ButtonToolbar key="resource.summary.actions">{buttons}</ButtonToolbar>];
 
         const component = this.state.edit ?
@@ -80,10 +102,12 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps> {
                 cancel={this.onCloseEdit}/> :
             <ResourceMetadata resource={this.props.resource}/>;
         return <PanelWithActions
-                title={this.props.resource.label}
-                actions={actions}>
-                {component}
-            </PanelWithActions>;
+            title={this.props.resource.label}
+            actions={actions}>
+            <RemoveAssetDialog show={this.state.showRemoveDialog} asset={this.props.resource}
+                               onCancel={this.onRemoveCancel} onSubmit={this.onRemove}/>
+            {component}
+        </PanelWithActions>;
     }
 }
 

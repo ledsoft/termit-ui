@@ -10,6 +10,7 @@ export default {
         'cancel': 'Cancel',
         'not-implemented': 'Not implemented, yet!',
         'edit': 'Edit',
+        "remove": "Remove",
         'optional': 'Optional',
         'actions': 'Actions',
         'description': 'Description',
@@ -75,6 +76,9 @@ export default {
         "asset.create.iri.help": "Identifier will be automatically generated based on the specified label. Or you can set it manually.",
         "asset.author": "Author",
         "asset.created": "Created",
+        "asset.remove.tooltip": "Remove this asset",
+        "asset.remove.dialog.title": "Remove {type} \'{label}\'?",
+        "asset.remove.dialog.text": "Are you sure you want to remove {type} \'{label}\'?",
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
