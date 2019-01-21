@@ -1,7 +1,7 @@
 import User, {EMPTY_USER} from "./User";
 import ErrorInfo, {EMPTY_ERROR} from "./ErrorInfo";
 import Message from "./Message";
-import en from '../i18n/en';
+import en from "../i18n/en";
 import IntlData from "./IntlData";
 import Vocabulary, {EMPTY_VOCABULARY} from "./Vocabulary";
 import {QueryResultIF} from "./QueryResult";
@@ -14,7 +14,7 @@ import SearchResult from "./SearchResult";
 import SearchQuery from "./SearchQuery";
 
 /**
- * This is the basic shape of the application's state managed by Redux.
+ * This is the basic shape of the application"s state managed by Redux.
  */
 export default class TermItState {
     public loading: boolean;
@@ -42,7 +42,6 @@ export default class TermItState {
     // Represents a queue of inter-component notifications
     public notifications: AppNotification[];
 
-    // FIXME: WTF: This constructor is never called?
     constructor() {
         this.loading = false;
         this.user = EMPTY_USER;

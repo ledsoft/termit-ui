@@ -4,14 +4,17 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import ResourceLink from "./ResourceLink";
-import {Table} from "reactstrap";
+import {Col, Row, Table} from "reactstrap";
 import {ThunkDispatch} from "../../util/Types";
 import Resource from "../../model/Resource";
 import {loadResources} from "../../action/AsyncActions";
+import ResourceBadge from "../badge/ResourceBadge";
+import classNames from "classnames";
 
 interface ResourceListProps extends HasI18n {
-    loadResources: () => void,
-    resources: { [id: string]: Resource }
+    loadResources: () => void;
+    resources: { [id: string]: Resource };
+    selectedResource: Resource;
 }
 
 class ResourceList extends React.Component<ResourceListProps> {
@@ -25,7 +28,14 @@ class ResourceList extends React.Component<ResourceListProps> {
         const rows = resources.map(v =>
             <tr key={v.iri}>
                 <td>
-                    <ResourceLink resource={v}/>
+                    <Row>
+                        <Col md={4} xl={2}>
+                            <ResourceBadge resource={v}/>
+                        </Col>
+                        <Col md={8} xl={10} className={classNames({"bold": v.iri === this.props.selectedResource.iri})}>
+                            <ResourceLink resource={v}/>
+                        </Col>
+                    </Row>
                 </td>
             </tr>
         );
@@ -41,7 +51,8 @@ class ResourceList extends React.Component<ResourceListProps> {
 
 export default connect((state: TermItState) => {
     return {
-        resources: state.resources
+        resources: state.resources,
+        selectedResource: state.resource
     };
 }, (dispatch: ThunkDispatch) => {
     return {
