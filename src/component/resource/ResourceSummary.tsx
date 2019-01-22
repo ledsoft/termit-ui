@@ -4,7 +4,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadResource, loadResourceTerms, updateResourceTerms} from "../../action/AsyncActions";
+import {loadResource, loadResourceTerms, removeResource, updateResourceTerms} from "../../action/AsyncActions";
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
@@ -24,6 +24,7 @@ interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     loadResource: (iri: IRI) => Promise<any>;
     loadResourceTerms: (iri: IRI) => Promise<any>;
     saveResource: (resource: Resource) => Promise<any>;
+    removeResource: (resource: Resource) => Promise<any>;
     clearResource: () => void;
 }
 
@@ -75,8 +76,9 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         this.setState({showRemoveDialog: true});
     };
 
-    private onRemove = () => {
-        // TODO invoke removal action
+    public onRemove = () => {
+        this.props.removeResource(this.props.resource);
+        this.setState({showRemoveDialog: false});
     };
 
     private onRemoveCancel = () => {
@@ -120,6 +122,7 @@ export default connect((state: TermItState) => {
         loadResource: (iri: IRI) => dispatch(loadResource(iri)),
         loadResourceTerms: (iri: IRI) => dispatch(loadResourceTerms(iri)),
         saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
+        removeResource: (resource: Resource) => dispatch(removeResource(resource)),
         clearResource: () => dispatch(clearResource())
     };
 })(injectIntl(withI18n(ResourceSummary)));

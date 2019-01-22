@@ -17,6 +17,7 @@ describe("ResourceSummary", () => {
     let loadResource: (iri: IRI) => Promise<any>;
     let loadResourceTerms: (iri: IRI) => Promise<any>;
     let saveResource: (resource: Resource) => Promise<any>;
+    let removeResource: (resource: Resource) => Promise<any>;
     let clearResource: () => void;
 
     let resourceHandlers: any;
@@ -29,8 +30,9 @@ describe("ResourceSummary", () => {
         loadResource = jest.fn().mockImplementation(() => Promise.resolve());
         loadResourceTerms = jest.fn().mockImplementation(() => Promise.resolve());
         saveResource = jest.fn().mockImplementation(() => Promise.resolve());
+        removeResource = jest.fn().mockImplementation(() => Promise.resolve());
         clearResource = jest.fn();
-        resourceHandlers = {loadResource, loadResourceTerms, saveResource, clearResource};
+        resourceHandlers = {loadResource, loadResourceTerms, saveResource, removeResource, clearResource};
 
         location = {
             pathname: "/resource/" + resourceName,
@@ -110,5 +112,18 @@ describe("ResourceSummary", () => {
             history={history} location={location} match={match}/>);
         wrapper.unmount();
         expect(clearResource).toHaveBeenCalled();
+    });
+
+    it("invokes remove action and closes remove confirmation dialog on remove", () => {
+        const resource = new Resource({
+            iri: "http://onto.fel.cvut.cz/ontologies/termit/resources/" + resourceName,
+            label: resourceName
+        });
+        const wrapper = shallow(<ResourceSummary
+            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history} location={location} match={match}/>);
+        (wrapper.instance() as ResourceSummary).onRemove();
+        expect(removeResource).toHaveBeenCalledWith(resource);
+        expect(wrapper.state("showRemoveDialog")).toBeFalsy();
     });
 });

@@ -18,7 +18,7 @@ import {
     loadVocabularies,
     loadVocabulary,
     loadVocabularyTerm,
-    login,
+    login, removeResource,
     updateResourceTerms,
     updateTerm,
     updateVocabulary
@@ -907,6 +907,50 @@ describe('Async actions', () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(createResource(resource))).then(() => {
                 const actions = store.getActions();
                 expect(actions.find(a => a.type === ActionType.LOAD_RESOURCES)).toBeDefined();
+            });
+        });
+    });
+
+    describe("removeResource", () => {
+        it("sends delete resource request to the server", () => {
+            const normalizedName = "test-resource";
+            const namespace = "http://onto.fel.cvut.cz/ontologies/termit/resources/";
+            const resource = new Resource({
+                iri: namespace + normalizedName,
+                label: "Test resource"
+            });
+            Ajax.delete = jest.fn().mockImplementation(() => Promise.resolve());
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(removeResource(resource))).then(() => {
+                expect(Ajax.delete).toHaveBeenCalled();
+                const call = (Ajax.delete as jest.Mock).mock.calls[0];
+                expect(call[0]).toEqual(Constants.API_PREFIX + "/resources/" + normalizedName);
+                expect(call[1].getParams().namespace).toEqual(namespace);
+            });
+        });
+
+        it("refreshes resource list on success", () => {
+            const resource = new Resource({
+                iri: Generator.generateUri(),
+                label: "Test resource"
+            });
+            Ajax.delete = jest.fn().mockImplementation(() => Promise.resolve());
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(removeResource(resource))).then(() => {
+                const actions = store.getActions();
+                expect(actions.find(a => a.type === ActionType.LOAD_RESOURCES)).toBeDefined();
+            });
+        });
+
+        it("transitions to resource management on success", () => {
+            const resource = new Resource({
+                iri: Generator.generateUri(),
+                label: "Test resource"
+            });
+            Ajax.delete = jest.fn().mockImplementation(() => Promise.resolve());
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(removeResource(resource))).then(() => {
+                expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.resources);
             });
         });
     });

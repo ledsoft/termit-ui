@@ -243,6 +243,27 @@ export function createResource(resource: Resource) {
     };
 }
 
+export function removeResource(resource: Resource) {
+    const action = {
+        type: ActionType.REMOVE_RESOURCE
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        const resourceIri = VocabularyUtils.create(resource.iri);
+        return Ajax.delete(Constants.API_PREFIX + "/resources/" + resourceIri.fragment, param("namespace", resourceIri.namespace))
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                dispatch(loadResources());
+                Routing.transitionTo(Routes.resources);
+                return dispatch(SyncActions.publishMessage(new Message({messageId: "resource.removed.message"}, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    }
+}
+
 export function loadVocabularies() {
     const action = {
         type: ActionType.LOAD_VOCABULARIES

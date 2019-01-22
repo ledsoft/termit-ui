@@ -113,6 +113,7 @@ export default {
         "resource.management.create.tooltip": "Create or upload a new resource",
         "resource.created.message": "Resource successfully created.",
         'resource.updated.message': 'Resource successfully updated.',
+        "resource.removed.message": "Resource successfully removed.",
 
         "resource.create.title": "Create resource",
         "resource.create.type": "Type",
