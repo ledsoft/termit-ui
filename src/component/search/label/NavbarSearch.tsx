@@ -12,8 +12,9 @@ import Routes from "../../../util/Routes";
 import {ThunkDispatch} from "../../../util/Types";
 import TermItState from "../../../model/TermItState";
 import Routing from "../../../util/Routing";
+import {RouteComponentProps, withRouter} from "react-router";
 
-interface NavbarSearchProps extends HasI18n {
+interface NavbarSearchProps extends HasI18n, RouteComponentProps<any> {
     autocompleteSearch: (searchString: string) => any;
     updateSearchFilter: (searchString: string) => any;
     searchString: string;
@@ -39,7 +40,11 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         this.props.updateSearchFilter(value);
-        this.autocompleteSearch(value);
+        if (this.props.location.pathname !== Routes.search.path) {
+            this.autocompleteSearch(value);
+        } else {
+            this.setState({showResults: false, results: null});
+        }
     };
 
     private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -54,7 +59,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         if (searchString.length > 0) {
             query.set("searchString", encodeURI(searchString));
         }
-        this.setState({results: [], showResults: false});
+        this.setState({results: null, showResults: false});
         Routing.transitionTo(Routes.search, {query});
     };
 
@@ -112,4 +117,4 @@ export default connect((state: TermItState) => {
         autocompleteSearch: (searchString: string) => dispatch(autocompleteSearch(searchString, true)),
         updateSearchFilter: (searchString: string) => dispatch(updateSearchFilter(searchString)),
     };
-})(injectIntl(withI18n(NavbarSearch)));
+})(injectIntl(withI18n(withRouter(NavbarSearch))));
