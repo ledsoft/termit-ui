@@ -36,8 +36,8 @@ const constants = {
 
     // News
     NEWS_MD_URL: {
-        "cs": location.origin + location.pathname + "/NEWS.cs.md",
-        "en": location.origin + location.pathname + "/NEWS.en.md",
+        "cs": location.origin + location.pathname + "NEWS.cs.md",
+        "en": location.origin + location.pathname + "NEWS.en.md",
     },
 
     // Layout customization

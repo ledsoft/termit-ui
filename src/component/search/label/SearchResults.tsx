@@ -66,10 +66,10 @@ export class SearchResults extends React.Component<SearchResultsProps> {
             return <tr key={r.iri}>
                 <td className="align-middle search-result-label">
                     <Row>
-                        <Col md={5} lg={4} xl={3} className="d-flex align-items-center">
+                        <Col md={5} lg={4} xl={2} className="d-flex align-items-center">
                             {SearchResults.renderTypeBadge(r)}
                         </Col>
-                        <Col md={7} lg={8} xl={9}>
+                        <Col md={7} lg={8} xl={10}>
                             {AssetLinkFactory.createAssetLink(AssetFactory.createAsset(r))}
                         </Col>
                     </Row>

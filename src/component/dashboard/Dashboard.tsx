@@ -15,17 +15,17 @@ export class Dashboard extends React.Component<HasI18n> {
         return <>
             <WidgetToolbar/>
             <Row>
-                <Col className="col-4">
+                <Col xl={4} lg={6} md={12}>
                     <LastEditedAssets/>
                 </Col>
-                <Col className="col-4">
+                <Col xl={4} lg={6} md={12}>
                     <PanelWithActions title={this.props.i18n("dashboard.widget.typeFrequency.title")}>
                         <TermFrequency
                             sparqlQuery={templateQuery}
                             lang={this.props.locale}/>
                     </PanelWithActions>
                 </Col>
-                <Col className="col-4">
+                <Col xl={4} col={6} md={12}>
                     <NewsMd/>
                 </Col>
             </Row>

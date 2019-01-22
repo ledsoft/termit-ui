@@ -182,7 +182,7 @@ export default {
 
         'search.title': 'Search',
         'search.tab.dashboard': 'Dashboard',
-        'search.tab.everything': 'Search everything',
+        'search.tab.everything': 'Search everywhere',
         'search.tab.terms': 'Terms',
         'search.tab.facets': 'Faceted search',
         "search.reset": "Reset search",
