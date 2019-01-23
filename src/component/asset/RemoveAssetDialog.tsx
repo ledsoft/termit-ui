@@ -4,7 +4,6 @@ import Asset from "../../model/Asset";
 import {Button, ButtonToolbar, Label, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Utils from "../../util/Utils";
-import {i18n} from "../../__tests__/environment/IntlUtil";
 
 interface RemoveAssetDialogProps extends HasI18n {
     show: boolean;
@@ -15,7 +14,7 @@ interface RemoveAssetDialogProps extends HasI18n {
 
 const RemoveAssetDialog: React.SFC<RemoveAssetDialogProps> = (props) => {
     const typeLabelId = Utils.getAssetTypeLabelId(props.asset);
-    const typeLabel = i18n(typeLabelId ? typeLabelId : "type.asset").toLowerCase();
+    const typeLabel = props.i18n(typeLabelId ? typeLabelId : "type.asset").toLowerCase();
     return <Modal isOpen={props.show} toggle={props.onCancel}>
         <ModalHeader toggle={props.onCancel}>{props.formatMessage("asset.remove.dialog.title", {
             type: typeLabel,
@@ -29,8 +28,10 @@ const RemoveAssetDialog: React.SFC<RemoveAssetDialogProps> = (props) => {
         </ModalBody>
         <ModalFooter>
             <ButtonToolbar className="pull-right">
-                <Button name="remove-asset.submit" color="primary" size="sm" onClick={props.onSubmit}>{i18n("remove")}</Button>
-                <Button name="remove-asset.cancel" color="secondary" size="sm" onClick={props.onCancel}>{i18n("cancel")}</Button>
+                <Button name="remove-asset.submit" color="primary" size="sm"
+                        onClick={props.onSubmit}>{props.i18n("remove")}</Button>
+                <Button name="remove-asset.cancel" color="secondary" size="sm"
+                        onClick={props.onCancel}>{props.i18n("cancel")}</Button>
             </ButtonToolbar>
         </ModalFooter>
     </Modal>;
