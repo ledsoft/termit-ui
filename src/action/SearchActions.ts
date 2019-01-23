@@ -2,11 +2,11 @@
  * Search-related actions
  */
 
-import * as SyncActions from './SyncActions';
-import * as AsyncActions from './AsyncActions';
-import Ajax, {params} from '../util/Ajax';
-import {ThunkDispatch} from '../util/Types';
-import Constants from '../util/Constants';
+import * as SyncActions from "./SyncActions";
+import * as AsyncActions from "./AsyncActions";
+import Ajax, {params} from "../util/Ajax";
+import {ThunkDispatch} from "../util/Types";
+import Constants from "../util/Constants";
 import {ErrorData} from "../model/ErrorInfo";
 import * as jsonld from "jsonld";
 import Message from "../model/Message";
@@ -72,7 +72,7 @@ export function updateSearchFilter(searchString: string) {
 
         const state = getState();
         if (state.searchQuery.isEmpty()) {
-            // Don't delay empty query as it will just reset searches without bothering the server
+            // Don"t delay empty query as it will just reset searches without bothering the server
             dispatch(searchEverything());
         } else {
             // Delay the search while user types the query
@@ -101,7 +101,7 @@ export function searchEverything() {
     };
 }
 
-export function search(searchString: string, disableLoading: boolean = false) {
+export function search(searchString: string, disableLoading: boolean = true) {
     const action = {
         type: ActionType.SEARCH
     };
@@ -120,7 +120,7 @@ export function search(searchString: string, disableLoading: boolean = false) {
     };
 }
 
-export function autocompleteSearch(searchString: string, disableLoading: boolean = false) {
+export function autocompleteSearch(searchString: string, disableLoading: boolean = true) {
     const action = {
         type: ActionType.SEARCH
     };

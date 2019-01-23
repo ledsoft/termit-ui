@@ -12,7 +12,7 @@ import SearchQuery from "../../../model/SearchQuery";
 import SearchResults from "./SearchResults";
 import {Button} from "reactstrap";
 import {GoTrashcan} from "react-icons/go";
-import Mask from "../../misc/Mask";
+import ContainerMask from "../../misc/ContainerMask";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
@@ -37,24 +37,24 @@ export class Search extends React.Component<SearchProps> {
         this.props.removeSearchListener();
     }
 
-    private resetSearch = () => {
+    protected resetSearch = () => {
         this.props.updateSearchFilter("");
     };
 
     public render() {
-        const loading = this.props.searchInProgress ? <Mask/> : null;
+        const loading = this.props.searchInProgress ? <ContainerMask/> : null;
 
         if (this.props.searchResults) {
-            return <>
-                <Button color="danger" outline={true} size="sm" className="float-right" onClick={this.resetSearch}>
+            return <div className="relative">
+                <Button name="search-reset" color="danger" outline={true} size="sm" className="float-right" onClick={this.resetSearch}>
                     <GoTrashcan/> {this.props.i18n("search.reset")}
                 </Button>
                 <h2>{this.props.formatMessage("search.results.title", {searchString: this.props.searchQuery.searchQuery})}</h2>
                 <SearchResults results={this.props.searchResults}/>
                 {loading}
-            </>;
+            </div>;
         } else {
-            return loading;
+            return <div className="relative">{loading}</div>;
         }
     }
 

@@ -76,4 +76,19 @@ describe("NavbarSearch", () => {
             expect(autocompleteSearch).not.toHaveBeenCalled();
         });
     });
+
+    it("does not run search when current route is term search", () => {
+        const div = document.createElement("div");
+        document.body.appendChild(div);
+        location.pathname = Routes.searchTerms.path;
+        match.path = Routes.searchTerms.path;
+        const wrapper = mountWithIntl(<NavbarSearch searchString="" {...navbarConnections()} {...intlFunctions()}/>, {attachTo: div});
+        const searchStr = "test";
+        const input = wrapper.find("input");
+        (input.getDOMNode() as HTMLInputElement).value = searchStr;
+        input.simulate("change", input);
+        return Promise.resolve().then(() => {
+            expect(autocompleteSearch).not.toHaveBeenCalled();
+        });
+    });
 });
