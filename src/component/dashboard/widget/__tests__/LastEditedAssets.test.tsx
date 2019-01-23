@@ -52,8 +52,16 @@ describe("LastEditedAssets", () => {
             iri: Generator.generateUri(),
             label: "Term",
             types: [VocabularyUtils.TERM],
-            vocabulary: {iri: Generator.generateUri()}
-        }), new Vocabulary({iri: Generator.generateUri(), label: "Vocabulary", types: [VocabularyUtils.VOCABULARY]})];
+            vocabulary: {iri: Generator.generateUri()},
+            author: Generator.generateUser(),
+            created: Date.now()
+        }), new Vocabulary({
+            iri: Generator.generateUri(),
+            label: "Vocabulary",
+            types: [VocabularyUtils.VOCABULARY],
+            author: Generator.generateUser(),
+            created: Date.now()
+        })];
         onLoad = jest.fn().mockImplementation(() => Promise.resolve(assets));
         const wrapper = mountWithIntl(<MemoryRouter>
             <LastEditedAssets loadAssets={onLoad} {...loadingInjectMock} {...intlFunctions()}/>

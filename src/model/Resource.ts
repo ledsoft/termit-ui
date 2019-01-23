@@ -22,9 +22,10 @@ export default class Resource extends Asset implements ResourceData {
     public terms: Term[];
 
     constructor(data: ResourceData) {
-        super(data);
+        super();
         this.terms = [];
         Object.assign(this, data);
+        this.initUserData(data);
         this.types = Utils.sanitizeArray(data.types);
         if (this.types.indexOf(VocabularyUtils.RESOURCE) === -1) {
             this.types.push(VocabularyUtils.RESOURCE);

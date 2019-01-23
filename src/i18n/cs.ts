@@ -65,6 +65,10 @@ export default {
         "dashboard.widget.lastEdited.title": "Naposledy upravené záznamy",
         "dashboard.widget.lastEdited.empty": "Pro tuto část nebyly nalezeny žádné záznamy.",
         "dashboard.widget.lastEdited.lastEditDate": "Naposledy upraven/vytvořen",
+        "dashboard.widget.lastEdited.lastEditMessage": "Záznam {operation, select, " +
+            "edit {upraven}" +
+            "other {vytvořen}" +
+            "} uživatelem {user} {when}.",
         "dashboard.widget.typeFrequency.title": "Počet pojmů ve slovníku",
         "dashboard.widget.news": "Novinky",
 

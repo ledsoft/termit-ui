@@ -32,6 +32,7 @@
     "htmlparser2": "^3.10.0",
     "informed": "1.10.8",
     "intelligent-tree-select": "0.6.1",
+    "javascript-time-ago": "2.0.1",
     "jest": "23.6.0",
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",

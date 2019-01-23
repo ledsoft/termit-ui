@@ -1,6 +1,7 @@
 import OntologicalVocabulary from "../../util/VocabularyUtils";
 import Term, {TermData} from "../Term";
 import Generator from "../../__tests__/environment/Generator";
+import User from "../User";
 
 describe("Term tests", () => {
 
@@ -25,8 +26,28 @@ describe("Term tests", () => {
         expect(term).toEqual(new Term(termData));
     });
 
-    it("symmetry of constructor vs. toJSONLD", () => {
-        expect(termData).toEqual(new Term(termData).toTermData());
+    describe("constructor", () => {
+        it("is symmetric to toJSONLD", () => {
+            expect(termData).toEqual(new Term(termData).toTermData());
+        });
+
+        it("initializes author and last editor information when available", () => {
+            termData.author = {
+                iri: Generator.generateUri(),
+                firstName: "test",
+                lastName: "test-lastname",
+                username: "username"
+            };
+            termData.lastEditor = {
+                iri: Generator.generateUri(),
+                firstName: "test2",
+                lastName: "test2-lastname",
+                username: "username2"
+            };
+            const instance = new Term(termData);
+            expect(instance.author instanceof User).toBeTruthy();
+            expect(instance.lastEditor instanceof User).toBeTruthy();
+        });
     });
 
     it("adds term type in constructor when it is missing in specified data", () => {

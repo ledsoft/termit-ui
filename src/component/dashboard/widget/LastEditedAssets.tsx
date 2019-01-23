@@ -2,7 +2,7 @@ import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../../hoc/withI18n";
 import Asset from "../../../model/Asset";
-import {Card, CardBody, CardHeader, Col, Row, Table} from "reactstrap";
+import {Card, CardBody, CardHeader, Col, Label, Row, Table} from "reactstrap";
 import Term from "../../../model/Term";
 import TermBadge from "../../badge/TermBadge";
 import Vocabulary from "../../../model/Vocabulary";
@@ -15,6 +15,7 @@ import {loadLastEditedAssets} from "../../../action/AsyncActions";
 import withInjectableLoading, {InjectsLoading} from "../../hoc/withInjectableLoading";
 import AssetLinkFactory from "../../factory/AssetLinkFactory";
 import TermItState from "../../../model/TermItState";
+import TimeAgo from "javascript-time-ago";
 
 interface LastEditedAssetsProps extends HasI18n, InjectsLoading {
     loadAssets: () => Promise<Asset[]>;
@@ -57,35 +58,36 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
     }
 
     private renderNonEmptyContent() {
-        const i18n = this.props.i18n;
-        return <Table responsive={true}>
-            <thead>
-            <tr>
-                <th className="align-content-center col-xs-8">{i18n("type.asset")}</th>
-                <th className="col-xs-4">{i18n("dashboard.widget.lastEdited.lastEditDate")}</th>
-            </tr>
-            </thead>
-            <tbody>
+        return <Table className="widget">
             {this.renderAssets()}
-            </tbody>
         </Table>;
     }
 
     private renderAssets() {
+        const formatter = new TimeAgo(this.props.locale);
         return this.state.assets.map(asset => <tr key={asset.iri}>
-            <td className="col-xs-8">
+            <td className="col-xs-12">
                 <Row>
-                    <Col>
+                    <Col md={3} lg={2}>
                         {LastEditedAssets.renderAssetBadge(asset)}
                     </Col>
-                </Row>
-                <Row>
-                    <Col>
+                    <Col md={9} lg={10}>
                         {AssetLinkFactory.createAssetLink(asset)}
                     </Col>
                 </Row>
+                <Row>
+                    <Col xs={12}>
+                        <Label className="italics"
+                               title={new Date(asset.lastEdited!).toLocaleString(this.props.locale)}>
+                            {this.props.formatMessage("dashboard.widget.lastEdited.lastEditMessage", {
+                                user: asset.lastEditedBy!.fullName,
+                                when: formatter.format(asset.lastEdited!),
+                                operation: asset.lastEditor ? "edit" : "create"
+                            })}
+                        </Label>
+                    </Col>
+                </Row>
             </td>
-            <td className="col-xs-4">{new Date(asset.lastEdited!).toLocaleString(this.props.locale)}</td>
         </tr>);
     }
 

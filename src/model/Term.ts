@@ -32,8 +32,9 @@ export default class Term extends Asset implements TermData {
     public readonly vocabulary?: AssetData;
 
     constructor(termData: TermData) {
-        super(termData);
+        super();
         Object.assign(this, termData);
+        this.initUserData(termData);
         this.types = Utils.sanitizeArray(termData.types);
         if (this.types.indexOf(VocabularyUtils.TERM) === -1) {
             this.types.push(VocabularyUtils.TERM);

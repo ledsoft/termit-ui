@@ -8,6 +8,7 @@ import TermFrequency from "../statistics/termfrequency/TermFrequency";
 import PanelWithActions from "../misc/PanelWithActions";
 import templateQuery from "../statistics/termfrequency/TermFrequency.rq";
 import LastEditedAssets from "./widget/LastEditedAssets";
+import "./Dashboard.scss";
 
 export class Dashboard extends React.Component<HasI18n> {
 

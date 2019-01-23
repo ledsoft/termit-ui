@@ -1,4 +1,4 @@
-import User, {CONTEXT as USER_CONTEXT} from "./User";
+import {CONTEXT as USER_CONTEXT} from "./User";
 import OntologicalVocabulary from "../util/VocabularyUtils";
 import Asset, {ASSET_CONTEXT, AssetData, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
 import WithUnmappedProperties from "./WithUnmappedProperties";
@@ -29,11 +29,9 @@ export default class Vocabulary extends Asset implements VocabularyData {
     public model?: AssetData;
 
     constructor(data: VocabularyData) {
-        super(data);
+        super();
         Object.assign(this, data);
-        if (data.author) {
-            this.author = new User(data.author);
-        }
+        this.initUserData(data);
         this.types = Utils.sanitizeArray(data.types);
         if (this.types.indexOf(OntologicalVocabulary.VOCABULARY) === -1) {
             this.types.push(OntologicalVocabulary.VOCABULARY);

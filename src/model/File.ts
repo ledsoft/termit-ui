@@ -18,7 +18,8 @@ export default class File extends Resource implements FileData {
 
     constructor(data: FileData) {
         super(data);
-        Object.assign(this, data);
+        this.origin = data.origin ? data.origin : "";
+        this.content = data.content;
     }
 
     public toJsonLd(): {} {

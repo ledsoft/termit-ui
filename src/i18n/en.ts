@@ -67,6 +67,10 @@ export default {
         "dashboard.widget.lastEdited.title": "Last edited assets",
         "dashboard.widget.lastEdited.empty": "Found no assets to show here.",
         "dashboard.widget.lastEdited.lastEditDate": "Last edited/created",
+        "dashboard.widget.lastEdited.lastEditMessage": "{operation, select, " +
+            "edit {Edited} " +
+            "other {Created} " +
+            "} by {user} {when}.",
         "dashboard.widget.typeFrequency.title": "Term count in vocabularies",
         "dashboard.widget.news": "News",
 
