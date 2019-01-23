@@ -10,6 +10,7 @@ import TermItState from "../../model/TermItState";
 import {Nav, NavItem, NavLink} from "reactstrap";
 import SearchQuery from "../../model/SearchQuery";
 import Routes, {Route} from "../../util/Routes";
+import "./MainSearch.scss";
 
 interface SearchTypeTabsProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
@@ -31,14 +32,13 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
         const i18n = this.props.i18n;
         const path = this.props.location.pathname;
 
-        const tabs: Array<{route: Route, altExactRoutes: Route[], label: string}> = [
-            { route: Routes.dashboard, altExactRoutes: [], label: i18n("search.tab.dashboard") },
-            { route: Routes.search, altExactRoutes: [], label: i18n("search.tab.everything") },
-            { route: Routes.searchTerms, altExactRoutes: [], label: i18n("search.tab.terms") },
-            { route: Routes.facetedSearch, altExactRoutes: [], label: i18n("search.tab.facets") },
+        const tabs: Array<{ route: Route, altExactRoutes: Route[], label: string }> = [
+            {route: Routes.search, altExactRoutes: [], label: i18n("search.tab.everything")},
+            {route: Routes.searchTerms, altExactRoutes: [], label: i18n("search.tab.terms")},
+            {route: Routes.facetedSearch, altExactRoutes: [], label: i18n("search.tab.facets")},
         ];
 
-        let activeTab: object|null = null;
+        let activeTab: object | null = null;
         let activeTabDepth = -1;
 
         // Find active tab using exact matches
@@ -65,7 +65,7 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
         }
 
         if (activeTab !== null) {
-            return <Nav tabs={true}>
+            return <Nav tabs={true} className="search-type-tabs">
                 {tabs.map((tab) => (
                     <NavItem key={tab.route.name}>
                         <NavLink active={tab === activeTab} href={"#" + tab.route.link()}>{tab.label}</NavLink>
@@ -73,7 +73,7 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
                 )}
             </Nav>;
         } else {
-            return this.props.children;
+            return null;
         }
     }
 

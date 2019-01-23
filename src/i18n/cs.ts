@@ -49,6 +49,7 @@ export default {
         'main.nav.resources': 'Datové zdroje',
         'main.nav.statistics': 'Statistiky',
         'main.nav.search': 'Vyhledávání',
+        "main.nav.facetedSearch": "Facetové vyhledávání",
         'main.nav.searchTerms': 'Vyhledávání pojmů',
         'main.nav.admin': 'Administrace',
         'main.user-profile': 'Profil uživatele',

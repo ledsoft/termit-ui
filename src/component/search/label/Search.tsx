@@ -12,7 +12,6 @@ import SearchQuery from "../../../model/SearchQuery";
 import SearchResults from "./SearchResults";
 import {Button} from "reactstrap";
 import {GoTrashcan} from "react-icons/go";
-import Routing from "../../../util/Routing";
 import Mask from "../../misc/Mask";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
@@ -41,13 +40,6 @@ export class Search extends React.Component<SearchProps> {
     private resetSearch = () => {
         this.props.updateSearchFilter("");
     };
-
-    public componentDidUpdate() {
-        // Go to dashboard if there is nothing to look for.
-        if (!this.props.searchQuery || this.props.searchQuery.isEmpty()) {
-            Routing.transitionToHome();
-        }
-    }
 
     public render() {
         const loading = this.props.searchInProgress ? <Mask/> : null;

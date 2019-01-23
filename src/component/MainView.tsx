@@ -56,8 +56,7 @@ interface MainViewState {
 
 export class MainView extends React.Component<MainViewProps, MainViewState> {
 
-    public static defaultProps: Partial<MainViewProps> = {
-    };
+    public static defaultProps: Partial<MainViewProps> = {};
 
     constructor(props: MainViewProps) {
         super(props);
@@ -106,13 +105,20 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                     <Collapse isOpen={this.state.isMainMenuOpen} navbar={true}>
                         <Nav navbar={true} className={"flex-grow-1 justify-content-end"}>
                             <NavItem active={path.startsWith(Routes.vocabularies.path)}>
-                                <NavLink href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
                             </NavItem>
                             <NavItem active={path.startsWith(Routes.resources.path)}>
-                                <NavLink href={MainView.hashPath(Routes.resources.path)}>{i18n('main.nav.resources')}</NavLink>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.resources.path)}>{i18n('main.nav.resources')}</NavLink>
                             </NavItem>
                             <NavItem active={path.startsWith(Routes.statistics.path)}>
-                                <NavLink href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
+                            </NavItem>
+                            <NavItem active={path.startsWith(Routes.search.path)}>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.search.path)}>{i18n("main.nav.search")}</NavLink>
                             </NavItem>
                         </Nav>
                         <Nav navbar={true}>
@@ -134,10 +140,9 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         </Nav>
                     </Collapse>
                 </Navbar>
-                <SearchTypeTabs>
-                    <Breadcrumbs className="breadcrumb-bar"/>
-                </SearchTypeTabs>
+                <Breadcrumbs className="breadcrumb-bar"/>
             </header>
+            <SearchTypeTabs/>
             <Messages/>
             <Container fluid={true} className="mt-5 mb-5 flex-grow-1">
                 <Switch>
@@ -147,9 +152,11 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                      component={VocabularyManagementRoute}/>
                     <BreadcrumbRoute title={i18n("main.nav.statistics")} path={Routes.statistics.path}
                                      component={Statistics}/>
-                    <BreadcrumbRoute title={i18n("main.nav.searchTerms")} path={Routes.searchTerms.path} component={SearchTerms}/>
+                    <BreadcrumbRoute title={i18n("main.nav.searchTerms")} path={Routes.searchTerms.path}
+                                     component={SearchTerms}/>
                     <BreadcrumbRoute title={i18n("main.nav.search")} path={Routes.search.path} component={Search}/>
-                    <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path} component={FacetedSearch}/>
+                    <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path}
+                                     component={FacetedSearch}/>
                     <Route component={Dashboard}/>
                 </Switch>
             </Container>

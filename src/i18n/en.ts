@@ -50,6 +50,7 @@ export default {
         'main.nav.resources': 'Resources',
         'main.nav.statistics': 'Statistics',
         'main.nav.search': 'Search',
+        "main.nav.facetedSearch": "Faceted search",
         'main.nav.searchTerms': 'Search terms',
         'main.nav.resourceDetail': 'Resource Detail',
         'main.nav.admin': 'Administration',
