@@ -1,14 +1,9 @@
 import * as React from "react";
-import Document from "../../../model/Document";
 import {FileDetail} from "../FileDetail";
-import Vocabulary from "../../../model/Vocabulary";
 import OntologicalVocabulary from "../../../util/VocabularyUtils";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {intl, intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import createMemoryHistory from "history/createMemoryHistory";
 import {shallow} from "enzyme";
-import {match} from "react-router";
-import Generator from "../../../__tests__/environment/Generator";
 import {Annotator} from "../../annotator/Annotator";
 import FetchOptionsFunction from "../../../model/Functions";
 import Term from "../../../model/Term";
@@ -22,29 +17,16 @@ function generateTerm(i: number): Term {
 }
 
 
-describe('FileDetail', () => {
+describe("FileDetail", () => {
 
-    let document: Document;
-    let vocabulary: Vocabulary;
+    const fileIri = VocabularyUtils.create("http://file.org/file-iri");
+    const vocabularyIri = VocabularyUtils.create("http://vocabulary.org/vocabulary-iri");
     let fileContent: string;
-    const history = createMemoryHistory();
-    const routeMatch: match<any> = {
-        params: {},
-        isExact: true,
-        path: '',
-        url: ''
-    };
-    const location = {
-        pathname: '/',
-        search: '',
-        hash: '',
-        state: {}
-    };
     let mockedFunctionLikeProps: {
         loadFileContent: (fileIri: IRI) => void
         saveFileContent: (fileIri: IRI, fileContent: string) => void
         loadDefaultTerms: (normalizedName: string, namespace?: string) => void
-        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
+        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => Promise<Term[]>
         fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => Promise<Term>
     };
     let mockDataProps: {
@@ -53,120 +35,89 @@ describe('FileDetail', () => {
 
 
     beforeEach(() => {
-        document = new Document({
-            iri: Generator.generateUri(),
-            name: "Test document",
-            files: []
-        });
-        vocabulary = new Vocabulary({
-            iri: Generator.generateUri(),
-            label: 'Test vocabulary'
-        });
-        fileContent = "<html><body>Test content</body></html>"
+        fileContent = "<html><body>Test content</body></html>";
         mockedFunctionLikeProps = {
             loadFileContent: jest.fn(),
             saveFileContent: jest.fn(),
             loadDefaultTerms: jest.fn(),
             fetchTerms: (fetchOptions, normalizedName) => Promise.resolve([]),
             fetchTerm: (termNormalizedName, vocabularyNormalizedName, namespace) => Promise.resolve(generateTerm(0))
-        }
+        };
         mockDataProps = {
             defaultTerms: []
         }
     });
 
-    it('loads file content on mount', () => {
+    it("loads file content on mount", () => {
         shallow(<FileDetail
-            vocabulary={vocabulary}
-            document={document}
+            iri={fileIri}
+            vocabularyIri={vocabularyIri}
             fileContent={fileContent}
             {...mockDataProps}
             {...mockedFunctionLikeProps}
             intl={intl()}
             {...intlFunctions()}
-            history={history} location={location} match={routeMatch}
         />);
 
         expect(mockedFunctionLikeProps.loadFileContent).toBeCalled();
     });
 
 
-    it('renders annotator of file content', () => {
+    it("renders annotator of file content", () => {
 
         const wrapper = shallow(<FileDetail
-            vocabulary={vocabulary}
-            document={document}
+            iri={fileIri}
+            vocabularyIri={vocabularyIri}
             fileContent={fileContent}
             {...mockedFunctionLikeProps}
             {...mockDataProps}
             intl={intl()}
             {...intlFunctions()}
-            history={history} location={location} match={routeMatch}
         />);
 
         expect(wrapper.find(Annotator).exists()).toBeTruthy()
     });
 
 
-    it('fetches root terms within initialization', () => {
-        mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve([]))
+    it("fetches root terms within initialization", () => {
+        mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve([]));
 
         shallow(<FileDetail
-            vocabulary={vocabulary}
-            document={document}
+            iri={fileIri}
+            vocabularyIri={vocabularyIri}
             fileContent={fileContent}
             {...mockDataProps}
             {...mockedFunctionLikeProps}
             intl={intl()}
             {...intlFunctions()}
-            history={history} location={location} match={routeMatch}
         />);
 
-        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, expect.anything())
+        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri.fragment, vocabularyIri.namespace)
     });
 
-    it('fetches root terms within initialization', () => {
-        const terms: Term[] = [1, 2, 3].map(i => generateTerm(i));
-        mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve(terms))
-
-        shallow(<FileDetail
-            vocabulary={vocabulary}
-            document={document}
-            fileContent={fileContent}
-            {...mockDataProps}
-            {...mockedFunctionLikeProps}
-            intl={intl()}
-            {...intlFunctions()}
-            history={history} location={location} match={routeMatch}
-        />);
-
-        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, expect.anything())
-    });
-
-    it('onFetchTerm returns cached root term', async () => {
+    it("onFetchTerm returns cached root term", async () => {
         const terms: Term[] = [0, 1, 2, 3].map(i => generateTerm(i));
         mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve(terms))
 
         const wrapper = shallow(<FileDetail
-            vocabulary={vocabulary}
-            document={document}
+            iri={fileIri}
+            vocabularyIri={vocabularyIri}
             fileContent={fileContent}
             {...mockDataProps}
             {...mockedFunctionLikeProps}
             intl={intl()}
             {...intlFunctions()}
-            history={history} location={location} match={routeMatch}
         />);
 
         // @ts-ignore
         const returnedTerm = await wrapper.instance().onFetchTerm(terms[1].iri);
 
-        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, expect.anything())
+        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri.fragment, vocabularyIri.namespace)
         expect(mockedFunctionLikeProps.fetchTerms).toHaveBeenCalledTimes(1);
         expect(returnedTerm).toEqual(terms[1]);
     });
 
-    it('onFetchTerm fetches non-root term', async () => {
+    it("onFetchTerm fetches non-root term", async () => {
         const terms: Term[] = [0, 1, 2, 3].map(i => generateTerm(i));
         const term4 = generateTerm(4);
         mockedFunctionLikeProps.fetchTerms = jest.fn()
@@ -175,26 +126,25 @@ describe('FileDetail', () => {
             .mockImplementationOnce(() => Promise.resolve(term4));
 
         const wrapper = shallow(<FileDetail
-            vocabulary={vocabulary}
-            document={document}
+            iri={fileIri}
+            vocabularyIri={vocabularyIri}
             fileContent={fileContent}
             {...mockDataProps}
             {...mockedFunctionLikeProps}
             intl={intl()}
             {...intlFunctions()}
-            history={history} location={location} match={routeMatch}
         />);
 
 
         // @ts-ignore
         const returnedTerm = await wrapper.instance().onFetchTerm(term4.iri);
 
-        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, expect.anything())
+        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri.fragment, vocabularyIri.namespace);
         expect(mockedFunctionLikeProps.fetchTerm).toBeCalledWith(
             VocabularyUtils.create(term4.iri).fragment,
             expect.anything(),
             expect.anything()
-        )
+        );
         expect(mockedFunctionLikeProps.fetchTerms).toHaveBeenCalledTimes(1);
         expect(mockedFunctionLikeProps.fetchTerm).toHaveBeenCalledTimes(1);
         expect(returnedTerm).toEqual(term4);

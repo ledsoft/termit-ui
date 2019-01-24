@@ -4,14 +4,17 @@ import File from "../../../model/File";
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {MemoryRouter} from "react-router";
-import FileLink from "../FileLink";
 import {Button} from "reactstrap";
+import Vocabulary from "../../../model/Vocabulary";
+import Generator from "../../../__tests__/environment/Generator";
+import VocabularyFileLink from "../../vocabulary/VocabularyFileLink";
 
 
-describe('FileList', () => {
+describe("FileList", () => {
     let files: File[];
     let file: File;
     let startFileTextAnalysis: (file: File) => void;
+    let vocabulary: Vocabulary;
     beforeEach(() => {
         files = [
             new File({
@@ -24,28 +27,34 @@ describe('FileList', () => {
                 label: "fileName2",
             })
         ];
+        vocabulary = new Vocabulary({
+            iri: Generator.generateUri(),
+            label: "Test vocabulary"
+        });
         file = files[0];
         startFileTextAnalysis = jest.fn();
     });
 
-    it('renders file links', () => {
+    it("renders vocabulary file links", () => {
 
         const wrapper = mountWithIntl(<MemoryRouter>
                 <FileList
                     files={files}
+                    vocabulary={vocabulary}
                     startFileTextAnalysis={startFileTextAnalysis}
                     {...intlFunctions()}/>
             </MemoryRouter>
         );
-        expect(wrapper.find(FileLink).exists()).toBeTruthy();
+        expect(wrapper.find(VocabularyFileLink).exists()).toBeTruthy();
     });
 
 
-    it('renders file metadata', () => {
+    it("renders file metadata", () => {
 
         const wrapper = mountWithIntl(<MemoryRouter>
                 <FileList
                     files={files}
+                    vocabulary={vocabulary}
                     startFileTextAnalysis={startFileTextAnalysis}
                     {...intlFunctions()}/>
             </MemoryRouter>
@@ -55,11 +64,12 @@ describe('FileList', () => {
         expect(wrapper.text()).toContain("fileName2");
     });
 
-    it('renders text analysis button', () => {
+    it("renders text analysis button", () => {
 
         const wrapper = mountWithIntl(<MemoryRouter>
                 <FileList
                     files={[file]}
+                    vocabulary={vocabulary}
                     startFileTextAnalysis={startFileTextAnalysis}
                     {...intlFunctions()}/>
             </MemoryRouter>
@@ -67,11 +77,12 @@ describe('FileList', () => {
         expect(wrapper.find(Button).exists()).toBeTruthy();
     });
 
-    it('on text analysis button click starts the analysis', () => {
+    it("on text analysis button click starts the analysis", () => {
 
         const wrapper = mountWithIntl(<MemoryRouter>
                 <FileList
                     files={[file]}
+                    vocabulary={vocabulary}
                     startFileTextAnalysis={startFileTextAnalysis}
                     {...intlFunctions()}/>
             </MemoryRouter>
