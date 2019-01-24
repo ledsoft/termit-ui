@@ -59,7 +59,9 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
 
     private renderNonEmptyContent() {
         return <Table className="widget">
+            <tbody>
             {this.renderAssets()}
+            </tbody>
         </Table>;
     }
 

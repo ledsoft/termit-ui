@@ -3,17 +3,16 @@
  */
 
 import * as SyncActions from "./SyncActions";
-import * as AsyncActions from "./AsyncActions";
 import Ajax, {params} from "../util/Ajax";
 import {ThunkDispatch} from "../util/Types";
 import Constants from "../util/Constants";
 import {ErrorData} from "../model/ErrorInfo";
-import * as jsonld from "jsonld";
 import Message from "../model/Message";
 import MessageType from "../model/MessageType";
 import ActionType from "./ActionType";
 import SearchResult, {CONTEXT as SEARCH_RESULT_CONTEXT, SearchResultData} from "../model/SearchResult";
 import TermItState from "../model/TermItState";
+import JsonLdUtils from "../util/JsonLdUtils";
 import Timer = NodeJS.Timer;
 
 /**
@@ -48,7 +47,7 @@ export function removeSearchListener() {
 /**
  * Timer to delay search requests as user is still typing.
  */
-let updateSearchTimer: Timer|null = null;
+let updateSearchTimer: Timer | null = null;
 const updateSearchDelay = 400; // ms
 
 /**
@@ -62,8 +61,8 @@ export function updateSearchFilter(searchString: string) {
         });
 
         // Clear search results
-        dispatch({ type: ActionType.SEARCH_START });
-        dispatch({ type: ActionType.SEARCH_RESULT, searchResults: null });
+        dispatch({type: ActionType.SEARCH_START});
+        dispatch({type: ActionType.SEARCH_RESULT, searchResults: null});
 
         // Stop waiting after previous update
         if (updateSearchTimer) {
@@ -95,7 +94,7 @@ export function searchEverything() {
             window.console.info("%c 🔍 Searching ... ", "color: black; font-weight: bold; background: yellow;");
             return dispatch(search(state.searchQuery.searchQuery, true));
         } else {
-            dispatch({ type: ActionType.SEARCH_FINISH });
+            dispatch({type: ActionType.SEARCH_FINISH});
             return Promise.resolve();
         }
     };
@@ -108,8 +107,7 @@ export function search(searchString: string, disableLoading: boolean = true) {
     return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.asyncActionRequest(action, disableLoading));
         return Ajax.get(Constants.API_PREFIX + "/search/label", params({searchString}))
-            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
-            .then((compacted: object) => AsyncActions.loadArrayFromCompactedGraph(compacted))
+            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, SEARCH_RESULT_CONTEXT) : [])
             .then((data: SearchResultData[]) => {
                 dispatch(searchResult(data.map(d => new SearchResult(d))));
                 dispatch(SyncActions.asyncActionSuccess(action));
@@ -127,8 +125,7 @@ export function autocompleteSearch(searchString: string, disableLoading: boolean
     return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.asyncActionRequest(action, disableLoading));
         return Ajax.get(Constants.API_PREFIX + "/search/label", params({searchString}))
-            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, SEARCH_RESULT_CONTEXT) : [])
-            .then((compacted: object) => AsyncActions.loadArrayFromCompactedGraph(compacted))
+            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, SEARCH_RESULT_CONTEXT) : [])
             .then((data: SearchResultData[]) => {
                 dispatch(SyncActions.asyncActionSuccess(action));
                 return data.map(d => new SearchResult(d));
@@ -141,8 +138,8 @@ export function autocompleteSearch(searchString: string, disableLoading: boolean
 
 export function searchResult(searchResults: SearchResult[]) {
     return (dispatch: ThunkDispatch) => {
-        dispatch({ type: ActionType.SEARCH_RESULT, searchResults });
-        dispatch({ type: ActionType.SEARCH_FINISH });
+        dispatch({type: ActionType.SEARCH_RESULT, searchResults});
+        dispatch({type: ActionType.SEARCH_FINISH});
     };
 }
 

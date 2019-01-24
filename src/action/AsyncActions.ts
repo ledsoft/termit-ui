@@ -34,6 +34,7 @@ import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Docu
 import {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
+import JsonLdUtils from "../util/JsonLdUtils";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -47,7 +48,7 @@ export function loadUser() {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/users/current")
-            .then((data: object) => jsonld.compact(data, USER_CONTEXT))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, USER_CONTEXT))
             .then((data: UserData) => dispatch(asyncActionSuccessWithPayload(action, new User(data))))
             .catch((error: ErrorData) => {
                 if (error.status === Constants.STATUS_UNAUTHORIZED) {
@@ -151,8 +152,7 @@ export function loadVocabulary(iri: IRI) {
         dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/vocabularies/" + iri.fragment, param("namespace", iri.namespace))
-            .then((data: object) =>
-                jsonld.compact(data, VOCABULARY_CONTEXT))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, VOCABULARY_CONTEXT))
             .then((data: VocabularyData) =>
                 dispatch(asyncActionSuccessWithPayload(action, new Vocabulary(data))))
             .catch((error: ErrorData) => {
@@ -170,8 +170,7 @@ export function loadResource(iri: IRI) {
         dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
-            .then((data: object) =>
-                jsonld.compact(data, RESOURCE_CONTEXT))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, RESOURCE_CONTEXT))
             .then((data: ResourceData) =>
                 dispatch(asyncActionSuccessWithPayload(action, new Resource(data))))
             .catch((error: ErrorData) => {
@@ -190,8 +189,7 @@ export function loadResources() {
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/resources")
             .then((data: object[]) =>
-                data.length !== 0 ? jsonld.compact(data, RESOURCE_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+                data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, RESOURCE_CONTEXT) : [])
             .then((data: ResourceData[]) =>
                 dispatch(asyncActionSuccessWithPayload(action, data.map(v => new Resource(v)))))
             .catch((error: ErrorData) => {
@@ -210,8 +208,7 @@ export function loadResourceTerms(iri: IRI) {
         return Ajax
         // , params({query: queryString})
             .get(Constants.API_PREFIX + "/resources/" + iri.fragment + "/terms", param("namespace", iri.namespace))
-            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
             .then((data: TermData[]) => {
                 const terms = data.map(d => new Term(d));
                 return dispatch(asyncActionSuccessWithPayload(action, terms));
@@ -272,8 +269,7 @@ export function loadVocabularies() {
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/vocabularies")
             .then((data: object[]) =>
-                data.length !== 0 ? jsonld.compact(data, VOCABULARY_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+                data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, VOCABULARY_CONTEXT) : [])
             .then((data: VocabularyData[]) =>
                 dispatch(asyncActionSuccessWithPayload(action, data.map(v => new Vocabulary(v)))))
             .catch((error: ErrorData) => {
@@ -312,8 +308,7 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
                 searchString: fetchOptions.searchString,
                 namespace
             }, Utils.createPagingParams(fetchOptions.offset, fetchOptions.limit))))
-            .then((data: object[]) => data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: object[]) => data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
             .then((data: TermData[]) => data.map(d => new Term(d)))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
@@ -329,7 +324,7 @@ export function fetchVocabularyTerm(termNormalizedName: string, vocabularyNormal
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyNormalizedName + "/terms/" + termNormalizedName, param("namespace", namespace))
-            .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, TERM_CONTEXT))
             .then((data: TermData) => new Term(data))
     };
 }
@@ -341,7 +336,7 @@ export function loadVocabularyTerm(termNormalizedName: string, vocabularyNormali
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyNormalizedName + "/terms/" + termNormalizedName, param("namespace", namespace))
-            .then((data: object) => jsonld.compact(data, TERM_CONTEXT))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, TERM_CONTEXT))
             .then((data: TermData) => dispatch(asyncActionSuccessWithPayload(action, new Term(data))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
@@ -378,8 +373,7 @@ export function loadTypes(language: string) {
         return Ajax
             .get(Constants.API_PREFIX + "/language/types", params({language}))
             .then((data: object[]) =>
-                data.length !== 0 ? jsonld.compact(data, TERM_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+                data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
             .then((data: TermData[]) => {
                 data.forEach((term: Term) => {
                     if (term.subTerms) {
@@ -395,13 +389,6 @@ export function loadTypes(language: string) {
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
-}
-
-export function loadArrayFromCompactedGraph(compacted: object): object[] {
-    if (!compacted.hasOwnProperty("@context")) {
-        return []
-    }
-    return compacted.hasOwnProperty("@graph") ? Object.keys(compacted["@graph"]).map(k => compacted["@graph"][k]) : [compacted]
 }
 
 export function startFileTextAnalysis(file: File) {
@@ -478,8 +465,7 @@ export function loadDocument(iri: IRI) {
         dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
-            .then((data: object) =>
-                jsonld.compact(data, DOCUMENT_CONTEXT))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, DOCUMENT_CONTEXT))
             .then((data: DocumentData) =>
                 dispatch(asyncActionSuccessWithPayload(action, new Document(data))))
             .catch((error: ErrorData) => {
@@ -587,8 +573,7 @@ export function getProperties() {
         }
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/data/properties")
-            .then((data: object[]) => data.length > 0 ? jsonld.compact(data, RDFS_RESOURCE_CONTEXT) : [])
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, RDFS_RESOURCE_CONTEXT) : [])
             .then((data: RdfsResourceData[]) => dispatch(asyncActionSuccessWithPayload(action, data.map(d => new RdfsResource(d)))))
             .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
     };
@@ -615,8 +600,7 @@ export function loadTermAssignments(term: Term) {
         const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
         const url = "/vocabularies/" + vocabularyIri.fragment + "/terms/" + VocabularyUtils.getFragment(term.iri) + "/assignments";
         return Ajax.get(Constants.API_PREFIX + url, param("namespace", vocabularyIri.namespace))
-            .then((data: object) => jsonld.compact(data, TERM_ASSIGNMENT_CONTEXT))
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENT_CONTEXT))
             .then((data: TermAssignmentData[]) => {
                 dispatch(asyncActionSuccess(action));
                 return data.map(tad => new TermAssignment(tad));
@@ -664,8 +648,7 @@ export function loadLastEditedAssets() {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/assets/last-edited")
-            .then((data: object) => jsonld.compact(data, context))
-            .then((compacted: object) => loadArrayFromCompactedGraph(compacted))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferencesAsArray(data, context))
             .then((data: AssetData[]) => {
                 dispatch(asyncActionSuccess(action));
                 return data.map(item => AssetFactory.createAsset(item));
