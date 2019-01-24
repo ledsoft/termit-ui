@@ -10,7 +10,6 @@ import TermItState from "../../model/TermItState";
 import {Nav, NavItem, NavLink} from "reactstrap";
 import SearchQuery from "../../model/SearchQuery";
 import Routes, {Route} from "../../util/Routes";
-import "./MainSearch.scss";
 
 interface SearchTypeTabsProps extends HasI18n, RouteComponentProps<any> {
     addSearchListener: () => void;
@@ -65,13 +64,13 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
         }
 
         if (activeTab !== null) {
-            return <Nav tabs={true} className="search-type-tabs">
+            return <div><Nav tabs={true} className="justify-content-center">
                 {tabs.map((tab) => (
                     <NavItem key={tab.route.name}>
                         <NavLink active={tab === activeTab} href={"#" + tab.route.link()}>{tab.label}</NavLink>
                     </NavItem>)
                 )}
-            </Nav>;
+            </Nav></div>;
         } else {
             return null;
         }
