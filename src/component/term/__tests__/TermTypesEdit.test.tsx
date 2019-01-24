@@ -35,7 +35,7 @@ describe("TermTypesEdit", () => {
         const wrapper = mountWithIntl(<TermTypesEdit termTypes={types} availableTypes={availableTypes}
                                                      onChange={onChange} {...intlFunctions()}/>);
         const selector = wrapper.find(IntelligentTreeSelect);
-        expect(selector.prop("value")).toEqual(availableTypes[iri]);
+        expect(selector.prop("value")).toEqual(availableTypes[iri].iri);
     });
 
     it("invokes onChange handler with selected type and the implicit Term type", () => {

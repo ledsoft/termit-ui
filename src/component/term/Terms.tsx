@@ -122,7 +122,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                 <IntelligentTreeSelect className={"p-0"}
                                        ref={this.treeComponent}
                                        onChange={this.onChange}
-                                       value={this.props.selectedTerms}
+                                       value={this.props.selectedTerms ? this.props.selectedTerms.iri : null}
                                        fetchOptions={this.fetchOptions}
                                        valueKey={"iri"}
                                        labelKey={"label"}

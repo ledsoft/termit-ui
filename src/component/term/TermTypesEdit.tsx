@@ -33,9 +33,9 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
         return option.label;
     };
 
-    private resolveSelectedTypes(types: Term[]): Term | undefined {
+    private resolveSelectedTypes(types: Term[]): string | undefined {
         const matching = types.filter(t => t.iri !== VocabularyUtils.TERM && this.props.termTypes.indexOf(t.iri) !== -1);
-        return matching.length > 0 ? matching[0] : undefined;
+        return matching.length > 0 ? matching[0].iri : undefined;
     }
 
     public render() {
