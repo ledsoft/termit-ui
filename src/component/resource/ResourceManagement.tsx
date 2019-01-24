@@ -8,8 +8,8 @@ import Routes from "../../util/Routes";
 import ResourceSummary from "./ResourceSummary";
 import DynamicBreadcrumbRoute from "../breadcrumb/DynamicBreadcrumbRoute";
 import BreadcrumbRoute from "../breadcrumb/BreadcrumbRoute";
-import FileDetail from "../file/FileDetail";
 import CreateResource from "./CreateResource";
+import ResourceFileDetail from "./ResourceFileDetail";
 
 class ResourceManagement extends React.Component<HasI18n> {
     constructor(props: HasI18n) {
@@ -20,7 +20,7 @@ class ResourceManagement extends React.Component<HasI18n> {
         const i18n = this.props.i18n;
         return <Switch>
             <BreadcrumbRoute title={i18n("annotator.annotate-content")} path={Routes.annotateFile.path}
-                             component={FileDetail}/>
+                             component={ResourceFileDetail}/>
             <div>
                 <h2 className="page-header">{i18n("resource.management")}</h2>
                 <div className="row">
