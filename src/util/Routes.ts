@@ -3,7 +3,7 @@ export class Route {
     public readonly name: string;
     public readonly path: string;
 
-    constructor(name:string, path:string) {
+    constructor(name: string, path: string) {
         this.name = name;
         this.path = path;
     }
@@ -27,9 +27,10 @@ export default {
     dashboard: new Route("dashboard", "/"),
     login: new Route("login", "/login"),
     profile: new Route("profile", "/profile"),
-    register: new Route("register","/register"),
+    register: new Route("register", "/register"),
     search: new Route("search", "/search"),
     searchTerms: new Route("searchTerms", "/search/terms"),
+    searchVocabularies: new Route("searchVocabularies", "/search/vocabularies"),
     facetedSearch: new Route("facetedSearch", "/facetedSearch"),
     statistics: new Route("statistics", "/statistics"),
     vocabularies: new Route("vocabulary", "/vocabularies"),

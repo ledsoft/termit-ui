@@ -40,12 +40,17 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         this.props.updateSearchFilter(value);
-        if (this.props.location.pathname !== Routes.search.path && this.props.location.pathname !== Routes.searchTerms.path) {
+        if (this.shouldRun()) {
             this.autocompleteSearch(value);
         } else {
             this.setState({showResults: false, results: null});
         }
     };
+
+    private shouldRun() {
+        const path = this.props.location.pathname;
+        return path !== Routes.search.path && path !== Routes.searchTerms.path && path !== Routes.searchVocabularies.path;
+    }
 
     private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {

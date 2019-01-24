@@ -79,7 +79,7 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
                 </Row>
                 <Row>
                     <Col xs={12}>
-                        <Label className="italics"
+                        <Label className="italics last-edited-message"
                                title={new Date(asset.lastEdited!).toLocaleString(this.props.locale)}>
                             {this.props.formatMessage("dashboard.widget.lastEdited.lastEditMessage", {
                                 user: asset.lastEditedBy!.fullName,

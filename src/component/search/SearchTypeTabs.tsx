@@ -34,6 +34,7 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
         const tabs: Array<{ route: Route, altExactRoutes: Route[], label: string }> = [
             {route: Routes.search, altExactRoutes: [], label: i18n("search.tab.everything")},
             {route: Routes.searchTerms, altExactRoutes: [], label: i18n("search.tab.terms")},
+            {route: Routes.searchVocabularies, altExactRoutes: [], label: i18n("search.tab.vocabularies")},
             {route: Routes.facetedSearch, altExactRoutes: [], label: i18n("search.tab.facets")},
         ];
 

@@ -41,23 +41,27 @@ export class Search extends React.Component<SearchProps> {
         this.props.updateSearchFilter("");
     };
 
+    protected getResults() {
+        return this.props.searchResults;
+    }
+
     public render() {
         const loading = this.props.searchInProgress ? <ContainerMask/> : null;
+        const results = this.getResults();
 
-        if (this.props.searchResults) {
+        if (results) {
             return <div className="relative">
                 <Button name="search-reset" color="danger" outline={true} size="sm" className="float-right" onClick={this.resetSearch}>
                     <GoTrashcan/> {this.props.i18n("search.reset")}
                 </Button>
                 <h2>{this.props.formatMessage("search.results.title", {searchString: this.props.searchQuery.searchQuery})}</h2>
-                <SearchResults results={this.props.searchResults}/>
+                <SearchResults results={results}/>
                 {loading}
             </div>;
         } else {
             return <div className="relative">{loading}</div>;
         }
     }
-
 }
 
 

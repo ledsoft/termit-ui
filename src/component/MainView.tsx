@@ -1,9 +1,9 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import withI18n, {HasI18n} from './hoc/withI18n';
-import withLoading from './hoc/withLoading';
-import {connect} from 'react-redux';
-import TermItState from '../model/TermItState';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "./hoc/withI18n";
+import withLoading from "./hoc/withLoading";
+import {connect} from "react-redux";
+import TermItState from "../model/TermItState";
 import {
     Collapse,
     Container,
@@ -18,15 +18,15 @@ import {
     NavItem,
     NavLink,
     UncontrolledDropdown
-} from 'reactstrap';
-import Constants from '../util/Constants';
-import User, {EMPTY_USER} from '../model/User';
-import './MainView.scss';
-import Routes from '../util/Routes';
-import Footer from './Footer';
-import {loadUser} from '../action/AsyncActions';
-import {logout} from '../action/ComplexActions';
-import {Route, RouteComponentProps, Switch, withRouter} from 'react-router';
+} from "reactstrap";
+import Constants from "../util/Constants";
+import User, {EMPTY_USER} from "../model/User";
+import "./MainView.scss";
+import Routes from "../util/Routes";
+import Footer from "./Footer";
+import {loadUser} from "../action/AsyncActions";
+import {logout} from "../action/ComplexActions";
+import {Route, RouteComponentProps, Switch, withRouter} from "react-router";
 import LanguageSelector from "./main/LanguageSelector";
 import Messages from "./message/Messages";
 import Statistics from "./statistics/Statistics";
@@ -41,6 +41,7 @@ import {Breadcrumbs} from "react-breadcrumbs";
 import BreadcrumbRoute from "./breadcrumb/BreadcrumbRoute";
 import VocabularyManagementRoute from "./vocabulary/VocabularyManagementRoute";
 import Dashboard from "./dashboard/Dashboard";
+import SearchVocabularies from "./search/SearchVocabularies";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
@@ -78,7 +79,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
     };
 
     private onUserProfileClick = () => {
-        alert('Not implemented, yet!');
+        alert("Not implemented, yet!");
     };
 
     public render() {
@@ -106,15 +107,15 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         <Nav navbar={true} className={"flex-grow-1 justify-content-end"}>
                             <NavItem active={path.startsWith(Routes.vocabularies.path)}>
                                 <NavLink
-                                    href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
+                                    href={MainView.hashPath(Routes.vocabularies.path)}>{i18n("main.nav.vocabularies")}</NavLink>
                             </NavItem>
                             <NavItem active={path.startsWith(Routes.resources.path)}>
                                 <NavLink
-                                    href={MainView.hashPath(Routes.resources.path)}>{i18n('main.nav.resources')}</NavLink>
+                                    href={MainView.hashPath(Routes.resources.path)}>{i18n("main.nav.resources")}</NavLink>
                             </NavItem>
                             <NavItem active={path.startsWith(Routes.statistics.path)}>
                                 <NavLink
-                                    href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
+                                    href={MainView.hashPath(Routes.statistics.path)}>{i18n("main.nav.statistics")}</NavLink>
                             </NavItem>
                             <NavItem active={path.startsWith(Routes.search.path)}>
                                 <NavLink
@@ -125,16 +126,16 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                             <LanguageSelector/>
                         </Nav>
                         <Nav navbar={true}>
-                            <UncontrolledDropdown id='logout' nav={true} inNavbar={true}>
+                            <UncontrolledDropdown id="logout" nav={true} inNavbar={true}>
                                 <DropdownToggle nav={true} caret={true}>
                                     {user.abbreviatedName}
                                 </DropdownToggle>
                                 <DropdownMenu right={true}>
                                     <DropdownItem disabled={true}
-                                                  title={i18n('not-implemented')}
-                                                  onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
+                                                  title={i18n("not-implemented")}
+                                                  onClick={this.onUserProfileClick}>{i18n("main.user-profile")}</DropdownItem>
                                     <DropdownItem divider={true}/>
-                                    <DropdownItem onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem>
+                                    <DropdownItem onClick={this.props.logout}>{i18n("main.logout")}</DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
                         </Nav>
@@ -154,6 +155,8 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                      component={Statistics}/>
                     <BreadcrumbRoute title={i18n("main.nav.searchTerms")} path={Routes.searchTerms.path}
                                      component={SearchTerms}/>
+                    <BreadcrumbRoute title={i18n("main.nav.searchVocabularies")} path={Routes.searchVocabularies.path}
+                                     component={SearchVocabularies}/>
                     <BreadcrumbRoute title={i18n("main.nav.search")} path={Routes.search.path} component={Search}/>
                     <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path}
                                      component={FacetedSearch}/>
@@ -165,7 +168,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
     }
 
     private renderPlaceholder() {
-        return <div className='wrapper center'><Jumbotron><h1>{this.props.i18n('message.welcome')}</h1></Jumbotron>
+        return <div className="wrapper center"><Jumbotron><h1>{this.props.i18n("message.welcome")}</h1></Jumbotron>
         </div>;
     }
 
@@ -173,7 +176,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
      * Have to explicitly add the hash to NavLink paths, otherwise NavLinks act as if using browser history.
      */
     private static hashPath(path: string): string {
-        return '#' + path;
+        return "#" + path;
     }
 }
 
@@ -188,4 +191,4 @@ export default connect((state: TermItState) => {
         loadUser: () => dispatch(loadUser()),
         logout: () => dispatch(logout())
     };
-})(injectIntl(withI18n(withLoading(withRouter(MainView), {containerClass: 'app-container'}))));
+})(injectIntl(withI18n(withLoading(withRouter(MainView), {containerClass: "app-container"}))));

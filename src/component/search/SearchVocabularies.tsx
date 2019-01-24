@@ -8,10 +8,10 @@ import {Search} from "./label/Search";
 import SearchResult from "../../model/SearchResult";
 import VocabularyUtils from "../../util/VocabularyUtils";
 
-export class SearchTerms extends Search {
+export class SearchVocabularies extends Search {
 
     protected getResults(): SearchResult[] | null {
-        return this.props.searchResults ? this.props.searchResults.filter(r => r.hasType(VocabularyUtils.TERM)) : null;
+        return this.props.searchResults ? this.props.searchResults.filter(r => r.hasType(VocabularyUtils.VOCABULARY)) : null;
     }
 }
 
@@ -27,4 +27,4 @@ export default connect((state: TermItState) => {
         addSearchListener: () => dispatch(SearchActions.addSearchListener()),
         removeSearchListener: () => dispatch(SearchActions.removeSearchListener()),
     };
-})(injectIntl(withI18n(SearchTerms)));
+})(injectIntl(withI18n(SearchVocabularies)));
