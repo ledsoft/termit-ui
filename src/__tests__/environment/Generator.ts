@@ -1,3 +1,6 @@
+import User from "../../model/User";
+import VocabularyUtils from "../../util/VocabularyUtils";
+
 export default class Generator {
 
     public static readonly URI_BASE = 'http://onto.fel.cvut.cz/ontologies/application/termit';
@@ -12,6 +15,16 @@ export default class Generator {
 
     public static generateUri() {
         return Generator.URI_BASE + '/instance-' + Generator.randomInt();
+    }
+
+    public static generateUser() {
+        return new User({
+            iri: Generator.generateUri(),
+            firstName: "FirstName" + Generator.randomInt(0, 10000),
+            lastName: "LastName" + Generator.randomInt(0, 10000),
+            username: "username" + Generator.randomInt() + "@kbss.felk.cvut.cz",
+            types: [VocabularyUtils.USER]
+        });
     }
 
     /**

@@ -9,7 +9,7 @@
 }
 
 .search-results-overlay {
-  min-width: 20rem;
+  min-width: 30rem !important;
 }
 
 .search-results-overlay .popover-body {
@@ -34,8 +34,13 @@
   cursor: pointer;
 }
 
+.search-result-link .badge {
+  margin-right: 0.125rem;
+}
+
 .search-result-info {
   @extend .search-result-link;
+  margin-top: 0.125rem;
   border-top: 1px solid rgba(0, 0, 0, 0.15) !important;
   font-weight: bold;
   font-style: italic;

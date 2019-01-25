@@ -1,51 +1,69 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import withI18n, {HasI18n} from './hoc/withI18n';
-import withLoading from './hoc/withLoading';
-import {connect} from 'react-redux';
-import TermItState from '../model/TermItState';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "./hoc/withI18n";
+import withLoading from "./hoc/withLoading";
+import {connect} from "react-redux";
+import TermItState from "../model/TermItState";
 import {
+    Collapse,
     Container,
     DropdownItem,
     DropdownMenu,
-    DropdownToggle, Jumbotron,
+    DropdownToggle,
+    Jumbotron,
     Nav,
     Navbar,
     NavbarBrand,
+    NavbarToggler,
     NavItem,
     NavLink,
     UncontrolledDropdown
-} from 'reactstrap';
-import Constants from '../util/Constants';
-import User, {EMPTY_USER} from '../model/User';
-import './MainView.scss';
-import Routes from '../util/Routes';
-import Footer from './Footer';
-import {ThunkDispatch} from 'redux-thunk';
-import {Action} from 'redux';
-import {loadUser, logout} from '../action/ComplexActions';
-import {Route, RouteComponentProps, Switch, withRouter} from 'react-router';
-import Dashboard from './dashboard/Dashboard';
-import VocabularyManagement from './vocabulary/VocabularyManagement';
-import VocabularyDetail from "./vocabulary/VocabularyDetail";
+} from "reactstrap";
+import Constants from "../util/Constants";
+import User, {EMPTY_USER} from "../model/User";
+import "./MainView.scss";
+import Routes from "../util/Routes";
+import Footer from "./Footer";
+import {loadUser} from "../action/AsyncActions";
+import {logout} from "../action/ComplexActions";
+import {Route, RouteComponentProps, Switch, withRouter} from "react-router";
 import LanguageSelector from "./main/LanguageSelector";
 import Messages from "./message/Messages";
 import Statistics from "./statistics/Statistics";
 import NavbarSearch from "./search/label/NavbarSearch";
 import Search from "./search/label/Search";
 import FacetedSearch from "./search/facets/FacetedSearch";
-import FileDetail from "./file/FileDetail";
+import {ThunkDispatch} from "../util/Types";
+import ResourceManagement from "./resource/ResourceManagement";
+import SearchTypeTabs from "./search/SearchTypeTabs";
+import SearchTerms from "./search/SearchTerms";
+import {Breadcrumbs} from "react-breadcrumbs";
+import BreadcrumbRoute from "./breadcrumb/BreadcrumbRoute";
+import VocabularyManagementRoute from "./vocabulary/VocabularyManagementRoute";
+import Dashboard from "./dashboard/Dashboard";
+import SearchVocabularies from "./search/SearchVocabularies";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User,
     loadUser: () => void,
-    logout: () => void
+    logout: () => void,
+    backgroundColor: string,
+    backgroundIsLight: boolean,
 }
 
-export class MainView extends React.Component<MainViewProps> {
+interface MainViewState {
+    isMainMenuOpen: boolean;
+}
+
+export class MainView extends React.Component<MainViewProps, MainViewState> {
+
+    public static defaultProps: Partial<MainViewProps> = {};
 
     constructor(props: MainViewProps) {
         super(props);
+        this.state = {
+            isMainMenuOpen: false
+        };
     }
 
     public componentDidMount() {
@@ -54,73 +72,94 @@ export class MainView extends React.Component<MainViewProps> {
         }
     }
 
+    public toggle = () => {
+        this.setState({
+            isMainMenuOpen: !this.state.isMainMenuOpen
+        });
+    };
+
     private onUserProfileClick = () => {
-        alert('Not implemented, yet!');
+        alert("Not implemented, yet!");
     };
 
     public render() {
         const {i18n, user} = this.props;
         const path = this.props.location.pathname;
+
         if (user === EMPTY_USER) {
             return this.renderPlaceholder();
         }
-        return <div className='wrapper'>
+        return <div className="main-container">
             <header>
-                <Navbar color="light" light={true} expand={"md"} className={"d-flex"}>
-
-                    <NavbarBrand>{Constants.APP_NAME}</NavbarBrand>
-
+                <Navbar light={Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT}
+                        expand={"lg"}
+                        className={(Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT ? "navbar-light" : "navbar-dark") + " d-flex"}
+                        style={{background: Constants.LAYOUT_NAVBAR_BACKGROUND}}>
+                    <NavbarBrand href={MainView.hashPath(Routes.dashboard.path)}>
+                        {Constants.APP_NAME}
+                    </NavbarBrand>
                     <Nav navbar={true} className={"flex-grow-1"}>
-                        <NavItem active={path === Routes.dashboard.path}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.dashboard.path)}>{i18n('main.nav.dashboard')}</NavLink>
-                        </NavItem>
-                        <NavItem active={path.startsWith(Routes.vocabularies.path)}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.vocabularies.path)}>{i18n('main.nav.vocabularies')}</NavLink>
-                        </NavItem>
-                        <NavItem active={path === Routes.statistics.path}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.statistics.path)}>{i18n('main.nav.statistics')}</NavLink>
-                        </NavItem>
-                        <NavItem active={path === Routes.facetedSearch.path}>
-                            <NavLink
-                                href={MainView.hashPath(Routes.facetedSearch.path)}>{i18n('main.nav.facetedSearch')}</NavLink>
-                        </NavItem>
-                    </Nav>
-                    <Nav navbar={true}>
                         <NavbarSearch/>
                     </Nav>
-                    <Nav navbar={true}>
-                        <LanguageSelector/>
-                    </Nav>
-                    <Nav navbar={true}>
-                        <UncontrolledDropdown id='logout' nav={true} inNavbar={true}>
-                            <DropdownToggle nav={true} caret={true}>
-                                {user.abbreviatedName}
-                            </DropdownToggle>
-                            <DropdownMenu right={true}>
-                                <DropdownItem disabled={true}
-                                              title={i18n('not-implemented')}
-                                              onClick={this.onUserProfileClick}>{i18n('main.user-profile')}</DropdownItem>
-                                <DropdownItem divider={true}/>
-                                <DropdownItem onClick={this.props.logout}>{i18n('main.logout')}</DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </Nav>
+                    <NavbarToggler onClick={this.toggle}/>
+
+                    <Collapse isOpen={this.state.isMainMenuOpen} navbar={true}>
+                        <Nav navbar={true} className={"flex-grow-1 justify-content-end"}>
+                            <NavItem active={path.startsWith(Routes.vocabularies.path)}>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.vocabularies.path)}>{i18n("main.nav.vocabularies")}</NavLink>
+                            </NavItem>
+                            <NavItem active={path.startsWith(Routes.resources.path)}>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.resources.path)}>{i18n("main.nav.resources")}</NavLink>
+                            </NavItem>
+                            <NavItem active={path.startsWith(Routes.statistics.path)}>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.statistics.path)}>{i18n("main.nav.statistics")}</NavLink>
+                            </NavItem>
+                            <NavItem active={path.startsWith(Routes.search.path)}>
+                                <NavLink
+                                    href={MainView.hashPath(Routes.search.path)}>{i18n("main.nav.search")}</NavLink>
+                            </NavItem>
+                        </Nav>
+                        <Nav navbar={true}>
+                            <LanguageSelector/>
+                        </Nav>
+                        <Nav navbar={true}>
+                            <UncontrolledDropdown id="logout" nav={true} inNavbar={true}>
+                                <DropdownToggle nav={true} caret={true}>
+                                    {user.abbreviatedName}
+                                </DropdownToggle>
+                                <DropdownMenu right={true}>
+                                    <DropdownItem disabled={true}
+                                                  title={i18n("not-implemented")}
+                                                  onClick={this.onUserProfileClick}>{i18n("main.user-profile")}</DropdownItem>
+                                    <DropdownItem divider={true}/>
+                                    <DropdownItem onClick={this.props.logout}>{i18n("main.logout")}</DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+                        </Nav>
+                    </Collapse>
                 </Navbar>
+                <Breadcrumbs className="breadcrumb-bar"/>
             </header>
+            <SearchTypeTabs/>
             <Messages/>
-            <Container fluid={true} className="mt-5 mb-5">
+            <Container fluid={true} className="mt-5 mb-5 flex-grow-1">
                 <Switch>
-                    <Route path={Routes.vocabularyDetail.path} component={VocabularyDetail} exact={true}/>
-                    <Route path={Routes.createVocabularyTerm.path} component={VocabularyDetail} exact={true}/>
-                    <Route path={Routes.vocabularyTermDetail.path} component={VocabularyDetail} exact={true}/>
-                    <Route path={Routes.annotateFile.path} component={FileDetail} exact={true}/>
-                    <Route path={Routes.vocabularies.path} component={VocabularyManagement}/>
-                    <Route path={Routes.statistics.path} component={Statistics}/>
-                    <Route path={Routes.search.path} component={Search}/>
-                    <Route path={Routes.facetedSearch.path} component={FacetedSearch}/>
+                    <BreadcrumbRoute title={i18n("main.nav.resources")} path={Routes.resources.path}
+                                     component={ResourceManagement}/>
+                    <BreadcrumbRoute title={i18n("main.nav.vocabularies")} path={Routes.vocabularies.path}
+                                     component={VocabularyManagementRoute}/>
+                    <BreadcrumbRoute title={i18n("main.nav.statistics")} path={Routes.statistics.path}
+                                     component={Statistics}/>
+                    <BreadcrumbRoute title={i18n("main.nav.searchTerms")} path={Routes.searchTerms.path}
+                                     component={SearchTerms}/>
+                    <BreadcrumbRoute title={i18n("main.nav.searchVocabularies")} path={Routes.searchVocabularies.path}
+                                     component={SearchVocabularies}/>
+                    <BreadcrumbRoute title={i18n("main.nav.search")} path={Routes.search.path} component={Search}/>
+                    <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path}
+                                     component={FacetedSearch}/>
                     <Route component={Dashboard}/>
                 </Switch>
             </Container>
@@ -129,7 +168,7 @@ export class MainView extends React.Component<MainViewProps> {
     }
 
     private renderPlaceholder() {
-        return <div className='wrapper center'><Jumbotron><h1>{this.props.i18n('message.welcome')}</h1></Jumbotron>
+        return <div className="wrapper center"><Jumbotron><h1>{this.props.i18n("message.welcome")}</h1></Jumbotron>
         </div>;
     }
 
@@ -137,7 +176,7 @@ export class MainView extends React.Component<MainViewProps> {
      * Have to explicitly add the hash to NavLink paths, otherwise NavLinks act as if using browser history.
      */
     private static hashPath(path: string): string {
-        return '#' + path;
+        return "#" + path;
     }
 }
 
@@ -147,9 +186,9 @@ export default connect((state: TermItState) => {
         user: state.user,
         intl: state.intl    // Pass intl in props to force UI re-render on language switch
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         loadUser: () => dispatch(loadUser()),
         logout: () => dispatch(logout())
     };
-})(injectIntl(withI18n(withLoading(withRouter(MainView), {containerClass: 'app-container'}))));
+})(injectIntl(withI18n(withLoading(withRouter(MainView), {containerClass: "app-container"}))));

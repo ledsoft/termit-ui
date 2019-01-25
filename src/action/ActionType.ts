@@ -1,23 +1,14 @@
 import ErrorInfo from "../model/ErrorInfo";
-import User from "../model/User";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
-import Vocabulary from "../model/Vocabulary";
-import VocabularyTerm from "../model/VocabularyTerm";
+import Term from "../model/Term";
+import {Action} from "redux";
 import SearchResult from "../model/SearchResult";
-import Document from "../model/Document";
-
-export interface Action {
-    type: string
-}
+import AppNotification from "../model/AppNotification";
 
 export interface AsyncAction extends Action {
     status: AsyncActionStatus;
     ignoreLoading?: boolean;    // Allows to prevent loading spinner display on async action
-}
-
-export interface UserLoadingAction extends AsyncAction {
-    user: User
 }
 
 export interface FailureAction extends Action {
@@ -25,6 +16,10 @@ export interface FailureAction extends Action {
 }
 
 export interface AsyncFailureAction extends AsyncAction, FailureAction {
+}
+
+export interface AsyncActionSuccess<T> extends AsyncAction {
+    payload: T;
 }
 
 export interface ClearErrorAction extends Action {
@@ -39,20 +34,8 @@ export interface SwitchLanguageAction extends Action {
     language: string
 }
 
-export interface VocabularyLoadingAction extends AsyncAction {
-    vocabulary: Vocabulary
-}
-
 export interface SelectingTermsAction extends Action {
-    selectedTerms: VocabularyTerm | null
-}
-
-export interface LoadDefaultTermsAction extends Action {
-    options: VocabularyTerm[]
-}
-
-export interface VocabulariesLoadingAction extends AsyncAction {
-    vocabularies: Vocabulary[]
+    selectedTerms: Term | null
 }
 
 export interface ExecuteQueryAction extends AsyncAction {
@@ -60,81 +43,92 @@ export interface ExecuteQueryAction extends AsyncAction {
     queryResult: object
 }
 
-export interface SearchAction extends AsyncAction {
-    results: SearchResult[];
-}
-
-export interface DocumentLoadingAction extends AsyncAction {
-    document: Document
+export interface FacetedSearchAction extends AsyncAction {
+    payload: object
 }
 
 export interface FileSelectingAction extends Action {
     fileIri: string | null
 }
 
-export interface FileContentLoadingAction extends AsyncAction {
-    fileContent: string | null
+export interface SearchAction extends Action {
+    searchString: string
 }
 
+export interface SearchResultAction extends Action {
+    searchResults: SearchResult[]
+}
+
+export interface NotificationAction extends Action {
+    notification: AppNotification;
+}
+
+
 export default {
-    FETCH_USER_REQUEST: 'FETCH_USER_REQUEST',
-    FETCH_USER_FAILURE: 'FETCH_USER_FAILURE',
-    FETCH_USER_SUCCESS: 'FETCH_USER_SUCCESS',
+    FETCH_USER: "FETCH_USER",
+    LOGIN: "LOGIN",
+    REGISTER: "REGISTER",
+    LOGOUT: "LOGOUT",
 
-    LOGIN_REQUEST: 'LOGIN_REQUEST',
-    LOGIN_FAILURE: 'LOGIN_REQUEST_FAILURE',
-    LOGIN_SUCCESS: 'LOGIN_REQUEST_SUCCESS',
+    CLEAR_ERROR: "CLEAR_ERROR",
+    PUBLISH_MESSAGE: "PUBLISH_MESSAGE",
+    DISMISS_MESSAGE: "DISMISS_MESSAGE",
+    SWITCH_LANGUAGE: "SWITCH_LANGUAGE",
 
-    REGISTER_REQUEST: 'REGISTER_REQUEST',
-    REGISTER_FAILURE: 'REGISTER_FAILURE',
-    REGISTER_SUCCESS: 'REGISTER_SUCCESS',
+    PUBLISH_NOTIFICATION: "PUBLISH_NOTIFICATION",
+    CONSUME_NOTIFICATION: "CONSUME_NOTIFICATION",
 
-    CLEAR_ERROR: 'CLEAR_ERROR',
+    CREATE_VOCABULARY: "CREATE_VOCABULARY",
+    LOAD_VOCABULARY: "LOAD_VOCABULARY",
+    SELECT_VOCABULARY_TERM: "SELECT_VOCABULARY_TERM",
+    LOAD_VOCABULARIES: "LOAD_VOCABULARIES",
+    UPDATE_VOCABULARY: "UPDATE_VOCABULARY",
 
-    PUBLISH_MESSAGE: 'PUBLISH_MESSAGE',
-    DISMISS_MESSAGE: 'DISMISS_MESSAGE',
+    CREATE_VOCABULARY_TERM: "CREATE_VOCABULARY_TERM",
+    FETCH_VOCABULARY_TERMS: "FETCH_VOCABULARY_TERMS",
+    LOAD_DEFAULT_TERMS: "LOAD_DEFAULT_TERMS",
+    FETCH_TERM: "FETCH_TERM",
+    LOAD_TERM: "LOAD_TERM",
+    UPDATE_TERM: "UPDATE_TERM",
+    LOAD_TERM_ASSIGNMENTS: "LOAD_TERM_ASSIGNMENTS",
 
-    SWITCH_LANGUAGE: 'SWITCH_LANGUAGE',
+    CREATE_TERM_OCCURRENCE: "CREATE_TERM_OCCURRENCE",
+    UPDATE_TERM_OCCURRENCE: "UPDATE_TERM_OCCURRENCE",
+    REMOVE_TERM_OCCURRENCE: "REMOVE_TERM_OCCURRENCE",
 
-    CREATE_VOCABULARY_REQUEST: 'CREATE_VOCABULARY_REQUEST',
-    CREATE_VOCABULARY_SUCCESS: 'CREATE_VOCABULARY_SUCCESS',
-    CREATE_VOCABULARY_FAILURE: 'CREATE_VOCABULARY_FAILURE',
+    LOAD_TYPES: "LOAD_TYPES",
 
-    LOAD_VOCABULARY_REQUEST: 'LOAD_VOCABULARY_REQUEST',
-    LOAD_VOCABULARY_SUCCESS: 'LOAD_VOCABULARY_SUCCESS',
-    LOAD_VOCABULARY_FAILURE: 'LOAD_VOCABULARY_FAILURE',
+    EXECUTE_QUERY: "EXECUTE_QUERY",
+    FACETED_SEARCH: "FACETED_SEARCH",
+    SEARCH: "SEARCH",
+    SEARCH_RESULT: "SEARCH_RESULT",
+    UPDATE_SEARCH_FILTER: "UPDATE_SEARCH_FILTER",
+    SEARCH_START: "SEARCH_START",
+    SEARCH_FINISH: "SEARCH_FINISH",
 
-    SELECT_VOCABULARY_TERM: 'SELECT_VOCABULARY_TERM',
+    ADD_SEARCH_LISTENER: "ADD_SEARCH_LISTENER",
+    REMOVE_SEARCH_LISTENER: "REMOVE_SEARCH_LISTENER",
 
-    LOAD_VOCABULARIES_REQUEST: 'LOAD_VOCABULARIES_REQUEST',
-    LOAD_VOCABULARIES_SUCCESS: 'LOAD_VOCABULARIES_SUCCESS',
-    LOAD_VOCABULARIES_FAILURE: 'LOAD_VOCABULARIES_FAILURE',
+    LOAD_DOCUMENT: "LOAD_DOCUMENT",
+    LOAD_FILE_CONTENT: "LOAD_FILE_CONTENT",
+    SAVE_FILE_CONTENT: "SAVE_FILE_CONTENT",
 
-    EXECUTE_QUERY_REQUEST: 'EXECUTE_QUERY_REQUEST',
-    EXECUTE_QUERY_SUCCESS: 'EXECUTE_QUERY_SUCCESS',
-    EXECUTE_QUERY_FAILURE: 'EXECUTE_QUERY_FAILURE',
+    CREATE_RESOURCE: "CREATE_RESOURCE",
+    LOAD_RESOURCE: "LOAD_RESOURCE",
+    LOAD_RESOURCES: "LOAD_RESOURCES",
+    CLEAR_RESOURCE: "CLEAR_RESOURCE",
+    LOAD_RESOURCE_TERMS: "LOAD_RESOURCE_TERMS",
+    UPDATE_RESOURCE_TERMS: "UPDATE_RESOURCE_TERMS",
+    REMOVE_RESOURCE: "REMOVE_RESOURCE",
 
-    CREATE_VOCABULARY_TERM_REQUEST: 'CREATE_VOCABULARY_TERM_REQUEST',
-    CREATE_VOCABULARY_TERM_SUCCESS: 'CREATE_VOCABULARY_TERM_SUCCESS',
-    CREATE_VOCABULARY_TERM_FAILURE: 'CREATE_VOCABULARY_TERM_FAILURE',
+    START_FILE_TEXT_ANALYSIS: "START_FILE_TEXT_ANALYSIS",
 
-    FETCH_VOCABULARY_TERMS_REQUEST: 'FETCH_VOCABULARY_TERMS_REQUEST',
-    FETCH_VOCABULARY_TERMS_FAILURE: 'FETCH_VOCABULARY_TERMS_FAILURE',
+    GET_LABEL: "GET_LABEL",
+    GET_PROPERTIES: "GET_PROPERTIES",
+    CREATE_PROPERTY: "CREATE_PROPERTY",
+    CLEAR_PROPERTIES: "CLEAR_PROPERTIES",
 
-    LOAD_DEFAULT_TERMS: 'LOAD_DEFAULT_TERMS',
+    EXPORT_GLOSSARY: "EXPORT_GLOSSARY",
 
-    SEARCH: 'SEARCH',
-    CLEAR_SEARCH_RESULTS: 'CLEAR_SEARCH_RESULTS',
-
-    LOAD_DOCUMENT_REQUEST: 'LOAD_DOCUMENT_REQUEST',
-    LOAD_DOCUMENT_SUCCESS: 'LOAD_DOCUMENT_SUCCESS',
-    LOAD_DOCUMENT_FAILURE: 'LOAD_DOCUMENT_FAILURE',
-
-    SELECT_FILE: 'SELECT_FILE',
-
-    LOAD_FILE_CONTENT_REQUEST: 'LOAD_FILE_CONTENT_REQUEST',
-    LOAD_FILE_CONTENT_SUCCESS: 'LOAD_FILE_CONTENT_SUCCESS',
-    LOAD_FILE_CONTENT_FAILURE: 'LOAD_FILE_CONTENT_FAILURE',
-
-    LOGOUT: 'LOGOUT'
+    LOAD_LAST_EDITED: "LOAD_LAST_EDITED"
 }

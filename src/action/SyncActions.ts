@@ -1,33 +1,21 @@
 import ActionType, {
-    Action,
     AsyncAction,
+    AsyncActionSuccess,
     AsyncFailureAction,
     ClearErrorAction,
-    DocumentLoadingAction,
     ExecuteQueryAction,
-    FileContentLoadingAction,
-    FileSelectingAction,
-    LoadDefaultTermsAction,
     MessageAction,
+    NotificationAction,
     SelectingTermsAction,
     SwitchLanguageAction,
-    UserLoadingAction,
-    VocabulariesLoadingAction,
-    VocabularyLoadingAction
-} from './ActionType';
+} from "./ActionType";
 import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
-import User, {UserData} from "../model/User";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
-import Vocabulary, {VocabularyData} from "../model/Vocabulary";
 import {saveLanguagePreference} from "../util/IntlUtil";
-import VocabularyTerm, {VocabularyTermData} from "../model/VocabularyTerm";
-import Document, {DocumentData} from "../model/Document";
-import {FileData} from "../model/File";
-
-/*
- * The most basic Redux actions. Each function exported from here returns an action object which is directly dispatched by Redux.
- */
+import Term, {TermData} from "../model/Term";
+import {Action} from "redux";
+import AppNotification from "../model/AppNotification";
 
 export function asyncActionRequest(a: Action, ignoreLoading: boolean = false): AsyncAction {
     return {...a, status: AsyncActionStatus.REQUEST, ignoreLoading};
@@ -37,47 +25,12 @@ export function asyncActionFailure(a: Action, error: ErrorData): AsyncFailureAct
     return {...a, status: AsyncActionStatus.FAILURE, error: new ErrorInfo(a.type, error)};
 }
 
+export function asyncActionSuccessWithPayload<T>(a: Action, payload: T): AsyncActionSuccess<T> {
+    return {...a, status: AsyncActionStatus.SUCCESS, payload};
+}
+
 export function asyncActionSuccess(a: Action): AsyncAction {
     return {...a, status: AsyncActionStatus.SUCCESS};
-}
-
-export function fetchUserRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.FETCH_USER_REQUEST
-    });
-}
-
-export function fetchUserSuccess(data: UserData): UserLoadingAction {
-    return {
-        type: ActionType.FETCH_USER_SUCCESS,
-        status: AsyncActionStatus.SUCCESS,
-        user: new User(data)
-    };
-}
-
-export function fetchUserFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.FETCH_USER_FAILURE,
-    }, error);
-}
-
-export function loginRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.LOGIN_REQUEST
-    });
-}
-
-export function loginSuccess(): AsyncAction {
-    return {
-        type: ActionType.LOGIN_SUCCESS,
-        status: AsyncActionStatus.SUCCESS
-    };
-}
-
-export function loginFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.LOGIN_FAILURE
-    }, error);
 }
 
 export function clearError(origin: string): ClearErrorAction {
@@ -109,200 +62,62 @@ export function switchLanguage(language: string): SwitchLanguageAction {
     };
 }
 
-export function registerRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.REGISTER_REQUEST
-    });
-}
-
-export function registerFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.REGISTER_FAILURE,
-    }, error);
-}
-
-export function registerSuccess(): AsyncAction {
-    return {
-        type: ActionType.REGISTER_SUCCESS,
-        status: AsyncActionStatus.SUCCESS
-    };
-}
-
 export function userLogout(): Action {
     return {
         type: ActionType.LOGOUT
     };
 }
 
-export function createVocabularyRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.CREATE_VOCABULARY_REQUEST
-    });
-}
-
-export function createVocabularyTermRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.CREATE_VOCABULARY_TERM_REQUEST
-    })
-}
-
-export function createVocabularyTermFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.CREATE_VOCABULARY_TERM_FAILURE,
-    }, error);
-}
-
-export function createVocabularyTermSuccess(): AsyncAction {
-    return {
-        type: ActionType.CREATE_VOCABULARY_TERM_SUCCESS,
-        status: AsyncActionStatus.SUCCESS
-    };
-}
-
-export function createVocabularyFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.CREATE_VOCABULARY_FAILURE,
-    }, error);
-}
-
-export function createVocabularySuccess(): AsyncAction {
-    return {
-        type: ActionType.CREATE_VOCABULARY_SUCCESS,
-        status: AsyncActionStatus.SUCCESS
-    };
-}
-
-export function loadVocabularyRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.LOAD_VOCABULARY_REQUEST
-    });
-}
-
-export function loadVocabularySuccess(data: VocabularyData): VocabularyLoadingAction {
-    return {
-        type: ActionType.LOAD_VOCABULARY_SUCCESS,
-        status: AsyncActionStatus.SUCCESS,
-        vocabulary: new Vocabulary(data)
-    }
-}
-
-export function loadVocabularyFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.LOAD_VOCABULARY_FAILURE
-    }, error);
-}
-
-export function loadDocumentRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.LOAD_DOCUMENT_REQUEST
-    });
-}
-
-export function loadDocumentSuccess(data: DocumentData): DocumentLoadingAction {
-    return {
-        type: ActionType.LOAD_DOCUMENT_SUCCESS,
-        status: AsyncActionStatus.SUCCESS,
-        document: new Document(data)
-    }
-}
-
-export function loadDocumentFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.LOAD_DOCUMENT_FAILURE
-    }, error);
-}
-
-
-export function loadVocabulariesRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.LOAD_VOCABULARIES_REQUEST
-    });
-}
-
-export function loadVocabulariesSuccess(data: VocabularyData[]): VocabulariesLoadingAction {
-    return {
-        type: ActionType.LOAD_VOCABULARIES_SUCCESS,
-        status: AsyncActionStatus.SUCCESS,
-        vocabularies: data ? data.map(v => new Vocabulary(v)) : []
-    }
-}
-
-export function loadVocabulariesFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.LOAD_VOCABULARIES_FAILURE
-    }, error);
-}
-
-export function executeQueryRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.EXECUTE_QUERY_REQUEST
-    });
-}
-
 export function executeQuerySuccess(queryString: string, result: object): ExecuteQueryAction {
     return {
-        type: ActionType.EXECUTE_QUERY_SUCCESS,
+        type: ActionType.EXECUTE_QUERY,
         status: AsyncActionStatus.SUCCESS,
         queryResult: result,
         queryString
-    }
+    };
 }
 
-export function executeQueryFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.EXECUTE_QUERY_FAILURE
-    }, error);
-}
-
-export function selectVocabularyTerm(data: VocabularyTermData | null): SelectingTermsAction {
+export function selectVocabularyTerm(data: TermData | null): SelectingTermsAction {
     return {
         type: ActionType.SELECT_VOCABULARY_TERM,
-        selectedTerms: data ? new VocabularyTerm(data) : data,
+        selectedTerms: data ? new Term(data) : data,
     }
 }
 
-export function fetchVocabularyTermsRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.FETCH_VOCABULARY_TERMS_REQUEST,
-    }, true);
+export function fireFacetedSearchRequested() {
+    return asyncActionRequest({type: ActionType.FACETED_SEARCH});
 }
 
-export function fetchVocabularyTermsFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.FETCH_VOCABULARY_TERMS_FAILURE
-    }, error);
+export function fireFacetedSearchFinished(data: any) {
+    return asyncActionSuccessWithPayload({type: ActionType.FACETED_SEARCH}, data)
 }
 
-export function loadDefaultTerms(data: VocabularyTermData[]): LoadDefaultTermsAction {
+export function fireFacetedSearchFailed(error: any) {
+    return asyncActionFailure({type: ActionType.FACETED_SEARCH}, error)
+}
+
+export function clearProperties() {
     return {
-        type: ActionType.LOAD_DEFAULT_TERMS,
-        options: data.map((term: VocabularyTermData) => new VocabularyTerm(term))
-    }
+        type: ActionType.CLEAR_PROPERTIES
+    };
 }
 
-export function selectFile(data: FileData | null): FileSelectingAction {
+export function publishNotification(notification: AppNotification): NotificationAction {
     return {
-        type: ActionType.SELECT_FILE,
-        fileIri: data ? (data.iri ? data.iri : null) : data,
-    }
+        type: ActionType.PUBLISH_NOTIFICATION,
+        notification
+    };
 }
 
-export function loadFileContentRequest(): AsyncAction {
-    return asyncActionRequest({
-        type: ActionType.LOAD_FILE_CONTENT_REQUEST
-    });
-}
-
-export function loadFileContentSuccess(data: string): FileContentLoadingAction {
+export function consumeNotification(notification: AppNotification): NotificationAction {
     return {
-        type: ActionType.LOAD_FILE_CONTENT_SUCCESS,
-        status: AsyncActionStatus.SUCCESS,
-        fileContent: data
-    }
+        type: ActionType.CONSUME_NOTIFICATION,
+        notification
+    };
 }
 
-export function loadFileContentFailure(error: ErrorData): AsyncFailureAction {
-    return asyncActionFailure({
-        type: ActionType.LOAD_FILE_CONTENT_FAILURE
-    }, error);
+export function clearResource() {
+    return {
+        type: ActionType.CLEAR_RESOURCE
+    };
 }

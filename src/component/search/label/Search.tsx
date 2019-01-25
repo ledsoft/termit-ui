@@ -1,158 +1,80 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../../hoc/withI18n";
 import {RouteComponentProps, withRouter} from "react-router";
 import {connect} from "react-redux";
-import {Button, Card, CardBody, CardHeader, Col, Form, FormGroup, Input, Row} from "reactstrap";
 import SearchResult from "../../../model/SearchResult";
-import './Search.scss';
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
-import {search} from "../../../action/AsyncActions";
-import Vocabulary from "../../../util/VocabularyUtils";
-import Routing from "../../../util/Routing";
-import Routes from "../../../util/Routes";
+import "./Search.scss";
+import * as SearchActions from "../../../action/SearchActions";
+import {ThunkDispatch} from "../../../util/Types";
+import TermItState from "../../../model/TermItState";
+import SearchQuery from "../../../model/SearchQuery";
+import SearchResults from "./SearchResults";
+import {Button} from "reactstrap";
+import {GoTrashcan} from "react-icons/go";
+import ContainerMask from "../../misc/ContainerMask";
 
 interface SearchProps extends HasI18n, RouteComponentProps<any> {
-    search: (searchString: string) => Promise<object>;
+    addSearchListener: () => void;
+    removeSearchListener: () => void;
+    updateSearchFilter: (searchString: string) => any;
+    searchQuery: SearchQuery;
+    searchResults: SearchResult[] | null;
+    searchInProgress: boolean;
 }
 
-interface SearchState {
-    searchString: string;
-    results: SearchResult[] | null;
-}
-
-class Search extends React.Component<SearchProps, SearchState> {
+export class Search extends React.Component<SearchProps> {
 
     constructor(props: SearchProps) {
         super(props);
-        this.state = {
-            searchString: '',
-            results: null
-        };
     }
 
     public componentDidMount() {
-        const query = this.props.location.search;
-        const match = query.match(/searchString=(.+)/);
-        if (match) {
-            const searchString = match[1];
-            this.setState({searchString});
-            this.search(searchString);
-        }
+        this.props.addSearchListener();
     }
 
-    private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.currentTarget.value;
-        this.setState({searchString: value});
+    public componentWillUnmount() {
+        this.props.removeSearchListener();
+    }
+
+    protected resetSearch = () => {
+        this.props.updateSearchFilter("");
     };
 
-    private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            this.search(this.state.searchString);
-        }
-    };
-
-    private onClick = () => {
-        this.search(this.state.searchString);
-    };
-
-    public search = (searchString: string) => {
-        if (searchString.trim().length > 0) {
-            this.props.search(searchString).then((data: SearchResult[]) => this.setState({results: data}));
-        }
-    };
-
-    private openResult = (result: SearchResult) => {
-        this.clear();
-        if (result.types.indexOf(Vocabulary.VOCABULARY) !== -1) {
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
-        } else {
-            // TODO Transition to term (once term detail is implemented)
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.vocabularyIri!)]])});
-        }
-    };
-
-    private clear = () => {
-        this.setState({searchString: '', results: null});
-    };
+    protected getResults() {
+        return this.props.searchResults;
+    }
 
     public render() {
-        const i18n = this.props.i18n;
-        return <div>
-            <h2 className='page-header'>{i18n('search.title')}</h2>
-            <Row>
-                <Col md={4}>
-                    <Form inline={true}>
-                        <FormGroup className='mb-2 mr-sm-2 search-input-container'>
-                            <Input type='search' bsSize='sm' className='search-input' value={this.state.searchString}
-                                   onChange={this.onChange} onKeyPress={this.onKeyPress}/>
-                        </FormGroup>
-                        <div className='mb-2'>
-                            <Button size='sm' color='primary' onClick={this.onClick}>{i18n('search.title')}</Button>
-                        </div>
-                    </Form>
-                </Col>
-            </Row>
-            <Row>
-                {this.renderResults()}
-            </Row>
-        </div>;
-    }
+        const loading = this.props.searchInProgress ? <ContainerMask/> : null;
+        const results = this.getResults();
 
-    private renderResults() {
-        if (this.state.results === null) {
-            return null;
-        }
-        const title =
-            <h5>{this.props.formatMessage('search.results.title', {searchString: this.state.searchString})}</h5>;
-        let content;
-        if (this.state.results.length === 0) {
-            content = <Row><Col md={6}>
-                <div className='italics'>{this.props.i18n('main.search.no-results')}</div>
-            </Col></Row>;
-        } else {
-            content = <div>
-                <Row><Col md={12}>{this.renderVocabularies()}</Col></Row>
-                <Row><Col md={12}>{this.renderTerms()}</Col></Row>
+        if (results) {
+            return <div className="relative">
+                <Button name="search-reset" color="danger" outline={true} size="sm" className="float-right" onClick={this.resetSearch}>
+                    <GoTrashcan/> {this.props.i18n("search.reset")}
+                </Button>
+                <h2>{this.props.formatMessage("search.results.title", {searchString: this.props.searchQuery.searchQuery})}</h2>
+                <SearchResults results={results}/>
+                {loading}
             </div>;
+        } else {
+            return <div className="relative">{loading}</div>;
         }
-        return <div className='container-fluid'>
-            <hr/>
-            {title}
-            {content}
-        </div>;
-    }
-
-    private renderVocabularies() {
-        return <Card className='search-result-container'>
-            <CardHeader tag='h5' color='info'>{this.props.i18n('search.slovnik')}</CardHeader>
-            <CardBody>
-                {this.state.results!.filter(r => r.hasType(Vocabulary.VOCABULARY)).map(r => {
-                    return <span key={r.iri} className='search-result-item search-result-link btn-link'
-                                 title={this.props.i18n('search.results.item.vocabulary.tooltip')}
-                                 onClick={this.openResult.bind(null, r)}>{r.label}</span>;
-                })}
-            </CardBody>
-        </Card>;
-    }
-
-    private renderTerms() {
-        return <Card className='search-result-container'>
-            <CardHeader tag='h5' color='info'>{this.props.i18n('search.pojem')}</CardHeader>
-            <CardBody>
-                {this.state.results!.filter(r => r.hasType(Vocabulary.TERM)).map(r => {
-                    return <span key={r.iri} className='search-result-item search-result-link btn-link'
-                                 title={this.props.i18n('search.results.item.term.tooltip')}
-                                 onClick={this.openResult.bind(null, r)}>{r.label}</span>;
-                })}
-            </CardBody>
-        </Card>;
     }
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+
+export default connect((state: TermItState) => {
     return {
-        search: (searchString: string) => dispatch(search(searchString))
+        searchQuery: state.searchQuery,
+        searchResults: state.searchResults,
+        searchInProgress: state.searchInProgress,
+    };
+}, (dispatch: ThunkDispatch) => {
+    return {
+        updateSearchFilter: (searchString: string) => dispatch(SearchActions.updateSearchFilter(searchString)),
+        addSearchListener: () => dispatch(SearchActions.addSearchListener()),
+        removeSearchListener: () => dispatch(SearchActions.removeSearchListener()),
     };
 })(withRouter(injectIntl(withI18n(Search))));

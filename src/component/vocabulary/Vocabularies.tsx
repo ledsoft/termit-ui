@@ -1,32 +1,21 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import {Button} from 'reactstrap';
-import withI18n, {HasI18n} from '../hoc/withI18n';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import Routes from "../../util/Routes";
-import Routing from '../../util/Routing';
 import VocabularyList from "./VocabularyList";
 import PanelWithActions from "../misc/PanelWithActions";
+import {GoPlus} from "react-icons/go";
+import {Link} from "react-router-dom";
 
-class Vocabularies extends React.Component<HasI18n> {
+const Vocabularies: React.SFC<HasI18n> = props => {
+    const i18n = props.i18n;
+    const actions = [<Link key="vocabulary.vocabularies.create" className="btn btn-primary btn-sm"
+                           title={i18n("vocabulary.vocabularies.create.tooltip")}
+                           to={Routes.createVocabulary.path}><GoPlus/>&nbsp;{i18n("asset.create.button.text")}</Link>];
 
-    private static onCreateVocabularyClick() {
-        Routing.transitionTo(Routes.createVocabulary)
-    }
-
-    public render() {
-        const i18n = this.props.i18n;
-        const actions = [];
-        actions.push(<Button key='vocabulary.vocabularies.create'
-                             color='primary'
-                             title={i18n('vocabulary.vocabularies.create.tooltip')}
-                             size='sm'
-                             onClick={Vocabularies.onCreateVocabularyClick}>+</Button>);
-        return (<PanelWithActions
-                    title={i18n('vocabulary.management.vocabularies')}
-                    component={<VocabularyList/>}
-                    actions={actions}
-            />);
-    }
-}
+    return <PanelWithActions title={i18n("vocabulary.management.vocabularies")} actions={actions}>
+        <VocabularyList/>
+    </PanelWithActions>;
+};
 
 export default injectIntl(withI18n(Vocabularies));

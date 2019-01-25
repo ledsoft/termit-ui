@@ -1,16 +1,67 @@
+@import "custom";
+@import "~bootstrap/scss/bootstrap";
+
 html {
   height: 100%;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 body {
   height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+header .nav-tabs,
+header .breadcrumb-bar {
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid #dee2e6;
+}
+
+header .nav-tabs {
+  text-align: center;
+  justify-content: center;
+  padding-top: 0.3em;
 }
 
 .app-container {
-  min-height: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.modal-panel {
+  margin: 5% auto;
+  width: 100%;
+  max-width: 40em;
+  box-shadow: 0 0.5em 1.5em rgba(0, 0, 0, 0.15);
+}
+
+.modal-panel.wide {
+  width: 100%;
+  max-width: 65em;
+}
+
+.card {
+  @extend .mb-4;
 }
 
 .italics {
@@ -35,7 +86,13 @@ body {
 
 .btn-toolbar {
   & > button {
-    margin-left: 0.5em;
+    margin-left: 0.5rem;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+  & > .btn-group {
+    margin-left: 0.5rem;
     &:first-child {
       margin-left: 0;
     }
@@ -47,3 +104,9 @@ body {
     margin-bottom: 0;
   }
 }
+
+.breadcrumbs__crumb--active {
+  pointer-events: none;
+  color: #212529;
+}
+

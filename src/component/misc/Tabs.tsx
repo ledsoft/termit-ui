@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Nav, NavItem, NavLink, TabContent, TabPane} from 'reactstrap';
+import {Badge, Nav, NavItem, NavLink, TabContent, TabPane} from 'reactstrap';
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {injectIntl} from "react-intl";
 
@@ -11,7 +11,11 @@ interface TabsProps extends HasI18n {
     /**
      * Map of IDs to the actual components
      */
-    tabs: { [activeTabLabelKey: string]: React.SFC },
+    tabs: { [activeTabLabelKey: string]: JSX.Element },
+    /**
+     * Map of IDs to the tab badge (no badge shown if the key is missing)
+     */
+    tabBadges?: { [activeTabLabelKey: string]: string | null},
     /**
      * Tab change function.
      */
@@ -25,7 +29,7 @@ export class Tabs extends React.Component<TabsProps> {
     }
 
     public render() {
-        const navlinks: any[] = [];
+        const navLinks: any[] = [];
         const tabs: any[] = [];
         const activeKey = this.props.activeTabLabelKey;
         const propsChangeTab = this.props.changeTab;
@@ -35,17 +39,23 @@ export class Tabs extends React.Component<TabsProps> {
                 if (id !== activeKey) {
                     propsChangeTab(id);
                 }
-            }
-            navlinks.push(
+            };
+
+            const badge = this.props.tabBadges && id in this.props.tabBadges && this.props.tabBadges[id]
+                ? <>{" "}<Badge>{this.props.tabBadges[id]}</Badge></>
+                : null;
+
+            navLinks.push(
                 <NavItem key={id}>
                     <NavLink
                         className={(id === this.props.activeTabLabelKey) ? 'active' : ''}
                         onClick={changeTab}>
-                    {this.props.formatMessage(id,{})}
+                        {this.props.formatMessage(id, {})}
+                        {badge}
                     </NavLink>
                 </NavItem>
             );
-            const tabComponent = this.props.tabs[id]({});
+            const tabComponent = this.props.tabs[id];
             tabs.push(
                 <TabPane tabId={id} key={id}>
                     {tabComponent}
@@ -54,7 +64,7 @@ export class Tabs extends React.Component<TabsProps> {
         });
 
         return <div><Nav tabs={true}>
-            {navlinks}
+            {navLinks}
         </Nav>
             <TabContent activeTab={this.props.activeTabLabelKey}>
                 {tabs}

@@ -1,3 +1,5 @@
+import Utils from "../util/Utils";
+
 export const CONTEXT = {
     "iri": "@id",
     "firstName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno",
@@ -13,42 +15,20 @@ export interface UserData {
     username: string,
     types?: string[]
 }
+
 /**
  * System user account.
  */
 export default class User implements UserData {
-    private readonly mIri: string;
-    private readonly mFirstName: string;
-    private readonly mLastName: string;
-    private readonly mUsername: string;
-    private readonly mTypes: string[];
+    public readonly iri: string;
+    public readonly firstName: string;
+    public readonly lastName: string;
+    public readonly username: string;
+    public readonly types: string[];
 
     constructor(data: UserData) {
-        this.mIri = data.iri;
-        this.mFirstName = data.firstName;
-        this.mLastName = data.lastName;
-        this.mUsername = data.username;
-        this.mTypes = data.types ? data.types : []
-    }
-
-    get iri(): string {
-        return this.mIri;
-    }
-
-    get firstName(): string {
-        return this.mFirstName;
-    }
-
-    get lastName(): string {
-        return this.mLastName;
-    }
-
-    get username(): string {
-        return this.mUsername;
-    }
-
-    get types(): string[] {
-        return this.mTypes;
+        Object.assign(this, data);
+        this.types = Utils.sanitizeArray(data.types);
     }
 
     get fullName(): string {

@@ -14,8 +14,8 @@ export default class CustomInput extends AbstractInput<InputProps> {
     public render() {
         return <FormGroup>
             {this.renderLabel()}
-            <Input type={this.props.type ? this.props.type : 'text'} ref={(c: any) => this.input = c}
-                   bsSize='sm' {...this.inputProps()}/>
+            <Input type={this.props.type ? this.props.type : "text"} ref={(c: any) => this.input = c}
+                   {...this.inputProps()}/>
             <FormFeedback>{this.props.invalidMessage}</FormFeedback>
             {this.renderHelp()}
         </FormGroup>;

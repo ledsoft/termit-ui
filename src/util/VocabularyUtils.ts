@@ -1,45 +1,47 @@
 /**
  * Vocabulary used by the application ontological model.
  */
-import constants from "./Constants";
-import * as _ from "lodash";
 
 export interface IRI {
-    namespace? : string,
-    fragment : string,
+    namespace?: string,
+    fragment: string,
 }
 
+const _NS_POPIS_DAT = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/";
+const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/";
+const _NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const _NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
+
 export default {
-    VOCABULARY: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik",
-    TERM: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
-    FILE: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor",
-    DOCUMENT: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/document",
-    USER: "http://onto.fel.cvut.cz/ontologies/application/termit/uzivatel-termitu",
+    PREFIX: _NS_POPIS_DAT,
+    VOCABULARY: _NS_POPIS_DAT + "slovnik",
+    TERM: _NS_POPIS_DAT + "term",
+    FILE: _NS_POPIS_DAT + "soubor",
+    DOCUMENT: _NS_POPIS_DAT + "document",
+    DATASET: "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
+    JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovniku",
+    RESOURCE: _NS_POPIS_DAT + "zdroj",
+    TERM_ASSIGNMENT: _NS_POPIS_DAT + "prirazeni-termu",
+    HAS_AUTHOR: _NS_POPIS_DAT + "ma-autora",
+    CREATED: "http://purl.org/dc/terms/created",
+    HAS_LAST_EDITOR: _NS_TERMIT + "ma-posledniho-editora",
+    LAST_MODIFIED: _NS_TERMIT + "ma-posledni-modifikaci",
+    NS_TERMIT: _NS_TERMIT,
+    USER: _NS_TERMIT + "uzivatel-termitu",
+    HAS_COUNT: _NS_TERMIT + "has-count",
+    RDFS_LABEL: _NS_RDFS + "label",
+    RDFS_COMMENT: _NS_RDFS + "comment",
+    RDFS_RESOURCE: _NS_RDFS + "Resource",
+    RDF_PROPERTY: _NS_RDF + "Property",
 
-    equal(iri1 : IRI, iri2: IRI) {
-        return _.isEqual(this.complete(iri1),this.complete(iri2));
-    },
-
-    resolve(iri : IRI) {
-        const completed = this.complete(iri);
-        return completed.namespace + completed.fragment;
-    },
-
-    complete(iri : IRI) {
-        if (!iri.namespace) {
-            iri.namespace = constants.namespace_vocabulary;
-        }
-        return iri;
-    },
-
-    getFragment(iri : string) :string {
+    getFragment(iri: string): string {
         return this.create(iri).fragment;
     },
 
-    create(iri : string) :IRI {
+    create(iri: string): IRI {
         const hashFragment = iri.indexOf("#");
         const slashFragment = iri.lastIndexOf("/");
         const fragment = hashFragment < 0 ? slashFragment : hashFragment;
-        return {fragment:iri.substr(fragment+1),namespace:iri.substr(0,fragment+1)};
+        return {fragment: iri.substr(fragment + 1), namespace: iri.substr(0, fragment + 1)};
     }
 }

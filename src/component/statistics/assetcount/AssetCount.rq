@@ -1,4 +1,4 @@
-PREFIX termit: <http://onto.fel.cvut.cz/ontologies/termit/>
+PREFIX termit: <http://onto.fel.cvut.cz/ontologies/application/termit/>
 
 CONSTRUCT {
     ?assetType termit:has-count ?count

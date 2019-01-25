@@ -4,18 +4,16 @@ import {injectIntl} from 'react-intl';
 import {Alert, Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from 'reactstrap';
 import HorizontalInput from '../misc/HorizontalInput';
 import Routing from '../../util/Routing';
-import './Login.scss';
 import Routes from "../../util/Routes";
 import Mask from "../misc/Mask";
 import {connect} from 'react-redux';
 import TermItState from "../../model/TermItState";
-import {login} from "../../action/ComplexActions";
-import {Action} from "redux";
-import {ThunkDispatch} from "redux-thunk";
+import {login} from "../../action/AsyncActions";
 import ErrorInfo from "../../model/ErrorInfo";
 import ActionType from "../../action/ActionType";
 import {clearError} from "../../action/SyncActions";
-import Footer from "../Footer";
+import {ThunkDispatch} from "../../util/Types";
+import PublicLayout from "../layout/PublicLayout";
 
 interface LoginProps extends HasI18n {
     loading: boolean,
@@ -63,7 +61,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
     };
 
     private errorRelevant() {
-        return this.props.error.origin === ActionType.LOGIN_FAILURE;
+        return this.props.error.origin === ActionType.LOGIN;
     }
 
     private isValid() {
@@ -72,9 +70,8 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
     public render() {
         const i18n = this.props.i18n;
-        const panelCls = 'login-panel';
-        return <div className='app-container'>
-            <Card className={panelCls}>
+        return <PublicLayout title={i18n('login.title')}>
+            <Card className="modal-panel">
                 <CardHeader color='info'>
                     <h5>{i18n('login.title')}</h5>
                 </CardHeader>
@@ -84,19 +81,18 @@ export class Login extends React.Component<LoginProps, LoginState> {
                         {this.renderAlert()}
                         <HorizontalInput name='username' label={i18n('login.username')} value={this.state.username}
                                          onKeyPress={this.onKeyPress} onChange={this.onChange} autoFocus={true}
-                                         labelWidth={3} inputWidth={9}/>
+                                         labelWidth={4} inputWidth={8}/>
                         <HorizontalInput type='password' name='password' label={i18n('login.password')}
                                          value={this.state.password}
                                          onKeyPress={this.onKeyPress} onChange={this.onChange}
-                                         labelWidth={3} inputWidth={9}/>
+                                         labelWidth={4} inputWidth={8}/>
 
                         <Row>
-                            <Col xs={3}>&nbsp;</Col>
-                            <Col xs={9}>
+                            <Col xs={{size: 'auto', offset: 4}}>
                                 <ButtonToolbar>
-                                    <Button color='success' size='sm' onClick={this.login}
+                                    <Button color="success" onClick={this.login}
                                             disabled={this.props.loading || !this.isValid()}>{i18n('login.submit')}</Button>
-                                    <Button color='link' size='sm' onClick={this.register} className='register-link'
+                                    <Button color="link" onClick={this.register} className="register-link"
                                             disabled={this.props.loading}>{i18n('login.register')}</Button>
                                 </ButtonToolbar>
                             </Col>
@@ -104,8 +100,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                     </Form>
                 </CardBody>
             </Card>
-            <Footer className='footer-login'/>
-        </div>;
+        </PublicLayout>;
     }
 
     private renderMask() {
@@ -128,9 +123,9 @@ export default connect((state: TermItState) => {
         loading: state.loading,
         error: state.error
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         login: (username: string, password: string) => dispatch(login(username, password)),
-        clearError: () => dispatch(clearError(ActionType.LOGIN_FAILURE))
+        clearError: () => dispatch(clearError(ActionType.LOGIN))
     };
 })(injectIntl(withI18n(Login)));

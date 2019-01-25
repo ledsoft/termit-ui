@@ -1,27 +1,29 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../../hoc/withI18n";
-import {Input, InputGroup, InputGroupAddon, InputGroupText} from "reactstrap";
+import {Button, Input, InputGroup, InputGroupAddon} from "reactstrap";
 import {GoSearch} from "react-icons/go";
-import './NavbarSearch.scss';
+import "./NavbarSearch.scss";
 import SearchResult from "../../../model/SearchResult";
 import {connect} from "react-redux";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
-import {search} from "../../../action/AsyncActions";
+import {autocompleteSearch, updateSearchFilter} from "../../../action/SearchActions";
 import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
-import Routing from '../../../util/Routing';
-import Vocabulary from "../../../util/VocabularyUtils";
+import {ThunkDispatch} from "../../../util/Types";
+import TermItState from "../../../model/TermItState";
+import Routing from "../../../util/Routing";
+import {RouteComponentProps, withRouter} from "react-router";
 
-interface NavbarSearchProps extends HasI18n {
-    search: (searchString: string) => Promise<object>;
+interface NavbarSearchProps extends HasI18n, RouteComponentProps<any> {
+    autocompleteSearch: (searchString: string) => any;
+    updateSearchFilter: (searchString: string) => any;
+    searchString: string;
 }
 
 interface NavbarSearchState {
     searchString: string;
-    showResults: boolean;
     results: SearchResult[] | null;
+    showResults: boolean;
 }
 
 export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearchState> {
@@ -29,7 +31,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     constructor(props: NavbarSearchProps) {
         super(props);
         this.state = {
-            searchString: '',
+            searchString: "",
             showResults: false,
             results: null
         };
@@ -37,14 +39,43 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
-        this.setState({searchString: value, showResults: value.length > 0});
-        this.search(value);
+        this.props.updateSearchFilter(value);
+        if (this.shouldRun()) {
+            this.autocompleteSearch(value);
+        } else {
+            this.setState({showResults: false, results: null});
+        }
     };
 
-    public search = (str?: string) => {
+    private shouldRun() {
+        const path = this.props.location.pathname;
+        return path !== Routes.search.path && path !== Routes.searchTerms.path && path !== Routes.searchVocabularies.path;
+    }
+
+    private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            this.openSearchView();
+        }
+    };
+
+    private openSearchView = () => {
+        const query = new Map();
+        const searchString = this.props.searchString.trim();
+        if (searchString.length > 0) {
+            query.set("searchString", encodeURI(searchString));
+        }
+        this.setState({results: null, showResults: false});
+        Routing.transitionTo(Routes.search, {query});
+    };
+
+    public autocompleteSearch = (str?: string) => {
         const searchVal = str ? str : this.state.searchString;
         if (searchVal.trim().length > 0) {
-            this.props.search(searchVal).then((data: SearchResult[]) => this.setState({results: data}));
+            this.setState({results: [], showResults: false});
+            this.props.autocompleteSearch(searchVal).then((data: SearchResult[]) => this.setState({
+                results: data,
+                showResults: true
+            }));
         }
     };
 
@@ -52,39 +83,17 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         this.setState({showResults: false});
     };
 
-    private clear = () => {
-        this.setState({searchString: '', results: null});
-    };
-
-    public openResult = (result: SearchResult) => {
-        this.clear();
-        if (result.types.indexOf(Vocabulary.VOCABULARY) !== -1) {
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.iri)]])});
-        } else {
-            // TODO Transition to term otherwise (once term detail is implemented)
-            Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', Vocabulary.getFragment(result.vocabularyIri!)]])});
-        }
-    };
-
-    private openSearchView = () => {
-        const query = new Map();
-        if (this.state.searchString.trim().length > 0) {
-            query.set('searchString', encodeURI(this.state.searchString));
-        }
-        Routing.transitionTo(Routes.search, {query});
-        this.clear();
-    };
-
     public render() {
         const i18n = this.props.i18n;
-        return <div className='search'>
+        return <div className="search flex-grow-1">
             <InputGroup>
-                <Input type='search' id='main-search-input' placeholder={i18n('main.search.placeholder')} bsSize='sm'
-                       value={this.state.searchString} onChange={this.onChange}/>
-                <InputGroupAddon addonType='append' className='search-icon' title={i18n('main.search.tooltip')}>
-                    <InputGroupText>
-                        <GoSearch onClick={this.openSearchView}/>
-                    </InputGroupText>
+                <Input type="search" id="main-search-input" placeholder={i18n("main.search.placeholder")}
+                       autoFocus={true} autoComplete="off"
+                       value={this.props.searchString} onChange={this.onChange} onKeyPress={this.onKeyPress}/>
+                <InputGroupAddon addonType="append" className="search-icon" title={i18n("main.search.tooltip")}>
+                    <Button color="grey" onClick={this.openSearchView}>
+                        <GoSearch/>
+                    </Button>
                 </InputGroupAddon>
             </InputGroup>
             {this.renderResultsOverlay()}
@@ -92,18 +101,25 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     }
 
     private renderResultsOverlay() {
-        if (this.state.results === null) {
+        if (!this.state.results) {
             return null;
         } else {
             return <SearchResultsOverlay show={this.state.showResults} searchResults={this.state.results}
-                                         onClose={this.closeResults} targetId='main-search-input'
-                                         onClick={this.openResult} onOpenSearch={this.openSearchView}/>;
+                                         onClose={this.closeResults} targetId="main-search-input"
+                                         onOpenSearch={this.openSearchView}/>;
         }
     }
+
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+export default connect((state: TermItState) => {
     return {
-        search: (searchString: string) => dispatch(search(searchString, true))
+        searchString: state.searchQuery.searchQuery,
+        intl: state.intl        // Pass intl in props to force UI re-render on language switch
     };
-})(injectIntl(withI18n(NavbarSearch)));
+}, (dispatch: ThunkDispatch) => {
+    return {
+        autocompleteSearch: (searchString: string) => dispatch(autocompleteSearch(searchString, true)),
+        updateSearchFilter: (searchString: string) => dispatch(updateSearchFilter(searchString)),
+    };
+})(injectIntl(withI18n(withRouter(NavbarSearch))));

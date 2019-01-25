@@ -1,172 +1,168 @@
-import * as React from 'react';
-import {injectIntl, IntlProvider} from 'react-intl';
-import withI18n, {HasI18n} from '../hoc/withI18n';
-import {connect, Provider} from "react-redux";
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "../hoc/withI18n";
+import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadFileContent, loadTerms} from "../../action/ComplexActions";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
-import Document from "../../model/Document";
-import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from 'html-to-react';
-import Annotation from "../annotation/Annotation";
-import * as ReactDOM from 'react-dom';
-import {RouteComponentProps} from "react-router";
-import Vocabulary2, {IRI} from "../../util/VocabularyUtils";
-import Vocabulary from "../../model/Vocabulary";
-import TermItStore from "../../store/TermItStore";
+import {
+    fetchVocabularyTerm,
+    fetchVocabularyTerms,
+    loadDefaultTerms,
+    loadFileContent,
+    saveFileContent
+} from "../../action/AsyncActions";
+import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import IntlData from "../../model/IntlData";
+import {ThunkDispatch} from "../../util/Types";
+import {Annotator} from "../annotator/Annotator";
+import Term from "../../model/Term";
+import FetchOptionsFunction from "../../model/Functions";
 
 
-interface FileDetailProps extends HasI18n, RouteComponentProps<any> {
-    vocabulary: Vocabulary,
-    document: Document,
-    fileIri: string | null,
-    fileContent: string | null
-    loadContentFile: (documentIri: IRI, fileName: string) => void
-    loadTerms: (normalizedVocabularyName: string) => void
-    intl: IntlData
+interface FileDetailProvidedProps {
+    iri: IRI
+    vocabularyIri: IRI
 }
 
-class FileDetail extends React.Component<FileDetailProps> {
-    private containerElement: HTMLDivElement | null;
+interface FileDetailOwnProps extends HasI18n {
+    fileContent: string | null
+    loadFileContent: (fileIri: IRI) => void
+    saveFileContent: (fileIri: IRI, fileContent: string) => void
+    loadDefaultTerms: (normalizedName: string, namespace?: string) => void
+    intl: IntlData
+    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => Promise<Term[]>
+    fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => Promise<Term>
+    defaultTerms: Term[]
+}
+
+type FileDetailProps = FileDetailOwnProps & FileDetailProvidedProps;
+
+// TODO "file detail" --> "file content detail"
+export class FileDetail extends React.Component<FileDetailProps> {
+
+    private terms: object = {};
+    private lastExecutedPromise: Promise<Term> | null = null;
+
+    constructor(props: FileDetailProps) {
+        super(props);
+    }
+
+    private loadFileContentData = (): void => {
+        this.props.loadFileContent({
+            fragment: this.props.iri.fragment,
+            namespace: this.props.iri.namespace
+        });
+    };
+
+    // TODO should not be responsibility of file detail
+    private initializeTermFetching = (): void => {
+        this.createInitialFetchTermPromise(); // TODO ?! should be enough to call it on componentDidMount
+        if (this.props.defaultTerms.length === 0) {
+            this.props.loadDefaultTerms(this.props.vocabularyIri.fragment, this.props.vocabularyIri.namespace);
+        } else {
+            this.updateTerms(this.props.defaultTerms)
+        }
+    };
 
     public componentDidMount(): void {
-        const normalizedFileName = this.props.match.params.name;
-        if (this.props.vocabulary.iri) {
-            this.props.loadTerms(this.getNormalizedName(this.props.vocabulary.iri))
+        this.loadFileContentData();
+        this.initializeTermFetching();
+
+    }
+
+    public componentDidUpdate(): void {
+        this.initializeTermFetching();
+    }
+
+    private onUpdate = (newFileContent: string) => {
+        this.props.saveFileContent({
+            fragment: this.props.iri.fragment,
+            namespace: this.props.iri.namespace
+        }, newFileContent);
+    };
+
+    private updateTerms(retrievedTerms: Term[]) {
+        retrievedTerms.forEach((t: Term) => this.terms[t.iri] = t);
+    }
+
+    private createInitialFetchTermPromise = ():void => {
+        if (!this.lastExecutedPromise) {
+            this.lastExecutedPromise = this.props.fetchTerms(
+                {},
+                this.props.vocabularyIri.fragment,
+                this.props.vocabularyIri.namespace
+            )
+                .then((terms: Term[]) => {
+                    this.updateTerms(terms);
+                }, (d) => d);
         }
-        this.props.loadContentFile(Vocabulary2.create(this.props.document.iri), normalizedFileName);
     }
 
-    private getNormalizedName(iri: string): string {
-        return Vocabulary2.create(iri).fragment;
-    }
+    /**
+     * Creates lambda function that checks if term identified by termIri is downloaded.
+     * If term is already downloaded resolved promise is returned with term as output.
+     * If term is not downloaded it returns fetching request promise that updates terms if succeeds and returns the term.
+     * @param termIri Iri of searched term.
+     */
+    private fetchTermPromiseCreator(termIri: string) {
+        return () => {
+            const term = this.terms[termIri];
 
-    private getProcessingInstructions(): Instruction[] {
-        // Order matters. Instructions are processed in the order they're defined
-        const processNodeDefinitions = new ProcessNodeDefinitions(React);
-        return [
-            {
-                // Custom annotated <span> processing
-                shouldProcessNode: (node: any): boolean => {
-                    // return node.parent && node.parent.name && node.parent.name === 'span';
-                    return node.name && (node.name === 'span') && (node.attribs.typeof === "ddo:vyskyt-termu")
-                },
-                processNode: (node: any, children: any) => {
-                    // node.attribs = Object.assign(node.attribs, { style:'background-color: rgb(132, 210, 255); padding: 0px 4px;'})
-                    return <Annotation text={node.children[0].data} {...node.attribs} />
-                    // return node.data.toUpperCase();
-                }
-            }, {
-                // Anything else
-                shouldProcessNode: (node: any): boolean => {
-                    return true;
-                },
-                processNode: processNodeDefinitions.processDefaultNode
-            }];
-    }
-
-    private surroundSelection = (element: any, document: any) => {
-
-        const selection = window.getSelection();
-
-        if (!selection.isCollapsed) {
-
-
-            if (selection) {
-                const sel = window.getSelection();
-                if (sel.rangeCount) {
-                    const range = sel.getRangeAt(0).cloneRange();
-
-                    const fragment = range.cloneContents();
-                    if ((fragment.childNodes.length === 1) && (fragment.childNodes[0].nodeType === Node.TEXT_NODE)) {
-                        const span = document.createElement("span");
-                        const text = fragment.childNodes[0].nodeValue!;
-
-                        range.extractContents();
-                        range.surroundContents(span);
-                        sel.removeAllRanges();
-                        sel.addRange(range);
-
-                        ReactDOM.render(
-                            this.getAnnotation(text),
-                            span);
-                    }
-
-
-                }
+            if (!term) {
+                return this.props.fetchTerm(
+                    VocabularyUtils.create(termIri).fragment,
+                    this.props.vocabularyIri.fragment,
+                    this.props.vocabularyIri.namespace
+                )
+                    .then((foundTerm: Term) => {
+                        this.updateTerms([foundTerm]);
+                        const t = this.terms[termIri];
+                        if (!t) {
+                            throw Error("Term " + termIri + " not found.");
+                        }
+                        return t;
+                    })
+            } else {
+                return Promise.resolve(term);
             }
         }
     }
 
+    public onFetchTerm = (termIri: string): Promise<Term> => {
 
-    private getAnnotation = (text: string) => {
-        return <Provider store={TermItStore}>
-            <IntlProvider {...this.props.intl}>
-                <Annotation about={this.getRDFNodeId()} property={"ddo:je-vyskytem-termu"} typeof={"ddo:vyskyt-termu"}
-                            text={text}/>
-            </IntlProvider>
-        </Provider>
-    }
+        const term = this.terms[termIri];
+        if (!term) {
+            if (!this.lastExecutedPromise) { // TODO should be initialized here already
+                this.createInitialFetchTermPromise();
+            }
+            this.lastExecutedPromise = this.lastExecutedPromise!
+                .then((d) => d, (d) => d)
+                .then(this.fetchTermPromiseCreator(termIri));
 
-    private getRDFNodeId(): string {
-        return '_:' + Math.random().toString(36).substring(8);
-    }
-
-    private handleMouseLeave = () => {
-        if (this.containerElement) {
-            this.surroundSelection(this.containerElement, this.containerElement.ownerDocument)
+            return this.lastExecutedPromise;
+        } else {
+            return Promise.resolve(term)
         }
     };
 
-    // private onAnnotate = () => {
-    // };
-    //
-    // private onSave = () => {
-    // };
-
     public render() {
-        // const actions = [];
-        // actions.push(<Button key='glossary.edit'
-        //                          color='secondary'
-        //                          title={"annotate"}
-        //                          size='sm'
-        //                          onClick={this.onAnnotate}>{"✎"}</Button>);
-        // actions.push(<Button key='glossary.save'
-        //                          color='secondary'
-        //                          title={"save"}
-        //                          size='sm'
-        //                          onClick={this.onSave}>{"✓"}</Button>);
-
-        const isValidNode = () => {
-            return true;
-        };
-        const htmlToReactParser = new HtmlToReactParser();
-        const reactComponent = htmlToReactParser.parseWithInstructions(this.props.fileContent, isValidNode,
-            this.getProcessingInstructions());
-
-        return <div
-            ref={r => {
-                this.containerElement = r
-            }}
-            onMouseUp={this.handleMouseLeave}>
-            {reactComponent}
-        </div>
+        return (this.props.fileContent) ?
+            <Annotator html={this.props.fileContent} onFetchTerm={this.onFetchTerm} onUpdate={this.onUpdate}
+                       intl={this.props.intl}/> : null;
     }
-
 }
 
 export default connect((state: TermItState) => {
     return {
-        vocabulary: state.vocabulary,
-        document: state.document,
-        fileIri: state.fileIri,
         fileContent: state.fileContent,
-        intl: state.intl
+        intl: state.intl,
+        defaultTerms: state.defaultTerms
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
-        loadContentFile: (documentIri: IRI, fileName: string) => dispatch(loadFileContent(documentIri, fileName)),
-        loadTerms: (normalizedVocabularyName: string) => dispatch(loadTerms(normalizedVocabularyName))
+        loadFileContent: (fileIri: IRI) => dispatch(loadFileContent(fileIri)),
+        saveFileContent: (fileIri: IRI, fileContent: string) => dispatch(saveFileContent(fileIri, fileContent)),
+        loadDefaultTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => dispatch(fetchVocabularyTerms(fetchOptions, vocabularyNormalizedName, namespace)),
+        fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => dispatch(fetchVocabularyTerm(termNormalizedName, vocabularyNormalizedName, namespace))
     };
 })(injectIntl(withI18n(FileDetail)));

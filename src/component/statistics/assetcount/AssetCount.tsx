@@ -1,28 +1,13 @@
 import * as React from "react";
-import SparqlWidget from "../SparqlWidget";
+import SparqlWidget, {PublicProps} from "../SparqlWidget";
 import LD from "ld-query";
-import queryTemplate from "./AssetCount.rq";
+import VocabularyUtils from "../../../util/VocabularyUtils";
 
-interface Props {
-    typeIri : string;
-    title : string
-}
-
-export class AssetCount extends React.Component<Props> {
+class AssetCount extends React.Component<PublicProps> {
     public render() {
-        const query = queryTemplate.split('?assetType').join('<'+this.props.typeIri+'>');
-
-        const context = LD( { "termit": 'http://onto.fel.cvut.cz/ontologies/termit/' } );
-        const componentFunction = (queryResult : any) =>
-            <h2>{ context( queryResult ).query("termit:has-count @value") }</h2>;
-
-        return (<div>
-            <SparqlWidget
-                title={this.props.title}
-                componentFunction={componentFunction}
-                sparqlQuery={query}/>
-        </div>);
+        const context = LD( { "termit": VocabularyUtils.NS_TERMIT } );
+        return <h2>{ context( this.props.queryResults ).query("termit:has-count @value") }</h2>;
     }
 }
 
-export default AssetCount;
+export default SparqlWidget<PublicProps>( AssetCount );

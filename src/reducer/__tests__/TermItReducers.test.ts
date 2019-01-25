@@ -1,20 +1,17 @@
-import reducers from '../TermItReducers';
-import ActionType, {FailureAction, UserLoadingAction} from "../../action/ActionType";
+import reducers from "../TermItReducers";
+import ActionType, {AsyncActionSuccess, FailureAction} from "../../action/ActionType";
 import TermItState from "../../model/TermItState";
 import {
+    asyncActionFailure,
+    asyncActionRequest,
+    asyncActionSuccess,
+    asyncActionSuccessWithPayload,
     clearError,
+    clearProperties, clearResource,
+    consumeNotification,
     dismissMessage,
-    fetchUserFailure,
-    fetchUserRequest,
-    fetchUserSuccess,
-    loadDefaultTerms,
-    loadVocabularyFailure,
-    loadVocabularySuccess,
-    loginFailure,
-    loginRequest,
-    loginSuccess,
     publishMessage,
-    registerFailure,
+    publishNotification,
     selectVocabularyTerm,
     switchLanguage,
     userLogout
@@ -25,9 +22,13 @@ import Message from "../../model/Message";
 import Constants from "../../util/Constants";
 import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
-import VocabularyTerm, {VocabularyTermData} from "../../model/VocabularyTerm";
+import Term, {TermData} from "../../model/Term";
+import RdfsResource from "../../model/RdfsResource";
+import AppNotification from "../../model/AppNotification";
+import Resource, {EMPTY_RESOURCE} from "../../model/Resource";
+import Generator from "../../__tests__/environment/Generator";
 
-function stateToPlainObject(state: TermItState) {
+function stateToPlainObject(state: TermItState): TermItState {
     return {
         loading: state.loading,
         user: state.user,
@@ -41,12 +42,21 @@ function stateToPlainObject(state: TermItState) {
         defaultTerms: state.defaultTerms,
         createdTermsCounter: state.createdTermsCounter,
         document: state.document,
-        fileIri: state.fileIri,
-        fileContent: state.fileContent
+        fileContent: state.fileContent,
+        facetedSearchResult: state.facetedSearchResult,
+        searchListenerCount: state.searchListenerCount,
+        searchInProgress: state.searchInProgress,
+        searchQuery: state.searchQuery,
+        searchResults: state.searchResults,
+        types: state.types,
+        resource: state.resource,
+        resources: state.resources,
+        properties: state.properties,
+        notifications: state.notifications
     };
 }
 
-describe('Reducers', () => {
+describe("Reducers", () => {
 
     let initialState = new TermItState();
 
@@ -54,135 +64,137 @@ describe('Reducers', () => {
         initialState = new TermItState();
     });
 
-    describe('loading user', () => {
-        it('sets user in state on user load success', () => {
+    describe("loading user", () => {
+        const action = {type: ActionType.FETCH_USER};
+        it("sets user in state on user load success", () => {
             const user = new User({
-                iri: 'http://test',
-                firstName: 'test',
-                lastName: 'test',
-                username: 'test@kbss.felk.cvut.cz'
+                iri: "http://test",
+                firstName: "test",
+                lastName: "test",
+                username: "test@kbss.felk.cvut.cz"
             });
-            const action: UserLoadingAction = fetchUserSuccess(user);
-            expect(reducers(undefined, action)).toEqual(Object.assign({}, initialState, {user}));
+            const a: AsyncActionSuccess<User> = asyncActionSuccessWithPayload(action, user);
+            expect(reducers(undefined, a)).toEqual(Object.assign({}, initialState, {user}));
         });
 
-        it('sets error in state on user load failure', () => {
-            const error = new ErrorInfo(ActionType.FETCH_USER_FAILURE, {
-                message: 'Failed to connect to server',
-                requestUrl: '/users/current'
+        it("sets error in state on user load failure", () => {
+            const error = new ErrorInfo(ActionType.FETCH_USER, {
+                message: "Failed to connect to server",
+                requestUrl: "/users/current"
             });
-            const action: FailureAction = fetchUserFailure(error);
-            expect(reducers(undefined, action)).toEqual(Object.assign({}, initialState, {error}));
+            const a: FailureAction = asyncActionFailure(action, error);
+            expect(reducers(undefined, a)).toEqual(Object.assign({}, initialState, {error}));
         });
 
-        it('sets loading status when user fetch is initiated', () => {
-            const action = fetchUserRequest();
-            expect(reducers(undefined, action)).toEqual(Object.assign({}, initialState, {loading: true}));
+        it("sets loading status when user fetch is initiated", () => {
+            const a = asyncActionRequest(action);
+            expect(reducers(undefined, a)).toEqual(Object.assign({}, initialState, {loading: true}));
         });
 
-        it('sets loading status to false on user load success', () => {
+        it("sets loading status to false on user load success", () => {
             const user = new User({
-                iri: 'http://test',
-                firstName: 'test',
-                lastName: 'test',
-                username: 'test@kbss.felk.cvut.cz'
+                iri: "http://test",
+                firstName: "test",
+                lastName: "test",
+                username: "test@kbss.felk.cvut.cz"
             });
-            const action: UserLoadingAction = fetchUserSuccess(user);
+            const a: AsyncActionSuccess<User> = asyncActionSuccessWithPayload(action, user);
             initialState.loading = true;
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {
+            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {
                 user,
                 loading: false
             }));
         });
 
-        it('sets loading status to false on user load failure', () => {
-            const error = new ErrorInfo(ActionType.FETCH_USER_FAILURE, {
-                message: 'Failed to connect to server',
-                requestUrl: '/users/current'
+        it("sets loading status to false on user load failure", () => {
+            const error = new ErrorInfo(ActionType.FETCH_USER, {
+                message: "Failed to connect to server",
+                requestUrl: "/users/current"
             });
-            const action: FailureAction = fetchUserFailure(error);
+            const a: FailureAction = asyncActionFailure(action, error);
             initialState.loading = true;
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {
+            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {
                 error,
                 loading: false
             }));
         });
     });
 
-    describe('login', () => {
-        it('sets loading status on login request', () => {
-            const action = loginRequest();
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {loading: true}));
+    describe("login", () => {
+        const action = {type: ActionType.LOGIN};
+        it("sets loading status on login request", () => {
+            const a = asyncActionRequest(action);
+            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {loading: true}));
         });
 
-        it('sets loading status to false on login success', () => {
-            const action = loginSuccess();
+        it("sets loading status to false on login success", () => {
+            const a = asyncActionSuccess(action);
             initialState.loading = true;
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {loading: false}));
+            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {loading: false}));
         });
 
-        it('sets loading status to false on login failure', () => {
-            const error = new ErrorInfo(ActionType.LOGIN_FAILURE, {
-                message: 'Incorrect password',
-                requestUrl: '/j_spring_security_check'
+        it("sets loading status to false on login failure", () => {
+            const error = new ErrorInfo(ActionType.LOGIN, {
+                message: "Incorrect password",
+                requestUrl: "/j_spring_security_check"
             });
-            const action = loginFailure(error);
+            const a = asyncActionFailure(action, error);
             initialState.loading = true;
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {
+            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {
                 loading: false,
                 error
             }));
         });
 
-        it('sets error state on login failure', () => {
-            const error = new ErrorInfo(ActionType.LOGIN_FAILURE, {
-                message: 'Incorrect password',
-                requestUrl: '/j_spring_security_check'
+        it("sets error state on login failure", () => {
+            const error = new ErrorInfo(ActionType.LOGIN, {
+                message: "Incorrect password",
+                requestUrl: "/j_spring_security_check"
             });
-            const action = loginFailure(error);
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error}));
+            const a = asyncActionFailure(action, error);
+            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {error}));
         });
     });
 
-    describe('clear error', () => {
-        it('clears error when action origin matches', () => {
-            initialState.error = new ErrorInfo(ActionType.LOGIN_FAILURE, {
-                messageId: 'Unable to connect to server'
+    describe("clear error", () => {
+        it("clears error when action origin matches", () => {
+            initialState.error = new ErrorInfo(ActionType.LOGIN, {
+                messageId: "Unable to connect to server"
             });
-            const action = clearError(ActionType.LOGIN_FAILURE);
+            const action = clearError(ActionType.LOGIN);
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error: EMPTY_ERROR}));
         });
 
-        it('does not clear error when origin is different', () => {
-            initialState.error = new ErrorInfo(ActionType.LOGIN_FAILURE, {
-                messageId: 'Unable to connect to server'
+        it("does not clear error when origin is different", () => {
+            initialState.error = new ErrorInfo(ActionType.LOGIN, {
+                messageId: "Unable to connect to server"
             });
-            const action = clearError(ActionType.FETCH_USER_FAILURE);
+            const action = clearError(ActionType.FETCH_USER);
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(stateToPlainObject(initialState));
         });
     });
 
-    describe('messages', () => {
-        it('adds message into message array on publish message action', () => {
+    describe("messages", () => {
+        it("adds message into message array on publish message action", () => {
             const mOne = new Message({
-                message: 'test'
+                message: "test"
             });
             const action = publishMessage(mOne);
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {messages: [mOne]}));
             const mTwo = new Message({
-                messageId: 'connection.error'
+                messageId: "connection.error"
             });
             const actionTwo = publishMessage(mTwo);
             initialState.messages = [mOne];
             expect(reducers(stateToPlainObject(initialState), actionTwo)).toEqual(Object.assign({}, initialState, {messages: [mOne, mTwo]}));
         });
 
-        it('removes message from array on dismiss message action', () => {
+        it("removes message from array on dismiss message action", () => {
             const mOne = new Message({
-                message: 'test'
+                message: "test"
             });
             const mTwo = new Message({
-                messageId: 'connection.error'
+                messageId: "connection.error"
             });
             initialState.messages = [mOne, mTwo];
             const action = dismissMessage(mOne);
@@ -190,101 +202,193 @@ describe('Reducers', () => {
         });
     });
 
-    describe('intl', () => {
-        it('loads localization data on action', () => {
+    describe("intl", () => {
+        it("loads localization data on action", () => {
             const action = switchLanguage(Constants.LANG.CS);
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {intl: require('../../i18n/cs').default}));
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {intl: require("../../i18n/cs").default}));
         });
     });
 
-    describe('register', () => {
-        it('sets error state on registration failure', () => {
-            const error = new ErrorInfo(ActionType.REGISTER_FAILURE, {
-                message: 'Username exists',
-                requestUrl: '/users'
+    describe("register", () => {
+        it("sets error state on registration failure", () => {
+            const error = new ErrorInfo(ActionType.REGISTER, {
+                message: "Username exists",
+                requestUrl: "/users"
             });
-            const action = registerFailure(error);
+            const action = asyncActionFailure({type: ActionType.REGISTER}, error);
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error}));
         });
     });
 
-    describe('logout', () => {
-        it('resets current user to empty user', () => {
+    describe("logout", () => {
+        it("resets current user to empty user", () => {
             initialState.user = new User({
-                iri: 'http://test',
-                firstName: 'test',
-                lastName: 'test',
-                username: 'test@kbss.felk.cvut.cz'
+                iri: "http://test",
+                firstName: "test",
+                lastName: "test",
+                username: "test@kbss.felk.cvut.cz"
             });
             expect(reducers(stateToPlainObject(initialState), userLogout())).toEqual(Object.assign({}, initialState, {user: EMPTY_USER}));
         });
     });
 
-    describe('loading vocabulary', () => {
-        it('sets vocabulary when it was successfully loaded', () => {
+    describe("loading vocabulary", () => {
+        const action = {type: ActionType.LOAD_VOCABULARY};
+
+        it("sets vocabulary when it was successfully loaded", () => {
             const vocabularyData: VocabularyData = {
-                name: 'Test vocabulary',
-                iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary'
+                label: "Test vocabulary",
+                iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary"
             };
-            expect(reducers(stateToPlainObject(initialState), loadVocabularySuccess(vocabularyData)))
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload(action, new Vocabulary(vocabularyData))))
                 .toEqual(Object.assign({}, initialState, {vocabulary: new Vocabulary(vocabularyData)}));
         });
 
-        it('sets error when vocabulary loading fails', () => {
+        it("sets error when vocabulary loading fails", () => {
             const errorData = {
-                message: 'Vocabulary does not exist',
-                requestUri: '/vocabularies/unknown-vocabulary'
+                message: "Vocabulary does not exist",
+                requestUri: "/vocabularies/unknown-vocabulary"
             };
-            expect(reducers(stateToPlainObject(initialState), loadVocabularyFailure(errorData)))
-                .toEqual(Object.assign({}, initialState, {error: new ErrorInfo(ActionType.LOAD_VOCABULARY_FAILURE, errorData)}));
+            expect(reducers(stateToPlainObject(initialState), asyncActionFailure(action, errorData)))
+                .toEqual(Object.assign({}, initialState, {error: new ErrorInfo(ActionType.LOAD_VOCABULARY, errorData)}));
         });
     });
 
-    describe('select term', () => {
-        it('sets selectedTerm when it was successfully selected', () => {
-            const term: VocabularyTermData = {
-                label: 'Test term',
-                iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term'
+    describe("select term", () => {
+        it("sets selectedTerm when it was successfully selected", () => {
+            const term: TermData = {
+                label: "Test term",
+                iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term"
             };
             expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(term)))
-                .toEqual(Object.assign({}, initialState, {selectedTerm: new VocabularyTerm(term)}));
+                .toEqual(Object.assign({}, initialState, {selectedTerm: new Term(term)}));
         });
 
-        it('sets selectedTerm when it was successfully selected then deselect it', () => {
-            const term: VocabularyTermData = {
-                label: 'Test term',
-                iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term'
+        it("sets selectedTerm when it was successfully selected then deselect it", () => {
+            const term: TermData = {
+                label: "Test term",
+                iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term"
             };
             expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(term)))
-                .toEqual(Object.assign({}, initialState, {selectedTerm: new VocabularyTerm(term)}));
+                .toEqual(Object.assign({}, initialState, {selectedTerm: new Term(term)}));
             expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(null)))
                 .toEqual(Object.assign({}, initialState, {selectedTerm: null}));
         });
     });
 
-    describe('load default terms', () => {
-        it('sets default terms when it was successfully loaded', () => {
-            const terms: VocabularyTermData[] = [
+    describe("load default terms", () => {
+        it("sets default terms when it was successfully loaded", () => {
+            const terms: TermData[] = [
                 {
-                    label: 'Test term 1',
-                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1'
+                    label: "Test term 1",
+                    iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1"
                 },
                 {
-                    label: 'Test term 2',
-                    iri: 'http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-2'
+                    label: "Test term 2",
+                    iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-2"
                 }
             ];
-            expect(reducers(stateToPlainObject(initialState), loadDefaultTerms(terms)))
-                .toEqual(Object.assign({}, initialState, {defaultTerms: terms.map(t => new VocabularyTerm(t))}));
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_DEFAULT_TERMS}, terms.map(vt => new Term(vt)))))
+                .toEqual(Object.assign({}, initialState, {defaultTerms: terms.map(t => new Term(t))}));
         });
     });
 
-    it('does not change loading status on request action with ignoreLoading specified', () => {
+    describe("load types", () => {
+        it("sets default terms when it was successfully loaded", () => {
+            const terms: TermData[] = [
+                {
+                    label: "Test type 1",
+                    iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-type-1"
+                },
+                {
+                    label: "Test type 2",
+                    iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-type-2"
+                }
+            ];
+
+            const map = {};
+            terms.forEach((v: TermData) =>
+                map[(v.iri || "")] = new Term(v)
+            );
+
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_TYPES}, terms.map(vt => new Term(vt)))))
+                .toEqual(Object.assign({}, initialState, {types: map}));
+        });
+    });
+
+    it("does not change loading status on request action with ignoreLoading specified", () => {
         const action = {
             type: ActionType.SEARCH,
             status: AsyncActionStatus.REQUEST,
             ignoreLoading: true
         };
         expect(reducers(stateToPlainObject(initialState), action)).toEqual(initialState);
+    });
+
+    describe("properties", () => {
+        it("sets properties when they were successfully loaded", () => {
+            const properties: RdfsResource[] = [new RdfsResource({
+                iri: "http://www.w3.org/2000/01/rdf-schema#label",
+                label: "Label",
+                comment: "RDFS label property"
+            })];
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.GET_PROPERTIES}, properties)))
+                .toEqual(Object.assign({}, initialState, {properties}));
+        });
+
+        it("clear properties on clearProperties action", () => {
+            initialState.properties = [new RdfsResource({
+                iri: "http://www.w3.org/2000/01/rdf-schema#label",
+                label: "Label",
+                comment: "RDFS label property"
+            })];
+            expect(reducers(stateToPlainObject(initialState), clearProperties())).toEqual(Object.assign({}, initialState, {properties: []}));
+        });
+    });
+
+    describe("notifications", () => {
+        it("appends notification into queue on publish notification action", () => {
+            const notification: AppNotification = {
+                source: {
+                    type: ActionType.CREATE_VOCABULARY_TERM,
+                    status: AsyncActionStatus.SUCCESS
+                }
+            };
+            expect(reducers(stateToPlainObject(initialState), publishNotification(notification)))
+                .toEqual(Object.assign({}, initialState, {notifications: [notification]}));
+        });
+
+        it("removes notification from queue on consume notification action", () => {
+            const notification: AppNotification = {
+                source: {
+                    type: ActionType.CREATE_VOCABULARY_TERM,
+                    status: AsyncActionStatus.SUCCESS
+                }
+            };
+            initialState.notifications = [notification];
+            expect(reducers(stateToPlainObject(initialState), consumeNotification(notification)))
+                .toEqual(Object.assign({}, initialState, {notifications: []}));
+        });
+
+        it("does nothing when unknown notification is consumed", () => {
+            const notification: AppNotification = {
+                source: {
+                    type: ActionType.CREATE_VOCABULARY_TERM,
+                    status: AsyncActionStatus.SUCCESS
+                }
+            };
+            initialState.notifications = [notification];
+            const another: AppNotification = {
+                source: {type: ActionType.SWITCH_LANGUAGE}
+            };
+            expect(reducers(stateToPlainObject(initialState), consumeNotification(another))).toEqual(initialState);
+        });
+    });
+
+    describe("resource", () => {
+        it("resets resource to empty on clear resource action", () => {
+            initialState.resource = new Resource({iri: Generator.generateUri(), label: "Resource"});
+            expect(reducers(stateToPlainObject(initialState), clearResource())).toEqual(Object.assign(initialState, {resource: EMPTY_RESOURCE}));
+        });
     });
 });

@@ -1,0 +1,12 @@
+/**
+ Customize Bootstrap default values.
+ */
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+$theme-colors: (
+        "primary": $purple,
+        "info": $blue,
+        "secondary": $gray-400
+)

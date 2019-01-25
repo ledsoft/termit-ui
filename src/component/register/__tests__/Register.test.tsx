@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {mountWithIntl} from '../../../__tests__/environment/Environment';
 import {Register} from '../Register';
-import {formatMessage, i18n} from "../../../__tests__/environment/IntlUtil";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import ErrorInfo, {EMPTY_ERROR} from "../../../model/ErrorInfo";
 import Routing from '../../../util/Routing';
 import Routes from "../../../util/Routes";
@@ -10,9 +10,11 @@ import {ReactWrapper} from "enzyme";
 import ActionType from "../../../action/ActionType";
 import Ajax, {params} from "../../../util/Ajax";
 import Constants from '../../../util/Constants';
+import Authentication from "../../../util/Authentication";
 
 jest.mock('../../../util/Routing');
 jest.mock('../../../util/Ajax');
+jest.mock('../../../util/Authentication');
 
 describe('Registration', () => {
 
@@ -35,23 +37,23 @@ describe('Registration', () => {
     });
 
     it('navigates to login route on cancel', () => {
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={EMPTY_ERROR}
-                                                formatMessage={formatMessage} register={register}/>);
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} error={EMPTY_ERROR}
+                                                register={register} {...intlFunctions()}/>);
         const cancelButton = wrapper.find('button.register-cancel');
         cancelButton.simulate('click');
         expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.login);
     });
 
     it('displays submit button disabled when inputs are empty', () => {
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={EMPTY_ERROR}
-                                                formatMessage={formatMessage} register={register}/>);
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} error={EMPTY_ERROR}
+                                                register={register} {...intlFunctions()}/>);
         const submitButton = wrapper.find(Button).first();
         expect(submitButton.getElement().props.disabled).toBeTruthy();
     });
 
     it('enables submit button when inputs are nonempty', () => {
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={EMPTY_ERROR}
-                                                formatMessage={formatMessage} register={register}/>);
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} error={EMPTY_ERROR}
+                                                register={register} {...intlFunctions()}/>);
         fillBasicUserInfo(wrapper);
         fillPasswords(wrapper);
         const submitButton = wrapper.find(Button).first();
@@ -80,8 +82,8 @@ describe('Registration', () => {
     }
 
     it('disables submit button when passwords do not match', () => {
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={EMPTY_ERROR}
-                                                formatMessage={formatMessage} register={register}/>);
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} error={EMPTY_ERROR}
+                                                register={register} {...intlFunctions()}/>);
         fillBasicUserInfo(wrapper);
         fillPasswords(wrapper, true);
         const submitButton = wrapper.find(Button).first();
@@ -89,8 +91,8 @@ describe('Registration', () => {
     });
 
     it('submits user for registration on register click', () => {
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={EMPTY_ERROR}
-                                                formatMessage={formatMessage} register={register}/>);
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} error={EMPTY_ERROR}
+                                                register={register} {...intlFunctions()}/>);
         fillBasicUserInfo(wrapper);
         fillPasswords(wrapper);
         const submitButton = wrapper.find(Button).first();
@@ -99,8 +101,8 @@ describe('Registration', () => {
     });
 
     it('disables submit button when loading', () => {
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={true} i18n={i18n} error={EMPTY_ERROR}
-                                                formatMessage={formatMessage} register={register}/>);
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={true} error={EMPTY_ERROR}
+                                                register={register} {...intlFunctions()}/>);
         fillBasicUserInfo(wrapper);
         fillPasswords(wrapper);
         const submitButton = wrapper.find(Button).first();
@@ -108,20 +110,20 @@ describe('Registration', () => {
     });
 
     it('renders alert with error info', () => {
-        const error = new ErrorInfo(ActionType.REGISTER_FAILURE, {
+        const error = new ErrorInfo(ActionType.REGISTER, {
             message: 'Error'
         });
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={error}
-                                                formatMessage={formatMessage} register={register}/>);
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} error={error}
+                                                register={register} {...intlFunctions()}/>);
         expect(wrapper.find(Alert).exists()).toBeTruthy();
     });
 
     it('clears error o change', () => {
-        const error = new ErrorInfo(ActionType.REGISTER_FAILURE, {
+        const error = new ErrorInfo(ActionType.REGISTER, {
             message: 'Error'
         });
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={error}
-                                                formatMessage={formatMessage} register={register}/>);
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} error={error}
+                                                register={register} {...intlFunctions()}/>);
         const firstNameInput = wrapper.find('input[name="firstName"]');
         (firstNameInput.getDOMNode() as HTMLInputElement).value = userInfo.firstName;
         firstNameInput.simulate('change', firstNameInput);
@@ -129,11 +131,17 @@ describe('Registration', () => {
     });
 
     it('checks for username existence on username field edit', () => {
-        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} i18n={i18n} error={EMPTY_ERROR}
-                                                formatMessage={formatMessage} register={register}/>);
+        const wrapper = mountWithIntl(<Register clearError={clearError} loading={false} error={EMPTY_ERROR}
+                                                register={register} {...intlFunctions()}/>);
         const usernameInput = wrapper.find('input[name="username"]');
         (usernameInput.getDOMNode() as HTMLInputElement).value = userInfo.username;
         usernameInput.simulate('change', usernameInput);
         expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + '/users/username', params({username: userInfo.username}));
+    });
+
+    it('clears potentially existing JWT on mount', () => {
+        mountWithIntl(<Register clearError={clearError} loading={false} error={EMPTY_ERROR}
+                                register={register} {...intlFunctions()}/>);
+        expect(Authentication.clearToken).toHaveBeenCalled();
     });
 });

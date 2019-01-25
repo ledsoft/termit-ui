@@ -4,7 +4,7 @@
  * Note: This is work in progress, the API description is not definitive.
  */
 
-declare module 'jsonld' {
+declare module "jsonld" {
     type JsonLdInput = object | object[] | string;
     type JsonLdContext = object | object[] | string;
     type JsonLdDictionary = object;

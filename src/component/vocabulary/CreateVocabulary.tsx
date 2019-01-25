@@ -1,59 +1,48 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import {Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from 'reactstrap';
-import withI18n, {HasI18n} from '../hoc/withI18n';
-import {connect} from 'react-redux';
-import TermItState from '../../model/TermItState';
-import CustomInput from '../misc/CustomInput';
-import Routes from '../../util/Routes';
-import Routing from '../../util/Routing';
-import Ajax, {params} from "../../util/Ajax";
-import Constants from '../../util/Constants';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import {Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from "reactstrap";
+import withI18n, {HasI18n} from "../hoc/withI18n";
+import {connect} from "react-redux";
+import CustomInput from "../misc/CustomInput";
+import Routes from "../../util/Routes";
+import Routing from "../../util/Routing";
+import Constants from "../../util/Constants";
 import withLoading from "../hoc/withLoading";
-import {createVocabulary} from "../../action/ComplexActions";
-import {ThunkDispatch} from "redux-thunk";
-import {Action} from "redux";
+import {createVocabulary} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
+import {ThunkDispatch} from "../../util/Types";
+import TextArea from "../misc/TextArea";
+import {AbstractCreateAsset, AbstractCreateAssetState} from "../asset/AbstractCreateAsset";
 
 interface CreateVocabularyProps extends HasI18n {
     onCreate: (vocabulary: Vocabulary) => void
 }
 
-interface CreateVocabularyState {
-    name: string,
-    iri: string,
-    generateIri: boolean
+interface CreateVocabularyState extends AbstractCreateAssetState {
+    comment: string;
 }
 
-export class CreateVocabulary extends React.Component<CreateVocabularyProps, CreateVocabularyState> {
+export class CreateVocabulary extends AbstractCreateAsset<CreateVocabularyProps, CreateVocabularyState> {
     constructor(props: CreateVocabularyProps) {
         super(props);
         this.state = {
-            name: '',
-            iri: '',
+            label: "",
+            comment: "",
+            iri: "",
             generateIri: true
         };
     }
 
-    private onNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        const name = (e.currentTarget.value as string);
-        this.setState({name});
-        this.generateIri(name);
-    };
-
-    private generateIri(name: string): void {
-        if (!this.state.generateIri) {
-            return;
-        }
-        Ajax.get(Constants.API_PREFIX + '/vocabularies/identifier', params({name})).then(iri => this.setState({iri}));
+    protected get identifierGenerationEndpoint(): string {
+        return Constants.API_PREFIX + "/vocabularies/identifier";
     }
 
-    private onIriChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({iri: (e.currentTarget.value as string), generateIri: false});
+    private onCommentChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({comment: e.currentTarget.value});
     };
 
     private onCreate = (): void => {
-        this.props.onCreate(new Vocabulary({name: this.state.name, iri: this.state.iri}));
+        this.props.onCreate(new Vocabulary({label: this.state.label, iri: this.state.iri}));
     };
 
     private static onCancel(): void {
@@ -63,31 +52,39 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
     public render() {
         const i18n = this.props.i18n;
         return <Card>
-            <CardHeader color='info'>
-                <h5>{i18n('vocabulary.create.title')}</h5>
+            <CardHeader color="info">
+                <h5>{i18n("vocabulary.create.title")}</h5>
             </CardHeader>
             <CardBody>
                 <Form>
                     <Row>
-                        <Col md={6}>
-                            <CustomInput name='create-vocabulary.name' label={i18n('vocabulary.name')}
-                                         value={this.state.name}
-                                         onChange={this.onNameChange}/>
+                        <Col xl={6} md={12}>
+                            <CustomInput name="create-vocabulary.label" label={i18n("asset.label")}
+                                         value={this.state.label}
+                                         onChange={this.onLabelChange}/>
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={6}>
-                            <CustomInput name='create-vocabulary.iri' label={i18n('vocabulary.iri')}
+                        <Col xl={6} md={12}>
+                            <CustomInput name="create-vocabulary.iri" label={i18n("asset.iri")}
                                          value={this.state.iri}
-                                         onChange={this.onIriChange} help={i18n('vocabulary.create.iri.help')}/>
+                                         onChange={this.onIriChange} help={i18n("asset.create.iri.help")}/>
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={6}>
-                            <ButtonToolbar className='pull-right'>
-                                <Button onClick={this.onCreate} color='success' size='sm'
-                                        disabled={this.state.name.trim().length === 0}>{i18n('vocabulary.create.submit')}</Button>
-                                <Button onClick={CreateVocabulary.onCancel} size='sm'>{i18n('cancel')}</Button>
+                        <Col xl={6} md={12}>
+                            <TextArea name="create-vocabulary.comment" label={i18n("vocabulary.comment")}
+                                      type="textarea" rows={3} value={this.state.comment} help={i18n("optional")}
+                                      onChange={this.onCommentChange}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xl={6} md={12}>
+                            <ButtonToolbar className="pull-right">
+                                <Button name="create-vocabulary.submit" onClick={this.onCreate} color="success" size="sm"
+                                        disabled={this.state.label.trim().length === 0}>{i18n("vocabulary.create.submit")}</Button>
+                                <Button name="create-vocabulary.cancel" onClick={CreateVocabulary.onCancel} color="secondary"
+                                        size="sm">{i18n("cancel")}</Button>
                             </ButtonToolbar>
                         </Col>
                     </Row>
@@ -97,11 +94,7 @@ export class CreateVocabulary extends React.Component<CreateVocabularyProps, Cre
     }
 }
 
-export default connect((state: TermItState) => {
-    return {
-        loading: state.loading
-    };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
         onCreate: (vocabulary: Vocabulary) => dispatch(createVocabulary(vocabulary))
     };

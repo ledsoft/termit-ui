@@ -1,11 +1,13 @@
 /**
  * Type declarations for html-to-react library.
  */
-declare module 'html-to-react' {
+declare module "html-to-react" {
 
     interface Node {
+        type?: string
         name?: string
-        attrib?: object
+        attribs?: any
+        children?: [any]
     }
 
     interface Instruction {

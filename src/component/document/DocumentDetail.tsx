@@ -1,32 +1,49 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import withI18n, {HasI18n} from '../hoc/withI18n';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import FileList from "../file/FileList";
-import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "redux-thunk";
 import {connect} from "react-redux";
-import {Action} from "redux";
-import {loadDocument} from "../../action/ComplexActions";
+import {loadDocument} from "../../action/AsyncActions";
 import {IRI} from "../../util/VocabularyUtils";
 import Document from "../../model/Document";
+import {ThunkDispatch} from "../../util/Types";
+import TermItState from "../../model/TermItState";
 
 
-interface DocumentDetailProps extends HasI18n {
+interface DocumentDetailOwnProps {
     iri: IRI, // TODO remove
     document: Document,
+}
+
+interface DocumentDetailDispatchProps {
     loadDocument: (iri: IRI) => void
 }
 
-class DocumentDetail extends React.Component<DocumentDetailProps> {
+type DocumentDetailProps = DocumentDetailOwnProps & DocumentDetailDispatchProps & HasI18n;
 
-    public componentDidMount() {
-        this.props.loadDocument(this.props.iri);
+export class DocumentDetail extends React.Component<DocumentDetailProps> {
+
+    public componentDidMount(): void {
+        this.synchronizeDocument();
+    }
+
+    public componentDidUpdate(): void {
+        this.synchronizeDocument();
+    }
+
+    private synchronizeDocument(): void {
+        if (DocumentDetail.isDifferent(this.props.iri,this.props.document.iri)) {
+            this.props.loadDocument(this.props.iri);
+        }
     }
 
     public render() {
-        return <div>
-            {(this.props.document.files.length > 0) ?  <FileList files={this.props.document.files}/> : (null)}
-        </div>
+        return <FileList files={this.props.document.files}/>;
+    }
+
+    private static isDifferent(iri1: IRI, iri2: string): boolean {
+        const iri1str = iri1.namespace + iri1.fragment;
+        return iri1str !== iri2;
     }
 }
 
@@ -35,7 +52,7 @@ export default connect((state: TermItState) => {
     return {
         document: state.document
     };
-}, (dispatch: ThunkDispatch<object, undefined, Action>) => {
+}, (dispatch: ThunkDispatch) => {
     return {
         loadDocument: (iri: IRI) => dispatch(loadDocument(iri))
     };

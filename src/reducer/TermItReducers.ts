@@ -1,21 +1,17 @@
-import {combineReducers} from "redux";
+import {Action, combineReducers} from "redux";
 import ActionType, {
-    Action,
     AsyncAction,
+    AsyncActionSuccess,
     ClearErrorAction,
-    DocumentLoadingAction,
     ExecuteQueryAction,
+    FacetedSearchAction,
     FailureAction,
-    FileContentLoadingAction,
-    FileSelectingAction,
-    LoadDefaultTermsAction,
-    MessageAction,
+    MessageAction, NotificationAction,
+    SearchAction,
+    SearchResultAction,
     SelectingTermsAction,
-    SwitchLanguageAction,
-    UserLoadingAction,
-    VocabulariesLoadingAction,
-    VocabularyLoadingAction
-} from '../action/ActionType';
+    SwitchLanguageAction
+} from "../action/ActionType";
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
 import ErrorInfo, {EMPTY_ERROR} from "../model/ErrorInfo";
@@ -24,19 +20,24 @@ import IntlData from "../model/IntlData";
 import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
 import AsyncActionStatus from "../action/AsyncActionStatus";
 import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
+import Resource, {EMPTY_RESOURCE} from "../model/Resource";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
-import VocabularyTerm from "../model/VocabularyTerm";
+import Term from "../model/Term";
 import Document, {EMPTY_DOCUMENT} from "../model/Document";
+import RdfsResource from "../model/RdfsResource";
+import AppNotification from "../model/AppNotification";
+import SearchResult from "../model/SearchResult";
+import SearchQuery from "../model/SearchQuery";
 
 /**
  * Handles changes to the currently logged in user.
  *
  * The initial state is an empty user, which basically shouldn't be allowed to do anything.
  */
-function user(state: User = EMPTY_USER, action: UserLoadingAction): User {
+function user(state: User = EMPTY_USER, action: AsyncActionSuccess<User>): User {
     switch (action.type) {
-        case ActionType.FETCH_USER_SUCCESS:
-            return action.user;
+        case ActionType.FETCH_USER:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         case ActionType.LOGOUT:
             return EMPTY_USER;
         default:
@@ -77,17 +78,13 @@ function loading(state = false, action: AsyncAction): boolean {
  */
 function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
     switch (action.type) {
-        case ActionType.FETCH_USER_FAILURE:
-        case ActionType.LOGIN_FAILURE:
-        case ActionType.REGISTER_FAILURE:
-        case ActionType.CREATE_VOCABULARY_FAILURE:
-        case ActionType.CREATE_VOCABULARY_TERM_FAILURE:
-        case ActionType.LOAD_VOCABULARY_FAILURE:
-            return (action as FailureAction).error;
         case ActionType.CLEAR_ERROR:
             const errAction = action as ClearErrorAction;
             return errAction.origin === state.origin ? EMPTY_ERROR : state;
         default:
+            if ((action as FailureAction).error) {
+                return (action as FailureAction).error;
+            }
             return state;
     }
 }
@@ -114,32 +111,75 @@ function intl(state: IntlData = loadInitialLocalizationData(), action: SwitchLan
     }
 }
 
-function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: VocabularyLoadingAction): Vocabulary {
+function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary>): Vocabulary {
     switch (action.type) {
-        case ActionType.LOAD_VOCABULARY_SUCCESS:
-            return action.vocabulary;
+        case ActionType.LOAD_VOCABULARY:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         default:
             return state;
     }
 }
 
-function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: VocabulariesLoadingAction): { [key: string]: Vocabulary } {
+function resource(state: Resource = EMPTY_RESOURCE, action: AsyncActionSuccess<any>): Resource {
     switch (action.type) {
-        case ActionType.LOAD_VOCABULARIES_SUCCESS:
-            const map = {};
-            action.vocabularies.forEach(v =>
-                map[v.iri] = v
-            );
-            return map;
+        case ActionType.LOAD_RESOURCE:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        case ActionType.CLEAR_RESOURCE:
+            return EMPTY_RESOURCE;
+        case ActionType.LOAD_RESOURCE_TERMS:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const r = new Resource(state);
+                r.terms = action.payload;
+                return r;
+            } else {
+                return state;
+            }
         default:
             return state;
     }
 }
 
-function selectedTerm(state: VocabularyTerm | null = null, action: SelectingTermsAction) {
+function resources(state: { [key: string]: Resource } | any = {}, action: AsyncActionSuccess<Resource[]>): { [key: string]: Resource } {
+    switch (action.type) {
+        case ActionType.LOAD_RESOURCES:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const map = {};
+                action.payload.forEach(v =>
+                    map[v.iri] = v
+                );
+                return map;
+            } else {
+                return state;
+            }
+        default:
+            return state;
+    }
+}
+
+function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: AsyncActionSuccess<Vocabulary[]>): { [key: string]: Vocabulary } {
+    switch (action.type) {
+        case ActionType.LOAD_VOCABULARIES:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const map = {};
+                action.payload.forEach(v =>
+                    map[v.iri] = v
+                );
+                return map;
+            } else {
+                return state;
+            }
+        default:
+            return state;
+    }
+}
+
+function selectedTerm(state: Term | null = null, action: SelectingTermsAction | AsyncActionSuccess<Term>) {
     switch (action.type) {
         case ActionType.SELECT_VOCABULARY_TERM:
-            return action.selectedTerms;
+            return (action as SelectingTermsAction).selectedTerms;
+        case ActionType.LOAD_TERM:
+            const aa = action as AsyncActionSuccess<Term>;
+            return aa.status === AsyncActionStatus.SUCCESS ? aa.payload : state;
         default:
             return state;
     }
@@ -147,17 +187,17 @@ function selectedTerm(state: VocabularyTerm | null = null, action: SelectingTerm
 
 function createdTermsCounter(state: number = 0, action: AsyncAction) {
     switch (action.type) {
-        case ActionType.CREATE_VOCABULARY_TERM_SUCCESS:
-            return state + 1;
+        case ActionType.CREATE_VOCABULARY_TERM:
+            return action.status === AsyncActionStatus.SUCCESS ? state + 1 : state;
         default:
             return state;
     }
 }
 
-function defaultTerms(state: VocabularyTerm[] = [], action: LoadDefaultTermsAction) {
+function defaultTerms(state: Term[] = [], action: AsyncActionSuccess<Term[]>): Term[] {
     switch (action.type) {
         case ActionType.LOAD_DEFAULT_TERMS:
-            return action.options;
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         default:
             return state;
     }
@@ -165,38 +205,131 @@ function defaultTerms(state: VocabularyTerm[] = [], action: LoadDefaultTermsActi
 
 function queryResults(state: { [key: string]: QueryResultIF } = {}, action: ExecuteQueryAction) {
     switch (action.type) {
-        case ActionType.EXECUTE_QUERY_SUCCESS:
-            return {
-                ...state,
-                [action.queryString]: new QueryResult(action.queryString, action.queryResult)
-            };
+        case ActionType.EXECUTE_QUERY:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                return {
+                    ...state,
+                    [action.queryString]: new QueryResult(action.queryString, action.queryResult)
+                };
+            } else {
+                return state;
+            }
         default:
             return state;
     }
 }
 
-function fileContent(state: string | null = null, action: FileContentLoadingAction): string | null {
+function facetedSearchResult(state: object = {}, action: FacetedSearchAction) {
     switch (action.type) {
-        case ActionType.LOAD_FILE_CONTENT_SUCCESS:
-            return action.fileContent;
+        case ActionType.FACETED_SEARCH:
+            return (action.status === AsyncActionStatus.SUCCESS) ? action.payload : state;
         default:
             return state;
     }
 }
 
-function fileIri(state: string | null = null, action: FileSelectingAction): string | null {
+function fileContent(state: string | null = null, action: AsyncActionSuccess<string>): string | null {
     switch (action.type) {
-        case ActionType.SELECT_FILE:
-            return action.fileIri;
+        case ActionType.LOAD_FILE_CONTENT:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        case ActionType.SAVE_FILE_CONTENT:
+            return state; // TODD not updating file content for now
         default:
             return state;
     }
 }
 
-function document(state: Document = EMPTY_DOCUMENT, action: DocumentLoadingAction): Document {
+function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<Document>): Document {
     switch (action.type) {
-        case ActionType.LOAD_DOCUMENT_SUCCESS:
-            return action.document;
+        case ActionType.LOAD_DOCUMENT:
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        default:
+            return state;
+    }
+}
+
+function searchQuery(state: SearchQuery | undefined, action: SearchAction): SearchQuery {
+    switch (action.type) {
+        case ActionType.UPDATE_SEARCH_FILTER:
+            const newState = new SearchQuery(state);
+            newState.searchQuery = action.searchString;
+            return newState;
+        default:
+            return state || new SearchQuery();
+    }
+}
+
+function searchResults(state: SearchResult[] | null = null, action: SearchResultAction): SearchResult[] | null {
+    switch (action.type) {
+        case ActionType.SEARCH_RESULT:
+            return action.searchResults;
+    }
+    return state;
+}
+
+function searchListenerCount(state: number = 0, action: Action): number {
+    switch (action.type) {
+        case ActionType.ADD_SEARCH_LISTENER:
+            return state + 1;
+        case ActionType.REMOVE_SEARCH_LISTENER:
+            return state - 1;
+        default:
+            return state;
+    }
+}
+
+function searchInProgress(state: boolean = false, action: Action): boolean {
+    switch (action.type) {
+        case ActionType.SEARCH_START:
+            return true;
+        case ActionType.SEARCH_FINISH:
+            return false;
+        default:
+            return state;
+    }
+}
+
+function types(state: { [key: string]: Term } | any = {}, action: AsyncActionSuccess<Term[]>): { [key: string]: Term } {
+    switch (action.type) {
+        case ActionType.LOAD_TYPES:
+            if (action.status === AsyncActionStatus.SUCCESS) {
+                const map = {};
+                action.payload.forEach(v =>
+                    map[v.iri] = v
+                );
+                return map;
+            } else {
+                return state;
+            }
+        default:
+            return state;
+    }
+}
+
+function properties(state: RdfsResource[] = [], action: AsyncActionSuccess<RdfsResource[]> | Action): RdfsResource[] {
+    switch (action.type) {
+        case ActionType.GET_PROPERTIES:
+            const asyncAction = action as AsyncActionSuccess<RdfsResource[]>;
+            return asyncAction.status === AsyncActionStatus.SUCCESS ? asyncAction.payload : state;
+        case ActionType.CLEAR_PROPERTIES:
+            return [];
+        default:
+            return state;
+    }
+}
+
+function notifications(state: AppNotification[] = [], action: NotificationAction) {
+    switch (action.type) {
+        case ActionType.PUBLISH_NOTIFICATION:
+            return [...state, action.notification];
+        case ActionType.CONSUME_NOTIFICATION:
+            const index = state.indexOf(action.notification);
+            if (index >= 0) {
+                const newState = state.slice();
+                newState.splice(index, 1);
+                return newState;
+            }
+            return state;
         default:
             return state;
     }
@@ -207,6 +340,8 @@ const rootReducer = combineReducers<TermItState>({
     loading,
     vocabulary,
     vocabularies,
+    resource,
+    resources,
     error,
     messages,
     intl,
@@ -215,8 +350,15 @@ const rootReducer = combineReducers<TermItState>({
     queryResults,
     createdTermsCounter,
     document,
-    fileIri,
-    fileContent
+    fileContent,
+    facetedSearchResult,
+    searchQuery,
+    searchResults,
+    searchListenerCount,
+    searchInProgress,
+    types,
+    properties,
+    notifications
 });
 
 export default rootReducer;

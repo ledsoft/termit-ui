@@ -1,39 +1,34 @@
-import OntologicalVocabulary from '../util/VocabularyUtils';
+import OntologicalVocabulary from "../util/VocabularyUtils";
+import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "./Resource";
 
 const ctx = {
-    "iri": "@id",
-    "fileName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-nazev-souboru",
-    "comment": "http://www.w3.org/2000/01/rdf-schema#comment",
     "content": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor/content"
 };
 
-export const CONTEXT = ctx;
+export const CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx);
 
-export interface FileData {
-    iri?: string,
-    fileName: string,
-    comment?: string,
+export interface FileData extends ResourceData {
     origin?: string,
     content?: string
 }
 
-export default class File implements FileData {
-    public iri: string;
-    public fileName: string;
-    public comment: string;
+export default class File extends Resource implements FileData {
     public origin: string;
     public content?: string;
 
     constructor(data: FileData) {
-        Object.assign(this, data);
+        super(data);
+        this.origin = data.origin ? data.origin : "";
+        this.content = data.content;
     }
 
     public toJsonLd(): {} {
-        return Object.assign({}, this, {"@context": CONTEXT, "@type": [OntologicalVocabulary.FILE]});
+        return Object.assign({}, this, {"@context": RESOURCE_CONTEXT, "@type": [OntologicalVocabulary.FILE]});
     }
 }
 
 export const EMPTY_FILE = new File({
-    iri: 'http://empty',
-    fileName: ''
+    iri: "http://empty",
+    label: "",
+    terms: []
 });

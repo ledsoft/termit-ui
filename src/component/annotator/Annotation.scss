@@ -1,0 +1,66 @@
+.assigned-term-occurrence {
+  background: rgba(188, 239, 184, 0.8);
+}
+
+.suggested-term-occurrence {
+  background: rgba(239, 207, 184, 0.8);
+}
+
+.invalid-term-occurrence {
+  background: rgba(239, 66, 24, 0.7);
+}
+
+.loading-term-occurrence {
+  background: rgba(238, 239, 144, 0.4);
+}
+
+.assigned-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted green;
+}
+
+.suggested-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted rgb(239, 69, 27)
+}
+
+.invalid-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted rgb(239, 14, 0)
+}
+
+.loading-term-occurrence.proposed-occurrence {
+  border: 0.15em dotted rgb(239, 173, 62)
+}
+
+.selected-occurrence {
+}
+
+.pwa-popup-title {
+  margin-right: 20px
+}
+
+.an-info {
+  color: #007bff;
+}
+
+.an-warning {
+  color: orangered;
+}
+
+.an-error {
+  color: red;
+}
+
+.popover {
+  min-width: 300px
+}
+
+.popover-body {
+  background-color: rgba(230, 230, 230,1);
+}
+
+.popover-body td.label {
+  min-width: 110px
+}
+
+.popover-header {
+  background-color: rgba(220, 220, 220,1);
+}

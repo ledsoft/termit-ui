@@ -5,7 +5,10 @@
     "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
       "@id": "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/metropolitan-plan"
-    }
+    },
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-text": "<em>Matched</em> text.",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-field": "label",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/score": 5.41
   },
   {
     "@id": "http://onto.fel.cvut.cz/ontologies/termit/term/twenty-one",
@@ -13,11 +16,25 @@
     "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term",
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
       "@id": "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/metropolitan-plan"
-    }
+    },
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-text": "<em>Match</em> can be found in multiple <em>matching</em> places.",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-field": "comment",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/score": 5.00
   },
   {
     "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan",
     "http://www.w3.org/2000/01/rdf-schema#label": "Metropolitan plan",
-    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik"
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-text": "<em>Metropolitan</em> plan is the plan of urban development of a particular city.",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-field": "comment",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/score": 1.20
+  },
+  {
+    "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan",
+    "http://www.w3.org/2000/01/rdf-schema#label": "Metropolitan plan",
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovnik",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-text": "<em>Metropolitan</em> plan",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-field": "label",
+    "http://onto.fel.cvut.cz/ontologies/application/termit/fts/score": 1.17
   }
 ]
