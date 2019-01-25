@@ -1,4 +1,5 @@
 import * as React from "react";
+import classNames from "classnames";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "./hoc/withI18n";
 import "./Footer.scss";
@@ -7,11 +8,12 @@ import {Col, Row} from "reactstrap";
 import LanguageSelector from "./main/LanguageSelector";
 
 interface FooterProps extends HasI18n {
+    dark?: boolean;
 }
 
 const Footer: React.SFC<FooterProps> = (props) => {
     const i18n = props.i18n;
-    return <footer className="container-fluid">
+    return <footer className={classNames("container-fluid", {"footer-dark": props.dark})}>
         <Row className="justify-content-between">
             <Col className="footer-copyright text-left p-3 flex-grow-1">
                 &copy; <a href="https://kbss.felk.cvut.cz" target="_blank"
@@ -25,6 +27,10 @@ const Footer: React.SFC<FooterProps> = (props) => {
             </div>
         </Row>
     </footer>;
+};
+
+Footer.defaultProps = {
+    dark: false
 };
 
 export default injectIntl(withI18n(Footer));

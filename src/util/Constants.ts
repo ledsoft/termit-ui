@@ -54,7 +54,7 @@ const constants = {
     // LAYOUT_WALLPAPER: null,
     // LAYOUT_WALLPAPER: "/background/Magnetic_Termite_Mounds.small-blur.jpg",
     // LAYOUT_WALLPAPER_POSITION: "center center", // CSS background-position property
-    LAYOUT_WALLPAPER: "/background/people-on-the-bridge-with-cityscape-in-prague-czech-republic.small-blur.jpg",
+    LAYOUT_WALLPAPER: "background/people-on-the-bridge-with-cityscape-in-prague-czech-republic.small-blur.jpg",
     LAYOUT_WALLPAPER_POSITION: "top center", // CSS background-position property
 
     // Navbar background when LAYOUT_WALLPAPER is in use

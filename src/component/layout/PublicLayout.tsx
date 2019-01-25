@@ -42,7 +42,7 @@ const PublicLayout: React.SFC<PublicLayoutProps> = (props) => {
         <Container fluid={true} className="pt-5 pb-5 flex-grow-1 main-container">
             {props.children}
         </Container>
-        <Footer />
+        <Footer dark={!navbarBackgroundIsLight}/>
     </div>;
 };
 
