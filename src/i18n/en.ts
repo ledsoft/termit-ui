@@ -1,7 +1,7 @@
 import Constants from '../util/Constants';
 
 export default {
-    locale: Constants.LANG.EN,
+    locale: Constants.LANG.EN.locale,
 
     messages: {
         'please-wait': 'Please wait...',

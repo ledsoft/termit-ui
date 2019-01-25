@@ -1,9 +1,9 @@
-import * as React from 'react';
-import {mount} from "enzyme";
+import * as React from "react";
+import {mount, shallow} from "enzyme";
 import {LanguageSelector} from "../LanguageSelector";
 import Constants from "../../../util/Constants";
 
-describe('Language selector', () => {
+describe("Language selector", () => {
 
     let switchLanguage: (lang: string) => void;
 
@@ -11,39 +11,25 @@ describe('Language selector', () => {
         switchLanguage = jest.fn();
     });
 
-    it('renders selected language element', () => {
+    it("renders selected language", () => {
         const selectedLanguage = Constants.LANG.EN;
-        const wrapper = mount(<LanguageSelector language={selectedLanguage} switchLanguage={switchLanguage}/>);
-        const element = wrapper.find('.active');
+        const wrapper = mount(<LanguageSelector language={selectedLanguage.locale} switchLanguage={switchLanguage}/>);
+        const element = wrapper.find("a[name=\"language-selector\"]");
         expect(element).toBeDefined();
-        expect(element.text().toLowerCase()).toEqual(Constants.LANG.EN);
+        expect(element.text()).toEqual(Constants.LANG.EN.label);
     });
 
-    it('changes active language to Czech when Czech language selector is clicked', () => {
-        const wrapper = mount(<LanguageSelector language={Constants.LANG.EN} switchLanguage={switchLanguage}/>);
-        const element = wrapper.find('.nav-link').at(0);
-        element.simulate('click');
-        expect(switchLanguage).toHaveBeenCalledWith(Constants.LANG.CS);
+    it("changes active language to specified value when language is selected", () => {
+        const wrapper = shallow(<LanguageSelector language={Constants.LANG.EN.locale}
+                                                  switchLanguage={switchLanguage}/>);
+        (wrapper.instance() as LanguageSelector).onSelect(Constants.LANG.CS.locale);
+        expect(switchLanguage).toHaveBeenCalledWith(Constants.LANG.CS.locale);
     });
 
-    it('changes active language to English when English language selector is clicked', () => {
-        const wrapper = mount(<LanguageSelector language={Constants.LANG.CS} switchLanguage={switchLanguage}/>);
-        const element = wrapper.find('.nav-link').at(1);
-        element.simulate('click');
-        expect(switchLanguage).toHaveBeenCalledWith(Constants.LANG.EN);
-    });
-
-    it('does not emit action when already active language selector is clicked - Czech', () => {
-        const wrapper = mount(<LanguageSelector language={Constants.LANG.CS} switchLanguage={switchLanguage}/>);
-        const element = wrapper.find('.nav-link').at(0);
-        element.simulate('click');
-        expect(switchLanguage).not.toHaveBeenCalled();
-    });
-
-    it('does not emit action when already active language selector is clicked - English', () => {
-        const wrapper = mount(<LanguageSelector language={Constants.LANG.EN} switchLanguage={switchLanguage}/>);
-        const element = wrapper.find('.nav-link').at(1);
-        element.simulate('click');
+    it("does not emit action when already active language selector is clicked - Czech", () => {
+        const wrapper = shallow(<LanguageSelector language={Constants.LANG.CS.locale}
+                                                  switchLanguage={switchLanguage}/>);
+        (wrapper.instance() as LanguageSelector).onSelect(Constants.LANG.CS.locale);
         expect(switchLanguage).not.toHaveBeenCalled();
     });
 });

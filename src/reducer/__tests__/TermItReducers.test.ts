@@ -7,7 +7,8 @@ import {
     asyncActionSuccess,
     asyncActionSuccessWithPayload,
     clearError,
-    clearProperties, clearResource,
+    clearProperties,
+    clearResource,
     consumeNotification,
     dismissMessage,
     publishMessage,
@@ -204,7 +205,7 @@ describe("Reducers", () => {
 
     describe("intl", () => {
         it("loads localization data on action", () => {
-            const action = switchLanguage(Constants.LANG.CS);
+            const action = switchLanguage(Constants.LANG.CS.locale);
             expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {intl: require("../../i18n/cs").default}));
         });
     });

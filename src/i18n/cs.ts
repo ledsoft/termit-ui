@@ -1,7 +1,7 @@
 import Constants from '../util/Constants';
 
 export default {
-    locale: Constants.LANG.CS,
+    locale: Constants.LANG.CS.locale,
     messages: {
         'please-wait': 'Prosím, čekejte...',
         "create": "Vytvořit",

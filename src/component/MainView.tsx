@@ -27,7 +27,6 @@ import Footer from "./Footer";
 import {loadUser} from "../action/AsyncActions";
 import {logout} from "../action/ComplexActions";
 import {Route, RouteComponentProps, Switch, withRouter} from "react-router";
-import LanguageSelector from "./main/LanguageSelector";
 import Messages from "./message/Messages";
 import Statistics from "./statistics/Statistics";
 import NavbarSearch from "./search/label/NavbarSearch";
@@ -121,9 +120,6 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                 <NavLink
                                     href={MainView.hashPath(Routes.search.path)}>{i18n("main.nav.search")}</NavLink>
                             </NavItem>
-                        </Nav>
-                        <Nav navbar={true}>
-                            <LanguageSelector/>
                         </Nav>
                         <Nav navbar={true}>
                             <UncontrolledDropdown id="logout" nav={true} inNavbar={true}>
