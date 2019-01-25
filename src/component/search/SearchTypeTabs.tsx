@@ -82,6 +82,7 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
 export default withRouter(connect((state: TermItState) => {
     return {
         searchQuery: state.searchQuery,
+        intl: state.intl
     };
 }, (dispatch: ThunkDispatch) => {
     return {

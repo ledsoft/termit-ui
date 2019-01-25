@@ -45,18 +45,25 @@ export class SearchResults extends React.Component<SearchResultsProps> {
         if (this.props.results.length === 0) {
             return <Label className="italics">{i18n("main.search.no-results")}</Label>;
         }
-        return <Table responsive={true} className="search-results">
-            <thead>
-            <tr>
-                <th className="search-results-asset">{i18n("type.asset")}</th>
-                <th className="search-results-match">{i18n("search.results.table.match")}</th>
-                <th className="search-results-score text-center">{i18n("search.results.table.score")}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {this.renderResults()}
-            </tbody>
-        </Table>;
+        const rows = this.renderResults();
+        return <div>
+            <div className="italics">{this.props.formatMessage("search.results.countInfo", {
+                matches: this.props.results.length,
+                assets: rows.length
+            })}</div>
+            <Table responsive={true} className="search-results">
+                <thead>
+                <tr>
+                    <th className="search-results-asset">{i18n("type.asset")}</th>
+                    <th className="search-results-match">{i18n("search.results.table.match")}</th>
+                    <th className="search-results-score text-center">{i18n("search.results.table.score")}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {rows}
+                </tbody>
+            </Table>
+        </div>;
     }
 
     private renderResults() {
