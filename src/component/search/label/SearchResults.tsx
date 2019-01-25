@@ -45,12 +45,12 @@ export class SearchResults extends React.Component<SearchResultsProps> {
         if (this.props.results.length === 0) {
             return <Label className="italics">{i18n("main.search.no-results")}</Label>;
         }
-        return <Table responsive={true}>
+        return <Table responsive={true} className="search-results">
             <thead>
             <tr>
-                <th className="col-xs-4">{i18n("type.asset")}</th>
-                <th className="col-xs-7">{i18n("search.results.table.match")}</th>
-                <th className="col-xs-1 text-center">{i18n("search.results.table.score")}</th>
+                <th className="search-results-asset">{i18n("type.asset")}</th>
+                <th className="search-results-match">{i18n("search.results.table.match")}</th>
+                <th className="search-results-score text-center">{i18n("search.results.table.score")}</th>
             </tr>
             </thead>
             <tbody>
