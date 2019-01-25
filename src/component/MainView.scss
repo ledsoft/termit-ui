@@ -2,6 +2,14 @@
   margin: 0 -15px 0 0;
 }
 
+.navbar-dark .nav-menu-user {
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-light .nav-menu-user {
+  border-left: 2px solid rgba(0, 0, 0, 0.1)
+}
+
 .content {
   min-height: 100%;
   margin-top: 40px;

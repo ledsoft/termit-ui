@@ -1,4 +1,5 @@
 import * as React from "react";
+import classNames from "classnames";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "./hoc/withI18n";
 import withLoading from "./hoc/withLoading";
@@ -92,7 +93,11 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
             <header>
                 <Navbar light={Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT}
                         expand={"lg"}
-                        className={(Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT ? "navbar-light" : "navbar-dark") + " d-flex"}
+                        className={classNames("d-flex", {
+                            "navbar-light": Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT,
+                            "navbar-dark": !Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT,
+                            "bg-light": Constants.LAYOUT_NAVBAR_BACKGROUND_IS_LIGHT
+                        })}
                         style={{background: Constants.LAYOUT_NAVBAR_BACKGROUND}}>
                     <NavbarBrand href={MainView.hashPath(Routes.dashboard.path)}>
                         {Constants.APP_NAME}
@@ -121,7 +126,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                     href={MainView.hashPath(Routes.search.path)}>{i18n("main.nav.search")}</NavLink>
                             </NavItem>
                         </Nav>
-                        <Nav navbar={true}>
+                        <Nav navbar={true} className="nav-menu-user">
                             <UncontrolledDropdown id="logout" nav={true} inNavbar={true}>
                                 <DropdownToggle nav={true} caret={true}>
                                     {user.abbreviatedName}
