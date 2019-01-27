@@ -4,6 +4,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {
+    createVocabularyTerm,
     fetchVocabularyTerm,
     fetchVocabularyTerms,
     loadDefaultTerms,
@@ -16,6 +17,7 @@ import {ThunkDispatch} from "../../util/Types";
 import {Annotator} from "../annotator/Annotator";
 import Term from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
+import IdentifierResolver from "../../util/IdentifierResolver";
 
 
 interface FileDetailProvidedProps {
@@ -29,6 +31,7 @@ interface FileDetailOwnProps extends HasI18n {
     saveFileContent: (fileIri: IRI, fileContent: string) => void
     loadDefaultTerms: (normalizedName: string, namespace?: string) => void
     intl: IntlData
+    createVocabularyTerm: (term: Term, vocabularyIri: IRI) => Promise<string>
     fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => Promise<Term[]>
     fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => Promise<Term>
     defaultTerms: Term[]
@@ -84,7 +87,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
         retrievedTerms.forEach((t: Term) => this.terms[t.iri] = t);
     }
 
-    private createInitialFetchTermPromise = ():void => {
+    private createInitialFetchTermPromise = (): void => {
         if (!this.lastExecutedPromise) {
             this.lastExecutedPromise = this.props.fetchTerms(
                 {},
@@ -95,7 +98,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
                     this.updateTerms(terms);
                 }, (d) => d);
         }
-    }
+    };
 
     /**
      * Creates lambda function that checks if term identified by termIri is downloaded.
@@ -127,6 +130,21 @@ export class FileDetail extends React.Component<FileDetailProps> {
         }
     }
 
+    public onCreateTerm = (term: Term): Promise<Term> => {
+        return this.props
+            .createVocabularyTerm(term, this.props.vocabularyIri)
+            .then((location: string) => {
+                    // TODO nasty workaround for createVocabularyTerm sending error in resolved promise,
+                    //      i.e. location.type === "PUBLISH_MESSAGE"
+                // @ts-ignore
+                if (location.type) {
+                    return Promise.reject("Could not create term");
+                }
+                const termName = IdentifierResolver.extractNameFromLocation(location);
+                return this.props.fetchTerm(termName, this.props.vocabularyIri.fragment, this.props.vocabularyIri.namespace); // TODO use onFetchTerm
+            })
+    };
+
     public onFetchTerm = (termIri: string): Promise<Term> => {
 
         const term = this.terms[termIri];
@@ -146,7 +164,9 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     public render() {
         return (this.props.fileContent) ?
-            <Annotator html={this.props.fileContent} onFetchTerm={this.onFetchTerm} onUpdate={this.onUpdate}
+            <Annotator html={this.props.fileContent}
+                       onCreateTerm={this.onCreateTerm} onFetchTerm={this.onFetchTerm}
+                       onUpdate={this.onUpdate}
                        intl={this.props.intl}/> : null;
     }
 }
@@ -162,6 +182,7 @@ export default connect((state: TermItState) => {
         loadFileContent: (fileIri: IRI) => dispatch(loadFileContent(fileIri)),
         saveFileContent: (fileIri: IRI, fileContent: string) => dispatch(saveFileContent(fileIri, fileContent)),
         loadDefaultTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace)),
+        createVocabularyTerm: (term: Term, vocabularyIri: IRI) => dispatch(createVocabularyTerm(term, vocabularyIri)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => dispatch(fetchVocabularyTerms(fetchOptions, vocabularyNormalizedName, namespace)),
         fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => dispatch(fetchVocabularyTerm(termNormalizedName, vocabularyNormalizedName, namespace))
     };
