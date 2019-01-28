@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Instruction, Parser as HtmlToReactParser, ProcessNodeDefinitions} from "html-to-react";
+import {Instruction, Node, Parser as HtmlToReactParser, ProcessNodeDefinitions} from "html-to-react";
 import Annotation from "./Annotation";
 import IntlData from "../../model/IntlData";
 import HtmlParserUtils from "./HtmlParserUtils";
@@ -10,8 +10,9 @@ import HtmlDomUtils from "./HtmlDomUtils";
 interface AnnotatorProps {
     html: string
     intl: IntlData
-    onUpdate(newHtml :string): void
+    onUpdate(newHtml: string): void
     onFetchTerm(termIri: string): Promise<Term>
+    onCreateTerm(term: Term): Promise<Term>
 }
 
 interface AnnotatorState {
@@ -19,10 +20,12 @@ interface AnnotatorState {
     stickyAnnotationId: string
 }
 
-export interface AnnotationSpanProps { // TODO remove
+export interface AnnotationSpanProps {
+    // TODO remove
     about?: string
     property?: string
     resource?: string
+    content?: string;
     typeof?: string
     score?: string
 }
@@ -74,15 +77,42 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
         const ann = AnnotationDomHelper.findAnnotation(dom, annotationSpan.about!);
         if (ann) {
-            ann.attribs.resource = annotationSpan.resource;
+            if (annotationSpan.resource) {
+                ann.attribs.resource = annotationSpan.resource!;
+            }
             delete ann.attribs.score;
-            const newInternalHtml = HtmlParserUtils.dom2html(dom);
-            this.setState(
-                {internalHtml: newInternalHtml}
-            );
-            this.props.onUpdate(this.reconstructHtml(newInternalHtml));
+            this.updateInternalHtml(dom);
+            if (!annotationSpan.resource && annotationSpan.content) {
+                this.assignNewTerm(annotationSpan.about!, annotationSpan.content!);
+            }
         }
     };
+
+    private assignNewTerm = (annAbout: string, termLabel: string) => {
+
+        const term = new Term({label: termLabel});
+        this.props.onCreateTerm(term).then(
+            (t: Term) => {
+                const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
+                const ann = AnnotationDomHelper.findAnnotation(dom, annAbout);
+                if (ann) {
+                    ann.attribs.resource = t.iri;
+                }
+                this.updateInternalHtml(dom);
+            }
+        ).catch(
+            (d) => (d)
+        );
+    };
+
+    private updateInternalHtml = (dom: [Node]) => {
+        const newInternalHtml = HtmlParserUtils.dom2html(dom);
+        this.setState(
+            {internalHtml: newInternalHtml}
+        );
+        this.props.onUpdate(this.reconstructHtml(newInternalHtml));
+    };
+
 
     private getProcessingInstructions = (): Instruction[] => {
         // Order matters. Instructions are processed in the order they're defined
@@ -165,7 +195,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         return nodes.map((n: any, i: number) => <React.Fragment key={i}>{n}</React.Fragment>)
     }
 
-    private static getSelection(rootElement: HTMLElement): Range | null{
+    private static getSelection(rootElement: HTMLElement): Range | null {
         const range = HtmlDomUtils.getSelectionRange(
             rootElement
         );

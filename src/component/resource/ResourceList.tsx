@@ -52,7 +52,8 @@ class ResourceList extends React.Component<ResourceListProps> {
 export default connect((state: TermItState) => {
     return {
         resources: state.resources,
-        selectedResource: state.resource
+        selectedResource: state.resource,
+        intl: state.intl    // Forces component update on language switch
     };
 }, (dispatch: ThunkDispatch) => {
     return {

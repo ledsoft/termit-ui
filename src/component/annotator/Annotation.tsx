@@ -16,6 +16,7 @@ interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     about: string
     property: string
     resource?: string // TODO rename to initialResource (we don't use it directly to render) !!!
+    content?: string
     typeof: string
     score?: string
     text: string
@@ -60,6 +61,24 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     }
 
     public componentDidMount() {
+        this.fetchTerm();
+    }
+
+
+    public componentDidUpdate(prevProps: AnnotationProps) {
+        // if (prevProps.score && !this.props.score) {
+        //     this.setState(  {
+        //         term: this.props.resource ? undefined : null,
+        //         termFetchFinished: false
+        //     });
+        // }
+
+        if (!prevProps.resource && this.props.resource) {
+            this.fetchTerm();
+        }
+    }
+
+    private fetchTerm = () => {
         if (this.props.resource) {
             this.props
                 .onFetchTerm(this.props.resource).then(
@@ -82,7 +101,8 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                     termFetchFinished: true
                 })
         }
-    }
+    };
+
 
     private toggleOpenDetail = () => {
         this.setState({
@@ -106,7 +126,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         }
     };
 
-    private onSaveDetail = () => {
+    private onSelectOccurrence = () => {
         this.setState({
             detailEditable: false,
             detailPinned: false,
@@ -118,10 +138,13 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                 about: this.props.about,
                 property: this.props.property,
                 typeof: this.props.typeof
-            }
+            };
             const res = this.getCurrentResource();
             if (res) {
                 newSpan.resource = res;
+            }
+            if (this.props.content) {
+                newSpan.content = this.props.content;
             }
             this.props.onUpdate(newSpan);
         }
@@ -242,7 +265,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         } else {
             return this.getReadOnlyComponent();
         }
-    }
+    };
 
     private getTermState = () => {
         if (!this.state.termFetchFinished) {
@@ -255,14 +278,14 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
             return TermOccurrenceState.ASSIGNED
         }
         return TermOccurrenceState.INVALID;
-    }
+    };
 
     private getTermCreatorState = () => {
         if (this.props.score) {
             return TermOccurrenceCreatorState.PROPOSED;
         }
         return TermOccurrenceCreatorState.SELECTED;
-    }
+    };
 
     private getCurrentResource = () => {
         if (this.state.term) {
@@ -272,7 +295,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
             return this.props.resource;
         }
         return;
-    }
+    };
 
 
     public render() {
@@ -287,7 +310,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                                      color="secondary"
                                      title={i18n("save")}
                                      size="sm"
-                                     onClick={this.onSaveDetail}>{"✓"}</Button>);
+                                     onClick={this.onSelectOccurrence}>{"✓"}</Button>);
             }
             if (!this.state.detailEditable) {
                 actions.push(<Button key="annotation.edit"
@@ -311,6 +334,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         }
         const resourceProps = this.getCurrentResource() ? {resource: this.getCurrentResource()} : {};
         const scoreProps = this.props.score ? {score: this.props.score.toString()} : {};
+        const contentProps = this.props.content ? {content: this.props.content} : {};
         return <span id={id}
                      onMouseEnter={this.onMouseEnter}
                      onMouseLeave={this.onMouseLeave}
@@ -318,6 +342,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
                      about={this.props.about}
                      property={this.props.property}
                      {...resourceProps}
+                     {...contentProps}
                      typeof={this.props.typeof}
                      {...scoreProps}
                      className={termClassName + " " + termCreatorClassName}

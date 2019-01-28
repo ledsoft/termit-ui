@@ -8,8 +8,21 @@
   width: 100% !important;
 }
 
-.search-result-container {
-  margin-bottom: 1rem;
+table.search-results {
+  table-layout: fixed;
+  word-break: break-word;
+}
+
+th.search-results-asset {
+  width: 30%;
+}
+
+th.search-results-match {
+  width: 60%;
+}
+
+th.search-results-score {
+  width: 10%;
 }
 
 .search-result-snippet-match {
