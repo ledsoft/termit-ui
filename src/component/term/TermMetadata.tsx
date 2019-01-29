@@ -5,8 +5,7 @@ import {Col, Label, Row} from "reactstrap";
 import Term from "../../model/Term";
 import OutgoingLink from "../misc/OutgoingLink";
 import "./TermMetadata.scss";
-import Vocabulary from "../../model/Vocabulary";
-import VocabularyUtils from "../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import AssetLabel from "../misc/AssetLabel";
@@ -18,9 +17,8 @@ import {ThunkDispatch} from "../../util/Types";
 import {fetchVocabularyTerms} from "../../action/AsyncActions";
 
 interface TermMetadataProps extends HasI18n {
-    vocabulary: Vocabulary;
     term: Term;
-    loadSubTerms: (term: Term, vocabulary: Vocabulary) => Promise<Term[]>;
+    loadSubTerms: (term: Term, vocabularyIri: IRI) => Promise<Term[]>;
 }
 
 interface TermMetadataState {
@@ -41,13 +39,22 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     }
 
     public componentDidMount(): void {
-        this.props.loadSubTerms(this.props.term, this.props.vocabulary).then((data: Term[]) => this.setState({subTerms: data}));
+        this.loadSubTerms();
     }
 
     public componentDidUpdate(prevProps: Readonly<TermMetadataProps>): void {
         if (prevProps.term.iri !== this.props.term.iri) {
-            this.props.loadSubTerms(this.props.term, this.props.vocabulary).then((data: Term[]) => this.setState({subTerms: data}));
+            this.loadSubTerms();
         }
+    }
+
+    private loadSubTerms() {
+        const term = this.props.term;
+        if (!term.vocabulary) {
+            return;
+        }
+        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
+        this.props.loadSubTerms(term, vocabularyIri).then((data: Term[]) => this.setState({subTerms: data}));
     }
 
     private onTabSelect = (tabId: string) => {
@@ -139,8 +146,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
-        loadSubTerms: (term: Term, vocabulary: Vocabulary) => {
-            const vocabularyIri = VocabularyUtils.create(vocabulary.iri);
+        loadSubTerms: (term: Term, vocabularyIri: IRI) => {
             return dispatch(fetchVocabularyTerms({optionID: term.iri}, vocabularyIri.fragment, vocabularyIri.namespace));
         }
     }

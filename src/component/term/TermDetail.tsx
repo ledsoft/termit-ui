@@ -90,7 +90,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
         const component = this.state.edit ?
             <TermMetadataEdit save={this.onSave} term={this.props.term!} vocabulary={this.props.vocabulary!}
                               cancel={this.onCloseEdit}/> :
-            <TermMetadata term={this.props.term!} vocabulary={this.props.vocabulary!}/>;
+            <TermMetadata term={this.props.term!}/>;
         return <PanelWithActions title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
                                  actions={actions}>{component}</PanelWithActions>;
     }
