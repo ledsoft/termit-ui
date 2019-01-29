@@ -72,7 +72,10 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     }
 
-    public componentDidUpdate(): void {
+    public componentDidUpdate(prevProps : FileDetailProps): void {
+        if (isDifferent(this.props.iri, prevProps.iri)) {
+            this.loadFileContentData();
+        }
         this.initializeTermFetching();
     }
 
@@ -170,6 +173,15 @@ export class FileDetail extends React.Component<FileDetailProps> {
                        intl={this.props.intl}/> : null;
     }
 }
+
+function isDifferent(iri1?: IRI, iri2?: IRI): boolean {
+
+    const iri1Str = (iri1) ? iri1!.namespace + iri1!.fragment : null;
+    const iri2Str = (iri2) ? iri2!.namespace + iri2!.fragment : null;
+
+    return iri1Str !== iri2Str;
+}
+
 
 export default connect((state: TermItState) => {
     return {
