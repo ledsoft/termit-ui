@@ -218,7 +218,9 @@ export default {
         'annotation.form.assigned-occurrence.termInfoLabel': 'Term info : ',
         'annotation.term.assigned-occurrence.termLabel': 'Assigned term : ',
         'annotation.term.occurrence.scoreLabel': 'Score:',
-        'annotation.remove': 'Remove',
+        'annotation.confirm': 'Confirm suggestion of term occurrence',
+        'annotation.edit': 'Edit term occurrence',
+        'annotation.remove': 'Remove term occurrence',
         'annotation.close': 'Close',
 
         'message.welcome': 'Welcome to TermIt!',

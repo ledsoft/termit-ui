@@ -219,7 +219,9 @@ export default {
         'annotation.form.assigned-occurrence.termInfoLabel': 'Informace o termínu:',
         'annotation.term.assigned-occurrence.termLabel': 'Přiřazený termín:',
         'annotation.term.occurrence.scoreLabel': 'Skóre:',
-        'annotation.remove': 'Odebrat',
+        'annotation.confirm': 'Potvrdit navrhovaný výskyt termínu',
+        'annotation.edit': 'Editovat výskyt termínu',
+        'annotation.remove': 'Odebrat výskyt termínu',
         'annotation.close': 'Zavřít',
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',

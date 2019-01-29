@@ -11,6 +11,9 @@ import OutgoingLink from "../misc/OutgoingLink";
 import {ThunkDispatch} from "../../util/Types";
 import AnnotationTerms from "./AnnotationTerms";
 import {AnnotationSpanProps} from "./Annotator";
+import {GoPencil} from "react-icons/go";
+import {TiTimes, TiTrash} from "react-icons/ti";
+import {FaCheck} from "react-icons/fa";
 
 interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     about: string
@@ -152,7 +155,6 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     };
 
 
-
     private toggleEditDetail = () => {
         this.setState({
             detailEditable: !this.state.detailEditable
@@ -251,7 +253,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
     private onTermChange = (term: Term | null) => {
 
         this.setState(
-            { term }
+            {term}
         )
     };
 
@@ -306,31 +308,31 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         const actions = [];
         if (this.state.detailPinned || this.props.sticky) {
             if (this.props.onUpdate && (this.state.detailEditable || termCreatorClassName === TermOccurrenceCreatorState.PROPOSED)) {
-                actions.push(<Button key="annotation.save"
-                                     color="secondary"
-                                     title={i18n("save")}
+                actions.push(<Button key="annotation.confirm"
+                                     color="primary"
+                                     title={i18n("annotation.confirm")}
                                      size="sm"
-                                     onClick={this.onSelectOccurrence}>{"✓"}</Button>);
+                                     onClick={this.onSelectOccurrence}><FaCheck/></Button>);
             }
             if (!this.state.detailEditable) {
                 actions.push(<Button key="annotation.edit"
-                                     color="secondary"
-                                     title={i18n("edit")}
+                                     color="primary"
+                                     title={i18n("annotation.edit")}
                                      size="sm"
-                                     onClick={this.toggleEditDetail}>{"✎"}</Button>);
+                                     onClick={this.toggleEditDetail}><GoPencil/></Button>);
             }
             if (this.props.onRemove) {
                 actions.push(<Button key="annotation.remove"
-                                     color="secondary"
+                                     color="primary"
                                      title={i18n("annotation.remove")}
                                      size="sm"
-                                     onClick={this.onRemoveAnnotation}>{"🚮"}</Button>);
+                                     onClick={this.onRemoveAnnotation}><TiTrash/></Button>);
             }
             actions.push(<Button key="annotation.close"
-                                 color="secondary"
+                                 color="primary"
                                  title={i18n("annotation.close")}
                                  size="sm"
-                                 onClick={this.onCloseDetail}>{"x"}</Button>);
+                                 onClick={this.onCloseDetail}><TiTimes/></Button>);
         }
         const resourceProps = this.getCurrentResource() ? {resource: this.getCurrentResource()} : {};
         const scoreProps = this.props.score ? {score: this.props.score.toString()} : {};
