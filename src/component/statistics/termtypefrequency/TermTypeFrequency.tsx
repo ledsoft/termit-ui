@@ -12,7 +12,7 @@ interface Props extends PublicProps {
 
 class TermTypeFrequency extends React.Component<Props> {
 
-    private cx = LD({"p": VocabularyUtils.PREFIX, "rdfs": "http://www.w3.org/2000/01/rdf-schema#"});
+    private cx = LD({"p": VocabularyUtils.PREFIX, "rdfs": VocabularyUtils.PREFIX_RDFS});
 
     private getLabel(res: any, iri: string) {
         if ((VocabularyUtils.PREFIX + "not-filled") === iri) {
@@ -37,12 +37,20 @@ class TermTypeFrequency extends React.Component<Props> {
 
         const res = queryResult.result;
         const types: object = {};
-        TermTypeFrequencyI.cx(res).queryAll("@type").forEach((t: any) => {
-            if (!types[t[0]]) {
-                types[t[0]] = TermTypeFrequencyI.getLabel(res, t[0]);
-            }
-        })
-
+        const fixedTypes=[
+            "https://slovník.gov.cz/základní/pojem/objekt"
+            , "https://slovník.gov.cz/základní/pojem/typ-objektu"
+            , "https://slovník.gov.cz/základní/pojem/typ-vlastnosti"
+            , "https://slovník.gov.cz/základní/pojem/typ-vztahu"
+            , "https://slovník.gov.cz/základní/pojem/typ-události"
+            , "https://slovník.gov.cz/základní/pojem/událost"
+            , "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled"];
+        fixedTypes.forEach(t => types[t] = TermTypeFrequencyI.getLabel(res, t) || t);
+        // TermTypeFrequencyI.cx(res).queryAll("@type").forEach((t: any) => {
+        //     if (!types[t[0]]) {
+        //         types[t[0]] = TermTypeFrequencyI.getLabel(res, t[0]) || t[0];
+        //     }
+        // })
         const vocabularies = {};
         res.filter((r: any) => {
             return r[VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU] !== undefined;
@@ -58,8 +66,10 @@ class TermTypeFrequency extends React.Component<Props> {
                 vocabularies[vocabulary] = vocO;
             }
 
-            const curType = r["@type"];
-            vocO[types[curType]] = vocO[types[curType]] + 1 || 1;
+            const curType = (r["@type"] || ["http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled"]);
+            curType.forEach( (tt : any) => {
+                vocO[types[tt]] = vocO[types[tt]] + 1 || 1;
+            });
         })
 
         const series = Object.keys(types).map(t => {
