@@ -195,7 +195,7 @@ export default {
         "search.tab.facets": "Facetové vyhledávání",
         "search.reset": "Vymazat vyhledávání",
         "search.results.title": "Výsledky vyhledávání „{searchString}“",
-        "search.results.countInfo": "{matches, plural, one {Nalezen # výskyt} few {Nalezeny celkem # výskyty} other {Nalezeno celkem # výskytů}} {assets, plural, one {v # záznamu} other {ve # záznamech}}.",
+        "search.results.countInfo": "{matches, plural, one {Nalezen # výskyt} few {Nalezeny celkem # výskyty} other {Nalezeno celkem # výskytů}} {assets, plural, one {v # záznamu} other {v # záznamech}}.",
         "search.results.table.label": "Název",
         "search.results.table.label.tooltip": "Zobrazit detail objektu",
         "search.results.table.match": "Nalezená shoda",

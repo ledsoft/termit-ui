@@ -112,7 +112,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
 
 }
 
-export default connect((state: TermItState) => {
+export default withRouter(connect((state: TermItState) => {
     return {
         searchString: state.searchQuery.searchQuery,
         intl: state.intl        // Pass intl in props to force UI re-render on language switch
@@ -122,4 +122,4 @@ export default connect((state: TermItState) => {
         autocompleteSearch: (searchString: string) => dispatch(autocompleteSearch(searchString, true)),
         updateSearchFilter: (searchString: string) => dispatch(updateSearchFilter(searchString)),
     };
-})(injectIntl(withI18n(withRouter(NavbarSearch))));
+})(injectIntl(withI18n(NavbarSearch))));
