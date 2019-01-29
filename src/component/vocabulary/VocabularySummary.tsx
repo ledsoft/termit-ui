@@ -34,6 +34,7 @@ interface VocabularySummaryProps extends HasI18n, RouteComponentProps<any> {
     updateVocabulary: (vocabulary: Vocabulary) => Promise<any>;
     exportToCsv: (iri: IRI) => void;
     exportToExcel: (iri: IRI) => void;
+    exportToTurtle: (iri: IRI) => void;
 }
 
 export class VocabularySummary extends EditableComponent<VocabularySummaryProps> {
@@ -87,6 +88,10 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
         this.props.exportToExcel(VocabularyUtils.create(this.props.vocabulary.iri));
     };
 
+    private onExportToTurtle = () => {
+        this.props.exportToTurtle(VocabularyUtils.create(this.props.vocabulary.iri));
+    };
+
     public render() {
         const buttons = [<Button key="vocabulary.summary.detail" color="primary" size="sm"
                                  title={this.props.i18n("vocabulary.summary.gotodetail.label")}
@@ -121,10 +126,12 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
             <DropdownToggle caret={true} color="primary"><GoCloudDownload/> {i18n("vocabulary.summary.export.text")}
             </DropdownToggle>
             <DropdownMenu className="glossary-export-menu">
-                <DropdownItem className="btn-sm" onClick={this.onExportToCsv}
+                <DropdownItem name="vocabulary-export-csv" className="btn-sm" onClick={this.onExportToCsv}
                               title={i18n("vocabulary.summary.export.csv.title")}>{i18n("vocabulary.summary.export.csv")}</DropdownItem>
-                <DropdownItem className="btn-sm" onClick={this.onExportToExcel}
+                <DropdownItem name="vocabulary-export-excel" className="btn-sm" onClick={this.onExportToExcel}
                               title={i18n("vocabulary.summary.export.excel.title")}>{i18n("vocabulary.summary.export.excel")}</DropdownItem>
+                <DropdownItem name="vocabulary-export-ttl" className="btn-sm" onClick={this.onExportToTurtle}
+                              title={i18n("vocabulary.summary.export.ttl.title")}>{i18n("vocabulary.summary.export.ttl")}</DropdownItem>
             </DropdownMenu>
         </UncontrolledButtonDropdown>;
     }
@@ -140,5 +147,6 @@ export default connect((state: TermItState) => {
         updateVocabulary: (vocabulary: Vocabulary) => dispatch(updateVocabulary(vocabulary)),
         exportToCsv: (iri: IRI) => dispatch(exportGlossary(iri, ExportType.CSV)),
         exportToExcel: (iri: IRI) => dispatch(exportGlossary(iri, ExportType.Excel)),
+        exportToTurtle: (iri: IRI) => dispatch(exportGlossary(iri, ExportType.Turtle))
     };
 })(injectIntl(withI18n(VocabularySummary)));
