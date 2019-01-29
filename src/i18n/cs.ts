@@ -220,6 +220,7 @@ export default {
         'annotation.term.assigned-occurrence.termLabel': 'Přiřazený termín:',
         'annotation.term.occurrence.scoreLabel': 'Skóre:',
         'annotation.confirm': 'Potvrdit navrhovaný výskyt termínu',
+        'annotation.save': 'Uložit výskyt termínu',
         'annotation.edit': 'Editovat výskyt termínu',
         'annotation.remove': 'Odebrat výskyt termínu',
         'annotation.close': 'Zavřít',

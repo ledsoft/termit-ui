@@ -219,6 +219,7 @@ export default {
         'annotation.term.assigned-occurrence.termLabel': 'Assigned term : ',
         'annotation.term.occurrence.scoreLabel': 'Score:',
         'annotation.confirm': 'Confirm suggestion of term occurrence',
+        'annotation.save': 'Save term occurrence',
         'annotation.edit': 'Edit term occurrence',
         'annotation.remove': 'Remove term occurrence',
         'annotation.close': 'Close',

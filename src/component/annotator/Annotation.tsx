@@ -307,12 +307,20 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         const termCreatorClassName = this.getTermCreatorState();
         const actions = [];
         if (this.state.detailPinned || this.props.sticky) {
-            if (this.props.onUpdate && (this.state.detailEditable || termCreatorClassName === TermOccurrenceCreatorState.PROPOSED)) {
-                actions.push(<Button key="annotation.confirm"
-                                     color="primary"
-                                     title={i18n("annotation.confirm")}
-                                     size="sm"
-                                     onClick={this.onSelectOccurrence}><FaCheck/></Button>);
+            if (this.props.onUpdate) {
+                if (this.state.detailEditable) {
+                    actions.push(<Button key="annotation.save"
+                                         color="primary"
+                                         title={i18n("annotation.save")}
+                                         size="sm"
+                                         onClick={this.onSelectOccurrence}><FaCheck/></Button>);
+                } else if (termCreatorClassName === TermOccurrenceCreatorState.PROPOSED) {
+                    actions.push(<Button key="annotation.confirm"
+                                         color="primary"
+                                         title={i18n("annotation.confirm")}
+                                         size="sm"
+                                         onClick={this.onSelectOccurrence}><FaCheck/></Button>);
+                }
             }
             if (!this.state.detailEditable) {
                 actions.push(<Button key="annotation.edit"
