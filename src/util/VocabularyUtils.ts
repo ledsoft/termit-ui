@@ -29,6 +29,7 @@ export default {
     NS_TERMIT: _NS_TERMIT,
     USER: _NS_TERMIT + "uzivatel-termitu",
     HAS_COUNT: _NS_TERMIT + "has-count",
+    PREFIX_RDFS: _NS_RDFS,
     RDFS_LABEL: _NS_RDFS + "label",
     RDFS_COMMENT: _NS_RDFS + "comment",
     RDFS_RESOURCE: _NS_RDFS + "Resource",

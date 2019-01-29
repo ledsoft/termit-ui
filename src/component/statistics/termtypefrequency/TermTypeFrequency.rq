@@ -1,6 +1,7 @@
 PREFIX a-popis-dat-pojem: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
 CONSTRUCT {
     ?pojem a ?typ ;
@@ -17,7 +18,7 @@ CONSTRUCT {
 
     OPTIONAL {
         ?pojem a ?t .
-    	FILTER(!(?t IN (a-popis-dat-pojem:term,skos:Concept)))
+    	FILTER(!(?t IN (a-popis-dat-pojem:term,skos:Concept,owl:Class,owl:DatatypeProperty,owl:NamedIndividual,owl:ObjectProperty)))
   	    OPTIONAL {
                 ?t rdfs:label ?lT .
         }
