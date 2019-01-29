@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Instruction, Node, Parser as HtmlToReactParser, ProcessNodeDefinitions} from "html-to-react";
+import {Instruction, Node as Node2, Parser as HtmlToReactParser, ProcessNodeDefinitions} from "html-to-react";
 import Annotation from "./Annotation";
 import IntlData from "../../model/IntlData";
 import HtmlParserUtils from "./HtmlParserUtils";
@@ -105,7 +105,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         );
     };
 
-    private updateInternalHtml = (dom: [Node]) => {
+    private updateInternalHtml = (dom: [Node2]) => {
         const newInternalHtml = HtmlParserUtils.dom2html(dom);
         this.setState(
             {internalHtml: newInternalHtml}
