@@ -25,7 +25,7 @@ interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
     vocabulary: Vocabulary | null;
     loadTerm: (termName: string, vocabularyIri: IRI) => void;
-    updateTerm: (term: Term, vocabulary: Vocabulary) => Promise<any>;
+    updateTerm: (term: Term) => Promise<any>;
     reloadVocabularyTerms: (vocabularyIri: IRI) => void;
     publishNotification: (notification: AppNotification) => void;
 }
@@ -71,7 +71,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
 
     public onSave = (term: Term) => {
         const oldChildren = this.props.term!.plainSubTerms;
-        this.props.updateTerm(term, this.props.vocabulary!).then(() => {
+        this.props.updateTerm(term).then(() => {
             this.loadTerm();
             this.reloadVocabularyTerms();
             this.onCloseEdit();
@@ -105,7 +105,7 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         loadTerm: (termName: string, vocabularyIri: IRI) => dispatch(loadTerm(termName, vocabularyIri)),
-        updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary)),
+        updateTerm: (term: Term) => dispatch(updateTerm(term)),
         reloadVocabularyTerms: (vocabularyIri: IRI) => dispatch(loadDefaultTerms(vocabularyIri)),
         publishNotification: (notification: AppNotification) => dispatch(publishNotification(notification))
     };

@@ -2,23 +2,24 @@ import configureMockStore, {MockStoreEnhanced} from "redux-mock-store";
 import {
     createProperty,
     createResource,
-    createVocabulary,
     createTerm,
+    createVocabulary,
     exportGlossary,
-    loadTerms,
     getLabel,
     getProperties,
     loadDocument,
     loadFileContent,
     loadLastEditedAssets,
     loadResources,
+    loadTerm,
     loadTermAssignments,
+    loadTerms,
     loadTypes,
     loadUser,
     loadVocabularies,
     loadVocabulary,
-    loadTerm,
-    login, removeResource,
+    login,
+    removeResource,
     updateResourceTerms,
     updateTerm,
     updateVocabulary
@@ -387,15 +388,12 @@ describe("Async actions", () => {
             const term: Term = new Term({
                 iri: namespace + "pojem/" + normalizedTermName,
                 label: "Test",
-                comment: "Test term"
-            });
-            const vocabulary = new Vocabulary({
-                iri: namespace + normalizedVocabularyName,
-                label: "Test vocabulary"
+                comment: "Test term",
+                vocabulary: {iri: namespace + normalizedVocabularyName}
             });
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
             Ajax.put = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(updateTerm(term, vocabulary))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(updateTerm(term))).then(() => {
                 expect(Ajax.put).toHaveBeenCalled();
                 const requestUri = mock.mock.calls[0][0];
                 expect(requestUri).toEqual(Constants.API_PREFIX + "/vocabularies/" + normalizedVocabularyName + "/terms/" + normalizedTermName);
@@ -409,15 +407,12 @@ describe("Async actions", () => {
             const term: Term = new Term({
                 iri: Generator.generateUri(),
                 label: "Test",
-                comment: "Test term"
-            });
-            const vocabulary = new Vocabulary({
-                iri: Generator.generateUri(),
-                label: "Test vocabulary"
+                comment: "Test term",
+                vocabulary: {iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/test-vocabulary"}
             });
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
             Ajax.put = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(updateTerm(term, vocabulary))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(updateTerm(term))).then(() => {
                 expect(Ajax.put).toHaveBeenCalled();
                 const data = mock.mock.calls[0][1].getContent();
                 expect(data).toEqual(term.toJsonLd());
@@ -505,7 +500,10 @@ describe("Async actions", () => {
             const termName = "test-term";
             const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(require("../../rest-mock/terms")[0]));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerm(termName, {fragment: vocabName, namespace}))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerm(termName, {
+                fragment: vocabName,
+                namespace
+            }))).then(() => {
                 const url = (Ajax.get as jest.Mock).mock.calls[0][0];
                 expect(url).toEqual(Constants.API_PREFIX + "/vocabularies/" + vocabName + "/terms/" + termName);
                 const config = (Ajax.get as jest.Mock).mock.calls[0][1];

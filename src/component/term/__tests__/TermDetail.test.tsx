@@ -28,7 +28,7 @@ describe("TermDetail", () => {
     let match: Match<any>;
 
     let onLoad: (termName: string, vocabIri: IRI) => void;
-    let onUpdate: (term: Term, vocabulary: Vocabulary) => Promise<any>;
+    let onUpdate: (term: Term) => Promise<any>;
     let onLoadTerms: (vocabularyIri: IRI) => void;
     let onPublishNotification: (notification: AppNotification) => void;
 
@@ -55,13 +55,14 @@ describe("TermDetail", () => {
         onUpdate = jest.fn().mockImplementation(() => Promise.resolve());
         onLoadTerms = jest.fn();
         onPublishNotification = jest.fn();
-        term = new Term({
-            iri: Generator.generateUri(),
-            label: "Test term"
-        });
         vocabulary = new Vocabulary({
             iri: Generator.generateUri(),
             label: "Test vocabulary"
+        });
+        term = new Term({
+            iri: Generator.generateUri(),
+            label: "Test term",
+            vocabulary: {iri: vocabulary.iri}
         });
     });
 
@@ -109,7 +110,7 @@ describe("TermDetail", () => {
                                             publishNotification={onPublishNotification}
                                             {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as TermDetail).onSave(term);
-        expect(onUpdate).toHaveBeenCalledWith(term, vocabulary);
+        expect(onUpdate).toHaveBeenCalledWith(term);
     });
 
     it("closes term metadata edit on save success", () => {

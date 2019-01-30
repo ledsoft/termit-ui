@@ -488,15 +488,14 @@ export function loadDocument(iri: IRI) {
     };
 }
 
-// TODO updateTerm(term: Term) - vocabulary iri can be extracted from the term
-export function updateTerm(term: Term, vocabulary: Vocabulary) {
+export function updateTerm(term: Term) {
     const action = {
         type: ActionType.UPDATE_TERM
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         const termIri = VocabularyUtils.create(term.iri);
-        const vocabularyIri = VocabularyUtils.create(vocabulary.iri);
+        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
         const reqUrl = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/" + termIri.fragment;
         // Vocabulary namespace defines also term namespace
         return Ajax.put(reqUrl, content(term.toJsonLd()).params({namespace: vocabularyIri.namespace}))
