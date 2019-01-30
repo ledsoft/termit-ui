@@ -51,7 +51,17 @@ Do not forget to import the core component into tests not the wrapped component!
 
 * Action are currently split into `SyncAction`, `AsyncActions` and `ComplexActions`, where `SyncActions` are simple synchronous actions represented by objects,
 whereas `AsyncActions` and `ComplexActions` exploit `redux-thunk` and return functions. `ComplexActions` represent actions which involve both synchronous and
-asynchronous actions.
+asynchronous actions or other additional logic.
+* `AsyncActions` API guidelines:
+    * _Load_ - use IRI identifiers as parameters (+ normalized name as string if necessary, e.g. when fetching a term).
+    * _Create_ - use the instance to be created as parameter + IRI identifier if additional context is necessary (e.g. when creating a term).
+    * _Update_ - use the instance to be updated as parameter. It should contain all the necessary data.
+    * _Remove_ - use the instance to be removed as parameter.
+* Action naming conventions for CRUD operations:
+    * _load${ASSET(S)}_ for loading assets from the server, e.g. `loadVocabulary`
+    * _create${ASSET}_ for creating an asset, e.g. `createVocabulary`
+    * _update${ASSET}_ for updating an asset, e.g. `updateVocabulary`
+    * _remove${ASSET}_ for removing an asset, e.g. `removeVocabulary`
 * Navigation is handled separately from Redux, although the Redux documentation contains a section on setting up routing with react-router and redux. Currently, I
 believe it is not necessary to interconnect the two.
 * Localization is now handled by Redux state, so that page refreshes are not necessary when switching language.

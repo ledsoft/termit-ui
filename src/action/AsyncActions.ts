@@ -39,6 +39,19 @@ import JsonLdUtils from "../util/JsonLdUtils";
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
  * of several synchronous sub-actions which inform the application of initiation of the request and its result.
+ *
+ * Some conventions (they are also described in README.md):
+ * API guidelines:
+ *      _Load_   - use IRI identifiers as parameters (+ normalized name as string if necessary, e.g. when fetching a term).
+ *      _Create_ - use the instance to be created as parameter + IRI identifier if additional context is necessary (e.g. when creating a term).
+ *      _Update_ - use the instance to be updated as parameter. It should contain all the necessary data.
+ *      _Remove_ - use the instance to be removed as parameter.
+ *
+ * Naming conventions for CRUD operations:
+ *      _load${ASSET(S)}_ - loading assets from the server, e.g. `loadVocabulary`
+ *      _create${ASSET}_  - creating an asset, e.g. `createVocabulary`
+ *      _update${ASSET}_  - updating an asset, e.g. `updateVocabulary`
+ *      _remove${ASSET}_  - removing an asset, e.g. `removeVocabulary`
  */
 
 export function loadUser() {
@@ -279,6 +292,7 @@ export function loadVocabularies() {
     };
 }
 
+// TODO loadDefaultTerms(vocabularyIri: IRI)
 export function loadDefaultTerms(normalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.LOAD_DEFAULT_TERMS
@@ -290,6 +304,7 @@ export function loadDefaultTerms(normalizedName: string, namespace?: string) {
 
 }
 
+// TODO fetchVocabularyTerms(fetchOptions: FetchOptionsFUnction, vocabularyIri: IRI)
 export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
@@ -317,6 +332,7 @@ export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normali
     };
 }
 
+// TODO fetchVocabularyTerm(termNormalizedName: string, vocabularyIri: IRI)
 export function fetchVocabularyTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.FETCH_TERM
@@ -329,6 +345,8 @@ export function fetchVocabularyTerm(termNormalizedName: string, vocabularyNormal
     };
 }
 
+// Also check the difference between loadVocabularyTerm and fetchVocabularyTerm
+// TODO loadVocabularyTerm(termNormalizedName: string, vocabularyIri: IRI)
 export function loadVocabularyTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.LOAD_TERM
@@ -475,6 +493,7 @@ export function loadDocument(iri: IRI) {
     };
 }
 
+// TODO updateTerm(term: Term) - vocabulary iri can be extracted from the term
 export function updateTerm(term: Term, vocabulary: Vocabulary) {
     const action = {
         type: ActionType.UPDATE_TERM
