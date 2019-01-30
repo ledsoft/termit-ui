@@ -292,16 +292,14 @@ export function loadVocabularies() {
     };
 }
 
-// TODO loadDefaultTerms(vocabularyIri: IRI)
-export function loadDefaultTerms(normalizedName: string, namespace?: string) {
+export function loadDefaultTerms(vocabularyIri: IRI) {
     const action = {
         type: ActionType.LOAD_DEFAULT_TERMS
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(loadTerms({}, normalizedName, namespace))
+        dispatch(loadTerms({}, vocabularyIri.fragment, vocabularyIri.namespace))
             .then((result: Term[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
     }
-
 }
 
 // TODO fetchVocabularyTerms(fetchOptions: FetchOptionsFUnction, vocabularyIri: IRI)

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps, withRouter} from "react-router";
 import {connect} from "react-redux";
@@ -19,13 +19,14 @@ import AppNotification from "../../model/AppNotification";
 import {publishNotification} from "../../action/SyncActions";
 import NotificationType from "../../model/NotificationType";
 import OutgoingLink from "../misc/OutgoingLink";
+import {IRI} from "../../util/VocabularyUtils";
 
 interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
     vocabulary: Vocabulary | null;
     loadTerm: (termName: string, vocabularyName: string, namespace?: string) => void;
     updateTerm: (term: Term, vocabulary: Vocabulary) => Promise<any>;
-    reloadVocabularyTerms: (normalizedName: string, namespace?: string) => void;
+    reloadVocabularyTerms: (vocabularyIri: IRI) => void;
     publishNotification: (notification: AppNotification) => void;
 }
 
@@ -45,7 +46,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
     private loadTerm(): void {
         const vocabularyName: string = this.props.match.params.name;
         const termName: string = this.props.match.params.termName;
-        const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
+        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         this.props.loadTerm(termName, vocabularyName, namespace);
     }
 
@@ -56,7 +57,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
         if (match) {
             namespace = match[1];
         }
-        this.props.reloadVocabularyTerms(vocabularyName, namespace);
+        this.props.reloadVocabularyTerms({fragment: vocabularyName, namespace});
     }
 
     public componentDidUpdate(prevProps: TermDetailProps) {
@@ -85,8 +86,8 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
             return null;
         }
         const actions = this.state.edit ? [] :
-            [<Button size='sm' color='primary' onClick={this.onEdit} key='term-detail-edit'
-                     title={this.props.i18n('edit')}><GoPencil/> {this.props.i18n('edit')}</Button>];
+            [<Button size="sm" color="primary" onClick={this.onEdit} key="term-detail-edit"
+                     title={this.props.i18n("edit")}><GoPencil/> {this.props.i18n("edit")}</Button>];
         const component = this.state.edit ?
             <TermMetadataEdit save={this.onSave} term={this.props.term!} vocabulary={this.props.vocabulary!}
                               cancel={this.onCloseEdit}/> :
@@ -105,7 +106,7 @@ export default connect((state: TermItState) => {
     return {
         loadTerm: (termName: string, vocabularyName: string, namespace?: string) => dispatch(loadTerm(termName, vocabularyName, namespace)),
         updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary)),
-        reloadVocabularyTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace)),
+        reloadVocabularyTerms: (vocabularyIri: IRI) => dispatch(loadDefaultTerms(vocabularyIri)),
         publishNotification: (notification: AppNotification) => dispatch(publishNotification(notification))
     };
 })(injectIntl(withI18n(withRouter(TermDetail))));

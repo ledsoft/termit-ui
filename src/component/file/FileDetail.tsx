@@ -29,7 +29,7 @@ interface FileDetailOwnProps extends HasI18n {
     fileContent: string | null
     loadFileContent: (fileIri: IRI) => void
     saveFileContent: (fileIri: IRI, fileContent: string) => void
-    loadDefaultTerms: (normalizedName: string, namespace?: string) => void
+    loadDefaultTerms: (vocabularyIri: IRI) => void
     intl: IntlData
     createVocabularyTerm: (term: Term, vocabularyIri: IRI) => Promise<string>
     fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => Promise<Term[]>
@@ -60,7 +60,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
     private initializeTermFetching = (): void => {
         this.createInitialFetchTermPromise(); // TODO ?! should be enough to call it on componentDidMount
         if (this.props.defaultTerms.length === 0) {
-            this.props.loadDefaultTerms(this.props.vocabularyIri.fragment, this.props.vocabularyIri.namespace);
+            this.props.loadDefaultTerms(this.props.vocabularyIri);
         } else {
             this.updateTerms(this.props.defaultTerms)
         }
@@ -193,7 +193,7 @@ export default connect((state: TermItState) => {
     return {
         loadFileContent: (fileIri: IRI) => dispatch(loadFileContent(fileIri)),
         saveFileContent: (fileIri: IRI, fileContent: string) => dispatch(saveFileContent(fileIri, fileContent)),
-        loadDefaultTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace)),
+        loadDefaultTerms: (vocabularyIri: IRI) => dispatch(loadDefaultTerms(vocabularyIri)),
         createVocabularyTerm: (term: Term, vocabularyIri: IRI) => dispatch(createTerm(term, vocabularyIri)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => dispatch(loadTerms(fetchOptions, vocabularyNormalizedName, namespace)),
         fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => dispatch(fetchVocabularyTerm(termNormalizedName, vocabularyNormalizedName, namespace))
