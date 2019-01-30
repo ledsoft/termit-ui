@@ -27,7 +27,7 @@ describe("TermDetail", () => {
     const history = createMemoryHistory();
     let match: Match<any>;
 
-    let onLoad: (termName: string, vocabName: string, namespace?: string) => void;
+    let onLoad: (termName: string, vocabIri: IRI) => void;
     let onUpdate: (term: Term, vocabulary: Vocabulary) => Promise<any>;
     let onLoadTerms: (vocabularyIri: IRI) => void;
     let onPublishNotification: (notification: AppNotification) => void;
@@ -70,7 +70,7 @@ describe("TermDetail", () => {
                             reloadVocabularyTerms={onLoadTerms} publishNotification={onPublishNotification}
                             history={history} location={location} match={match}
                             {...intlFunctions()} {...intlDataForShallow()}/>);
-        expect(onLoad).toHaveBeenCalledWith(normalizedTermName, normalizedVocabName, undefined);
+        expect(onLoad).toHaveBeenCalledWith(normalizedTermName, {fragment: normalizedVocabName});
     });
 
     it("provides namespace to term loading when specified in url", () => {
@@ -80,7 +80,7 @@ describe("TermDetail", () => {
                             reloadVocabularyTerms={onLoadTerms} history={history}
                             location={location} match={match} publishNotification={onPublishNotification}
                             {...intlFunctions()} {...intlDataForShallow()}/>);
-        expect(onLoad).toHaveBeenCalledWith(normalizedTermName, normalizedVocabName, namespace);
+        expect(onLoad).toHaveBeenCalledWith(normalizedTermName, {fragment: normalizedVocabName, namespace});
     });
 
     it("renders term metadata by default", () => {
@@ -134,7 +134,7 @@ describe("TermDetail", () => {
                                             {...intlFunctions()} {...intlDataForShallow()}/>);
         (wrapper.instance() as TermDetail).onSave(term);
         return Promise.resolve().then(() => {
-            expect(onLoad).toHaveBeenCalledWith(normalizedTermName, normalizedVocabName, undefined);
+            expect(onLoad).toHaveBeenCalledWith(normalizedTermName, {fragment: normalizedVocabName});
         });
     });
 

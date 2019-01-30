@@ -24,7 +24,7 @@ import {IRI} from "../../util/VocabularyUtils";
 interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
     vocabulary: Vocabulary | null;
-    loadTerm: (termName: string, vocabularyName: string, namespace?: string) => void;
+    loadTerm: (termName: string, vocabularyIri: IRI) => void;
     updateTerm: (term: Term, vocabulary: Vocabulary) => Promise<any>;
     reloadVocabularyTerms: (vocabularyIri: IRI) => void;
     publishNotification: (notification: AppNotification) => void;
@@ -47,7 +47,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
         const vocabularyName: string = this.props.match.params.name;
         const termName: string = this.props.match.params.termName;
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
-        this.props.loadTerm(termName, vocabularyName, namespace);
+        this.props.loadTerm(termName, {fragment: vocabularyName, namespace});
     }
 
     private reloadVocabularyTerms(): void {
@@ -104,7 +104,7 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        loadTerm: (termName: string, vocabularyName: string, namespace?: string) => dispatch(loadTerm(termName, vocabularyName, namespace)),
+        loadTerm: (termName: string, vocabularyIri: IRI) => dispatch(loadTerm(termName, vocabularyIri)),
         updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary)),
         reloadVocabularyTerms: (vocabularyIri: IRI) => dispatch(loadDefaultTerms(vocabularyIri)),
         publishNotification: (notification: AppNotification) => dispatch(publishNotification(notification))

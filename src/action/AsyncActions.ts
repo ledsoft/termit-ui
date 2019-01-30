@@ -342,14 +342,13 @@ export function fetchVocabularyTerm(termNormalizedName: string, vocabularyIri: I
 }
 
 // TODO Also check the difference between loadVocabularyTerm and fetchVocabularyTerm
-// TODO loadVocabularyTerm(termNormalizedName: string, vocabularyIri: IRI)
-export function loadTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
+export function loadTerm(termNormalizedName: string, vocabularyIri: IRI) {
     const action = {
         type: ActionType.LOAD_TERM
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
-        return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyNormalizedName + "/terms/" + termNormalizedName, param("namespace", namespace))
+        return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/" + termNormalizedName, param("namespace", vocabularyIri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, TERM_CONTEXT))
             .then((data: TermData) => dispatch(asyncActionSuccessWithPayload(action, new Term(data))))
             .catch((error: ErrorData) => {
