@@ -107,6 +107,6 @@ export default connect<PropsConnected, DispatchConnected>((state: TermItState) =
 }, ((dispatch: ThunkDispatch) => {
     return {
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabulary: Vocabulary) =>
-            dispatch(loadTerms(fetchOptions, VocabularyUtils.create(vocabulary.iri).fragment)),
+            dispatch(loadTerms(fetchOptions, VocabularyUtils.create(vocabulary.iri))),
     }
 }))(injectIntl(withI18n(ResourceRelatedTermsEdit)));

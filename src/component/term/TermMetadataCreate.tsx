@@ -33,6 +33,8 @@ import {loadTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from "../../util/Types";
 import {AssetData} from "../../model/Asset";
 import IntlData from "../../model/IntlData";
+import Utils from "../../util/Utils";
+import {IRI} from "../../util/VocabularyUtils";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -121,7 +123,7 @@ interface TermMetadataCreateStoreProps {
 }
 
 interface TermMetadataCreateDispatchProps {
-    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
+    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => void;
 }
 
 interface TermMetadataCreateOwnProps {
@@ -182,7 +184,11 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
 
     private cancelCreation() {
         const normalizedName = this.props.match.params.name;
-        Routing.transitionTo(Routes.vocabularyDetail, {params: new Map([['name', normalizedName]])});
+        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
+        Routing.transitionTo(Routes.vocabularyDetail, {
+            params: new Map([["name", normalizedName]]),
+            query: namespace ? new Map([["namespace", namespace]]) : undefined
+        });
     }
 
     private filterParentOptions(options: Term[], filter: string, currentValues: Term[]) {
@@ -200,7 +206,11 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
     }
 
     private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name)
+        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
+        return this.props.fetchTerms({searchString, optionID, limit, offset}, {
+            fragment: this.props.match.params.name,
+            namespace
+        });
     }
 
     private _getIDs(children: Term[]): AssetData[] {
@@ -374,6 +384,6 @@ export default connect<TermMetadataCreateStoreProps, TermMetadataCreateDispatchP
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(loadTerms(fetchOptions, normalizedName)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri))
     };
 })(withRouter(injectIntl(withI18n(TermMetadataCreate))));

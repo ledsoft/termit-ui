@@ -1,11 +1,11 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import {Button, Card, CardBody, CardHeader} from 'reactstrap';
-import withI18n, {HasI18n} from '../hoc/withI18n';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import {Button, Card, CardBody, CardHeader} from "reactstrap";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
-import VocabularyUtils from "../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 // @ts-ignore
-import {IntelligentTreeSelect} from 'intelligent-tree-select';
+import {IntelligentTreeSelect} from "intelligent-tree-select";
 import "intelligent-tree-select/lib/styles.css";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
@@ -16,7 +16,7 @@ import {RouteComponentProps, withRouter} from "react-router";
 import FetchOptionsFunction from "../../model/Functions";
 import Term, {TermData} from "../../model/Term";
 import {loadTerms} from "../../action/AsyncActions";
-import {ThunkDispatch} from '../../util/Types';
+import {ThunkDispatch} from "../../util/Types";
 import {GoPlus} from "react-icons/go";
 import Utils from "../../util/Utils";
 import AppNotification from "../../model/AppNotification";
@@ -31,7 +31,7 @@ interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     selectedTerms: Term | null;
     notifications: AppNotification[];
     selectVocabularyTerm: (selectedTerms: Term | null) => void;
-    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
+    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
     consumeNotification: (notification: AppNotification) => void;
 }
 
@@ -68,14 +68,18 @@ export class Terms extends React.Component<GlossaryTermsProps> {
     }
 
     private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name);
+        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
+        return this.props.fetchTerms({searchString, optionID, limit, offset}, {
+            fragment: this.props.match.params.name,
+            namespace
+        });
     }
 
     public onCreateClick() {
         const normalizedName = this.props.match.params.name;
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         Routing.transitionTo(Routes.createVocabularyTerm, {
-            params: new Map([['name', normalizedName]]),
+            params: new Map([["name", normalizedName]]),
             query: namespace ? new Map([["namespace", namespace]]) : undefined
         });
     }
@@ -98,7 +102,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
             const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
             Routing.transitionTo(Routes.vocabularyTermDetail,
                 {
-                    params: new Map([['name', this.props.match.params.name], ['termName', VocabularyUtils.getFragment(clone.iri)]]),
+                    params: new Map([["name", this.props.match.params.name], ["termName", VocabularyUtils.getFragment(clone.iri)]]),
                     query: namespace ? new Map([["namespace", namespace]]) : undefined
                 });
         }
@@ -108,14 +112,14 @@ export class Terms extends React.Component<GlossaryTermsProps> {
         const i18n = this.props.i18n;
 
         return <Card>
-            <CardHeader tag='h4' color='info' className='d-flex align-items-center'>
-                <div className='flex-grow-1'>{i18n('glossary.title')}</div>
+            <CardHeader tag="h4" color="info" className="d-flex align-items-center">
+                <div className="flex-grow-1">{i18n("glossary.title")}</div>
                 <div className="float-sm-right">
-                    <Button key='glossary.createTerm'
-                            color='primary'
-                            title={i18n('glossary.createTerm.tooltip')}
-                            size='sm'
-                            onClick={this.onCreateClick}><GoPlus/>&nbsp;{i18n('asset.create.button.text')}</Button>
+                    <Button key="glossary.createTerm"
+                            color="primary"
+                            title={i18n("glossary.createTerm.tooltip")}
+                            size="sm"
+                            onClick={this.onCreateClick}><GoPlus/>&nbsp;{i18n("asset.create.button.text")}</Button>
                 </div>
             </CardHeader>
             <CardBody className="p-0">
@@ -148,7 +152,7 @@ export default withRouter(connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
-        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(loadTerms(fetchOptions, normalizedName)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
         consumeNotification: (notification: AppNotification) => dispatch(consumeNotification(notification))
     };
 })(injectIntl(withI18n(Terms))));

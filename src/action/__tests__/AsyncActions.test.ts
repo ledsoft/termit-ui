@@ -297,7 +297,7 @@ describe('Async actions', () => {
                 limit: 5,
                 offset: 0,
                 optionID: ""
-            }, "test-vocabulary")))
+            }, {fragment: "test-vocabulary"})))
                 .then((data: Term[]) => {
                     expect(data.length).toEqual(terms.length);
                     data.sort((a, b) => a.iri.localeCompare(b.iri));
@@ -314,7 +314,7 @@ describe('Async actions', () => {
             const params: FetchOptionsFunction = {
                 searchString: "test"
             };
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms(params, "test-vocabulary"))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms(params, {fragment: "test-vocabulary"}))).then(() => {
                 const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
                 expect(callConfig.getParams()).toEqual(params);
             });
@@ -324,7 +324,7 @@ describe('Async actions', () => {
             const terms = require("../../rest-mock/terms");
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
             const vocabName = "test-vocabulary";
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms({}, vocabName))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms({}, {fragment: vocabName}))).then(() => {
                 const targetUri = (Ajax.get as jest.Mock).mock.calls[0][0];
                 expect(targetUri).toEqual(Constants.API_PREFIX + "/vocabularies/" + vocabName + "/terms/roots");
                 const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
@@ -340,7 +340,7 @@ describe('Async actions', () => {
                 optionID: parentUri
             };
             const vocabName = "test-vocabulary";
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms(params, vocabName))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms(params, {fragment: vocabName}))).then(() => {
                 const targetUri = (Ajax.get as jest.Mock).mock.calls[0][0];
                 expect(targetUri).toEqual(Constants.API_PREFIX + "/vocabularies/" + vocabName + "/terms/pojem-3/subterms");
                 const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
@@ -355,7 +355,7 @@ describe('Async actions', () => {
                 offset: 88,
                 limit: 100
             };
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms(params, 'test-vocabulary'))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms(params, {fragment: "test-vocabulary"}))).then(() => {
                 const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
                 expect(callConfig.getParams()).toEqual({page: 1, size: 100});
             });

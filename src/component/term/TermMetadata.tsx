@@ -146,8 +146,6 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
-        loadSubTerms: (term: Term, vocabularyIri: IRI) => {
-            return dispatch(loadTerms({optionID: term.iri}, vocabularyIri.fragment, vocabularyIri.namespace));
-        }
-    }
+        loadSubTerms: (term: Term, vocabularyIri: IRI) => dispatch(loadTerms({optionID: term.iri}, vocabularyIri))
+    };
 })(injectIntl(withI18n(TermMetadata)));

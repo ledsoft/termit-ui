@@ -6,9 +6,9 @@ import TermItState from "../../model/TermItState";
 import {
     createTerm,
     fetchVocabularyTerm,
-    loadTerms,
     loadDefaultTerms,
     loadFileContent,
+    loadTerms,
     saveFileContent
 } from "../../action/AsyncActions";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
@@ -32,7 +32,7 @@ interface FileDetailOwnProps extends HasI18n {
     loadDefaultTerms: (vocabularyIri: IRI) => void
     intl: IntlData
     createVocabularyTerm: (term: Term, vocabularyIri: IRI) => Promise<string>
-    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => Promise<Term[]>
+    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>
     fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => Promise<Term>
     defaultTerms: Term[]
 }
@@ -72,7 +72,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     }
 
-    public componentDidUpdate(prevProps : FileDetailProps): void {
+    public componentDidUpdate(prevProps: FileDetailProps): void {
         if (isDifferent(this.props.iri, prevProps.iri)) {
             this.loadFileContentData();
         }
@@ -92,11 +92,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     private createInitialFetchTermPromise = (): void => {
         if (!this.lastExecutedPromise) {
-            this.lastExecutedPromise = this.props.fetchTerms(
-                {},
-                this.props.vocabularyIri.fragment,
-                this.props.vocabularyIri.namespace
-            )
+            this.lastExecutedPromise = this.props.fetchTerms({}, this.props.vocabularyIri)
                 .then((terms: Term[]) => {
                     this.updateTerms(terms);
                 }, (d) => d);
@@ -106,7 +102,8 @@ export class FileDetail extends React.Component<FileDetailProps> {
     /**
      * Creates lambda function that checks if term identified by termIri is downloaded.
      * If term is already downloaded resolved promise is returned with term as output.
-     * If term is not downloaded it returns fetching request promise that updates terms if succeeds and returns the term.
+     * If term is not downloaded it returns fetching request promise that updates terms if succeeds and returns the
+     * term.
      * @param termIri Iri of searched term.
      */
     private fetchTermPromiseCreator(termIri: string) {
@@ -137,8 +134,8 @@ export class FileDetail extends React.Component<FileDetailProps> {
         return this.props
             .createVocabularyTerm(term, this.props.vocabularyIri)
             .then((location: string) => {
-                    // TODO nasty workaround for createVocabularyTerm sending error in resolved promise,
-                    //      i.e. location.type === "PUBLISH_MESSAGE"
+                // TODO nasty workaround for createVocabularyTerm sending error in resolved promise,
+                //      i.e. location.type === "PUBLISH_MESSAGE"
                 // @ts-ignore
                 if (location.type) {
                     return Promise.reject("Could not create term");
@@ -195,7 +192,7 @@ export default connect((state: TermItState) => {
         saveFileContent: (fileIri: IRI, fileContent: string) => dispatch(saveFileContent(fileIri, fileContent)),
         loadDefaultTerms: (vocabularyIri: IRI) => dispatch(loadDefaultTerms(vocabularyIri)),
         createVocabularyTerm: (term: Term, vocabularyIri: IRI) => dispatch(createTerm(term, vocabularyIri)),
-        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => dispatch(loadTerms(fetchOptions, vocabularyNormalizedName, namespace)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
         fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => dispatch(fetchVocabularyTerm(termNormalizedName, vocabularyNormalizedName, namespace))
     };
 })(injectIntl(withI18n(FileDetail)));

@@ -297,13 +297,12 @@ export function loadDefaultTerms(vocabularyIri: IRI) {
         type: ActionType.LOAD_DEFAULT_TERMS
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(loadTerms({}, vocabularyIri.fragment, vocabularyIri.namespace))
+        dispatch(loadTerms({}, vocabularyIri))
             .then((result: Term[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
     }
 }
 
-// TODO fetchVocabularyTerms(fetchOptions: FetchOptionsFUnction, vocabularyIri: IRI)
-export function loadTerms(fetchOptions: FetchOptionsFunction, normalizedName: string, namespace?: string) {
+export function loadTerms(fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
     };
@@ -311,15 +310,15 @@ export function loadTerms(fetchOptions: FetchOptionsFunction, normalizedName: st
         dispatch(asyncActionRequest(action, true));
         let url: string;
         if (fetchOptions.optionID) {
-            url = Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms/" + VocabularyUtils.getFragment(fetchOptions.optionID) + "/subterms"
+            url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/" + VocabularyUtils.getFragment(fetchOptions.optionID) + "/subterms"
         } else {
             // Fetching roots only
-            url = Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms/roots";
+            url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/roots";
         }
         return Ajax.get(url,
             params(Object.assign({
                 searchString: fetchOptions.searchString,
-                namespace
+                namespace: vocabularyIri.namespace
             }, Utils.createPagingParams(fetchOptions.offset, fetchOptions.limit))))
             .then((data: object[]) => data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
             .then((data: TermData[]) => data.map(d => new Term(d)))

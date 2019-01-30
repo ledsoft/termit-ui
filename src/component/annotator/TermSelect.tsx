@@ -17,12 +17,13 @@ import FetchOptionsFunction from "../../model/Functions";
 import Term from "../../model/Term";
 import {loadTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from "../../util/Types";
+import {IRI} from "../../util/VocabularyUtils";
 
 interface TermSelectProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
     selectedTerm: Term | null;
     selectVocabularyTerm: (selectedTerms: Term | null) => void;
-    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => void;
+    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => void;
 }
 
 export class TermSelect extends React.Component<TermSelectProps> {
@@ -44,7 +45,8 @@ export class TermSelect extends React.Component<TermSelectProps> {
     }
 
     private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, this.props.match.params.name)
+        // TODO This should consider also vocabulary IRI namespace
+        return this.props.fetchTerms({searchString, optionID, limit, offset}, {fragment: this.props.match.params.name});
     }
 
     private _onCreateClick() {
@@ -90,6 +92,6 @@ export default withRouter(connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
-        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(loadTerms(fetchOptions, normalizedName)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
     };
 })(injectIntl(withI18n(TermSelect))));

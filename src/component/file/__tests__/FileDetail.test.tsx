@@ -25,9 +25,10 @@ describe("FileDetail", () => {
     let mockedFunctionLikeProps: {
         loadFileContent: (fileIri: IRI) => void
         saveFileContent: (fileIri: IRI, fileContent: string) => void
-        loadDefaultTerms: (normalizedName: string, namespace?: string) => void
-        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyNormalizedName: string, namespace?: string) => Promise<Term[]>
+        loadDefaultTerms: (vocabularyIri: IRI) => void
+        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>
         fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => Promise<Term>
+        createVocabularyTerm: (term: Term, vocabularyIri: IRI) => Promise<string>
     };
     let mockDataProps: {
         defaultTerms: Term[]
@@ -40,8 +41,9 @@ describe("FileDetail", () => {
             loadFileContent: jest.fn(),
             saveFileContent: jest.fn(),
             loadDefaultTerms: jest.fn(),
-            fetchTerms: (fetchOptions, normalizedName) => Promise.resolve([]),
-            fetchTerm: (termNormalizedName, vocabularyNormalizedName, namespace) => Promise.resolve(generateTerm(0))
+            fetchTerms: (fetchOptions, vocabIri) => Promise.resolve([]),
+            fetchTerm: (termNormalizedName, vocabularyNormalizedName, namespace) => Promise.resolve(generateTerm(0)),
+            createVocabularyTerm: (term, vocabIri) => Promise.resolve("")
         };
         mockDataProps = {
             defaultTerms: []
@@ -92,12 +94,12 @@ describe("FileDetail", () => {
             {...intlFunctions()}
         />);
 
-        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri.fragment, vocabularyIri.namespace)
+        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri);
     });
 
     it("onFetchTerm returns cached root term", async () => {
         const terms: Term[] = [0, 1, 2, 3].map(i => generateTerm(i));
-        mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve(terms))
+        mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve(terms));
 
         const wrapper = shallow(<FileDetail
             iri={fileIri}
@@ -112,7 +114,7 @@ describe("FileDetail", () => {
         // @ts-ignore
         const returnedTerm = await wrapper.instance().onFetchTerm(terms[1].iri);
 
-        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri.fragment, vocabularyIri.namespace)
+        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri);
         expect(mockedFunctionLikeProps.fetchTerms).toHaveBeenCalledTimes(1);
         expect(returnedTerm).toEqual(terms[1]);
     });
@@ -139,7 +141,7 @@ describe("FileDetail", () => {
         // @ts-ignore
         const returnedTerm = await wrapper.instance().onFetchTerm(term4.iri);
 
-        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri.fragment, vocabularyIri.namespace);
+        expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri);
         expect(mockedFunctionLikeProps.fetchTerm).toBeCalledWith(
             VocabularyUtils.create(term4.iri).fragment,
             expect.anything(),
