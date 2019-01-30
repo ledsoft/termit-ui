@@ -33,7 +33,7 @@ interface FileDetailOwnProps extends HasI18n {
     intl: IntlData
     createVocabularyTerm: (term: Term, vocabularyIri: IRI) => Promise<string>
     fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>
-    fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => Promise<Term>
+    fetchTerm: (termNormalizedName: string, vocabularyIri: IRI) => Promise<Term>
     defaultTerms: Term[]
 }
 
@@ -111,11 +111,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
             const term = this.terms[termIri];
 
             if (!term) {
-                return this.props.fetchTerm(
-                    VocabularyUtils.create(termIri).fragment,
-                    this.props.vocabularyIri.fragment,
-                    this.props.vocabularyIri.namespace
-                )
+                return this.props.fetchTerm(VocabularyUtils.create(termIri).fragment, this.props.vocabularyIri)
                     .then((foundTerm: Term) => {
                         this.updateTerms([foundTerm]);
                         const t = this.terms[termIri];
@@ -123,7 +119,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
                             throw Error("Term " + termIri + " not found.");
                         }
                         return t;
-                    })
+                    });
             } else {
                 return Promise.resolve(term);
             }
@@ -141,7 +137,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
                     return Promise.reject("Could not create term");
                 }
                 const termName = IdentifierResolver.extractNameFromLocation(location);
-                return this.props.fetchTerm(termName, this.props.vocabularyIri.fragment, this.props.vocabularyIri.namespace); // TODO use onFetchTerm
+                return this.props.fetchTerm(termName, this.props.vocabularyIri); // TODO use onFetchTerm
             })
     };
 
@@ -193,6 +189,6 @@ export default connect((state: TermItState) => {
         loadDefaultTerms: (vocabularyIri: IRI) => dispatch(loadDefaultTerms(vocabularyIri)),
         createVocabularyTerm: (term: Term, vocabularyIri: IRI) => dispatch(createTerm(term, vocabularyIri)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
-        fetchTerm: (termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) => dispatch(fetchVocabularyTerm(termNormalizedName, vocabularyNormalizedName, namespace))
+        fetchTerm: (termNormalizedName: string, vocabularyIri: IRI) => dispatch(fetchVocabularyTerm(termNormalizedName, vocabularyIri))
     };
 })(injectIntl(withI18n(FileDetail)));

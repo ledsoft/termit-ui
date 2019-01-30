@@ -329,20 +329,19 @@ export function loadTerms(fetchOptions: FetchOptionsFunction, vocabularyIri: IRI
     };
 }
 
-// TODO fetchVocabularyTerm(termNormalizedName: string, vocabularyIri: IRI)
-export function fetchVocabularyTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
+export function fetchVocabularyTerm(termNormalizedName: string, vocabularyIri: IRI) {
     const action = {
         type: ActionType.FETCH_TERM
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyNormalizedName + "/terms/" + termNormalizedName, param("namespace", namespace))
+        return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/" + termNormalizedName, param("namespace", vocabularyIri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, TERM_CONTEXT))
             .then((data: TermData) => new Term(data))
     };
 }
 
-// Also check the difference between loadVocabularyTerm and fetchVocabularyTerm
+// TODO Also check the difference between loadVocabularyTerm and fetchVocabularyTerm
 // TODO loadVocabularyTerm(termNormalizedName: string, vocabularyIri: IRI)
 export function loadTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
     const action = {
