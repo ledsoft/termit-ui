@@ -132,7 +132,7 @@ export function createVocabulary(vocabulary: Vocabulary) {
     };
 }
 
-export function createVocabularyTerm(term: Term, vocabularyIri: IRI) {
+export function createTerm(term: Term, vocabularyIri: IRI) {
     const action = {
         type: ActionType.CREATE_VOCABULARY_TERM
     };
@@ -298,14 +298,14 @@ export function loadDefaultTerms(normalizedName: string, namespace?: string) {
         type: ActionType.LOAD_DEFAULT_TERMS
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(fetchVocabularyTerms({}, normalizedName, namespace))
+        dispatch(loadTerms({}, normalizedName, namespace))
             .then((result: Term[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
     }
 
 }
 
 // TODO fetchVocabularyTerms(fetchOptions: FetchOptionsFUnction, vocabularyIri: IRI)
-export function fetchVocabularyTerms(fetchOptions: FetchOptionsFunction, normalizedName: string, namespace?: string) {
+export function loadTerms(fetchOptions: FetchOptionsFunction, normalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
     };
@@ -347,7 +347,7 @@ export function fetchVocabularyTerm(termNormalizedName: string, vocabularyNormal
 
 // Also check the difference between loadVocabularyTerm and fetchVocabularyTerm
 // TODO loadVocabularyTerm(termNormalizedName: string, vocabularyIri: IRI)
-export function loadVocabularyTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
+export function loadTerm(termNormalizedName: string, vocabularyNormalizedName: string, namespace?: string) {
     const action = {
         type: ActionType.LOAD_TERM
     };

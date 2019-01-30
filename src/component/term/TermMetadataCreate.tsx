@@ -29,7 +29,7 @@ import Constants from "../../util/Constants";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
-import {fetchVocabularyTerms} from "../../action/AsyncActions";
+import {loadTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from "../../util/Types";
 import {AssetData} from "../../model/Asset";
 import IntlData from "../../model/IntlData";
@@ -374,6 +374,6 @@ export default connect<TermMetadataCreateStoreProps, TermMetadataCreateDispatchP
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(loadTerms(fetchOptions, normalizedName)),
     };
 })(withRouter(injectIntl(withI18n(TermMetadataCreate))));

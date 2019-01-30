@@ -14,7 +14,7 @@ import Tabs from "../misc/Tabs";
 import TermLink from "./TermLink";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {fetchVocabularyTerms} from "../../action/AsyncActions";
+import {loadTerms} from "../../action/AsyncActions";
 
 interface TermMetadataProps extends HasI18n {
     term: Term;
@@ -147,7 +147,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
 export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
         loadSubTerms: (term: Term, vocabularyIri: IRI) => {
-            return dispatch(fetchVocabularyTerms({optionID: term.iri}, vocabularyIri.fragment, vocabularyIri.namespace));
+            return dispatch(loadTerms({optionID: term.iri}, vocabularyIri.fragment, vocabularyIri.namespace));
         }
     }
 })(injectIntl(withI18n(TermMetadata)));

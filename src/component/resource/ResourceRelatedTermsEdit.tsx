@@ -10,7 +10,7 @@ import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {AssetData} from "../../model/Asset";
 import FetchOptionsFunction from "../../model/Functions";
-import {fetchVocabularyTerms} from "../../action/AsyncActions";
+import {loadTerms} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import TermItState from "../../model/TermItState";
 import VocabularyUtils from "../../util/VocabularyUtils";
@@ -107,6 +107,6 @@ export default connect<PropsConnected, DispatchConnected>((state: TermItState) =
 }, ((dispatch: ThunkDispatch) => {
     return {
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabulary: Vocabulary) =>
-            dispatch(fetchVocabularyTerms(fetchOptions, VocabularyUtils.create(vocabulary.iri).fragment)),
+            dispatch(loadTerms(fetchOptions, VocabularyUtils.create(vocabulary.iri).fragment)),
     }
 }))(injectIntl(withI18n(ResourceRelatedTermsEdit)));

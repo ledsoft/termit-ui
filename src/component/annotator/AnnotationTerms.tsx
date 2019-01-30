@@ -12,7 +12,7 @@ import {selectVocabularyTerm} from "../../action/SyncActions";
 import {RouteComponentProps, withRouter} from "react-router";
 import FetchOptionsFunction from "../../model/Functions";
 import Term, {TermData} from "../../model/Term";
-import {fetchVocabularyTerms} from "../../action/AsyncActions";
+import {loadTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from "../../util/Types";
 import Vocabulary2 from "../../util/VocabularyUtils";
 import {GoPlus} from "react-icons/go";
@@ -142,6 +142,6 @@ export default withRouter(connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
-        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(loadTerms(fetchOptions, normalizedName)),
     };
 })(injectIntl(withI18n(AnnotationTerms))));
