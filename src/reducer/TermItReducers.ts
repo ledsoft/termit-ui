@@ -6,7 +6,8 @@ import ActionType, {
     ExecuteQueryAction,
     FacetedSearchAction,
     FailureAction,
-    MessageAction, NotificationAction,
+    MessageAction,
+    NotificationAction,
     SearchAction,
     SearchResultAction,
     SelectingTermsAction,
@@ -23,7 +24,6 @@ import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
 import Resource, {EMPTY_RESOURCE} from "../model/Resource";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import Term from "../model/Term";
-import Document, {EMPTY_DOCUMENT} from "../model/Document";
 import RdfsResource from "../model/RdfsResource";
 import AppNotification from "../model/AppNotification";
 import SearchResult from "../model/SearchResult";
@@ -239,15 +239,6 @@ function fileContent(state: string | null = null, action: AsyncActionSuccess<str
     }
 }
 
-function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<Document>): Document {
-    switch (action.type) {
-        case ActionType.LOAD_DOCUMENT:
-            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
-        default:
-            return state;
-    }
-}
-
 function searchQuery(state: SearchQuery | undefined, action: SearchAction): SearchQuery {
     switch (action.type) {
         case ActionType.UPDATE_SEARCH_FILTER:
@@ -349,7 +340,6 @@ const rootReducer = combineReducers<TermItState>({
     defaultTerms,
     queryResults,
     createdTermsCounter,
-    document,
     fileContent,
     facetedSearchResult,
     searchQuery,

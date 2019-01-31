@@ -6,7 +6,6 @@ import IntlData from "./IntlData";
 import Vocabulary, {EMPTY_VOCABULARY} from "./Vocabulary";
 import {QueryResultIF} from "./QueryResult";
 import Term from "./Term";
-import Document, {EMPTY_DOCUMENT} from "./Document";
 import Resource, {EMPTY_RESOURCE} from "./Resource";
 import RdfsResource from "./RdfsResource";
 import AppNotification from "./AppNotification";
@@ -24,7 +23,6 @@ export default class TermItState {
     public resource: Resource;
     public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
-    public document: Document;
     public fileContent: string | null;
     public error: ErrorInfo;
     public messages: Message[];
@@ -50,7 +48,6 @@ export default class TermItState {
         this.resources = {};
         this.defaultTerms = [];
         this.vocabularies = {};
-        this.document = EMPTY_DOCUMENT;
         this.fileContent = null;
         this.error = EMPTY_ERROR;
         this.messages = [];

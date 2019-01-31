@@ -1,18 +1,18 @@
-import * as React from 'react';
-import {FormattedDate, FormattedTime, injectIntl} from 'react-intl';
+import * as React from "react";
+import {FormattedDate, FormattedTime, injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {Col, Row} from 'reactstrap';
+import {Col, Row} from "reactstrap";
 import {Route, RouteComponentProps, Switch} from "react-router";
 import Terms from "../term/Terms";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {loadTypes, loadVocabulary} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
-import './VocabularyDetail.scss';
+import "./VocabularyDetail.scss";
 import OutgoingLink from "../misc/OutgoingLink";
 import Routes from "../../util/Routes";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
-import {ThunkDispatch} from '../../util/Types';
+import {ThunkDispatch} from "../../util/Types";
 import CreateTerm from "../term/CreateTerm";
 import TermDetail from "../term/TermDetail";
 import NoTermSelected from "../term/NoTermSelected";
@@ -42,19 +42,19 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
         const dateCreated = new Date(this.props.vocabulary.created as number);
 
         return <div>
-            <h2 className='page-header'>
+            <h2 className="page-header">
                 <OutgoingLink
                     label={label}
                     iri={this.props.vocabulary.iri as string}
                 />
             </h2>
             <h6>
-                {this.props.formatMessage('vocabulary.detail.subtitle', {author})}
+                {this.props.formatMessage("vocabulary.detail.subtitle", {author})}
                 <FormattedDate value={dateCreated}/>
                 {", "}
                 <FormattedTime value={dateCreated}/>
             </h6>
-            <Row className='detail-row'>
+            <Row className="detail-row">
                 <Col md={4}>
                     <Terms/>
                 </Col>
