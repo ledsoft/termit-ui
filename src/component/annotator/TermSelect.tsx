@@ -26,6 +26,8 @@ interface TermSelectProps extends HasI18n, RouteComponentProps<any> {
     fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => void;
 }
 
+
+// TODO This class seems not to be used anywhere, remove it?
 export class TermSelect extends React.Component<TermSelectProps> {
 
 

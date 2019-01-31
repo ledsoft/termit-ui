@@ -9,7 +9,6 @@ import TermMetadata from "./TermMetadata";
 import Term from "../../model/Term";
 import TermItState from "../../model/TermItState";
 import {Button} from "reactstrap";
-import Vocabulary from "../../model/Vocabulary";
 import PanelWithActions from "../misc/PanelWithActions";
 import {GoPencil} from "react-icons/go";
 import EditableComponent from "../misc/EditableComponent";
@@ -23,7 +22,6 @@ import {IRI} from "../../util/VocabularyUtils";
 
 interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
-    vocabulary: Vocabulary | null;
     loadTerm: (termName: string, vocabularyIri: IRI) => void;
     updateTerm: (term: Term) => Promise<any>;
     reloadVocabularyTerms: (vocabularyIri: IRI) => void;
@@ -82,15 +80,14 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
     };
 
     public render() {
-        if (!this.props.term || !this.props.vocabulary) {
+        if (!this.props.term) {
             return null;
         }
         const actions = this.state.edit ? [] :
             [<Button size="sm" color="primary" onClick={this.onEdit} key="term-detail-edit"
                      title={this.props.i18n("edit")}><GoPencil/> {this.props.i18n("edit")}</Button>];
         const component = this.state.edit ?
-            <TermMetadataEdit save={this.onSave} term={this.props.term!} vocabulary={this.props.vocabulary!}
-                              cancel={this.onCloseEdit}/> :
+            <TermMetadataEdit save={this.onSave} term={this.props.term!} cancel={this.onCloseEdit}/> :
             <TermMetadata term={this.props.term!}/>;
         return <PanelWithActions title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
                                  actions={actions}>{component}</PanelWithActions>;
@@ -99,8 +96,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
 
 export default connect((state: TermItState) => {
     return {
-        term: state.selectedTerm,
-        vocabulary: state.vocabulary
+        term: state.selectedTerm
     };
 }, (dispatch: ThunkDispatch) => {
     return {

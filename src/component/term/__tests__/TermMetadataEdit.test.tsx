@@ -4,7 +4,6 @@ import Generator from "../../../__tests__/environment/Generator";
 import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {TermMetadataEdit} from "../TermMetadataEdit";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import Vocabulary from "../../../model/Vocabulary";
 import Ajax from "../../../util/Ajax";
 import {shallow} from "enzyme";
 
@@ -12,10 +11,6 @@ jest.mock("../TermSubTermsEdit");
 
 describe("Term edit", () => {
 
-    const vocabulary = new Vocabulary({
-        iri: Generator.generateUri(),
-        label: "Test vocabulary"
-    });
     let term: Term;
     let onSave: (t: Term) => void;
     let onCancel: () => void;
@@ -24,14 +19,15 @@ describe("Term edit", () => {
         term = new Term({
             iri: Generator.generateUri(),
             label: "Test",
-            comment: "test"
+            comment: "test",
+            vocabulary: {iri: Generator.generateUri()}
         });
         onSave = jest.fn();
         onCancel = jest.fn();
     });
 
     it("disables save button when identifier field is empty", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term} vocabulary={vocabulary}
+        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
         const idInput = wrapper.find("input[name=\"iri\"]");
         (idInput.getDOMNode() as HTMLInputElement).value = "";
@@ -41,7 +37,7 @@ describe("Term edit", () => {
     });
 
     it("disables save button when label field is empty", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term} vocabulary={vocabulary}
+        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
         const labelInput = wrapper.find("input[name=\"label\"]");
         (labelInput.getDOMNode() as HTMLInputElement).value = "";
@@ -51,7 +47,7 @@ describe("Term edit", () => {
     });
 
     it("invokes save with state data when save is clicked", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term} vocabulary={vocabulary}
+        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
         const newLabel = "New label";
         const labelInput = wrapper.find("input[name=\"label\"]");
@@ -66,7 +62,7 @@ describe("Term edit", () => {
     });
 
     it("checks for label uniqueness in vocabulary on label change", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term} vocabulary={vocabulary}
+        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
         const mock = jest.fn().mockImplementation(() => Promise.resolve(true));
         Ajax.get = mock;
@@ -81,7 +77,7 @@ describe("Term edit", () => {
     });
 
     it("does not check for label uniqueness when new label is the same as original", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term} vocabulary={vocabulary}
+        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(true));
         const labelInput = wrapper.find("input[name=\"label\"]");
@@ -91,7 +87,7 @@ describe("Term edit", () => {
     });
 
     it("disables save button when duplicate label is set", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term} vocabulary={vocabulary}
+        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(true));
         const newLabel = "New label";
@@ -108,7 +104,7 @@ describe("Term edit", () => {
     it("correctly sets unmapped properties on save", () => {
         const property = Generator.generateUri();
         term.unmappedProperties = new Map([[property, ["test"]]]);
-        const wrapper = shallow(<TermMetadataEdit vocabulary={vocabulary} term={term} save={onSave}
+        const wrapper = shallow(<TermMetadataEdit term={term} save={onSave}
                                                   cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
         const updatedProperties = new Map([[property, ["test1", "test2"]]]);
         wrapper.instance().setState({unmappedProperties: updatedProperties});

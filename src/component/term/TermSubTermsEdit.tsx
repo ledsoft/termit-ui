@@ -8,7 +8,6 @@ import "intelligent-tree-select/lib/styles.css";
 import Term from "../../model/Term";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import Vocabulary from "../../model/Vocabulary";
 import {ThunkDispatch} from "../../util/Types";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {AssetData} from "../../model/Asset";
@@ -16,9 +15,9 @@ import FetchOptionsFunction from "../../model/Functions";
 import {loadTerms} from "../../action/AsyncActions";
 
 interface TermSubTermsEditProps extends HasI18n {
-    vocabulary: Vocabulary;
     subTerms: AssetData[];
     termIri: string;
+    vocabularyIri: string;
     vocabularyTerms: Term[];
     onChange: (subTerms: AssetData[]) => void;
     loadTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
@@ -37,7 +36,7 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
             optionID,
             limit,
             offset
-        }, VocabularyUtils.create(this.props.vocabulary.iri));
+        }, VocabularyUtils.create(this.props.vocabularyIri));
     };
 
     private valueRenderer = (option: Term) => {
