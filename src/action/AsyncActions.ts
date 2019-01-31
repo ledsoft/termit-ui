@@ -189,8 +189,7 @@ export function loadResource(iri: IRI) {
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)))
-            })
-
+            });
     };
 }
 
@@ -218,9 +217,7 @@ export function loadResourceTerms(iri: IRI) {
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
-        return Ajax
-        // , params({query: queryString})
-            .get(Constants.API_PREFIX + "/resources/" + iri.fragment + "/terms", param("namespace", iri.namespace))
+        return Ajax.get(Constants.API_PREFIX + "/resources/" + iri.fragment + "/terms", param("namespace", iri.namespace))
             .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
             .then((data: TermData[]) => {
                 const terms = data.map(d => new Term(d));
@@ -341,7 +338,6 @@ export function fetchVocabularyTerm(termNormalizedName: string, vocabularyIri: I
     };
 }
 
-// TODO Also check the difference between loadVocabularyTerm and fetchVocabularyTerm
 export function loadTerm(termNormalizedName: string, vocabularyIri: IRI) {
     const action = {
         type: ActionType.LOAD_TERM
@@ -391,7 +387,7 @@ export function loadTypes(language: string) {
                 data.forEach((term: Term) => {
                     if (term.subTerms) {
                         // @ts-ignore
-                        term.subTerms = Array.isArray(term.subTerms) ? term.subTerms.map(subTerm => subTerm.iri) : [term.subTerms.iri];
+                        term.subTerms = Utils.sanitizeArray(term.subTerms).map(subTerm => subTerm.iri);
                     }
                 });
                 return data
