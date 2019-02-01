@@ -146,6 +146,15 @@ describe("Async actions", () => {
                 expect(Vocabulary2.create(loadSuccessAction.payload.iri).fragment === "metropolitan-plan").toBeTruthy();
             });
         });
+
+        it("does nothing when vocabulary loading action is already pending", () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(require("../../rest-mock/vocabulary")));
+
+            store.getState().pendingActions[ActionType.LOAD_VOCABULARY] = AsyncActionStatus.REQUEST;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadVocabulary({fragment: "metropolitan-plan"}))).then(() => {
+                expect(Ajax.get).not.toHaveBeenCalled();
+            });
+        });
     });
 
     describe("load vocabularies", () => {
@@ -175,6 +184,15 @@ describe("Async actions", () => {
                 expect(result[0].iri).toEqual(vocabularies[0]["@id"]);
             });
         });
+
+        it("does nothing when vocabularies loading action is already pending", () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+
+            store.getState().pendingActions[ActionType.LOAD_VOCABULARIES] = AsyncActionStatus.REQUEST;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadVocabularies())).then(() => {
+                expect(Ajax.get).not.toHaveBeenCalled();
+            });
+        });
     });
 
     describe("load document", () => {
@@ -196,6 +214,15 @@ describe("Async actions", () => {
             ).then(() => {
                 const loadSuccessAction: AsyncActionSuccess<string> = store.getActions()[1];
                 expect(loadSuccessAction.payload).toContain("html");
+            });
+        });
+
+        it("does nothing when file content loading action is already pending", () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+
+            store.getState().pendingActions[ActionType.LOAD_FILE_CONTENT] = AsyncActionStatus.REQUEST;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadFileContent({fragment: "metropolitan-plan"}))).then(() => {
+                expect(Ajax.get).not.toHaveBeenCalled();
             });
         });
     });
@@ -640,6 +667,15 @@ describe("Async actions", () => {
                 expect(Array.isArray(result)).toBeTruthy();
                 expect(result.length).toEqual(1);
                 expect(result[0].iri).toEqual(resources[0]["@id"]);
+            });
+        });
+
+        it("does nothing when resources loading action is already pending", () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+
+            store.getState().pendingActions[ActionType.LOAD_RESOURCES] = AsyncActionStatus.REQUEST;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadResources())).then(() => {
+                expect(Ajax.get).not.toHaveBeenCalled();
             });
         });
     });

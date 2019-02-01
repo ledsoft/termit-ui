@@ -8,7 +8,7 @@ import {
     publishNotification
 } from "./SyncActions";
 import Ajax, {content, contentType, param, params} from "../util/Ajax";
-import {ThunkDispatch} from "../util/Types";
+import {GetStoreState, ThunkDispatch} from "../util/Types";
 import Routing from "../util/Routing";
 import Constants from "../util/Constants";
 import User, {CONTEXT as USER_CONTEXT, UserData} from "../model/User";
@@ -35,6 +35,7 @@ import {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
 import JsonLdUtils from "../util/JsonLdUtils";
+import {Action} from "redux";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -53,6 +54,10 @@ import JsonLdUtils from "../util/JsonLdUtils";
  *      _update${ASSET}_  - updating an asset, e.g. `updateVocabulary`
  *      _remove${ASSET}_  - removing an asset, e.g. `removeVocabulary`
  */
+
+function isActionRequestPending(state: TermItState, action: Action) {
+    return state.pendingActions[action.type] !== undefined;
+}
 
 export function loadUser() {
     const action = {
@@ -161,7 +166,10 @@ export function loadVocabulary(iri: IRI) {
     const action = {
         type: ActionType.LOAD_VOCABULARY
     };
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: () => TermItState) => {
+        if (isActionRequestPending(getState(), action)) {
+            return Promise.resolve({});
+        }
         dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/vocabularies/" + iri.fragment, param("namespace", iri.namespace))
@@ -179,7 +187,10 @@ export function loadResource(iri: IRI) {
     const action = {
         type: ActionType.LOAD_RESOURCE
     };
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: GetStoreState) => {
+        if (isActionRequestPending(getState(), action)) {
+            return Promise.resolve({});
+        }
         dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
@@ -197,7 +208,10 @@ export function loadResources() {
     const action = {
         type: ActionType.LOAD_RESOURCES
     };
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: GetStoreState) => {
+        if (isActionRequestPending(getState(), action)) {
+            return Promise.resolve({});
+        }
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/resources")
             .then((data: object[]) =>
@@ -215,7 +229,10 @@ export function loadResourceTerms(iri: IRI) {
     const action = {
         type: ActionType.LOAD_RESOURCE_TERMS
     };
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: GetStoreState) => {
+        if (isActionRequestPending(getState(), action)) {
+            return Promise.resolve({});
+        }
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/resources/" + iri.fragment + "/terms", param("namespace", iri.namespace))
             .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
@@ -275,7 +292,10 @@ export function loadVocabularies() {
     const action = {
         type: ActionType.LOAD_VOCABULARIES
     };
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: GetStoreState) => {
+        if (isActionRequestPending(getState(), action)) {
+            return Promise.resolve({});
+        }
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/vocabularies")
             .then((data: object[]) =>
@@ -427,7 +447,10 @@ export function loadFileContent(fileIri: IRI) {
     const action = {
         type: ActionType.LOAD_FILE_CONTENT
     };
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: GetStoreState) => {
+        if (isActionRequestPending(getState(), action)) {
+            return Promise.resolve({});
+        }
         dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/resources/" + fileIri.fragment + "/content", param("namespace", fileIri.namespace))

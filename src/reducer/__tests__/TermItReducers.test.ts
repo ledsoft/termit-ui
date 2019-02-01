@@ -52,7 +52,8 @@ function stateToPlainObject(state: TermItState): TermItState {
         resource: state.resource,
         resources: state.resources,
         properties: state.properties,
-        notifications: state.notifications
+        notifications: state.notifications,
+        pendingActions: state.pendingActions
     };
 }
 
@@ -88,7 +89,7 @@ describe("Reducers", () => {
 
         it("sets loading status when user fetch is initiated", () => {
             const a = asyncActionRequest(action);
-            expect(reducers(undefined, a)).toEqual(Object.assign({}, initialState, {loading: true}));
+            expect(reducers(undefined, a).loading).toBeTruthy();
         });
 
         it("sets loading status to false on user load success", () => {
@@ -124,13 +125,13 @@ describe("Reducers", () => {
         const action = {type: ActionType.LOGIN};
         it("sets loading status on login request", () => {
             const a = asyncActionRequest(action);
-            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {loading: true}));
+            expect(reducers(stateToPlainObject(initialState), a).loading).toBeTruthy();
         });
 
         it("sets loading status to false on login success", () => {
             const a = asyncActionSuccess(action);
             initialState.loading = true;
-            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {loading: false}));
+            expect(reducers(stateToPlainObject(initialState), a).loading).toBeFalsy();
         });
 
         it("sets loading status to false on login failure", () => {
@@ -322,7 +323,7 @@ describe("Reducers", () => {
             status: AsyncActionStatus.REQUEST,
             ignoreLoading: true
         };
-        expect(reducers(stateToPlainObject(initialState), action)).toEqual(initialState);
+        expect(reducers(stateToPlainObject(initialState), action).loading).toEqual(initialState.loading);
     });
 
     describe("properties", () => {
@@ -389,6 +390,33 @@ describe("Reducers", () => {
         it("resets resource to empty on clear resource action", () => {
             initialState.resource = new Resource({iri: Generator.generateUri(), label: "Resource"});
             expect(reducers(stateToPlainObject(initialState), clearResource())).toEqual(Object.assign(initialState, {resource: EMPTY_RESOURCE}));
+        });
+    });
+
+    describe("pendingActions", () => {
+        it("adds action to pendingActions when it is async request action", () => {
+            const action = asyncActionRequest({type: ActionType.LOAD_RESOURCES}, true);
+            const added = {};
+            added[ActionType.LOAD_RESOURCES] = AsyncActionStatus.REQUEST;
+            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign(initialState, {pendingActions: added}));
+        });
+
+        it("does nothing when action is not asynchronous", () => {
+            expect(reducers(stateToPlainObject(initialState), {type: ActionType.CLEAR_RESOURCE})).toEqual(initialState);
+        });
+
+        it("removes action from pendingActions when it is async success action", () => {
+            const added = {};
+            added[ActionType.LOAD_RESOURCES] = AsyncActionStatus.REQUEST;
+            initialState.pendingActions = added;
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_RESOURCES}, []))).toEqual(Object.assign(initialState, {pendingActions: {}}));
+        });
+
+        it("removes action from pendingActions when it is async failure action", () => {
+            const added = {};
+            added[ActionType.LOAD_RESOURCES] = AsyncActionStatus.REQUEST;
+            initialState.pendingActions = added;
+            expect(reducers(stateToPlainObject(initialState), asyncActionFailure({type: ActionType.LOAD_RESOURCES}, {status: 404})).pendingActions).toEqual({});
         });
     });
 });

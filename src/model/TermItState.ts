@@ -11,6 +11,7 @@ import RdfsResource from "./RdfsResource";
 import AppNotification from "./AppNotification";
 import SearchResult from "./SearchResult";
 import SearchQuery from "./SearchQuery";
+import AsyncActionStatus from "../action/AsyncActionStatus";
 
 /**
  * This is the basic shape of the application"s state managed by Redux.
@@ -39,6 +40,8 @@ export default class TermItState {
     public properties: RdfsResource[];
     // Represents a queue of inter-component notifications
     public notifications: AppNotification[];
+    // Pending asynchronous actions. Can be used to prevent repeated requests when some are already pending
+    public pendingActions: { [key: string]: AsyncActionStatus};
 
     constructor() {
         this.loading = false;
@@ -63,5 +66,6 @@ export default class TermItState {
         this.types = {};
         this.properties = [];
         this.notifications = [];
+        this.pendingActions = {};
     }
 }

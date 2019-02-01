@@ -326,6 +326,22 @@ function notifications(state: AppNotification[] = [], action: NotificationAction
     }
 }
 
+function pendingActions(state: { [key: string]: AsyncActionStatus } = {}, action: AsyncAction) {
+    switch (action.status) {
+        case AsyncActionStatus.REQUEST:
+            const toAdd = {};
+            toAdd[action.type] = action.status;
+            return Object.assign({}, state, toAdd);
+        case AsyncActionStatus.SUCCESS:
+        case AsyncActionStatus.FAILURE:
+            const copy = Object.assign({}, state);
+            delete copy[action.type];
+            return copy;
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers<TermItState>({
     user,
     loading,
@@ -348,7 +364,8 @@ const rootReducer = combineReducers<TermItState>({
     searchInProgress,
     types,
     properties,
-    notifications
+    notifications,
+    pendingActions
 });
 
 export default rootReducer;
