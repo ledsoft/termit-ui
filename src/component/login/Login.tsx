@@ -1,12 +1,12 @@
-import * as React from 'react';
+import * as React from "react";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {injectIntl} from 'react-intl';
-import {Alert, Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from 'reactstrap';
-import HorizontalInput from '../misc/HorizontalInput';
-import Routing from '../../util/Routing';
+import {injectIntl} from "react-intl";
+import {Alert, Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from "reactstrap";
+import HorizontalInput from "../misc/HorizontalInput";
+import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
 import Mask from "../misc/Mask";
-import {connect} from 'react-redux';
+import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {login} from "../../action/AsyncActions";
 import ErrorInfo from "../../model/ErrorInfo";
@@ -32,8 +32,8 @@ export class Login extends React.Component<LoginProps, LoginState> {
     constructor(props: LoginProps) {
         super(props);
         this.state = {
-            username: '',
-            password: ''
+            username: "",
+            password: ""
         };
     }
 
@@ -47,7 +47,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
     };
 
     private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && this.isValid()) {
+        if (e.key === "Enter" && this.isValid()) {
             this.login();
         }
     };
@@ -70,30 +70,30 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
     public render() {
         const i18n = this.props.i18n;
-        return <PublicLayout title={i18n('login.title')}>
+        return <PublicLayout title={i18n("login.title")}>
             <Card className="modal-panel">
-                <CardHeader color='info'>
-                    <h5>{i18n('login.title')}</h5>
+                <CardHeader color="info">
+                    <h5>{i18n("login.title")}</h5>
                 </CardHeader>
                 <CardBody>
                     {this.renderMask()}
                     <Form>
                         {this.renderAlert()}
-                        <HorizontalInput name='username' label={i18n('login.username')} value={this.state.username}
+                        <HorizontalInput name="username" label={i18n("login.username")} value={this.state.username}
                                          onKeyPress={this.onKeyPress} onChange={this.onChange} autoFocus={true}
                                          labelWidth={4} inputWidth={8}/>
-                        <HorizontalInput type='password' name='password' label={i18n('login.password')}
+                        <HorizontalInput type="password" name="password" label={i18n("login.password")}
                                          value={this.state.password}
                                          onKeyPress={this.onKeyPress} onChange={this.onChange}
                                          labelWidth={4} inputWidth={8}/>
 
                         <Row>
-                            <Col xs={{size: 'auto', offset: 4}}>
+                            <Col xs={{size: "auto", offset: 4}}>
                                 <ButtonToolbar>
                                     <Button color="success" onClick={this.login}
-                                            disabled={this.props.loading || !this.isValid()}>{i18n('login.submit')}</Button>
+                                            disabled={this.props.loading || !this.isValid()}>{i18n("login.submit")}</Button>
                                     <Button color="link" onClick={this.register} className="register-link"
-                                            disabled={this.props.loading}>{i18n('login.register')}</Button>
+                                            disabled={this.props.loading}>{i18n("login.register")}</Button>
                                 </ButtonToolbar>
                             </Col>
                         </Row>
@@ -105,7 +105,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
     private renderMask() {
         return this.props.loading ?
-            <Mask text={this.props.i18n('login.progress-mask')} classes='mask-container'/> : null;
+            <Mask text={this.props.i18n("login.progress-mask")} classes="mask-container"/> : null;
     }
 
     private renderAlert() {
@@ -113,8 +113,8 @@ export class Login extends React.Component<LoginProps, LoginState> {
             return null;
         }
         const error = this.props.error;
-        const messageId = error.messageId ? error.messageId : 'login.error';
-        return this.props.error ? <Alert color='danger'>{this.props.i18n(messageId)}</Alert> : null;
+        const messageId = error.messageId ? error.messageId : "login.error";
+        return this.props.error ? <Alert color="danger">{this.props.i18n(messageId)}</Alert> : null;
     }
 }
 

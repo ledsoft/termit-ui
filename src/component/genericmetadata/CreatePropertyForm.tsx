@@ -21,9 +21,9 @@ export class CreatePropertyForm extends React.Component<CreatePropertyFormProps,
     constructor(props: CreatePropertyFormProps) {
         super(props);
         this.state = {
-            iri: '',
-            label: '',
-            comment: ''
+            iri: "",
+            label: "",
+            comment: ""
         };
     }
 
@@ -65,7 +65,7 @@ export class CreatePropertyForm extends React.Component<CreatePropertyFormProps,
                     </Col>
                     <Col xs={12}>
                         <CustomInput type="textarea" name="comment" label={i18n("properties.edit.new.comment")}
-                                     onChange={this.onChange} help={i18n('optional')}/>
+                                     onChange={this.onChange} help={i18n("optional")}/>
                     </Col>
                 </Row>
                 <Row>

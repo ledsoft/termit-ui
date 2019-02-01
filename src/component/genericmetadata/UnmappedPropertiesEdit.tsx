@@ -86,7 +86,7 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
             newProperties.set(this.state.property!.iri, [this.state.value]);
         }
         this.props.onChange(newProperties);
-        this.setState({property: null, value: ''});
+        this.setState({property: null, value: ""});
     };
 
     private isValid() {
@@ -149,13 +149,13 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
     private renderPropertyInput() {
         const options = this.props.knownProperties.map(p => p.label ? p : Object.assign(p, {label: p.iri}));
         return <FormGroup>
-            <Label className='attribute-label'>{this.props.i18n("properties.edit.property")}</Label>
-            {this.props.knownProperties.length > 0 ? <IntelligentTreeSelect className='term-edit'
+            <Label className="attribute-label">{this.props.i18n("properties.edit.property")}</Label>
+            {this.props.knownProperties.length > 0 ? <IntelligentTreeSelect className="term-edit"
                                                                             value={this.state.property}
                                                                             onChange={this.onPropertySelect}
                                                                             childrenKey="children"
-                                                                            valueKey='iri'
-                                                                            labelKey='label'
+                                                                            valueKey="iri"
+                                                                            labelKey="label"
                                                                             showSettings={true}
                                                                             maxHeight={150}
                                                                             multi={false}
