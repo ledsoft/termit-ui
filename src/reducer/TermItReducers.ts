@@ -329,6 +329,9 @@ function notifications(state: AppNotification[] = [], action: NotificationAction
 function pendingActions(state: { [key: string]: AsyncActionStatus } = {}, action: AsyncAction) {
     switch (action.status) {
         case AsyncActionStatus.REQUEST:
+            if (state[action.type] !== undefined) {
+                return state;
+            }
             const toAdd = {};
             toAdd[action.type] = action.status;
             return Object.assign({}, state, toAdd);

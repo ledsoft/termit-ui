@@ -418,5 +418,13 @@ describe("Reducers", () => {
             initialState.pendingActions = added;
             expect(reducers(stateToPlainObject(initialState), asyncActionFailure({type: ActionType.LOAD_RESOURCES}, {status: 404})).pendingActions).toEqual({});
         });
+
+        it("does nothing when the same async action request is registered multiple times", () => {
+            const added = {};
+            added[ActionType.LOAD_RESOURCES] = AsyncActionStatus.REQUEST;
+            initialState.pendingActions = added;
+            const action = asyncActionRequest({type: ActionType.LOAD_RESOURCES}, true);
+            expect(Object.is(reducers(stateToPlainObject(initialState), action).pendingActions, initialState.pendingActions)).toBeTruthy();
+        });
     });
 });

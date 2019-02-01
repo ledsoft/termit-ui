@@ -9,7 +9,7 @@ interface VocabularyDocumentProps extends HasI18n {
 }
 
 const VocabularyDocument: React.SFC<VocabularyDocumentProps> = (props: VocabularyDocumentProps) => {
-    if (props.vocabulary.document) {
+    if (props.vocabulary.document && props.vocabulary.document.files) {
         return <div>
             <hr/>
             <h5>{props.i18n("vocabulary.detail.files")}</h5>

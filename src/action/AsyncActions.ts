@@ -30,7 +30,6 @@ import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
 import File from "../model/File";
-import Document, {CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "../model/Document";
 import {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
@@ -482,24 +481,6 @@ export function saveFileContent(fileIri: IRI, fileContent: string) {
             )
             .then((data: object) => fileContent)// TODO load from the service instead
             .then((data: string) => dispatch(asyncActionSuccessWithPayload(action, data)))
-            .catch((error: ErrorData) => {
-                dispatch(asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-            });
-    };
-}
-
-export function loadDocument(iri: IRI) {
-    const action = {
-        type: ActionType.LOAD_DOCUMENT
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
-        return Ajax
-            .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
-            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, DOCUMENT_CONTEXT))
-            .then((data: DocumentData) =>
-                dispatch(asyncActionSuccessWithPayload(action, new Document(data))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
