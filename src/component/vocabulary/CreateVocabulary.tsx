@@ -41,8 +41,12 @@ export class CreateVocabulary extends AbstractCreateAsset<CreateVocabularyProps,
         this.setState({comment: e.currentTarget.value});
     };
 
-    private onCreate = (): void => {
-        this.props.onCreate(new Vocabulary({label: this.state.label, iri: this.state.iri}));
+    public onCreate = (): void => {
+        this.props.onCreate(new Vocabulary({
+            label: this.state.label,
+            iri: this.state.iri,
+            comment: this.state.comment
+        }));
     };
 
     private static onCancel(): void {
@@ -81,9 +85,11 @@ export class CreateVocabulary extends AbstractCreateAsset<CreateVocabularyProps,
                     <Row>
                         <Col xl={6} md={12}>
                             <ButtonToolbar className="pull-right">
-                                <Button name="create-vocabulary.submit" onClick={this.onCreate} color="success" size="sm"
+                                <Button name="create-vocabulary.submit" onClick={this.onCreate} color="success"
+                                        size="sm"
                                         disabled={this.state.label.trim().length === 0}>{i18n("vocabulary.create.submit")}</Button>
-                                <Button name="create-vocabulary.cancel" onClick={CreateVocabulary.onCancel} color="secondary"
+                                <Button name="create-vocabulary.cancel" onClick={CreateVocabulary.onCancel}
+                                        color="secondary"
                                         size="sm">{i18n("cancel")}</Button>
                             </ButtonToolbar>
                         </Col>
