@@ -18,8 +18,8 @@ interface TermTypesEditProps extends HasI18n {
 
 export class TermTypesEdit extends React.Component<TermTypesEditProps> {
 
-    public onChange = (val: Term) => {
-        this.props.onChange([val.iri, VocabularyUtils.TERM]);
+    public onChange = (val: Term | null) => {
+        this.props.onChange(val ? [val.iri, VocabularyUtils.TERM] : [VocabularyUtils.TERM]);
     };
 
     private filterParentOptions = (options: Term[], filter: string) => {
