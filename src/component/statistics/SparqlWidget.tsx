@@ -4,8 +4,10 @@ import TermItState from "../../model/TermItState";
 import {executeQuery} from "../../action/AsyncActions";
 import * as _ from "lodash";
 import {ThunkDispatch} from "../../util/Types";
+import {InjectsLoading} from "../hoc/withInjectableLoading";
 
-export interface PublicProps extends OutputProps, InputProps {}
+export interface PublicProps extends OutputProps, InputProps, InjectsLoading {
+}
 
 interface OutputProps {
     queryResults: any,
@@ -16,10 +18,10 @@ interface InputProps {
 }
 
 interface InternalActions {
-    executeQuery: (queryString: string) => any;
+    executeQuery: (queryString: string) => Promise<any>;
 }
 
-export default function SparqlWidget<P extends PublicProps>(Component: React.ComponentType<OutputProps & P>): React.ComponentClass<Pick<P,Exclude<keyof P, keyof (OutputProps & InternalActions)>>>  {
+export default function SparqlWidget<P extends PublicProps>(Component: React.ComponentType<OutputProps & P>): React.ComponentClass<Pick<P, Exclude<keyof P, keyof (OutputProps & InternalActions)>>> {
 
     class Wrapper extends React.Component<PublicProps & InternalActions & P> {
 
@@ -36,7 +38,8 @@ export default function SparqlWidget<P extends PublicProps>(Component: React.Com
         }
 
         private change() {
-            this.props.executeQuery(this.props.sparqlQuery);
+            this.props.loadingOn();
+            this.props.executeQuery(this.props.sparqlQuery).then(() => this.props.loadingOff());
         }
 
         public render() {

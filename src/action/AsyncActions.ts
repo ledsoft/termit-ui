@@ -378,7 +378,7 @@ export function executeQuery(queryString: string) {
         type: ActionType.EXECUTE_QUERY
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
+        dispatch(asyncActionRequest(action, true));
         return Ajax
             .get(Constants.API_PREFIX + "/query", params({query: queryString}))
             .then((data: object) =>
