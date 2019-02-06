@@ -131,7 +131,8 @@ export function createVocabulary(vocabulary: Vocabulary) {
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return undefined;
             });
     };
 }
@@ -156,7 +157,8 @@ export function createTerm(term: Term, vocabularyIri: IRI) {
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return undefined;
             });
     };
 }
@@ -261,7 +263,8 @@ export function createResource(resource: Resource) {
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return undefined;
             });
     };
 }
