@@ -11,7 +11,7 @@ import Ajax, {content, contentType, param, params} from "../util/Ajax";
 import {GetStoreState, ThunkDispatch} from "../util/Types";
 import Routing from "../util/Routing";
 import Constants from "../util/Constants";
-import User, {CONTEXT as USER_CONTEXT, UserData} from "../model/User";
+import User, {CONTEXT as USER_CONTEXT, UserAccountData, UserData} from "../model/User";
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT, VocabularyData} from "../model/Vocabulary";
 import Routes from "../util/Routes";
 import {ErrorData} from "../model/ErrorInfo";
@@ -103,7 +103,7 @@ export function login(username: string, password: string) {
     };
 }
 
-export function register(user: { username: string, password: string }) {
+export function register(user: UserAccountData) {
     const action = {
         type: ActionType.REGISTER
     };

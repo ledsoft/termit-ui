@@ -10,21 +10,20 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {login} from "../../action/AsyncActions";
 import ErrorInfo from "../../model/ErrorInfo";
-import ActionType from "../../action/ActionType";
-import {clearError} from "../../action/SyncActions";
 import {ThunkDispatch} from "../../util/Types";
 import PublicLayout from "../layout/PublicLayout";
+import {AsyncFailureAction, MessageAction} from "../../action/ActionType";
+import AsyncActionStatus from "../../action/AsyncActionStatus";
 
 interface LoginProps extends HasI18n {
-    loading: boolean,
-    error: ErrorInfo,
-    login: (username: string, password: string) => void
-    clearError: () => void
+    loading: boolean;
+    login: (username: string, password: string) => Promise<MessageAction | AsyncFailureAction>;
 }
 
 interface LoginState {
-    username: string,
-    password: string
+    username: string;
+    password: string;
+    error: ErrorInfo | null;
 }
 
 export class Login extends React.Component<LoginProps, LoginState> {
@@ -33,15 +32,13 @@ export class Login extends React.Component<LoginProps, LoginState> {
         super(props);
         this.state = {
             username: "",
-            password: ""
+            password: "",
+            error: null
         };
     }
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (this.errorRelevant()) {
-            this.props.clearError();
-        }
-        const newState = Object.assign({}, this.state);
+        const newState = Object.assign({}, this.state, {error: null});
         newState[e.currentTarget.name!] = e.currentTarget.value;
         this.setState(newState);
     };
@@ -53,16 +50,17 @@ export class Login extends React.Component<LoginProps, LoginState> {
     };
 
     private login = () => {
-        this.props.login(this.state.username, this.state.password);
+        this.props.login(this.state.username, this.state.password).then(result => {
+            const asyncResult = result as AsyncFailureAction;
+            if (asyncResult.status === AsyncActionStatus.FAILURE) {
+                this.setState({error: asyncResult.error});
+            }
+        });
     };
 
     private register = () => {
         Routing.transitionTo(Routes.register);
     };
-
-    private errorRelevant() {
-        return this.props.error.origin === ActionType.LOGIN;
-    }
 
     private isValid() {
         return this.state.username.length > 0 && this.state.password.length > 0;
@@ -109,23 +107,21 @@ export class Login extends React.Component<LoginProps, LoginState> {
     }
 
     private renderAlert() {
-        if (!this.errorRelevant()) {
+        if (!this.state.error) {
             return null;
         }
-        const error = this.props.error;
+        const error = this.state.error;
         const messageId = error.messageId ? error.messageId : "login.error";
-        return this.props.error ? <Alert color="danger">{this.props.i18n(messageId)}</Alert> : null;
+        return <Alert color="danger">{this.props.i18n(messageId)}</Alert>;
     }
 }
 
 export default connect((state: TermItState) => {
     return {
-        loading: state.loading,
-        error: state.error
+        loading: state.loading
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        login: (username: string, password: string) => dispatch(login(username, password)),
-        clearError: () => dispatch(clearError(ActionType.LOGIN))
+        login: (username: string, password: string) => dispatch(login(username, password))
     };
 })(injectIntl(withI18n(Login)));

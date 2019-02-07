@@ -1,5 +1,4 @@
 import User, {EMPTY_USER} from "./User";
-import ErrorInfo, {EMPTY_ERROR} from "./ErrorInfo";
 import Message from "./Message";
 import en from "../i18n/en";
 import IntlData from "./IntlData";
@@ -25,7 +24,6 @@ export default class TermItState {
     public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
     public fileContent: string | null;
-    public error: ErrorInfo;
     public messages: Message[];
     public intl: IntlData;
     public selectedTerm: Term | null;
@@ -41,7 +39,7 @@ export default class TermItState {
     // Represents a queue of inter-component notifications
     public notifications: AppNotification[];
     // Pending asynchronous actions. Can be used to prevent repeated requests when some are already pending
-    public pendingActions: { [key: string]: AsyncActionStatus};
+    public pendingActions: { [key: string]: AsyncActionStatus };
 
     constructor() {
         this.loading = false;
@@ -52,7 +50,6 @@ export default class TermItState {
         this.defaultTerms = [];
         this.vocabularies = {};
         this.fileContent = null;
-        this.error = EMPTY_ERROR;
         this.messages = [];
         this.intl = en;
         this.selectedTerm = null;

@@ -2,7 +2,6 @@ import ActionType, {
     AsyncAction,
     AsyncActionSuccess,
     AsyncFailureAction,
-    ClearErrorAction,
     ExecuteQueryAction,
     MessageAction,
     NotificationAction,
@@ -31,13 +30,6 @@ export function asyncActionSuccessWithPayload<T>(a: Action, payload: T): AsyncAc
 
 export function asyncActionSuccess(a: Action): AsyncAction {
     return {...a, status: AsyncActionStatus.SUCCESS};
-}
-
-export function clearError(origin: string): ClearErrorAction {
-    return {
-        type: ActionType.CLEAR_ERROR,
-        origin
-    };
 }
 
 export function publishMessage(message: Message): MessageAction {

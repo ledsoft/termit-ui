@@ -17,7 +17,7 @@ import {
     loadUser,
     loadVocabularies,
     loadVocabulary,
-    login,
+    login, register,
     removeResource,
     updateResourceTerms,
     updateTerm,
@@ -32,7 +32,7 @@ import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary"
 import Vocabulary2 from "../../util/VocabularyUtils";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Routes from "../../util/Routes";
-import ActionType, {AsyncAction, AsyncActionSuccess, MessageAction,} from "../ActionType";
+import ActionType, {AsyncAction, AsyncActionSuccess, AsyncFailureAction, MessageAction,} from "../ActionType";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
 import {ErrorData} from "../../model/ErrorInfo";
 import Generator from "../../__tests__/environment/Generator";
@@ -48,6 +48,7 @@ import ExportType from "../../util/ExportType";
 import fileContent from "../../rest-mock/file";
 import Asset from "../../model/Asset";
 import File from "../../model/File";
+import {UserAccountData} from "../../model/User";
 
 jest.mock("../../util/Routing");
 jest.mock("../../util/Ajax", () => ({
@@ -96,6 +97,36 @@ describe("Async actions", () => {
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve(resp));
             return Promise.resolve((store.dispatch as ThunkDispatch)(login("test", "test"))).then(() => {
                 expect(Routing.transitionToHome).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe("register", () => {
+
+        const userInfo: UserAccountData = {
+            firstName: "test",
+            lastName: "testowitch",
+            username: "admin",
+            password: "iamtheboss"
+        };
+
+        it("invokes login on registration success", () => {
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(register(userInfo))).then(() => {
+                expect(store.getActions().find(a => a.type === ActionType.LOGIN)).toBeDefined();
+            });
+        });
+
+        it("returns error info on error", () => {
+            const message = "User already exists";
+            Ajax.post = jest.fn().mockImplementation(() => Promise.reject({
+                status: 409,
+                message
+            }));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(register(userInfo))).then(result => {
+                expect(result.type).toEqual(ActionType.REGISTER);
+                expect((result as AsyncFailureAction).error).toBeDefined();
+                expect((result as AsyncFailureAction).error.message).toEqual(message);
             });
         });
     });

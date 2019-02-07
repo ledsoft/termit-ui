@@ -2,10 +2,8 @@ import {Action, combineReducers} from "redux";
 import ActionType, {
     AsyncAction,
     AsyncActionSuccess,
-    ClearErrorAction,
     ExecuteQueryAction,
     FacetedSearchAction,
-    FailureAction,
     MessageAction,
     NotificationAction,
     SearchAction,
@@ -15,7 +13,6 @@ import ActionType, {
 } from "../action/ActionType";
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
-import ErrorInfo, {EMPTY_ERROR} from "../model/ErrorInfo";
 import Message from "../model/Message";
 import IntlData from "../model/IntlData";
 import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
@@ -65,26 +62,6 @@ function loading(state = false, action: AsyncAction): boolean {
         case AsyncActionStatus.FAILURE:
             return false;
         default:
-            return state;
-    }
-}
-
-/**
- * Error status of the application.
- *
- * The store currently supports only one error, so if an error action is invoked, the previous error status is replaced
- * by the new one. The state holds structured information about the error itself and the action where the error
- * originated (usually an error action).
- */
-function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
-    switch (action.type) {
-        case ActionType.CLEAR_ERROR:
-            const errAction = action as ClearErrorAction;
-            return errAction.origin === state.origin ? EMPTY_ERROR : state;
-        default:
-            if ((action as FailureAction).error) {
-                return (action as FailureAction).error;
-            }
             return state;
     }
 }
@@ -352,7 +329,6 @@ const rootReducer = combineReducers<TermItState>({
     vocabularies,
     resource,
     resources,
-    error,
     messages,
     intl,
     selectedTerm,

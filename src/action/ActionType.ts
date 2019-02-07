@@ -22,10 +22,6 @@ export interface AsyncActionSuccess<T> extends AsyncAction {
     payload: T;
 }
 
-export interface ClearErrorAction extends Action {
-    origin: string
-}
-
 export interface MessageAction extends Action {
     message: Message
 }
@@ -70,7 +66,6 @@ export default {
     REGISTER: "REGISTER",
     LOGOUT: "LOGOUT",
 
-    CLEAR_ERROR: "CLEAR_ERROR",
     PUBLISH_MESSAGE: "PUBLISH_MESSAGE",
     DISMISS_MESSAGE: "DISMISS_MESSAGE",
     SWITCH_LANGUAGE: "SWITCH_LANGUAGE",

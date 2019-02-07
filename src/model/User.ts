@@ -8,12 +8,19 @@ export const CONTEXT = {
     "types": "@type"
 };
 
+export interface UserAccountData {
+    firstName: string;
+    lastName: string;
+    username: string;
+    password: string;
+}
+
 export interface UserData {
-    iri: string,
-    firstName: string,
-    lastName: string,
-    username: string,
-    types?: string[]
+    iri: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    types?: string[];
 }
 
 /**
@@ -32,17 +39,17 @@ export default class User implements UserData {
     }
 
     get fullName(): string {
-        return this.firstName + ' ' + this.lastName;
+        return this.firstName + " " + this.lastName;
     }
 
     get abbreviatedName(): string {
-        return this.firstName.charAt(0).toUpperCase() + '. ' + this.lastName;
+        return this.firstName.charAt(0).toUpperCase() + ". " + this.lastName;
     }
 }
 
 export const EMPTY_USER = new User({
-    iri: 'http://empty',
-    firstName: '',
-    lastName: '',
-    username: ''
+    iri: "http://empty",
+    firstName: "",
+    lastName: "",
+    username: ""
 });

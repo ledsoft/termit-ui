@@ -6,7 +6,6 @@ import {
     asyncActionRequest,
     asyncActionSuccess,
     asyncActionSuccessWithPayload,
-    clearError,
     clearProperties,
     clearResource,
     consumeNotification,
@@ -17,7 +16,7 @@ import {
     switchLanguage,
     userLogout
 } from "../../action/SyncActions";
-import ErrorInfo, {EMPTY_ERROR} from "../../model/ErrorInfo";
+import ErrorInfo from "../../model/ErrorInfo";
 import User, {EMPTY_USER} from "../../model/User";
 import Message from "../../model/Message";
 import Constants from "../../util/Constants";
@@ -36,7 +35,6 @@ function stateToPlainObject(state: TermItState): TermItState {
         vocabulary: state.vocabulary,
         vocabularies: state.vocabularies,
         queryResults: state.queryResults,
-        error: state.error,
         messages: state.messages,
         intl: state.intl,
         selectedTerm: state.selectedTerm,
@@ -78,15 +76,6 @@ describe("Reducers", () => {
             expect(reducers(undefined, a)).toEqual(Object.assign({}, initialState, {user}));
         });
 
-        it("sets error in state on user load failure", () => {
-            const error = new ErrorInfo(ActionType.FETCH_USER, {
-                message: "Failed to connect to server",
-                requestUrl: "/users/current"
-            });
-            const a: FailureAction = asyncActionFailure(action, error);
-            expect(reducers(undefined, a)).toEqual(Object.assign({}, initialState, {error}));
-        });
-
         it("sets loading status when user fetch is initiated", () => {
             const a = asyncActionRequest(action);
             expect(reducers(undefined, a).loading).toBeTruthy();
@@ -114,10 +103,7 @@ describe("Reducers", () => {
             });
             const a: FailureAction = asyncActionFailure(action, error);
             initialState.loading = true;
-            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {
-                error,
-                loading: false
-            }));
+            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {loading: false}));
         });
     });
 
@@ -141,37 +127,7 @@ describe("Reducers", () => {
             });
             const a = asyncActionFailure(action, error);
             initialState.loading = true;
-            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {
-                loading: false,
-                error
-            }));
-        });
-
-        it("sets error state on login failure", () => {
-            const error = new ErrorInfo(ActionType.LOGIN, {
-                message: "Incorrect password",
-                requestUrl: "/j_spring_security_check"
-            });
-            const a = asyncActionFailure(action, error);
-            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {error}));
-        });
-    });
-
-    describe("clear error", () => {
-        it("clears error when action origin matches", () => {
-            initialState.error = new ErrorInfo(ActionType.LOGIN, {
-                messageId: "Unable to connect to server"
-            });
-            const action = clearError(ActionType.LOGIN);
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error: EMPTY_ERROR}));
-        });
-
-        it("does not clear error when origin is different", () => {
-            initialState.error = new ErrorInfo(ActionType.LOGIN, {
-                messageId: "Unable to connect to server"
-            });
-            const action = clearError(ActionType.FETCH_USER);
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(stateToPlainObject(initialState));
+            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {loading: false}));
         });
     });
 
@@ -210,17 +166,6 @@ describe("Reducers", () => {
         });
     });
 
-    describe("register", () => {
-        it("sets error state on registration failure", () => {
-            const error = new ErrorInfo(ActionType.REGISTER, {
-                message: "Username exists",
-                requestUrl: "/users"
-            });
-            const action = asyncActionFailure({type: ActionType.REGISTER}, error);
-            expect(reducers(stateToPlainObject(initialState), action)).toEqual(Object.assign({}, initialState, {error}));
-        });
-    });
-
     describe("logout", () => {
         it("resets current user to empty user", () => {
             initialState.user = new User({
@@ -243,15 +188,6 @@ describe("Reducers", () => {
             };
             expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload(action, new Vocabulary(vocabularyData))))
                 .toEqual(Object.assign({}, initialState, {vocabulary: new Vocabulary(vocabularyData)}));
-        });
-
-        it("sets error when vocabulary loading fails", () => {
-            const errorData = {
-                message: "Vocabulary does not exist",
-                requestUri: "/vocabularies/unknown-vocabulary"
-            };
-            expect(reducers(stateToPlainObject(initialState), asyncActionFailure(action, errorData)))
-                .toEqual(Object.assign({}, initialState, {error: new ErrorInfo(ActionType.LOAD_VOCABULARY, errorData)}));
         });
     });
 
