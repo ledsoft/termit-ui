@@ -3,7 +3,7 @@ import ActionType, {
     AsyncAction,
     AsyncActionSuccess,
     ExecuteQueryAction,
-    FacetedSearchAction,
+    FacetedSearchAction, FailureAction,
     MessageAction,
     NotificationAction,
     SearchAction,
@@ -25,6 +25,7 @@ import RdfsResource from "../model/RdfsResource";
 import AppNotification from "../model/AppNotification";
 import SearchResult from "../model/SearchResult";
 import SearchQuery from "../model/SearchQuery";
+import {ErrorLogItem} from "../model/ErrorInfo";
 
 /**
  * Handles changes to the currently logged in user.
@@ -322,6 +323,17 @@ function pendingActions(state: { [key: string]: AsyncActionStatus } = {}, action
     }
 }
 
+function errors(state: ErrorLogItem[] = [], action: FailureAction) {
+    if (action.error) {
+        const logItem = {
+            timestamp: Date.now(),
+            error: action.error
+        };
+        return [logItem, ...state];
+    }
+    return state;
+}
+
 const rootReducer = combineReducers<TermItState>({
     user,
     loading,
@@ -344,7 +356,8 @@ const rootReducer = combineReducers<TermItState>({
     types,
     properties,
     notifications,
-    pendingActions
+    pendingActions,
+    errors
 });
 
 export default rootReducer;

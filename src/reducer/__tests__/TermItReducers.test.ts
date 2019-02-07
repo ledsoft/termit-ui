@@ -16,7 +16,7 @@ import {
     switchLanguage,
     userLogout
 } from "../../action/SyncActions";
-import ErrorInfo from "../../model/ErrorInfo";
+import ErrorInfo, {ErrorData} from "../../model/ErrorInfo";
 import User, {EMPTY_USER} from "../../model/User";
 import Message from "../../model/Message";
 import Constants from "../../util/Constants";
@@ -51,7 +51,8 @@ function stateToPlainObject(state: TermItState): TermItState {
         resources: state.resources,
         properties: state.properties,
         notifications: state.notifications,
-        pendingActions: state.pendingActions
+        pendingActions: state.pendingActions,
+        errors: state.errors
     };
 }
 
@@ -103,7 +104,7 @@ describe("Reducers", () => {
             });
             const a: FailureAction = asyncActionFailure(action, error);
             initialState.loading = true;
-            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {loading: false}));
+            expect(reducers(stateToPlainObject(initialState), a).loading).toBeFalsy();
         });
     });
 
@@ -127,7 +128,7 @@ describe("Reducers", () => {
             });
             const a = asyncActionFailure(action, error);
             initialState.loading = true;
-            expect(reducers(stateToPlainObject(initialState), a)).toEqual(Object.assign({}, initialState, {loading: false}));
+            expect(reducers(stateToPlainObject(initialState), a).loading).toBeFalsy();
         });
     });
 
@@ -361,6 +362,30 @@ describe("Reducers", () => {
             initialState.pendingActions = added;
             const action = asyncActionRequest({type: ActionType.LOAD_RESOURCES}, true);
             expect(Object.is(reducers(stateToPlainObject(initialState), action).pendingActions, initialState.pendingActions)).toBeTruthy();
+        });
+    });
+
+    describe("errors", () => {
+        it("records error with timestamp", () => {
+            const error: ErrorData = {message: "Login failed", status: 500};
+            const result = reducers(stateToPlainObject(initialState), asyncActionFailure({type: ActionType.LOGIN}, error)).errors;
+            expect(result.length).toEqual(1);
+            expect(result[0].timestamp).toBeDefined();
+            expect(result[0].error).toEqual(new ErrorInfo(ActionType.LOGIN, error));
+        });
+
+        it("records errors from latest to oldest", () => {
+            const errorOne: ErrorData = {message: "Fetch user failed", status: 500};
+            const errorTwo: ErrorData = {message: "Login failed", status: 400};
+            const tempState = reducers(stateToPlainObject(initialState), asyncActionFailure({type: ActionType.FETCH_USER}, errorOne));
+            const result = reducers(stateToPlainObject(tempState), asyncActionFailure({type: ActionType.LOGIN}, errorTwo)).errors;
+            expect(result.length).toEqual(2);
+            expect(result[0].error.origin).toEqual(ActionType.LOGIN);
+            expect(result[1].error.origin).toEqual(ActionType.FETCH_USER);
+        });
+
+        it("does nothing when action is no error", () => {
+            expect(reducers(stateToPlainObject(initialState), asyncActionSuccess({type: ActionType.LOGIN})).errors).toEqual([]);
         });
     });
 });

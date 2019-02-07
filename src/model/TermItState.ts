@@ -11,6 +11,7 @@ import AppNotification from "./AppNotification";
 import SearchResult from "./SearchResult";
 import SearchQuery from "./SearchQuery";
 import AsyncActionStatus from "../action/AsyncActionStatus";
+import {ErrorLogItem} from "./ErrorInfo";
 
 /**
  * This is the basic shape of the application"s state managed by Redux.
@@ -40,6 +41,7 @@ export default class TermItState {
     public notifications: AppNotification[];
     // Pending asynchronous actions. Can be used to prevent repeated requests when some are already pending
     public pendingActions: { [key: string]: AsyncActionStatus };
+    public errors: ErrorLogItem[];
 
     constructor() {
         this.loading = false;
@@ -64,5 +66,6 @@ export default class TermItState {
         this.properties = [];
         this.notifications = [];
         this.pendingActions = {};
+        this.errors = [];
     }
 }

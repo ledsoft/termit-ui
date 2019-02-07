@@ -69,7 +69,7 @@ export function loadUser() {
             .then((data: UserData) => dispatch(asyncActionSuccessWithPayload(action, new User(data))))
             .catch((error: ErrorData) => {
                 if (error.status === Constants.STATUS_UNAUTHORIZED) {
-                    return dispatch(asyncActionFailure(action, error));
+                    return dispatch(asyncActionFailure(action, {message: "Not logged in."}));
                 } else {
                     dispatch(asyncActionFailure(action, error));
                     return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
