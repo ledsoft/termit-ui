@@ -248,6 +248,10 @@ export default {
         "type.resource": "Zdroj",
         "type.document": "Dokument",
         "type.file": "Soubor",
-        "type.dataset": "Datová sada"
+        "type.dataset": "Datová sada",
+
+        "log-viewer.title": "Prohlížení chyb",
+        "log-viewer.timestamp": "Čas",
+        "log-viewer.error": "Chyba"
     }
 }

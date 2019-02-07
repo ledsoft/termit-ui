@@ -247,6 +247,10 @@ export default {
         "type.resource": "Resource",
         "type.document": "Document",
         "type.file": "File",
-        "type.dataset": "Dataset"
+        "type.dataset": "Dataset",
+
+        "log-viewer.title": "Error log",
+        "log-viewer.timestamp": "Timestamp",
+        "log-viewer.error": "Error"
     }
 }
