@@ -13,6 +13,7 @@ interface ErrorLogViewerProps extends HasI18n {
 export const ErrorLogViewer: React.SFC<ErrorLogViewerProps> = (props) => {
     const i18n = props.i18n;
     const errors = props.errors;
+    // TODO Support reset
     return <Table striped={true} responsive={true}>
         <thead>
         <tr>
@@ -22,9 +23,13 @@ export const ErrorLogViewer: React.SFC<ErrorLogViewerProps> = (props) => {
         </thead>
         <tbody>
         {errors.map(item => {
+            let error = item.error;
+            if (error.messageId) {
+                error = Object.assign({}, error, {message: i18n(error.messageId)});
+            }
             return <tr key={item.timestamp}>
-                <td>{new Date(item.timestamp).toLocaleString(props.locale)}</td>
-                <td>{JSON.stringify(item.error, null, 2)}</td>
+                <td className="error-log-timestamp">{new Date(item.timestamp).toLocaleString(props.locale)}</td>
+                <td className="error-log-value">{JSON.stringify(error, null, 2)}</td>
             </tr>
         })}
         </tbody>
