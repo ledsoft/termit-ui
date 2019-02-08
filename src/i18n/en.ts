@@ -251,6 +251,7 @@ export default {
 
         "log-viewer.title": "Error log",
         "log-viewer.timestamp": "Timestamp",
-        "log-viewer.error": "Error"
+        "log-viewer.error": "Error",
+        "log-viewer.clear": "Clear log"
     }
 }

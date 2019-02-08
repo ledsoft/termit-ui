@@ -330,6 +330,8 @@ function errors(state: ErrorLogItem[] = [], action: FailureAction) {
             error: action.error
         };
         return [logItem, ...state];
+    } else if (action.type === ActionType.CLEAR_ERRORS) {
+        return [];
     }
     return state;
 }

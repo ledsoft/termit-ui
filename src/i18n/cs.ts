@@ -252,6 +252,7 @@ export default {
 
         "log-viewer.title": "Prohlížení chyb",
         "log-viewer.timestamp": "Čas",
-        "log-viewer.error": "Chyba"
+        "log-viewer.error": "Chyba",
+        "log-viewer.clear": "Vyčistit"
     }
 }

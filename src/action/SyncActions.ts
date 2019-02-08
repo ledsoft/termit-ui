@@ -113,3 +113,9 @@ export function clearResource() {
         type: ActionType.CLEAR_RESOURCE
     };
 }
+
+export function clearErrors() {
+    return {
+        type: ActionType.CLEAR_ERRORS
+    };
+}

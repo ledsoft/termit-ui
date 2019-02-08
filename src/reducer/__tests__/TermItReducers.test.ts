@@ -5,7 +5,7 @@ import {
     asyncActionFailure,
     asyncActionRequest,
     asyncActionSuccess,
-    asyncActionSuccessWithPayload,
+    asyncActionSuccessWithPayload, clearErrors,
     clearProperties,
     clearResource,
     consumeNotification,
@@ -386,6 +386,14 @@ describe("Reducers", () => {
 
         it("does nothing when action is no error", () => {
             expect(reducers(stateToPlainObject(initialState), asyncActionSuccess({type: ActionType.LOGIN})).errors).toEqual([]);
+        });
+
+        it("clears errors on clear errors action", () => {
+            initialState.errors = [{
+                timestamp: Date.now(),
+                error: new ErrorInfo(ActionType.FETCH_USER, {message: "Connection error"})
+            }];
+            expect(reducers(stateToPlainObject(initialState), clearErrors()).errors).toEqual([]);
         });
     });
 });
