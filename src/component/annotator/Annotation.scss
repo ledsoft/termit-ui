@@ -33,8 +33,12 @@
 .selected-occurrence {
 }
 
+.pwa {
+  max-width: none !important;
+}
+
 .pwa-popup-title {
-  margin-right: 20px
+  margin-right: 20px;
 }
 
 .an-info {
@@ -47,10 +51,6 @@
 
 .an-error {
   color: red;
-}
-
-.popover {
-  min-width: 300px
 }
 
 .popover-body {
