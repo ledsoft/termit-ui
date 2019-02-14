@@ -1,10 +1,12 @@
 import * as React from "react";
 import {VocabularyEdit} from "../VocabularyEdit";
-import Vocabulary from "../../../model/Vocabulary";
+import Vocabulary, {CONTEXT} from "../../../model/Vocabulary";
 import Generator from "../../../__tests__/environment/Generator";
 import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {shallow} from "enzyme";
+import {UnmappedPropertiesEdit} from "../../genericmetadata/UnmappedPropertiesEdit";
+import VocabularyUtils from "../../../util/VocabularyUtils";
 
 describe("VocabularyEdit", () => {
 
@@ -68,5 +70,14 @@ describe("VocabularyEdit", () => {
         expect(result.unmappedProperties).toEqual(updatedProperties);
         expect(result[property]).toBeDefined();
         expect(result[property]).toEqual(updatedProperties.get(property));
+    });
+
+    it("passes mapped Term properties for ignoring to UnmappedPropertiesEdit", () => {
+        const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
+                                                      {...intlFunctions()}/>);
+        const ignored = wrapper.find(UnmappedPropertiesEdit).prop("ignoredProperties");
+        expect(ignored).toBeDefined();
+        expect(ignored!.indexOf(VocabularyUtils.RDF_TYPE)).not.toEqual(-1);
+        Object.getOwnPropertyNames((n:string) => expect(ignored![CONTEXT[n]]).not.toEqual(-1));
     });
 });

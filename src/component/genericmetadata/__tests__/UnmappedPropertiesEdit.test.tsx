@@ -7,6 +7,8 @@ import {Badge} from "reactstrap";
 import {GoPlus} from "react-icons/go";
 import {shallow} from "enzyme";
 import RdfsResource from "../../../model/RdfsResource";
+// @ts-ignore
+import {IntelligentTreeSelect} from "intelligent-tree-select";
 
 describe("UnmappedPropertiesEdit", () => {
 
@@ -35,7 +37,7 @@ describe("UnmappedPropertiesEdit", () => {
         expect(value.text()).toContain(existing.get(property)![0]);
     });
 
-    it('removes prop value when delete button is clicked', () => {
+    it("removes prop value when delete button is clicked", () => {
         const property = Generator.generateUri();
         const existing = new Map([[property, ["test1", "test2"]]]);
         const wrapper = mountWithIntl(<UnmappedPropertiesEdit properties={existing} knownProperties={[]}
@@ -159,7 +161,7 @@ describe("UnmappedPropertiesEdit", () => {
         const valueInput = wrapper.find("input[name=\"value\"]");
         (valueInput.getDOMNode() as HTMLInputElement).value = value;
         valueInput.simulate("change", valueInput);
-        valueInput.simulate("keyPress", {key: 'Enter'});
+        valueInput.simulate("keyPress", {key: "Enter"});
         expect(onChange).toHaveBeenCalled();
     });
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button, ButtonToolbar, Col, Form, Row} from "reactstrap";
-import Term, {TermData} from "../../model/Term";
+import Term, {CONTEXT, TermData} from "../../model/Term";
 import "./TermMetadata.scss";
 import CustomInput from "../misc/CustomInput";
 import TextArea from "../misc/TextArea";
@@ -125,6 +125,7 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 <Row>
                     <Col md={12}>
                         <UnmappedPropertiesEdit properties={this.state.unmappedProperties}
+                                                ignoredProperties={TermMetadataEdit.mappedPropertiesToIgnore()}
                                                 onChange={this.onPropertiesChange}/>
                     </Col>
                 </Row>
@@ -140,6 +141,12 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 </Row>
             </Form>
         </div>;
+    }
+
+    private static mappedPropertiesToIgnore() {
+        const toIgnore = Object.getOwnPropertyNames(CONTEXT).map(n => CONTEXT[n]);
+        toIgnore.push(VocabularyUtils.RDF_TYPE);
+        return toIgnore;
     }
 }
 

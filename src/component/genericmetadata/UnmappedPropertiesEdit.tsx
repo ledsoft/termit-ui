@@ -18,6 +18,7 @@ import {clearProperties} from "../../action/SyncActions";
 
 interface UnmappedPropertiesEditProps extends HasI18n {
     properties: Map<string, string[]>;
+    ignoredProperties?: string[];    // Properties which should not be offered in the editor
     onChange: (properties: Map<string, string[]>) => void;
     loadKnownProperties: () => void;
     knownProperties: RdfsResource[];
@@ -117,7 +118,8 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
                 </Col>
                 <Col md={1} className="form-group align-self-end">
                     <Button color="primary" size="sm" title={i18n("properties.edit.add.title")}
-                            onClick={this.onAdd} disabled={!this.isValid()}><GoPlus/> {i18n("properties.edit.add.text")}</Button>
+                            onClick={this.onAdd} disabled={!this.isValid()}><GoPlus/> {i18n("properties.edit.add.text")}
+                    </Button>
                 </Col>
             </Row>
         </div>;
@@ -130,7 +132,8 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
                 {v}
                 <Badge title={this.props.i18n("properties.edit.remove")}
                        className="term-edit-source-remove align-middle"
-                       onClick={this.onRemove.bind(null, k, v)}><GoX/>{this.props.i18n("properties.edit.remove.text")}</Badge>
+                       onClick={this.onRemove.bind(null, k, v)}><GoX/>{this.props.i18n("properties.edit.remove.text")}
+                </Badge>
             </li>);
 
             result.push(<div key={k}>
@@ -147,7 +150,6 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
     }
 
     private renderPropertyInput() {
-        const options = this.props.knownProperties.map(p => p.label ? p : Object.assign(p, {label: p.iri}));
         return <FormGroup>
             <Label className="attribute-label">{this.props.i18n("properties.edit.property")}</Label>
             {this.props.knownProperties.length > 0 ? <IntelligentTreeSelect className="term-edit"
@@ -161,7 +163,7 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
                                                                             multi={false}
                                                                             renderAsTree={false}
                                                                             simpleTreeData={true}
-                                                                            options={options}
+                                                                            options={this.prepareKnownPropertiesForRendering()}
                                                                             onOptionCreate={this.onCreateProperty}
                                                                             openButtonLabel={this.props.i18n("properties.edit.new")}
                                                                             openButtonTooltipLabel={this.props.i18n("properties.edit.new")}
@@ -169,6 +171,14 @@ export class UnmappedPropertiesEdit extends React.Component<UnmappedPropertiesEd
                                                                             valueRenderer={UnmappedPropertiesEdit.valueRenderer}/> :
                 <CustomInput disabled={true}/>}
         </FormGroup>
+    }
+
+    private prepareKnownPropertiesForRendering() {
+        const options = this.props.knownProperties.map(p => p.label ? p : Object.assign(p, {label: p.iri}));
+        if (!this.props.ignoredProperties) {
+            return options;
+        }
+        return options.filter(opt => this.props.ignoredProperties!.indexOf(opt.iri) === -1);
     }
 }
 
