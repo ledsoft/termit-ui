@@ -133,9 +133,9 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
                             </Col>
                         </Row>
                         <Row className="justify-content-center">
-                            <Button className="m-2" color="success" disabled={!this.isValid() || this.props.loading}
+                            <Button id="register-submit" className="m-2" color="success" disabled={!this.isValid() || this.props.loading}
                                     onClick={this.onRegister}>{i18n("register.submit")}</Button>
-                            <Button className="m-2 register-cancel" color="secondary"
+                            <Button id="register-cancel" className="m-2 register-cancel" color="secondary"
                                     onClick={this.onCancel}>{i18n("cancel")}</Button>
                         </Row>
                     </Form>

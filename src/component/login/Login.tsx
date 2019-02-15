@@ -88,9 +88,10 @@ export class Login extends React.Component<LoginProps, LoginState> {
                         <Row>
                             <Col xs={{size: "auto", offset: 4}}>
                                 <ButtonToolbar>
-                                    <Button color="success" onClick={this.login}
+                                    <Button id="login-submit" color="success" onClick={this.login}
                                             disabled={this.props.loading || !this.isValid()}>{i18n("login.submit")}</Button>
-                                    <Button color="link" onClick={this.register} className="register-link"
+                                    <Button id="login-register" color="link" onClick={this.register}
+                                            className="register-link"
                                             disabled={this.props.loading}>{i18n("login.register")}</Button>
                                 </ButtonToolbar>
                             </Col>
