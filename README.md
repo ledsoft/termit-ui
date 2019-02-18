@@ -71,6 +71,7 @@ so server keeps no sessions.
 separately and then specified in generic arguments to `connect`. An example of this technique can be found in `TermAssignments`. 
 Also, this means that intl props need to be explicitly passed to the component in `connect`. Otherwise, internationalization would not work properly 
 (language switching would have no effect). See `TermAssignments` again for a showcase how to do this.
+* Marker CSS classes should be used to denote important elements. These classes help in testing. Marker classes should be prefixed with `m-` and no styling should be applied based on them.
 
 
 ## Debugging

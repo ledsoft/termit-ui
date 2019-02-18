@@ -29,7 +29,7 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
                     <Label className="attribute-label">{i18n("asset.iri")}</Label>
                 </Col>
                 <Col md={10}>
-                    <Label><OutgoingLink iri={resource.iri} label={resource.iri}/></Label>
+                    <Label id="resource-metadata-iri"><OutgoingLink iri={resource.iri} label={resource.iri}/></Label>
                 </Col>
             </Row>
             <Row>
@@ -37,7 +37,7 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
                     <Label className="attribute-label">{i18n("asset.label")}</Label>
                 </Col>
                 <Col md={10}>
-                    <Label>{resource.label}</Label>
+                    <Label id="resource-metadata-label">{resource.label}</Label>
                 </Col>
             </Row>
             <Row>

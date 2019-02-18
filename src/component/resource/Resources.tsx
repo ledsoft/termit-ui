@@ -13,7 +13,7 @@ const Resources: React.SFC<HasI18n> = props => {
                            className="btn btn-primary btn-sm" title={i18n("resource.management.create.tooltip")}>
         <GoPlus/>&nbsp;{i18n("asset.create.button.text")}
     </Link>];
-    return <PanelWithActions title={i18n("resource.management.resources")} actions={actions}>
+    return <PanelWithActions id="resources" title={i18n("resource.management.resources")} actions={actions}>
         <ResourceList/>
     </PanelWithActions>;
 };

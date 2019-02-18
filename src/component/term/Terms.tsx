@@ -111,7 +111,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
     public render() {
         const i18n = this.props.i18n;
 
-        return <Card>
+        return <Card id="glossary">
             <CardHeader tag="h4" color="info" className="d-flex align-items-center">
                 <div className="flex-grow-1">{i18n("glossary.title")}</div>
                 <div className="float-sm-right">

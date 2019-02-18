@@ -7,6 +7,7 @@ interface AssetLinkProps<T extends Asset> {
     asset: T;
     path: string;
     tooltip?: string;
+    id?: string;
 }
 
 interface AssetLinkState {
@@ -33,17 +34,16 @@ export default class AssetLink<T extends Asset> extends React.Component<AssetLin
         const setInvisible = this.setInvisible.bind(this);
         const setVisible = this.setVisible.bind(this);
 
-        // "asset-link" is a marker class, it contains no styling
         return <span
             onMouseOut={setInvisible}
             onMouseOver={setVisible}>
-            <OutgoingLink label={<Link
+            <OutgoingLink label={<Link id={this.props.id}
                 title={this.props.tooltip ? this.props.tooltip : undefined}
                 to={props.path}>
                 {props.asset.label}</Link>}
                           iri={props.asset.iri}
                           showLink={this.state.showLink}
-                          className="asset-link"/>
+                          className="m-asset-link"/>
         </span>
     }
 }

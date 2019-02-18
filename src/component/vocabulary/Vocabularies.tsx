@@ -13,7 +13,7 @@ const Vocabularies: React.SFC<HasI18n> = props => {
                            title={i18n("vocabulary.vocabularies.create.tooltip")}
                            to={Routes.createVocabulary.path}><GoPlus/>&nbsp;{i18n("asset.create.button.text")}</Link>];
 
-    return <PanelWithActions title={i18n("vocabulary.management.vocabularies")} actions={actions}>
+    return <PanelWithActions title={i18n("vocabulary.management.vocabularies")} actions={actions} id="vocabularies">
         <VocabularyList/>
     </PanelWithActions>;
 };

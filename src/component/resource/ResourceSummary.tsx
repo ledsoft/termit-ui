@@ -89,7 +89,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         const i18n = this.props.i18n;
         const buttons = [];
         if (!this.state.edit) {
-            buttons.push(<Button key="resource.summary.edit" size="sm" color="primary" title={i18n("edit")}
+            buttons.push(<Button id="resource-detail-edit" key="resource.summary.edit" size="sm" color="primary" title={i18n("edit")}
                                  onClick={this.onEdit}><GoPencil/>&nbsp;{i18n("edit")}</Button>);
         }
         buttons.push(<Button key="resource.summary.remove" size="sm" color="secondary"
@@ -103,7 +103,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
                 save={this.onSave}
                 cancel={this.onCloseEdit}/> :
             <ResourceMetadata resource={this.props.resource}/>;
-        return <PanelWithActions
+        return <PanelWithActions id="resource-detail"
             title={this.props.resource.label}
             actions={actions}>
             <RemoveAssetDialog show={this.state.showRemoveDialog} asset={this.props.resource}

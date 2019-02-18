@@ -93,13 +93,15 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
     };
 
     public render() {
-        const buttons = [<Button key="vocabulary.summary.detail" color="primary" size="sm"
+        const buttons = [<Button id="vocabulary-summary-detail" key="vocabulary.summary.detail" color="primary"
+                                 size="sm"
                                  title={this.props.i18n("vocabulary.summary.gotodetail.label")}
                                  onClick={this.openTerms}>
             <GoThreeBars/> {this.props.i18n("vocabulary.summary.gotodetail.text")}
         </Button>];
         if (!this.state.edit) {
-            buttons.push(<Button key="vocabulary.summary.edit" size="sm" color="primary" title={this.props.i18n("edit")}
+            buttons.push(<Button id="vocabulary-summary-edit" key="vocabulary.summary.edit" size="sm" color="primary"
+                                 title={this.props.i18n("edit")}
                                  onClick={this.onEdit}><GoPencil/> {this.props.i18n("edit")}</Button>);
         }
         buttons.push(this.renderExportDropdown());
@@ -107,21 +109,19 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
         const component = this.state.edit ?
             <VocabularyEdit save={this.onSave} cancel={this.onCloseEdit} vocabulary={this.props.vocabulary}/> :
             <VocabularyMetadata vocabulary={this.props.vocabulary}/>;
-        return <div>
-            <PanelWithActions
-                title={<OutgoingLink
-                    label={this.props.vocabulary.label}
-                    iri={this.props.vocabulary.iri as string}
-                />}
-                actions={actions}>
-                {component}
-            </PanelWithActions>
-        </div>;
+        return <PanelWithActions id="vocabulary-summary"
+            title={<OutgoingLink
+                label={this.props.vocabulary.label}
+                iri={this.props.vocabulary.iri as string}
+            />}
+            actions={actions}>
+            {component}
+        </PanelWithActions>;
     }
 
     private renderExportDropdown() {
         const i18n = this.props.i18n;
-        return <UncontrolledButtonDropdown key="vocabulary.summary.export"
+        return <UncontrolledButtonDropdown id="vocabulary-summary-export" key="vocabulary.summary.export"
                                            size="sm" title={i18n("vocabulary.summary.export.title")}>
             <DropdownToggle caret={true} color="primary"><GoCloudDownload/> {i18n("vocabulary.summary.export.text")}
             </DropdownToggle>

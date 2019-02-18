@@ -84,12 +84,12 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
             return null;
         }
         const actions = this.state.edit ? [] :
-            [<Button size="sm" color="primary" onClick={this.onEdit} key="term-detail-edit"
+            [<Button id="term-detail-edit" size="sm" color="primary" onClick={this.onEdit} key="term-detail-edit"
                      title={this.props.i18n("edit")}><GoPencil/> {this.props.i18n("edit")}</Button>];
         const component = this.state.edit ?
             <TermMetadataEdit save={this.onSave} term={this.props.term!} cancel={this.onCloseEdit}/> :
             <TermMetadata term={this.props.term!}/>;
-        return <PanelWithActions title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
+        return <PanelWithActions id="term-detail" title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
                                  actions={actions}>{component}</PanelWithActions>;
     }
 }

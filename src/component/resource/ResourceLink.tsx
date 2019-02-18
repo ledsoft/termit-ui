@@ -8,7 +8,8 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {injectIntl} from "react-intl";
 
 interface ResourceLinkProps extends HasI18n {
-    resource: Resource
+    resource: Resource;
+    id?: string;
 }
 
 export const ResourceLink = (props: ResourceLinkProps) => {
@@ -18,10 +19,10 @@ export const ResourceLink = (props: ResourceLinkProps) => {
             params: new Map([["name", iri.fragment]]),
             query: new Map([["namespace", iri.namespace!]])
         });
-    return <AssetLink
-        asset={props.resource}
-        path={path}
-        tooltip={props.i18n("asset.link.tooltip")}/>;
+    return <AssetLink id={props.id}
+                      asset={props.resource}
+                      path={path}
+                      tooltip={props.i18n("asset.link.tooltip")}/>;
 };
 
 export default injectIntl(withI18n(ResourceLink));
