@@ -51,7 +51,7 @@ export class Search extends React.Component<SearchProps> {
 
         if (results) {
             return <div className="relative">
-                <Button name="search-reset" color="danger" outline={true} size="sm" className="float-right" onClick={this.resetSearch}>
+                <Button id="search-reset" color="danger" outline={true} size="sm" className="float-right" onClick={this.resetSearch}>
                     <GoTrashcan/> {this.props.i18n("search.reset")}
                 </Button>
                 <h2>{this.props.formatMessage("search.results.title", {searchString: this.props.searchQuery.searchQuery})}</h2>

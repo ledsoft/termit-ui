@@ -89,10 +89,11 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         const i18n = this.props.i18n;
         const buttons = [];
         if (!this.state.edit) {
-            buttons.push(<Button id="resource-detail-edit" key="resource.summary.edit" size="sm" color="primary" title={i18n("edit")}
+            buttons.push(<Button id="resource-detail-edit" key="resource.summary.edit" size="sm" color="primary"
+                                 title={i18n("edit")}
                                  onClick={this.onEdit}><GoPencil/>&nbsp;{i18n("edit")}</Button>);
         }
-        buttons.push(<Button key="resource.summary.remove" size="sm" color="secondary"
+        buttons.push(<Button id="resource-detail-remove" key="resource.summary.remove" size="sm" color="secondary"
                              title={i18n("asset.remove.tooltip")}
                              onClick={this.onRemoveClick}><GoX/>&nbsp;{i18n("remove")}</Button>);
         const actions = [<ButtonToolbar key="resource.summary.actions">{buttons}</ButtonToolbar>];
@@ -104,8 +105,8 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
                 cancel={this.onCloseEdit}/> :
             <ResourceMetadata resource={this.props.resource}/>;
         return <PanelWithActions id="resource-detail"
-            title={this.props.resource.label}
-            actions={actions}>
+                                 title={this.props.resource.label}
+                                 actions={actions}>
             <RemoveAssetDialog show={this.state.showRemoveDialog} asset={this.props.resource}
                                onCancel={this.onRemoveCancel} onSubmit={this.onRemove}/>
             {component}

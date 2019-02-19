@@ -12,11 +12,11 @@ class WidgetToolbar extends React.Component<HasI18n> {
 
         return <Nav className="widget-toolbar justify-content-center mb-4">
             <NavItem className="card mx-1">
-                <LinkWidget to={Routes.createVocabulary.path}
+                <LinkWidget id="dashboard-create-vocabulary" to={Routes.createVocabulary.path}
                             title={i18n("vocabulary.vocabularies.create.tooltip")}>{i18n("dashboard.create-vocabulary.tile")}</LinkWidget>
             </NavItem>
             <NavItem className="card mx-1">
-                <LinkWidget to={Routes.createResource.path}
+                <LinkWidget id="dashboard-create-resource" to={Routes.createResource.path}
                             title={i18n("resource.management.create.tooltip")}>{i18n("dashboard.create-resource.tile")}</LinkWidget>
             </NavItem>
         </Nav>;

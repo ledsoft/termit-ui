@@ -59,7 +59,7 @@ export class CreateResource extends AbstractCreateAsset<CreateResourceProps, Cre
 
     public render() {
         const i18n = this.props.i18n;
-        return <Card>
+        return <Card id="create-resource">
             <CardHeader color="info">
                 <h5>{i18n("resource.create.title")}</h5>
             </CardHeader>
@@ -75,16 +75,20 @@ export class CreateResource extends AbstractCreateAsset<CreateResourceProps, Cre
                             <Row>
                                 <Col>
                                     <ButtonGroup className="d-flex form-group">
-                                        <Button color="info" size="sm" className="w-100 create-resource-type-select" outline={true}
+                                        <Button id="create-resource-type-resource" color="info" size="sm"
+                                                className="w-100 create-resource-type-select" outline={true}
                                                 onClick={this.onTypeSelect.bind(null, VocabularyUtils.RESOURCE)}
                                                 active={this.state.types === VocabularyUtils.RESOURCE}>{i18n("type.resource")}</Button>
-                                        <Button color="info" size="sm" className="w-100 create-resource-type-select" outline={true}
+                                        <Button id="create-resource-type-dataset" color="info" size="sm"
+                                                className="w-100 create-resource-type-select" outline={true}
                                                 onClick={this.onTypeSelect.bind(null, VocabularyUtils.DATASET)}
                                                 active={this.state.types === VocabularyUtils.DATASET}>{i18n("type.dataset")}</Button>
-                                        <Button color="info" size="sm" className="w-100 create-resource-type-select" outline={true}
+                                        <Button id="create-resource-type-document" color="info" size="sm"
+                                                className="w-100 create-resource-type-select" outline={true}
                                                 onClick={this.onTypeSelect.bind(null, VocabularyUtils.DOCUMENT)}
                                                 active={this.state.types === VocabularyUtils.DOCUMENT}>{i18n("type.document")}</Button>
-                                        <Button color="info" size="sm" className="w-100 create-resource-type-select" outline={true}
+                                        <Button id="create-resource-type-file" color="info" size="sm"
+                                                className="w-100 create-resource-type-select" outline={true}
                                                 onClick={this.onTypeSelect.bind(null, VocabularyUtils.FILE)}
                                                 active={this.state.types === VocabularyUtils.FILE}>{i18n("type.file")}</Button>
                                     </ButtonGroup>
@@ -94,21 +98,21 @@ export class CreateResource extends AbstractCreateAsset<CreateResourceProps, Cre
                     </Row>
                     <Row>
                         <Col xl={6} md={12}>
-                            <CustomInput name="create-resource.label" label={i18n("asset.label")}
+                            <CustomInput name="create-resource-label" label={i18n("asset.label")}
                                          value={this.state.label}
                                          onChange={this.onLabelChange}/>
                         </Col>
                     </Row>
                     <Row>
                         <Col xl={6} md={12}>
-                            <CustomInput name="create-resource.iri" label={i18n("asset.iri")}
+                            <CustomInput name="create-resource-iri" label={i18n("asset.iri")}
                                          value={this.state.iri}
                                          onChange={this.onIriChange} help={i18n("asset.create.iri.help")}/>
                         </Col>
                     </Row>
                     <Row>
                         <Col xl={6} md={12}>
-                            <TextArea name="create-resource.description" label={i18n("resource.metadata.description")}
+                            <TextArea name="create-resource-description" label={i18n("resource.metadata.description")}
                                       type="textarea" rows={3} value={this.state.description} help={i18n("optional")}
                                       onChange={this.onDescriptionChange}/>
                         </Col>
@@ -116,9 +120,10 @@ export class CreateResource extends AbstractCreateAsset<CreateResourceProps, Cre
                     <Row>
                         <Col xl={6} md={12}>
                             <ButtonToolbar className="pull-right">
-                                <Button name="create-resource.submit" onClick={this.onCreate} color="success" size="sm"
+                                <Button id="create-resource-submit" onClick={this.onCreate} color="success" size="sm"
                                         disabled={this.state.label.trim().length === 0}>{i18n("create")}</Button>
-                                <Button name="create-resource.cancel" onClick={CreateResource.onCancel} color="secondary"
+                                <Button id="create-resource-cancel" onClick={CreateResource.onCancel}
+                                        color="secondary"
                                         size="sm">{i18n("cancel")}</Button>
                             </ButtonToolbar>
                         </Col>

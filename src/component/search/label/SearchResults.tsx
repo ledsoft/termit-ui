@@ -70,7 +70,7 @@ export class SearchResults extends React.Component<SearchResultsProps> {
         const items = SearchResults.mergeDuplicates(this.props.results);
         const maxScore = SearchResults.calculateMaxScore(items);
         return items.map(r => {
-            return <tr key={r.iri}>
+            return <tr key={r.iri} className="m-search-result-row">
                 <td className="align-middle search-result-label">
                     <Row>
                         <Col md={5} lg={4} xl={2} className="d-flex align-items-center">

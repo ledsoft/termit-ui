@@ -20,7 +20,8 @@ export const MAX_RENDERED_RESULTS = 10;
 export const SearchResultsOverlay: React.SFC<SearchResultsOverlayProps> = (props: SearchResultsOverlayProps) => {
     const items = [];
     if (props.searchResults.length === 0) {
-        items.push(<li key="full-info" className="btn-link search-result-no-results" onClick={props.onOpenSearch}
+        items.push(<li id="search-results-link" key="full-info" className="btn-link search-result-no-results"
+                       onClick={props.onOpenSearch}
                        title={props.i18n("main.search.tooltip")}>
             {props.i18n("main.search.no-results")}
         </li>);
@@ -41,7 +42,8 @@ export const SearchResultsOverlay: React.SFC<SearchResultsOverlayProps> = (props
             </li>);
         }
         if (i < props.searchResults.length) {
-            items.push(<li key="full-info" className="btn-link search-result-info" onClick={props.onOpenSearch}>
+            items.push(<li id="search-results-link" key="full-info" className="btn-link search-result-info"
+                           onClick={props.onOpenSearch}>
                 {props.formatMessage("main.search.count-info-and-link", {
                     displayed: MAX_RENDERED_RESULTS,
                     count: new Set(props.searchResults.map(r => r.iri)).size

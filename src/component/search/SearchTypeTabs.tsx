@@ -31,12 +31,26 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
         const i18n = this.props.i18n;
         const path = this.props.location.pathname;
 
-        const tabs: Array<{ route: Route, altExactRoutes: Route[], label: string }> = [
-            {route: Routes.search, altExactRoutes: [], label: i18n("search.tab.everything")},
-            {route: Routes.searchTerms, altExactRoutes: [], label: i18n("search.tab.terms")},
-            {route: Routes.searchVocabularies, altExactRoutes: [], label: i18n("search.tab.vocabularies")},
-            {route: Routes.facetedSearch, altExactRoutes: [], label: i18n("search.tab.facets")},
-        ];
+        const tabs: Array<{ route: Route, altExactRoutes: Route[], label: string, id: string }> = [{
+            route: Routes.search,
+            altExactRoutes: [],
+            label: i18n("search.tab.everything"),
+            id: "search-tab-everything"
+        }, {
+            route: Routes.searchTerms,
+            altExactRoutes: [],
+            label: i18n("search.tab.terms"), id: "search-tab-terms"
+        }, {
+            route: Routes.searchVocabularies,
+            altExactRoutes: [],
+            label: i18n("search.tab.vocabularies"),
+            id: "search-tab-vocabularies"
+        }, {
+            route: Routes.facetedSearch,
+            altExactRoutes: [],
+            label: i18n("search.tab.facets"),
+            id: "search-tab-facets"
+        }];
 
         let activeTab: object | null = null;
         let activeTabDepth = -1;
@@ -68,7 +82,7 @@ export class SearchTypeTabs extends React.Component<SearchTypeTabsProps> {
             return <div><Nav tabs={true} className="justify-content-center">
                 {tabs.map((tab) => (
                     <NavItem key={tab.route.name}>
-                        <NavLink active={tab === activeTab} href={"#" + tab.route.link()}>{tab.label}</NavLink>
+                        <NavLink id={tab.id} active={tab === activeTab} href={"#" + tab.route.link()}>{tab.label}</NavLink>
                     </NavItem>)
                 )}
             </Nav></div>;
