@@ -41,7 +41,7 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
                     <Label className="attribute-label">{i18n("vocabulary.comment")}</Label>
                 </Col>
                 <Col md={10}>
-                    <Label>{vocabulary.comment}</Label>
+                    <Label id="vocabulary-metadata-comment">{vocabulary.comment}</Label>
                 </Col>
             </Row>
             <Row>

@@ -26,11 +26,11 @@ describe("VocabularyEdit", () => {
     it("passes updated vocabulary to onSave", () => {
         const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
                                                       {...intlFunctions()}/>);
-        const nameInput = wrapper.find("input[name='vocabulary-edit-label']");
+        const nameInput = wrapper.find("input[name='edit-vocabulary-label']");
         const newName = "Metropolitan plan";
         (nameInput.getDOMNode() as HTMLInputElement).value = newName;
         nameInput.simulate("change", nameInput);
-        wrapper.find("button[name=\"vocabulary-edit-submit\"]").simulate("click");
+        wrapper.find("button#edit-vocabulary-submit").simulate("click");
         expect(onSave).toHaveBeenCalled();
         const arg = (onSave as jest.Mock).mock.calls[0][0];
         expect(arg).not.toEqual(vocabulary);
@@ -41,11 +41,11 @@ describe("VocabularyEdit", () => {
     it("supports updating comment on vocabulary", () => {
         const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
                                                       {...intlFunctions()}/>);
-        const commentInput = wrapper.find("textarea[name='vocabulary-edit-comment']");
+        const commentInput = wrapper.find("textarea[name='edit-vocabulary-comment']");
         const newComment = "Updated comment";
         (commentInput.getDOMNode() as HTMLInputElement).value = newComment;
         commentInput.simulate("change", commentInput);
-        wrapper.find("button[name=\"vocabulary-edit-submit\"]").simulate("click");
+        wrapper.find("button#edit-vocabulary-submit").simulate("click");
         expect(onSave).toHaveBeenCalled();
         const arg = (onSave as jest.Mock).mock.calls[0][0];
         expect(arg.comment).toEqual(newComment);
@@ -54,7 +54,7 @@ describe("VocabularyEdit", () => {
     it("closes editing view on when clicking on cancel", () => {
         const wrapper = mountWithIntl(<VocabularyEdit vocabulary={vocabulary} save={onSave} cancel={onCancel}
                                                       {...intlFunctions()}/>);
-        wrapper.find("button[name=\"vocabulary-edit-cancel\"]").simulate("click");
+        wrapper.find("button#edit-vocabulary-cancel").simulate("click");
         expect(onCancel).toHaveBeenCalled();
     });
 

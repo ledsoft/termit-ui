@@ -125,8 +125,9 @@ export function createVocabulary(vocabulary: Vocabulary) {
         return Ajax.post(Constants.API_PREFIX + "/vocabularies", content(vocabulary.toJsonLd()))
             .then((resp: AxiosResponse) => {
                 dispatch(asyncActionSuccess(action));
+                dispatch(loadVocabularies());
                 const location = resp.headers[Constants.LOCATION_HEADER];
-                Routing.transitionTo(Routes.vocabularyDetail, IdentifierResolver.routingOptionsFromLocation(location));
+                Routing.transitionTo(Routes.vocabularySummary, IdentifierResolver.routingOptionsFromLocation(location));
                 return dispatch(SyncActions.publishMessage(new Message({messageId: "vocabulary.created.message"}, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {

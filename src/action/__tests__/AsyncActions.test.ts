@@ -149,7 +149,7 @@ describe("Async actions", () => {
             });
         });
 
-        it("transitions to vocabulary detail on success", () => {
+        it("transitions to vocabulary summary on success", () => {
             const vocabulary = new Vocabulary({
                 label: "Test",
                 iri: "http://kbss.felk.cvut.cz/termit/rest/vocabularies/test"
@@ -158,11 +158,24 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabulary(vocabulary))).then(() => {
                 expect(Routing.transitionTo).toHaveBeenCalled();
                 const args = (Routing.transitionTo as jest.Mock).mock.calls[0];
-                expect(args[0]).toEqual(Routes.vocabularyDetail);
+                expect(args[0]).toEqual(Routes.vocabularySummary);
                 expect(args[1]).toEqual({
                     params: new Map([["name", "test"]]),
                     query: new Map()
                 });
+            });
+        });
+
+        it("reloads vocabularies on success", () => {
+            const vocabulary = new Vocabulary({
+                label: "Test",
+                iri: "http://kbss.felk.cvut.cz/termit/rest/vocabularies/test"
+            });
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({headers: {location: vocabulary.iri}}));
+            Ajax.get  = jest.fn().mockImplementation(() => Promise.resolve([]));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabulary(vocabulary))).then(() => {
+                const actions = store.getActions();
+                expect(actions.find(a => a.type === ActionType.LOAD_VOCABULARIES)).toBeDefined();
             });
         });
     });

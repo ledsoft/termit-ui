@@ -55,19 +55,19 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput label={i18n("asset.iri")} value={this.props.vocabulary.iri}
+                        <CustomInput name="edit-vocabulary-iri" label={i18n("asset.iri")} value={this.props.vocabulary.iri}
                                      disabled={true}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="vocabulary-edit-label" label={i18n("asset.label")}
+                        <CustomInput name="edit-vocabulary-label" label={i18n("asset.label")}
                                      value={this.state.label} onChange={this.onChange}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TextArea name="vocabulary-edit-comment" label={i18n("vocabulary.comment")} rows={3}
+                        <TextArea name="edit-vocabulary-comment" label={i18n("vocabulary.comment")} rows={3}
                                   value={this.state.comment} onChange={this.onChange}/>
                     </Col>
                 </Row>
@@ -82,9 +82,9 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className="pull-right">
-                            <Button name="vocabulary-edit-submit" onClick={this.onSave} color="success" size="sm"
+                            <Button id="edit-vocabulary-submit" onClick={this.onSave} color="success" size="sm"
                                     disabled={this.state.label.trim().length === 0}>{i18n("save")}</Button>
-                            <Button name="vocabulary-edit-cancel" onClick={this.props.cancel} color="secondary"
+                            <Button id="edit-vocabulary-cancel" onClick={this.props.cancel} color="secondary"
                                     size="sm">{i18n("cancel")}</Button>
                         </ButtonToolbar>
                     </Col>
