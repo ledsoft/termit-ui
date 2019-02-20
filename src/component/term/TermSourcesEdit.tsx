@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Badge, Button, Input, InputGroup, InputGroupAddon, Label} from "reactstrap";
 import {GoPlus, GoX} from "react-icons/go";
@@ -17,7 +17,7 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
     constructor(props: TermSourcesEditProps) {
         super(props);
         this.state = {
-            inputValue: ''
+            inputValue: ""
         };
     }
 
@@ -26,7 +26,7 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
     };
 
     private onKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
             this.onAdd();
         }
     };
@@ -38,7 +38,7 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
         const newSources = this.props.sources.slice();
         newSources.push(this.state.inputValue);
         this.props.onChange(newSources);
-        this.setState({inputValue: ''});
+        this.setState({inputValue: ""});
     };
 
     private onRemove = (source: string) => {
@@ -50,14 +50,15 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
     public render() {
         const i18n = this.props.i18n;
         return <div>
-            <Label className='attribute-label'>{i18n('term.metadata.source')}</Label>
+            <Label className="attribute-label">{i18n("term.metadata.source")}</Label>
             {this.renderSources()}
             <InputGroup className="form-group">
-                <Input bsSize='sm' value={this.state.inputValue} onChange={this.onChange} onKeyPress={this.onKeyPress}
-                       placeholder={i18n('term.metadata.source.add.placeholder')}/>
-                <InputGroupAddon addonType='append'>
-                    <Button color='primary' size='sm' onClick={this.onAdd} className='term-edit-source-add-button'
-                            title={i18n('term.metadata.source.add.placeholder')}><GoPlus/> {i18n('term.metadata.source.add.placeholder.text')}</Button>
+                <Input name="edit-term-add-source" bsSize="sm" value={this.state.inputValue} onChange={this.onChange}
+                       onKeyPress={this.onKeyPress} placeholder={i18n("term.metadata.source.add.placeholder")}/>
+                <InputGroupAddon addonType="append">
+                    <Button color="primary" size="sm" onClick={this.onAdd} className="term-edit-source-add-button"
+                            title={i18n("term.metadata.source.add.placeholder")}><GoPlus/> {i18n("term.metadata.source.add.placeholder.text")}
+                    </Button>
                 </InputGroupAddon>
             </InputGroup>
         </div>;
@@ -68,12 +69,13 @@ export class TermSourcesEdit extends React.Component<TermSourcesEditProps, TermS
         if (sources.length === 0) {
             return null;
         }
-        return <ul className='term-items'>
+        return <ul className="term-items">
             {sources.map(s => <li key={s}>
                 {s}
-                <Badge title={this.props.i18n('term.metadata.source.remove.title')}
-                       className='term-edit-source-remove align-middle'
-                       onClick={this.onRemove.bind(null, s)}><GoX/> {this.props.i18n('term.metadata.source.remove.text')}</Badge>
+                <Badge title={this.props.i18n("term.metadata.source.remove.title")}
+                       className="term-edit-source-remove align-middle"
+                       onClick={this.onRemove.bind(null, s)}><GoX/> {this.props.i18n("term.metadata.source.remove.text")}
+                </Badge>
             </li>)}
         </ul>;
     }

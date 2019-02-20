@@ -90,7 +90,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     <Label className="attribute-label">{i18n("term.metadata.comment")}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    <Label>{term.comment}</Label>
+                    <Label id="term-metadata-comment">{term.comment}</Label>
                 </Col>
             </Row>
             <Row>
@@ -98,7 +98,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     <Label className="attribute-label">{i18n("term.metadata.source")}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    {this.renderItems(term.sources)}
+                    {this.renderItems(term.sources, "term-metadata-sources")}
                 </Col>
             </Row>
             <Row>
@@ -122,7 +122,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         if (source.length === 0) {
             return null;
         }
-        return <ul className="term-items">{source.map(item => <li key={item.iri}>
+        return <ul id="term-metadata-subterms" className="term-items">{source.map(item => <li key={item.iri}>
             <TermLink term={item}/>
         </li>)}
         </ul>;
@@ -131,16 +131,18 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     private renderTypes() {
         // Ensures that the implicit TERM type is not rendered
         const types = this.props.term.types;
-        return this.renderItems(types ? types.filter(t => t !== VocabularyUtils.TERM) : types);
+        return this.renderItems(types ? types.filter(t => t !== VocabularyUtils.TERM) : types, "term-metadata-types");
     }
 
-    private renderItems(items: string[] | string | undefined) {
+    private renderItems(items: string[] | string | undefined, containerId?: string) {
         if (!items) {
             return null;
         }
         const source = Utils.sanitizeArray(items);
-        return <ul className="term-items">{source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
-            <OutgoingLink iri={item} label={<AssetLabel iri={item}/>}/> : <Label>{item}</Label>}</li>)}</ul>;
+        return <ul id={containerId} className="term-items">
+            {source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
+                <OutgoingLink iri={item} label={<AssetLabel iri={item}/>}/> : <Label>{item}</Label>}</li>)}
+        </ul>;
     }
 }
 

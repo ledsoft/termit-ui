@@ -1,7 +1,7 @@
 // @ts-ignore
 import {IntelligentTreeSelect} from "intelligent-tree-select";
 // @ts-ignore
-import {asField, BasicText, Form, Scope} from 'informed';
+import {asField, BasicText, Form, Scope} from "informed";
 
 import * as React from "react";
 import {ChangeEvent} from "react";
@@ -61,9 +61,9 @@ const ErrorText = asField(({fieldState, ...props}: any) => {
 
         return (
             <FormGroup>
-                <Input type={"text"} autoComplete={"off"} placeholder={props.label} {...attributes} onChange={_onChange}
-                       value={props.value}/>
-                {fieldState.error ? (<FormFeedback style={{color: 'red'}}>{fieldState.error}</FormFeedback>) : null}
+                <Input name={props.name} type={"text"} autoComplete={"off"} placeholder={props.label} {...attributes}
+                       onChange={_onChange} value={props.value}/>
+                {fieldState.error ? (<FormFeedback style={{color: "red"}}>{fieldState.error}</FormFeedback>) : null}
             </FormGroup>
         )
     }
@@ -79,7 +79,7 @@ const TextInput = asField(({fieldState, ...props}: any) => {
 
         return (
             <FormGroup className={props.className}>
-                <Input type={"text"} autoComplete={"off"} placeholder={props.label} onChange={_onChange}/>
+                <Input name={props.name} type={"text"} autoComplete={"off"} placeholder={props.label} onChange={_onChange}/>
                 {props.children}
             </FormGroup>
         );
@@ -100,18 +100,18 @@ const Select = asField(({fieldState, ...props}: any) => {
 
     return (
         <FormGroup>
-            <IntelligentTreeSelect
-                onChange={_onChange}
-                value={props.fieldApi.getValue()}
-                showSettings={false}
-                maxHeight={150}
-                fetchOptions={props.fetchOptions}
-                valueRenderer={valueRenderer}
-                {...props}
-                style={fieldState.error ? {border: 'solid 1px red'} : null}
+            <IntelligentTreeSelect name={props.name}
+                                   onChange={_onChange}
+                                   value={props.fieldApi.getValue()}
+                                   showSettings={false}
+                                   maxHeight={150}
+                                   fetchOptions={props.fetchOptions}
+                                   valueRenderer={valueRenderer}
+                                   {...props}
+                                   style={fieldState.error ? {border: "solid 1px red"} : null}
             />
             {fieldState.error ? (
-                <FormFeedback style={{color: 'red', display: 'block'}}>{fieldState.error}</FormFeedback>) : null}
+                <FormFeedback style={{color: "red", display: "block"}}>{fieldState.error}</FormFeedback>) : null}
         </FormGroup>
     );
 });
@@ -177,7 +177,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         this.state = {
             siblings: [],
             modalAdvancedSectionVisible: false,
-            optionUriValue: '',
+            optionUriValue: "",
             generateUri: true,
         }
     }
@@ -222,14 +222,8 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
     }
 
     private createNewOption(data: NewOptionData) {
-
-        // let types: string[] = [];
-        // if (data.siblings) {
-        //     types = data.siblings.map((o: any) => o.type)
-        // }
-
         const children = this._getIDs(data.childOptions);
-        let parent = '';
+        let parent = "";
         if (data.parentOption as Term) {
             parent = data.parentOption.iri;
         }
@@ -253,7 +247,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         fieldApi.setValue(name);
         if (this.state.generateUri && name.length > 4) {
             const normalizedName = this.props.match.params.name;
-            Ajax.get(Constants.API_PREFIX + '/vocabularies/' + normalizedName + '/terms/identifier',
+            Ajax.get(Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms/identifier",
                 params({name})).then(uri => this.setOptionUri(uri));
         }
     }
@@ -282,7 +276,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
     private addSibling() {
         this.setState((prevState: CreateVocabularyTermState): CreateVocabularyTermState => {
             // @ts-ignore
-            return {siblings: [...prevState.siblings, {key: '', value: ''}]};
+            return {siblings: [...prevState.siblings, {key: "", value: ""}]};
         });
     }
 
@@ -302,19 +296,19 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         const i18n = this.props.i18n;
         const types = this.props.types ? Object.keys(this.props.types).map(k => this.props.types[k]) : [];
 
-        return (<Card>
-            <CardHeader color='info'>
-                <CardTitle>{i18n('glossary.form.header')}</CardTitle>
+        return <Card id="create-term">
+            <CardHeader color="info">
+                <CardTitle>{i18n("glossary.form.header")}</CardTitle>
             </CardHeader>
             <CardBody>
                 <Form onSubmit={this.createNewOption}>
-                    <ErrorText field="optionLabel" id="optionLabel" label={i18n('glossary.form.field.label')}
+                    <ErrorText field="optionLabel" name="create-term-label" label={i18n("asset.label")}
                                validate={this.validateLengthMin5}
                                validateOnChange={true}
                                validateOnBlur={true}
                                onChange={this.getOptionUri}
                     />
-                    <ErrorText field="optionURI" id="optionURI" label={i18n('glossary.form.field.uri')}
+                    <ErrorText field="optionURI" name="create-term-iri" label={i18n("asset.iri")}
                                validate={this.validateLengthMin5}
                                validateOnChange={true}
                                validateOnBlur={true}
@@ -322,14 +316,14 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                                value={this.state.optionUriValue}
                     />
                     <TextInput field="optionDescription"
-                               id="optionDescription"
-                               label={i18n('glossary.form.field.description')}/>
+                               name="create-term-comment"
+                               label={i18n("term.metadata.comment")}/>
 
                     <Select field={"typeOption"}
-                            name={"types-" + this.props.match.params.name}
+                            name={"create-term-types-" + this.props.match.params.name}
                             options={types}
                             multi={false}
-                            placeholder={i18n('glossary.form.field.selectType')}
+                            placeholder={i18n("glossary.form.field.selectType")}
                             valueKey={"iri"}
                             labelKey={"label"}
                             childrenKey="plainSubTerms"
@@ -339,18 +333,18 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                             renderAsTree={true}
                     />
 
-                    <Button color="link"
+                    <Button color="link" id="create-term-toggle-advanced"
                             onClick={this.toggleAdvancedSection}>
-                        {(this.state.modalAdvancedSectionVisible ? i18n('glossary.form.button.hideAdvancedSection') : i18n('glossary.form.button.showAdvancedSection'))}
+                        {(this.state.modalAdvancedSectionVisible ? i18n("glossary.form.button.hideAdvancedSection") : i18n("glossary.form.button.showAdvancedSection"))}
                     </Button>
 
 
                     <Collapse isOpen={this.state.modalAdvancedSectionVisible}>
 
-                        <Select field={"parentOption"}
+                        <Select field={"parentOption"} id="create-term-parent"
                                 fetchOptions={this.fetchOptions}
                                 multi={false}
-                                placeholder={i18n('glossary.form.field.selectParent')}
+                                placeholder={i18n("glossary.form.field.selectParent")}
                                 valueKey={"iri"}
                                 labelKey={"label"}
                                 childrenKey="plainSubTerms"
@@ -360,18 +354,18 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                                 renderAsTree={true}
                         />
 
-                        <TextInput field="optionSource" id="optionSource"
-                                   label={i18n('glossary.form.field.source')}/>
+                        <TextInput field="optionSource" name="create-term-source"
+                                   label={i18n("glossary.form.field.source")}/>
                     </Collapse>
-                    <ButtonToolbar className={'d-flex justify-content-end'}>
-                        <Button color="primary" type="submit"
-                                size="sm">{i18n('glossary.form.button.submit')}</Button>{' '}
-                        <Button color="secondary" type="button" size="sm"
-                                onClick={this.cancelCreation}>{i18n('glossary.form.button.cancel')}</Button>
+                    <ButtonToolbar className={"d-flex justify-content-end"}>
+                        <Button id="create-term-submit" color="success" type="submit"
+                                size="sm">{i18n("glossary.form.button.submit")}</Button>
+                        <Button id="create-term-cancel" color="secondary" size="sm"
+                                onClick={this.cancelCreation}>{i18n("glossary.form.button.cancel")}</Button>
                     </ButtonToolbar>
                 </Form>
             </CardBody>
-        </Card>);
+        </Card>;
     }
 
 }

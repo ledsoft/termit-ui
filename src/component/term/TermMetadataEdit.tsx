@@ -35,7 +35,7 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const change = {};
-        change[e.currentTarget.name] = e.currentTarget.value;
+        change[e.currentTarget.name.substring(e.currentTarget.name.lastIndexOf("-") + 1)] = e.currentTarget.value;
         this.setState(change);
     };
 
@@ -86,20 +86,21 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="iri" onChange={this.onChange} value={this.state.iri} disabled={true}
+                        <CustomInput name="edit-term-iri" onChange={this.onChange} value={this.state.iri}
+                                     disabled={true}
                                      label={i18n("term.metadata.identifier")}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="label" value={this.state.label} onChange={this.onLabelChange}
+                        <CustomInput name="edit-term-label" value={this.state.label} onChange={this.onLabelChange}
                                      label={i18n("term.metadata.label")} invalid={this.state.labelExists}
                                      invalidMessage={this.state.labelExists ? this.props.formatMessage("term.metadata.labelExists.message", {label: this.state.label}) : undefined}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TextArea name="comment" value={this.state.comment}
+                        <TextArea name="edit-term-comment" value={this.state.comment}
                                   onChange={this.onChange} rows={3} label={i18n("term.metadata.comment")}/>
                     </Col>
                 </Row>
@@ -132,9 +133,9 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className="pull-right term-edit-buttons">
-                            <Button name="edit-term.submit" size="sm" color="success" disabled={!this.isValid()}
+                            <Button id="edit-term-submit" size="sm" color="success" disabled={!this.isValid()}
                                     onClick={this.onSave}>{i18n("save")}</Button>
-                            <Button name="edit-termi.cancel" size="sm" color="secondary"
+                            <Button id="edit-term-cancel" size="sm" color="secondary"
                                     onClick={this.props.cancel}>{i18n("cancel")}</Button>
                         </ButtonToolbar>
                     </Col>

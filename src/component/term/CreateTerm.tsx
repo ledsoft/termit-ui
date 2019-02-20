@@ -25,11 +25,10 @@ export class CreateTerm extends React.Component<CreateTermProps> {
                 return;
             }
             const termName = IdentifierResolver.extractNameFromLocation(location);
-            Routing.transitionTo(Routes.vocabularyDetail, {
+            Routing.transitionTo(Routes.vocabularyTermDetail, {
                 params: new Map([["name", vocabularyIri.fragment], ["termName", termName]]),
                 query: new Map([["namespace", vocabularyIri.namespace!]])
             });
-
         });
     };
 

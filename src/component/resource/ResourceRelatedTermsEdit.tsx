@@ -29,7 +29,8 @@ interface DispatchConnected {
     fetchTerms: (fetchOptions: FetchOptionsFunction, vocabulary: Vocabulary) => Promise<Term[]>;
 }
 
-interface Props extends PropsExternal, PropsConnected, DispatchConnected, HasI18n {}
+interface Props extends PropsExternal, PropsConnected, DispatchConnected, HasI18n {
+}
 
 interface State {
     vocabulary: Vocabulary | null;
@@ -72,8 +73,8 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
         const onVocabularySet = this.onVocabularySet.bind(this);
         const fetchOptions = ((fo: FetchOptionsFunction) =>
             this.fetchOptions.bind(this)(
-                fo,this.state.vocabulary
-        ));
+                fo, this.state.vocabulary
+            ));
         const key = this.state.vocabulary ? this.state.vocabulary.iri : "http://null";
         const a = <IntelligentTreeSelect key={key}
                                          className="resource-tags-edit"
@@ -94,7 +95,7 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
                                          valueRenderer={this.valueRenderer}/>;
         return <FormGroup>
             <Label className="attribute-label">{this.props.i18n("resource.metadata-edit.terms")}</Label>{" "}
-            <VocabularySelect vocabulary={this.state.vocabulary} onVocabularySet={onVocabularySet}/>
+            <VocabularySelect id="edit-resource-terms-vocabulary" vocabulary={this.state.vocabulary} onVocabularySet={onVocabularySet}/>
             {this.state.vocabulary ? a : ""}
         </FormGroup>;
     }

@@ -115,7 +115,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
             <CardHeader tag="h4" color="info" className="d-flex align-items-center">
                 <div className="flex-grow-1">{i18n("glossary.title")}</div>
                 <div className="float-sm-right">
-                    <Button key="glossary.createTerm"
+                    <Button id="terms-create"
                             color="primary"
                             title={i18n("glossary.createTerm.tooltip")}
                             size="sm"

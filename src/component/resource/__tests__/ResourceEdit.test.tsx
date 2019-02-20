@@ -27,7 +27,7 @@ describe("ResourceEdit", () => {
                                                       cancel={cancel}
                                                       resource={resource}
                                                       save={save}/>);
-        const saveButton = component.find("button[name=\"edit-resource.submit\"]");
+        const saveButton = component.find("button#edit-resource-submit");
         saveButton.simulate("click", saveButton);
         expect(save).toHaveBeenCalled();
     });
@@ -37,7 +37,7 @@ describe("ResourceEdit", () => {
                                                       cancel={cancel}
                                                       resource={resource}
                                                       save={save}/>);
-        component.find("button[name=\"edit-resource.cancel\"]").simulate("click");
+        component.find("button#edit-resource-cancel").simulate("click");
         expect(cancel).toHaveBeenCalled();
     });
 
@@ -61,15 +61,15 @@ describe("ResourceEdit", () => {
     it("passes updated values on save", () => {
         const component = mountWithIntl(<ResourceEdit {...intlFunctions()} save={save} cancel={cancel}
                                                       resource={resource}/>);
-        const labelInput = component.find("input[name='resource-edit-label']");
+        const labelInput = component.find("input[name='edit-resource-label']");
         const newLabel = "New label";
         (labelInput.getDOMNode() as HTMLInputElement).value = newLabel;
         labelInput.simulate("change", labelInput);
-        const descriptionInput = component.find("textarea[name='resource-edit-description']");
+        const descriptionInput = component.find("textarea[name='edit-resource-description']");
         const newDescription = "New description";
         (descriptionInput.getDOMNode() as HTMLInputElement).value = newDescription;
         descriptionInput.simulate("change", descriptionInput);
-        component.find("Button[color='success']").simulate("click");
+        component.find("button#edit-resource-submit").simulate("click");
         expect(save).toHaveBeenCalled();
         const update = (save as jest.Mock).mock.calls[0][0];
         expect(update).not.toEqual(resource);

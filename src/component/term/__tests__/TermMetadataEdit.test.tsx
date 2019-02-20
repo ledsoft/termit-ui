@@ -31,20 +31,20 @@ describe("Term edit", () => {
     it("disables save button when identifier field is empty", () => {
         const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
-        const idInput = wrapper.find("input[name=\"iri\"]");
+        const idInput = wrapper.find("input[name=\"edit-term-iri\"]");
         (idInput.getDOMNode() as HTMLInputElement).value = "";
         idInput.simulate("change", idInput);
-        const saveButton = wrapper.find("button[name=\"edit-term.submit\"]");
+        const saveButton = wrapper.find("button#edit-term-submit");
         expect(saveButton.getElement().props.disabled).toBeTruthy();
     });
 
     it("disables save button when label field is empty", () => {
         const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
-        const labelInput = wrapper.find("input[name=\"label\"]");
+        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
         (labelInput.getDOMNode() as HTMLInputElement).value = "";
         labelInput.simulate("change", labelInput);
-        const saveButton = wrapper.find("button[name=\"edit-term.submit\"]");
+        const saveButton = wrapper.find("button#edit-term-submit");
         expect(saveButton.getElement().props.disabled).toBeTruthy();
     });
 
@@ -52,10 +52,10 @@ describe("Term edit", () => {
         const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
         const newLabel = "New label";
-        const labelInput = wrapper.find("input[name=\"label\"]");
+        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
         (labelInput.getDOMNode() as HTMLInputElement).value = newLabel;
         labelInput.simulate("change", labelInput);
-        wrapper.find("button[name=\"edit-term.submit\"]").simulate("click");
+        wrapper.find("button#edit-term-submit").simulate("click");
         expect(onSave).toHaveBeenCalled();
         const arg = (onSave as jest.Mock).mock.calls[0][0];
         expect(arg.iri).toEqual(term.iri);
@@ -69,7 +69,7 @@ describe("Term edit", () => {
         const mock = jest.fn().mockImplementation(() => Promise.resolve(true));
         Ajax.get = mock;
         const newLabel = "New label";
-        const labelInput = wrapper.find("input[name=\"label\"]");
+        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
         (labelInput.getDOMNode() as HTMLInputElement).value = newLabel;
         labelInput.simulate("change", labelInput);
         return Promise.resolve().then(() => {
@@ -82,7 +82,7 @@ describe("Term edit", () => {
         const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
                                                         cancel={onCancel} {...intlFunctions()}/>);
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(true));
-        const labelInput = wrapper.find("input[name=\"label\"]");
+        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
         (labelInput.getDOMNode() as HTMLInputElement).value = term.label;
         labelInput.simulate("change", labelInput);
         expect(Ajax.get).not.toHaveBeenCalled();
@@ -93,12 +93,12 @@ describe("Term edit", () => {
                                                         cancel={onCancel} {...intlFunctions()}/>);
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(true));
         const newLabel = "New label";
-        const labelInput = wrapper.find("input[name=\"label\"]");
+        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
         (labelInput.getDOMNode() as HTMLInputElement).value = newLabel;
         labelInput.simulate("change", labelInput);
         return Promise.resolve().then(() => {
             wrapper.update();
-            const saveButton = wrapper.find("button[name=\"edit-term.submit\"]");
+            const saveButton = wrapper.find("button#edit-term-submit");
             expect(saveButton.getElement().props.disabled).toBeTruthy();
         });
     });
@@ -123,6 +123,6 @@ describe("Term edit", () => {
         const ignored = wrapper.find(UnmappedPropertiesEdit).prop("ignoredProperties");
         expect(ignored).toBeDefined();
         expect(ignored!.indexOf(VocabularyUtils.RDF_TYPE)).not.toEqual(-1);
-        Object.getOwnPropertyNames((n:string) => expect(ignored![CONTEXT[n]]).not.toEqual(-1));
+        Object.getOwnPropertyNames((n: string) => expect(ignored![CONTEXT[n]]).not.toEqual(-1));
     });
 });

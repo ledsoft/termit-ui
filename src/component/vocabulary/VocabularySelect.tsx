@@ -11,6 +11,7 @@ import withI18n from "../hoc/withI18n";
 
 interface PropsExt {
     vocabulary: Vocabulary | null;
+    id?: string;
 }
 
 interface DispatchExt {
@@ -25,9 +26,9 @@ interface DispatchCon {
     loadVocabularies: () => void
 }
 
-interface Props extends
-    PropsExt, DispatchExt,
-    PropsCon, HasI18n, DispatchCon {}
+interface Props extends PropsExt, DispatchExt,
+    PropsCon, HasI18n, DispatchCon {
+}
 
 interface State {
     dropDownOpen: boolean;
@@ -35,7 +36,7 @@ interface State {
 
 export class VocabularySelect extends React.Component<Props, State> {
 
-   constructor(props : Props) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             dropDownOpen: false,
@@ -52,22 +53,22 @@ export class VocabularySelect extends React.Component<Props, State> {
         }));
     }
 
-    private changeValue(vIri : string) {
+    private changeValue(vIri: string) {
         this.props.onVocabularySet(this.props.vocabularies[vIri]);
     }
 
     public render() {
         const that = this;
         const items = Object.keys(this.props.vocabularies || []).map(vIri => {
-             const onClick = () => that.changeValue(vIri);
-             return  <DropdownItem key={vIri} onClick={onClick}>
-                 {this.props.vocabularies[vIri].label}
+                const onClick = () => that.changeValue(vIri);
+                return <DropdownItem className="m-vocabulary-select-item" key={vIri} onClick={onClick}>
+                    {this.props.vocabularies[vIri].label}
                 </DropdownItem>
             }
         );
 
         const toggle = this.toggle.bind(this);
-        return <Dropdown group={true}
+        return <Dropdown id={this.props.id} group={true}
                          isOpen={this.state.dropDownOpen}
                          size="sm"
                          toggle={toggle}>
@@ -81,7 +82,7 @@ export class VocabularySelect extends React.Component<Props, State> {
     }
 }
 
-export default connect<PropsCon,DispatchCon>((state: TermItState) => {
+export default connect<PropsCon, DispatchCon>((state: TermItState) => {
     return {
         vocabularies: state.vocabularies
     };
