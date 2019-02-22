@@ -90,7 +90,6 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
                                          maxHeight={150}
                                          multi={true}
                                          displayInfoOnHover={true}
-                                         expanded={true}
                                          renderAsTree={true}
                                          valueRenderer={this.valueRenderer}/>;
         return <FormGroup>

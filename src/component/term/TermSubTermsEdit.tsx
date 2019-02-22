@@ -64,7 +64,6 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
                                    maxHeight={150}
                                    multi={true}
                                    displayInfoOnHover={true}
-                                   expanded={true}
                                    renderAsTree={true}
                                    valueRenderer={this.valueRenderer}/>
         </FormGroup>;
