@@ -91,7 +91,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
                        autoFocus={true} autoComplete="off"
                        value={this.props.searchString} onChange={this.onChange} onKeyPress={this.onKeyPress}/>
                 <InputGroupAddon addonType="append" className="search-icon" title={i18n("main.search.tooltip")}>
-                    <Button color="grey" onClick={this.openSearchView}>
+                    <Button id="main-search-icon-button" color="grey" onClick={this.openSearchView}>
                         <GoSearch/>
                     </Button>
                 </InputGroupAddon>

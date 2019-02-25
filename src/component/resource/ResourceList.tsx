@@ -32,8 +32,8 @@ class ResourceList extends React.Component<ResourceListProps> {
                         <Col md={4} xl={2}>
                             <ResourceBadge resource={v}/>
                         </Col>
-                        <Col md={8} xl={10} className={classNames({"bold": v.iri === this.props.selectedResource.iri})}>
-                            <ResourceLink resource={v}/>
+                        <Col md={8} xl={10} className={classNames("m-resource-list-item", {"bold": v.iri === this.props.selectedResource.iri})}>
+                            <ResourceLink id={"resources-link-to-" + v.iri} resource={v}/>
                         </Col>
                     </Row>
                 </td>

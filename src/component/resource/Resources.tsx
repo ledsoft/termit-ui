@@ -9,11 +9,11 @@ import {GoPlus} from "react-icons/go";
 
 const Resources: React.SFC<HasI18n> = props => {
     const i18n = props.i18n;
-    const actions = [<Link key="resource.management.create" to={Routes.createResource.path}
+    const actions = [<Link id="resources-create" key="resource.management.create" to={Routes.createResource.path}
                            className="btn btn-primary btn-sm" title={i18n("resource.management.create.tooltip")}>
         <GoPlus/>&nbsp;{i18n("asset.create.button.text")}
     </Link>];
-    return <PanelWithActions title={i18n("resource.management.resources")} actions={actions}>
+    return <PanelWithActions id="resources" title={i18n("resource.management.resources")} actions={actions}>
         <ResourceList/>
     </PanelWithActions>;
 };

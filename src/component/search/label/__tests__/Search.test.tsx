@@ -59,7 +59,7 @@ describe("Search", () => {
     it("resets search filter on reset results button click", () => {
         searchProps.searchResults = [];
         const wrapper = mountWithIntl(<Search {...searchProps} {...routingProps} {...intlFunctions()}/>);
-        wrapper.find("button[name=\"search-reset\"]").simulate("click");
+        wrapper.find("button#search-reset").simulate("click");
         expect(updateSearchFilter).toHaveBeenCalledWith("");
     });
 });

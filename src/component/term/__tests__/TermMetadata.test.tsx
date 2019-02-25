@@ -5,7 +5,7 @@ import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/
 import {TermMetadata} from "../TermMetadata";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Vocabulary from "../../../model/Vocabulary";
-import VocabularyUtils from "../../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {AssetLabel} from "../../misc/AssetLabel";
 import {shallow} from "enzyme";
 import {TermLink} from "../TermLink";
@@ -21,21 +21,21 @@ describe("TermMetadata", () => {
         label: "Test vocabulary"
     });
     let term: Term;
-    let loadSubTerms: (t: Term, voc: Vocabulary) => Promise<Term[]>;
+    let loadSubTerms: (t: Term, vocIri: IRI) => Promise<Term[]>;
 
     beforeEach(() => {
         term = new Term({
             iri: Generator.generateUri(),
             label: "Test",
-            comment: "test"
+            comment: "test",
+            vocabulary: {iri: vocabulary.iri}
         });
         loadSubTerms = jest.fn().mockImplementation(() => Promise.resolve([]));
     });
 
     it("loads sub terms after mount", () => {
-        shallow(<TermMetadata vocabulary={vocabulary} term={term}
-                              loadSubTerms={loadSubTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
-        expect(loadSubTerms).toHaveBeenCalledWith(term, vocabulary);
+        shallow(<TermMetadata term={term} loadSubTerms={loadSubTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(loadSubTerms).toHaveBeenCalledWith(term, VocabularyUtils.create(vocabulary.iri));
     });
 
     it("renders loaded sub terms as term links", () => {
@@ -45,7 +45,7 @@ describe("TermMetadata", () => {
             vocabulary: {iri: vocabulary.iri}
         })];
         loadSubTerms = jest.fn().mockImplementation(() => Promise.resolve(subTerms));
-        const wrapper = mountWithIntl(<MemoryRouter><TermMetadata vocabulary={vocabulary} term={term}
+        const wrapper = mountWithIntl(<MemoryRouter><TermMetadata term={term}
                                                                   loadSubTerms={loadSubTerms} {...intlFunctions()}/></MemoryRouter>);
         return Promise.resolve().then(() => {
             wrapper.update();
@@ -55,9 +55,9 @@ describe("TermMetadata", () => {
     });
 
     it("reloads sub terms when term prop changes", () => {
-        const wrapper = shallow(<TermMetadata vocabulary={vocabulary} term={term}
-                              loadSubTerms={loadSubTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
-        expect(loadSubTerms).toHaveBeenCalledWith(term, vocabulary);
+        const wrapper = shallow(<TermMetadata term={term}
+                                              loadSubTerms={loadSubTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(loadSubTerms).toHaveBeenCalledWith(term, VocabularyUtils.create(vocabulary.iri));
         const otherTerm = new Term({
             iri: Generator.generateUri(),
             label: "SubTerm",
@@ -65,12 +65,12 @@ describe("TermMetadata", () => {
         });
         wrapper.setProps({term: otherTerm});
         wrapper.update();
-        expect(loadSubTerms).toHaveBeenCalledWith(otherTerm, vocabulary);
+        expect(loadSubTerms).toHaveBeenCalledWith(otherTerm, VocabularyUtils.create(vocabulary.iri));
     });
 
     it("skips implicit term type when rendering types", () => {
         term.types = [VocabularyUtils.TERM, Generator.generateUri()];
-        const wrapper = mountWithIntl(<MemoryRouter><TermMetadata vocabulary={vocabulary} term={term}
+        const wrapper = mountWithIntl(<MemoryRouter><TermMetadata term={term}
                                                                   loadSubTerms={loadSubTerms} {...intlFunctions()}/></MemoryRouter>);
         const renderedTypes = wrapper.find(AssetLabel);
         expect(renderedTypes.length).toEqual(1);

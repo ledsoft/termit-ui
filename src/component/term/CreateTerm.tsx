@@ -3,7 +3,7 @@ import Term from "../../model/Term";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {createVocabularyTerm} from "../../action/AsyncActions";
+import {createTerm} from "../../action/AsyncActions";
 import TermMetadataCreate from "./TermMetadataCreate";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
@@ -25,11 +25,10 @@ export class CreateTerm extends React.Component<CreateTermProps> {
                 return;
             }
             const termName = IdentifierResolver.extractNameFromLocation(location);
-            Routing.transitionTo(Routes.vocabularyDetail, {
+            Routing.transitionTo(Routes.vocabularyTermDetail, {
                 params: new Map([["name", vocabularyIri.fragment], ["termName", termName]]),
                 query: new Map([["namespace", vocabularyIri.namespace!]])
             });
-
         });
     };
 
@@ -44,6 +43,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        createTerm: (term: Term, vocabularyIri: IRI) => dispatch(createVocabularyTerm(term, vocabularyIri))
+        createTerm: (term: Term, vocabularyIri: IRI) => dispatch(createTerm(term, vocabularyIri))
     };
 })(CreateTerm);

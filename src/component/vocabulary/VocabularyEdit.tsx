@@ -1,11 +1,12 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
-import Vocabulary from "../../model/Vocabulary";
+import Vocabulary, {CONTEXT} from "../../model/Vocabulary";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button, ButtonToolbar, Col, Form, Row} from "reactstrap";
 import CustomInput from "../misc/CustomInput";
 import UnmappedPropertiesEdit from "../genericmetadata/UnmappedPropertiesEdit";
 import TextArea from "../misc/TextArea";
+import VocabularyUtils from "../../util/VocabularyUtils";
 
 interface VocabularyEditProps extends HasI18n {
     vocabulary: Vocabulary;
@@ -24,7 +25,7 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
         super(props);
         this.state = {
             label: this.props.vocabulary.label,
-            comment: this.props.vocabulary.comment? this.props.vocabulary.comment : "",
+            comment: this.props.vocabulary.comment ? this.props.vocabulary.comment : "",
             unmappedProperties: this.props.vocabulary.unmappedProperties
         }
     }
@@ -54,25 +55,26 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput label={i18n("asset.iri")} value={this.props.vocabulary.iri}
+                        <CustomInput name="edit-vocabulary-iri" label={i18n("asset.iri")} value={this.props.vocabulary.iri}
                                      disabled={true}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="vocabulary-edit-label" label={i18n("asset.label")}
+                        <CustomInput name="edit-vocabulary-label" label={i18n("asset.label")}
                                      value={this.state.label} onChange={this.onChange}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TextArea name="vocabulary-edit-comment" label={i18n("vocabulary.comment")} rows={3}
+                        <TextArea name="edit-vocabulary-comment" label={i18n("vocabulary.comment")} rows={3}
                                   value={this.state.comment} onChange={this.onChange}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12}>
                         <UnmappedPropertiesEdit properties={this.state.unmappedProperties}
+                                                ignoredProperties={VocabularyEdit.mappedPropertiesToIgnore()}
                                                 onChange={this.onPropertiesChange}/>
                     </Col>
                 </Row>
@@ -80,14 +82,21 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className="pull-right">
-                            <Button name="vocabulary-edit-submit" onClick={this.onSave} color="success" size="sm"
+                            <Button id="edit-vocabulary-submit" onClick={this.onSave} color="success" size="sm"
                                     disabled={this.state.label.trim().length === 0}>{i18n("save")}</Button>
-                            <Button name="vocabulary-edit-cancel" onClick={this.props.cancel} color="secondary" size="sm">{i18n("cancel")}</Button>
+                            <Button id="edit-vocabulary-cancel" onClick={this.props.cancel} color="secondary"
+                                    size="sm">{i18n("cancel")}</Button>
                         </ButtonToolbar>
                     </Col>
                 </Row>
             </Form>
         </div>;
+    }
+
+    private static mappedPropertiesToIgnore() {
+        const toIgnore = Object.getOwnPropertyNames(CONTEXT).map(n => CONTEXT[n]);
+        toIgnore.push(VocabularyUtils.RDF_TYPE);
+        return toIgnore;
     }
 }
 

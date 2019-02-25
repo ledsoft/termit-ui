@@ -18,15 +18,8 @@ interface TermTypesEditProps extends HasI18n {
 
 export class TermTypesEdit extends React.Component<TermTypesEditProps> {
 
-    public onChange = (val: Term) => {
-        this.props.onChange([val.iri, VocabularyUtils.TERM]);
-    };
-
-    private filterParentOptions = (options: Term[], filter: string) => {
-        return options.filter(option => {
-            const label = option.label;
-            return label.toLowerCase().indexOf(filter.toLowerCase()) !== -1
-        });
+    public onChange = (val: Term | null) => {
+        this.props.onChange(val ? [val.iri, VocabularyUtils.TERM] : [VocabularyUtils.TERM]);
     };
 
     private valueRenderer = (option: Term) => {
@@ -38,9 +31,25 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
         return matching.length > 0 ? matching[0].iri : undefined;
     }
 
+    private getTypesForSelector() {
+        if (!this.props.availableTypes) {
+            return [];
+        }
+        const typesMap = {};
+        Object.keys(this.props.availableTypes).forEach(t => typesMap[t] = Object.assign({}, this.props.availableTypes[t]));
+        const types = Object.keys(typesMap).map(k => typesMap[k]);
+        types.forEach(t => {
+            if (t.subTerms) {
+                // The tree-select needs parent for proper function
+                // @ts-ignore
+                t.subTerms.forEach(st => typesMap[st].parent = t.iri);
+            }
+        });
+        return types;
+    }
+
     public render() {
-        const types = this.props.availableTypes ?
-            Object.keys(this.props.availableTypes).map(k => this.props.availableTypes[k]) : [];
+        const types = this.getTypesForSelector();
         const selected = this.resolveSelectedTypes(types);
         return <FormGroup>
             <Label className="attribute-label">{this.props.i18n("term.metadata.types")}</Label>
@@ -51,7 +60,6 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
                                    valueKey="iri"
                                    labelKey="label"
                                    childrenKey="subTerms"
-                                   filterOptions={this.filterParentOptions}
                                    showSettings={false}
                                    maxHeight={150}
                                    multi={false}

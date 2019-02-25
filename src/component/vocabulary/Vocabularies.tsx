@@ -9,11 +9,11 @@ import {Link} from "react-router-dom";
 
 const Vocabularies: React.SFC<HasI18n> = props => {
     const i18n = props.i18n;
-    const actions = [<Link key="vocabulary.vocabularies.create" className="btn btn-primary btn-sm"
+    const actions = [<Link id="vocabularies-create" key="vocabulary.vocabularies.create" className="btn btn-primary btn-sm"
                            title={i18n("vocabulary.vocabularies.create.tooltip")}
                            to={Routes.createVocabulary.path}><GoPlus/>&nbsp;{i18n("asset.create.button.text")}</Link>];
 
-    return <PanelWithActions title={i18n("vocabulary.management.vocabularies")} actions={actions}>
+    return <PanelWithActions title={i18n("vocabulary.management.vocabularies")} actions={actions} id="vocabularies">
         <VocabularyList/>
     </PanelWithActions>;
 };

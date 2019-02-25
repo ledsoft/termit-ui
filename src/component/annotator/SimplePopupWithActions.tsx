@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Popover, PopoverBody, PopoverHeader} from "reactstrap";
+import {ButtonToolbar, Popover, PopoverBody, PopoverHeader} from "reactstrap";
 
 interface PopupWithActionsProps {
     title: string,
@@ -12,15 +12,15 @@ interface PopupWithActionsProps {
 }
 
 export default (props: PopupWithActionsProps) =>
-    <Popover placement="auto"
+    <Popover placement="auto" className="pwa"
              isOpen={props.isOpen}
              target={props.target}
              toggle={props.toggle}>
-        <PopoverHeader>
-            <span className="pwa-popup-title">{props.title}</span>
-            <div className="float-sm-right">
+        <PopoverHeader className="d-flex align-items-center">
+            <div className="pwa-popup-title flex-grow-1">{props.title}</div>
+            <ButtonToolbar className="float-sm-right">
                 {props.actions}
-            </div>
+            </ButtonToolbar>
         </PopoverHeader>
         <PopoverBody>
             {props.component}

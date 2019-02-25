@@ -1,15 +1,14 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps, withRouter} from "react-router";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {loadDefaultTerms, loadVocabularyTerm, updateTerm} from "../../action/AsyncActions";
+import {loadDefaultTerms, loadTerm, updateTerm} from "../../action/AsyncActions";
 import TermMetadata from "./TermMetadata";
 import Term from "../../model/Term";
 import TermItState from "../../model/TermItState";
 import {Button} from "reactstrap";
-import Vocabulary from "../../model/Vocabulary";
 import PanelWithActions from "../misc/PanelWithActions";
 import {GoPencil} from "react-icons/go";
 import EditableComponent from "../misc/EditableComponent";
@@ -19,13 +18,13 @@ import AppNotification from "../../model/AppNotification";
 import {publishNotification} from "../../action/SyncActions";
 import NotificationType from "../../model/NotificationType";
 import OutgoingLink from "../misc/OutgoingLink";
+import {IRI} from "../../util/VocabularyUtils";
 
 interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
-    vocabulary: Vocabulary | null;
-    loadTerm: (termName: string, vocabularyName: string, namespace?: string) => void;
-    updateTerm: (term: Term, vocabulary: Vocabulary) => Promise<any>;
-    reloadVocabularyTerms: (normalizedName: string, namespace?: string) => void;
+    loadTerm: (termName: string, vocabularyIri: IRI) => void;
+    updateTerm: (term: Term) => Promise<any>;
+    reloadVocabularyTerms: (vocabularyIri: IRI) => void;
     publishNotification: (notification: AppNotification) => void;
 }
 
@@ -45,8 +44,8 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
     private loadTerm(): void {
         const vocabularyName: string = this.props.match.params.name;
         const termName: string = this.props.match.params.termName;
-        const namespace = Utils.extractQueryParam(this.props.location.search, 'namespace');
-        this.props.loadTerm(termName, vocabularyName, namespace);
+        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
+        this.props.loadTerm(termName, {fragment: vocabularyName, namespace});
     }
 
     private reloadVocabularyTerms(): void {
@@ -56,7 +55,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
         if (match) {
             namespace = match[1];
         }
-        this.props.reloadVocabularyTerms(vocabularyName, namespace);
+        this.props.reloadVocabularyTerms({fragment: vocabularyName, namespace});
     }
 
     public componentDidUpdate(prevProps: TermDetailProps) {
@@ -70,7 +69,7 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
 
     public onSave = (term: Term) => {
         const oldChildren = this.props.term!.plainSubTerms;
-        this.props.updateTerm(term, this.props.vocabulary!).then(() => {
+        this.props.updateTerm(term).then(() => {
             this.loadTerm();
             this.reloadVocabularyTerms();
             this.onCloseEdit();
@@ -81,31 +80,29 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
     };
 
     public render() {
-        if (!this.props.term || !this.props.vocabulary) {
+        if (!this.props.term) {
             return null;
         }
         const actions = this.state.edit ? [] :
-            [<Button size='sm' color='primary' onClick={this.onEdit} key='term-detail-edit'
-                     title={this.props.i18n('edit')}><GoPencil/> {this.props.i18n('edit')}</Button>];
+            [<Button id="term-detail-edit" size="sm" color="primary" onClick={this.onEdit} key="term-detail-edit"
+                     title={this.props.i18n("edit")}><GoPencil/> {this.props.i18n("edit")}</Button>];
         const component = this.state.edit ?
-            <TermMetadataEdit save={this.onSave} term={this.props.term!} vocabulary={this.props.vocabulary!}
-                              cancel={this.onCloseEdit}/> :
-            <TermMetadata term={this.props.term!} vocabulary={this.props.vocabulary!}/>;
-        return <PanelWithActions title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
+            <TermMetadataEdit save={this.onSave} term={this.props.term!} cancel={this.onCloseEdit}/> :
+            <TermMetadata term={this.props.term!}/>;
+        return <PanelWithActions id="term-detail" title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
                                  actions={actions}>{component}</PanelWithActions>;
     }
 }
 
 export default connect((state: TermItState) => {
     return {
-        term: state.selectedTerm,
-        vocabulary: state.vocabulary
+        term: state.selectedTerm
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        loadTerm: (termName: string, vocabularyName: string, namespace?: string) => dispatch(loadVocabularyTerm(termName, vocabularyName, namespace)),
-        updateTerm: (term: Term, vocabulary: Vocabulary) => dispatch(updateTerm(term, vocabulary)),
-        reloadVocabularyTerms: (normalizedName: string, namespace?: string) => dispatch(loadDefaultTerms(normalizedName, namespace)),
+        loadTerm: (termName: string, vocabularyIri: IRI) => dispatch(loadTerm(termName, vocabularyIri)),
+        updateTerm: (term: Term) => dispatch(updateTerm(term)),
+        reloadVocabularyTerms: (vocabularyIri: IRI) => dispatch(loadDefaultTerms(vocabularyIri)),
         publishNotification: (notification: AppNotification) => dispatch(publishNotification(notification))
     };
 })(injectIntl(withI18n(withRouter(TermDetail))));

@@ -1,6 +1,7 @@
 import {CONTEXT as USER_CONTEXT} from "./User";
 import OntologicalVocabulary from "../util/VocabularyUtils";
 import Asset, {ASSET_CONTEXT, AssetData, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
+import Document, {CONTEXT as DOCUMENT_CONTEXT} from "./Document";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import Utils from "../util/Utils";
 
@@ -11,20 +12,20 @@ const ctx = {
     "model": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model"
 };
 
-export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
+export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT, DOCUMENT_CONTEXT);
 
 const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "lastEditor", "lastModified", "document", "types", "glossary", "model"];
 
 export interface VocabularyData extends AssetData, HasProvenanceData {
     label: string;
-    document?: { iri: string };
+    document?: Document;
     glossary?: AssetData;
     model?: AssetData;
 }
 
 export default class Vocabulary extends Asset implements VocabularyData {
     public label: string;
-    public document?: { iri: string };
+    public document?: Document;
     public glossary?: AssetData;
     public model?: AssetData;
 

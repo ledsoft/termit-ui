@@ -2,11 +2,10 @@ import {Action, combineReducers} from "redux";
 import ActionType, {
     AsyncAction,
     AsyncActionSuccess,
-    ClearErrorAction,
     ExecuteQueryAction,
-    FacetedSearchAction,
-    FailureAction,
-    MessageAction, NotificationAction,
+    FacetedSearchAction, FailureAction,
+    MessageAction,
+    NotificationAction,
     SearchAction,
     SearchResultAction,
     SelectingTermsAction,
@@ -14,7 +13,6 @@ import ActionType, {
 } from "../action/ActionType";
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
-import ErrorInfo, {EMPTY_ERROR} from "../model/ErrorInfo";
 import Message from "../model/Message";
 import IntlData from "../model/IntlData";
 import {loadInitialLocalizationData, loadLocalizationData} from "../util/IntlUtil";
@@ -23,11 +21,11 @@ import Vocabulary, {EMPTY_VOCABULARY} from "../model/Vocabulary";
 import Resource, {EMPTY_RESOURCE} from "../model/Resource";
 import {default as QueryResult, QueryResultIF} from "../model/QueryResult";
 import Term from "../model/Term";
-import Document, {EMPTY_DOCUMENT} from "../model/Document";
 import RdfsResource from "../model/RdfsResource";
 import AppNotification from "../model/AppNotification";
 import SearchResult from "../model/SearchResult";
 import SearchQuery from "../model/SearchQuery";
+import {ErrorLogItem} from "../model/ErrorInfo";
 
 /**
  * Handles changes to the currently logged in user.
@@ -65,26 +63,6 @@ function loading(state = false, action: AsyncAction): boolean {
         case AsyncActionStatus.FAILURE:
             return false;
         default:
-            return state;
-    }
-}
-
-/**
- * Error status of the application.
- *
- * The store currently supports only one error, so if an error action is invoked, the previous error status is replaced
- * by the new one. The state holds structured information about the error itself and the action where the error
- * originated (usually an error action).
- */
-function error(state: ErrorInfo = EMPTY_ERROR, action: Action): ErrorInfo {
-    switch (action.type) {
-        case ActionType.CLEAR_ERROR:
-            const errAction = action as ClearErrorAction;
-            return errAction.origin === state.origin ? EMPTY_ERROR : state;
-        default:
-            if ((action as FailureAction).error) {
-                return (action as FailureAction).error;
-            }
             return state;
     }
 }
@@ -239,15 +217,6 @@ function fileContent(state: string | null = null, action: AsyncActionSuccess<str
     }
 }
 
-function document(state: Document = EMPTY_DOCUMENT, action: AsyncActionSuccess<Document>): Document {
-    switch (action.type) {
-        case ActionType.LOAD_DOCUMENT:
-            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
-        default:
-            return state;
-    }
-}
-
 function searchQuery(state: SearchQuery | undefined, action: SearchAction): SearchQuery {
     switch (action.type) {
         case ActionType.UPDATE_SEARCH_FILTER:
@@ -335,6 +304,38 @@ function notifications(state: AppNotification[] = [], action: NotificationAction
     }
 }
 
+function pendingActions(state: { [key: string]: AsyncActionStatus } = {}, action: AsyncAction) {
+    switch (action.status) {
+        case AsyncActionStatus.REQUEST:
+            if (state[action.type] !== undefined) {
+                return state;
+            }
+            const toAdd = {};
+            toAdd[action.type] = action.status;
+            return Object.assign({}, state, toAdd);
+        case AsyncActionStatus.SUCCESS:
+        case AsyncActionStatus.FAILURE:
+            const copy = Object.assign({}, state);
+            delete copy[action.type];
+            return copy;
+        default:
+            return state;
+    }
+}
+
+function errors(state: ErrorLogItem[] = [], action: FailureAction) {
+    if (action.error) {
+        const logItem = {
+            timestamp: Date.now(),
+            error: action.error
+        };
+        return [logItem, ...state];
+    } else if (action.type === ActionType.CLEAR_ERRORS) {
+        return [];
+    }
+    return state;
+}
+
 const rootReducer = combineReducers<TermItState>({
     user,
     loading,
@@ -342,14 +343,12 @@ const rootReducer = combineReducers<TermItState>({
     vocabularies,
     resource,
     resources,
-    error,
     messages,
     intl,
     selectedTerm,
     defaultTerms,
     queryResults,
     createdTermsCounter,
-    document,
     fileContent,
     facetedSearchResult,
     searchQuery,
@@ -358,7 +357,9 @@ const rootReducer = combineReducers<TermItState>({
     searchInProgress,
     types,
     properties,
-    notifications
+    notifications,
+    pendingActions,
+    errors
 });
 
 export default rootReducer;

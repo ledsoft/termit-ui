@@ -43,7 +43,7 @@ describe("CreateTerm", () => {
         return Promise.resolve().then(() => {
             expect(Routing.transitionTo).toHaveBeenCalled();
             const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
-            expect(call[0]).toEqual(Routes.vocabularyDetail);
+            expect(call[0]).toEqual(Routes.vocabularyTermDetail);
             expect((call[1].params as Map<string, string>).get("name")).toEqual("test-vocabulary");
             expect((call[1].params as Map<string, string>).get("termName")).toEqual("test-term");
             expect((call[1].query as Map<string, string>).get("namespace")).toEqual("http://onto.fel.cvut.cz/ontologies/termit/vocabularies/");

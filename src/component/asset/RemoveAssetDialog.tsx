@@ -28,9 +28,9 @@ const RemoveAssetDialog: React.SFC<RemoveAssetDialogProps> = (props) => {
         </ModalBody>
         <ModalFooter>
             <ButtonToolbar className="pull-right">
-                <Button name="remove-asset.submit" color="primary" size="sm"
+                <Button id="remove-asset-submit" color="primary" size="sm"
                         onClick={props.onSubmit}>{props.i18n("remove")}</Button>
-                <Button name="remove-asset.cancel" color="secondary" size="sm"
+                <Button id="remove-asset-cancel" color="secondary" size="sm"
                         onClick={props.onCancel}>{props.i18n("cancel")}</Button>
             </ButtonToolbar>
         </ModalFooter>

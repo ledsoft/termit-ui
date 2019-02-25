@@ -7,9 +7,11 @@ interface LinkWidgetProps extends HasI18n {
     to: any;
     title?: string;
     children: any;
+    id?: string;
 }
 
-const LinkWidget: React.SFC<LinkWidgetProps> = (props: LinkWidgetProps) => <Link to={props.to} title={props.title}
+const LinkWidget: React.SFC<LinkWidgetProps> = (props: LinkWidgetProps) => <Link id={props.id} to={props.to}
+                                                                                 title={props.title}
                                                                                  className="widget card-body text-center">{props.children}</Link>;
 
 export default injectIntl(withI18n(LinkWidget));

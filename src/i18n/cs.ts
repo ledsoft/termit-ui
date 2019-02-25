@@ -157,9 +157,6 @@ export default {
         'glossary.createTerm.breadcrumb': 'Vytvořit pojem',
         'glossary.form.header': 'Vytvořit nový pojem',
         'glossary.form.tooltipLabel': 'Nanašli jste pojem, který jste hledali? Vytvořte nový.',
-        'glossary.form.field.label': 'Štítek (požadováno)',
-        'glossary.form.field.uri': 'Identifikátor (požadováno)',
-        'glossary.form.field.description': 'Popisek',
         'glossary.form.field.selectParent': 'Vybrat předchůdce ...',
         'glossary.form.field.selectChildren': 'Vybrat potomky ...',
         'glossary.form.field.selectType': 'Vyber typy',
@@ -216,15 +213,15 @@ export default {
         'search.typ': 'Typ',
 
         'annotator.annotate-content': 'Anotovat obsah',
-        'annotation.form.suggested-occurrence.message': 'Fráze není přiřazena žádnemu termínu.',
-        'annotation.form.invalid-occurrence.message': 'Termín "%" nebyl nalezen v slovníku. ',
-        'annotation.form.assigned-occurrence.termInfoLabel': 'Informace o termínu:',
-        'annotation.term.assigned-occurrence.termLabel': 'Přiřazený termín:',
+        'annotation.form.suggested-occurrence.message': 'Fráze není přiřazena žádnemu pojmu.',
+        'annotation.form.invalid-occurrence.message': 'Pojem "%" nebyl nalezen v slovníku. ',
+        'annotation.form.assigned-occurrence.termInfoLabel': 'Informace o pojmu:',
+        'annotation.term.assigned-occurrence.termLabel': 'Přiřazený pojem:',
         'annotation.term.occurrence.scoreLabel': 'Skóre:',
-        'annotation.confirm': 'Potvrdit navrhovaný výskyt termínu',
-        'annotation.save': 'Uložit výskyt termínu',
-        'annotation.edit': 'Editovat výskyt termínu',
-        'annotation.remove': 'Odebrat výskyt termínu',
+        'annotation.confirm': 'Potvrdit navrhovaný výskyt pojmu',
+        'annotation.save': 'Uložit výskyt pojmu',
+        'annotation.edit': 'Editovat výskyt pojmu',
+        'annotation.remove': 'Odebrat výskyt pojmu',
         'annotation.close': 'Zavřít',
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',
@@ -248,6 +245,11 @@ export default {
         "type.resource": "Zdroj",
         "type.document": "Dokument",
         "type.file": "Soubor",
-        "type.dataset": "Datová sada"
+        "type.dataset": "Datová sada",
+
+        "log-viewer.title": "Prohlížení chyb",
+        "log-viewer.timestamp": "Čas",
+        "log-viewer.error": "Chyba",
+        "log-viewer.clear": "Vyčistit"
     }
 }

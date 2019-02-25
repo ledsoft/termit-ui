@@ -8,7 +8,8 @@ import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 
 interface VocabularyLinkProps extends HasI18n {
-    vocabulary: Vocabulary
+    vocabulary: Vocabulary;
+    id?: string;
 }
 
 export const VocabularyLink = (props: VocabularyLinkProps) => {
@@ -18,10 +19,10 @@ export const VocabularyLink = (props: VocabularyLinkProps) => {
             params: new Map([["name", iri.fragment]]),
             query: new Map([["namespace", iri.namespace!]])
         });
-    return <AssetLink
-        asset={props.vocabulary}
-        path={path}
-        tooltip={props.i18n("asset.link.tooltip")}/>;
+    return <AssetLink id={props.id}
+                      asset={props.vocabulary}
+                      path={path}
+                      tooltip={props.i18n("asset.link.tooltip")}/>;
 };
 
 export default injectIntl(withI18n(VocabularyLink));

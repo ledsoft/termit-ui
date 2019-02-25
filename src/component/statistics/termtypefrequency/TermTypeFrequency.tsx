@@ -4,6 +4,7 @@ import Chart from "react-apexcharts";
 import LD from "ld-query";
 import VocabularyUtils from "../../../util/VocabularyUtils";
 import defaultChartOptions from "../DefaultTermCharacteristicsFrequencyChartOptions";
+import withInjectableLoading from "../../hoc/withInjectableLoading";
 
 interface Props extends PublicProps {
     notFilled: string,
@@ -18,7 +19,7 @@ class TermTypeFrequency extends React.Component<Props> {
         if ((VocabularyUtils.PREFIX + "not-filled") === iri) {
             return this.props.notFilled;
         }
-        const labels = this.cx(res).queryAll("[@id=" + iri + "] rdfs:label")
+        const labels = this.cx(res).queryAll("[@id=" + iri + "] rdfs:label");
         for (const label of labels) {
             const q = label.query("@language");
             if (q && (q.json() === this.props.lang)) {
@@ -32,12 +33,12 @@ class TermTypeFrequency extends React.Component<Props> {
         const TermTypeFrequencyI = this;
         const queryResult = this.props.queryResults;
         if (!queryResult || !queryResult.result) {
-            return <div/>
+            return <div>{this.props.renderMask()}</div>;
         }
 
         const res = queryResult.result;
         const types: object = {};
-        const fixedTypes=[
+        const fixedTypes = [
             "https://slovník.gov.cz/základní/pojem/objekt"
             , "https://slovník.gov.cz/základní/pojem/typ-objektu"
             , "https://slovník.gov.cz/základní/pojem/typ-vlastnosti"
@@ -62,15 +63,15 @@ class TermTypeFrequency extends React.Component<Props> {
                 vocO = {name: TermTypeFrequencyI.getLabel(res, vocabulary)};
                 Object.keys(types).forEach(type => {
                     vocO[types[type]] = 0
-                })
+                });
                 vocabularies[vocabulary] = vocO;
             }
 
             const curType = (r["@type"] || ["http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled"]);
-            curType.forEach( (tt : any) => {
+            curType.forEach((tt: any) => {
                 vocO[types[tt]] = vocO[types[tt]] + 1 || 1;
             });
-        })
+        });
 
         const series = Object.keys(types).map(t => {
             return {
@@ -86,11 +87,11 @@ class TermTypeFrequency extends React.Component<Props> {
         });
 
         return <Chart options={options}
-                      series={series}
-                      type="bar"
-                      width="100%"
-                      height="430px"/>
+                   series={series}
+                   type="bar"
+                   width="100%"
+                   height="430px"/>;
     }
 }
 
-export default SparqlWidget(TermTypeFrequency);
+export default withInjectableLoading(SparqlWidget(TermTypeFrequency));

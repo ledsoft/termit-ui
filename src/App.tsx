@@ -1,6 +1,6 @@
-import * as React from 'react';
-import {Provider} from 'react-redux';
-import TermItStore from './store/TermItStore';
+import * as React from "react";
+import {Provider} from "react-redux";
+import TermItStore from "./store/TermItStore";
 import IntlApp from "./IntlApp";
 
 const App: React.SFC = () => {

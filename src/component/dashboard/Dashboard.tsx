@@ -26,7 +26,7 @@ export class Dashboard extends React.Component<HasI18n> {
                             lang={this.props.locale}/>
                     </PanelWithActions>
                 </Col>
-                <Col xl={4} col={6} md={12}>
+                <Col xl={4} lg={6} md={12}>
                     <NewsMd/>
                 </Col>
             </Row>

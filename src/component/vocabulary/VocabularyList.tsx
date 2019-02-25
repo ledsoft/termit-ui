@@ -28,18 +28,18 @@ class VocabularyList extends React.Component<VocabularyListProps> {
         const vocabularies = Object.keys(this.props.vocabularies).map((v) => this.props.vocabularies[v]);
         const rows = vocabularies.map(v =>
             <tr key={v.iri}>
-                <td className={classNames({"bold": v.iri === this.props.selectedVocabulary.iri})}>
-                    <VocabularyLink vocabulary={v}/>
+                <td className={classNames("m-vocabulary-list-item", {"bold": v.iri === this.props.selectedVocabulary.iri})}>
+                    <VocabularyLink id={"vocabularies-link-to-" + v.iri} vocabulary={v}/>
                 </td>
             </tr>
         );
-        return <div>
+        return <>
             <Table borderless={true}>
                 <tbody>
                 {rows}
                 </tbody>
             </Table>
-        </div>
+        </>
     }
 }
 

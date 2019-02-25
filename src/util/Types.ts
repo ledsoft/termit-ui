@@ -12,3 +12,8 @@ import {Action} from "redux";
  * Action can be specified.
  */
 export type ThunkDispatch<A extends Action = Action> = TDispatch<TermItState, null, Action>;
+
+/**
+ * Simple name for a function retrieving state from the store.
+ */
+export type GetStoreState = () => TermItState;

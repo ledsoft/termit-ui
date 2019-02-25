@@ -1,3 +1,8 @@
+export interface ErrorLogItem {
+    timestamp: number;
+    error: ErrorInfo;
+}
+
 export interface ErrorData {
     requestUrl?: string,
     messageId?: string,
@@ -9,42 +14,16 @@ export interface ErrorData {
  * Represents error received from the server API.
  */
 export default class ErrorInfo {
-    private readonly mOrigin: string;
-    private readonly mRequestUrl?: string;
-    private readonly mMessageId?: string;
-    private readonly mMessage?: string;
-    private readonly mStatus?: number;
+    public readonly origin: string;
+    public readonly requestUrl?: string;
+    public readonly messageId?: string;
+    public readonly message?: string;
+    public readonly status?: number;
 
     constructor(origin: string, data: ErrorData) {
-        this.mOrigin = origin;
-        this.mRequestUrl = data.requestUrl;
-        this.mMessage = data.message;
-        this.mMessageId = data.messageId;
-        this.mStatus = data.status;
-    }
-
-    /**
-     * Represents the action which originated this error
-     */
-    public get origin(): string {
-        return this.mOrigin;
-    }
-
-    public get requestUrl(): string | undefined {
-        return this.mRequestUrl;
-    }
-
-    public get messageId(): string | undefined {
-        return this.mMessageId;
-    }
-
-    public get message(): string | undefined {
-        return this.mMessage;
-    }
-
-    public get status(): number | undefined {
-        return this.mStatus;
+        this.origin = origin;
+        Object.assign(this, data);
     }
 }
 
-export const EMPTY_ERROR = new ErrorInfo('', {});
+export const EMPTY_ERROR = new ErrorInfo("", {});

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {InjectedIntlProps} from 'react-intl';
+import * as React from "react";
+import {InjectedIntlProps} from "react-intl";
 
 export interface HasI18n {
 

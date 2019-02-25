@@ -41,8 +41,12 @@ export class CreateVocabulary extends AbstractCreateAsset<CreateVocabularyProps,
         this.setState({comment: e.currentTarget.value});
     };
 
-    private onCreate = (): void => {
-        this.props.onCreate(new Vocabulary({label: this.state.label, iri: this.state.iri}));
+    public onCreate = (): void => {
+        this.props.onCreate(new Vocabulary({
+            label: this.state.label,
+            iri: this.state.iri,
+            comment: this.state.comment
+        }));
     };
 
     private static onCancel(): void {
@@ -51,7 +55,7 @@ export class CreateVocabulary extends AbstractCreateAsset<CreateVocabularyProps,
 
     public render() {
         const i18n = this.props.i18n;
-        return <Card>
+        return <Card id="create-vocabulary">
             <CardHeader color="info">
                 <h5>{i18n("vocabulary.create.title")}</h5>
             </CardHeader>
@@ -59,21 +63,21 @@ export class CreateVocabulary extends AbstractCreateAsset<CreateVocabularyProps,
                 <Form>
                     <Row>
                         <Col xl={6} md={12}>
-                            <CustomInput name="create-vocabulary.label" label={i18n("asset.label")}
+                            <CustomInput name="create-vocabulary-label" label={i18n("asset.label")}
                                          value={this.state.label}
                                          onChange={this.onLabelChange}/>
                         </Col>
                     </Row>
                     <Row>
                         <Col xl={6} md={12}>
-                            <CustomInput name="create-vocabulary.iri" label={i18n("asset.iri")}
+                            <CustomInput name="create-vocabulary-iri" label={i18n("asset.iri")}
                                          value={this.state.iri}
                                          onChange={this.onIriChange} help={i18n("asset.create.iri.help")}/>
                         </Col>
                     </Row>
                     <Row>
                         <Col xl={6} md={12}>
-                            <TextArea name="create-vocabulary.comment" label={i18n("vocabulary.comment")}
+                            <TextArea name="create-vocabulary-comment" label={i18n("vocabulary.comment")}
                                       type="textarea" rows={3} value={this.state.comment} help={i18n("optional")}
                                       onChange={this.onCommentChange}/>
                         </Col>
@@ -81,9 +85,11 @@ export class CreateVocabulary extends AbstractCreateAsset<CreateVocabularyProps,
                     <Row>
                         <Col xl={6} md={12}>
                             <ButtonToolbar className="pull-right">
-                                <Button name="create-vocabulary.submit" onClick={this.onCreate} color="success" size="sm"
+                                <Button id="create-vocabulary-submit" onClick={this.onCreate} color="success"
+                                        size="sm"
                                         disabled={this.state.label.trim().length === 0}>{i18n("vocabulary.create.submit")}</Button>
-                                <Button name="create-vocabulary.cancel" onClick={CreateVocabulary.onCancel} color="secondary"
+                                <Button id="create-vocabulary-cancel" onClick={CreateVocabulary.onCancel}
+                                        color="secondary"
                                         size="sm">{i18n("cancel")}</Button>
                             </ButtonToolbar>
                         </Col>

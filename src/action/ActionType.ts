@@ -22,10 +22,6 @@ export interface AsyncActionSuccess<T> extends AsyncAction {
     payload: T;
 }
 
-export interface ClearErrorAction extends Action {
-    origin: string
-}
-
 export interface MessageAction extends Action {
     message: Message
 }
@@ -70,10 +66,10 @@ export default {
     REGISTER: "REGISTER",
     LOGOUT: "LOGOUT",
 
-    CLEAR_ERROR: "CLEAR_ERROR",
     PUBLISH_MESSAGE: "PUBLISH_MESSAGE",
     DISMISS_MESSAGE: "DISMISS_MESSAGE",
     SWITCH_LANGUAGE: "SWITCH_LANGUAGE",
+    CLEAR_ERRORS: "CLEAR_ERRORS",
 
     PUBLISH_NOTIFICATION: "PUBLISH_NOTIFICATION",
     CONSUME_NOTIFICATION: "CONSUME_NOTIFICATION",
@@ -109,7 +105,6 @@ export default {
     ADD_SEARCH_LISTENER: "ADD_SEARCH_LISTENER",
     REMOVE_SEARCH_LISTENER: "REMOVE_SEARCH_LISTENER",
 
-    LOAD_DOCUMENT: "LOAD_DOCUMENT",
     LOAD_FILE_CONTENT: "LOAD_FILE_CONTENT",
     SAVE_FILE_CONTENT: "SAVE_FILE_CONTENT",
 

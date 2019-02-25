@@ -4,7 +4,7 @@ import FacetedSearchResult from "./FacetedSearchResult";
 import {Col} from "reactstrap";
 
 export default () => <div>
-    <div className='row'>
+    <div className="row">
         <Col md={4}>
             <Facets/>
         </Col>

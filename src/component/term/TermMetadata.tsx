@@ -5,8 +5,7 @@ import {Col, Label, Row} from "reactstrap";
 import Term from "../../model/Term";
 import OutgoingLink from "../misc/OutgoingLink";
 import "./TermMetadata.scss";
-import Vocabulary from "../../model/Vocabulary";
-import VocabularyUtils from "../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import AssetLabel from "../misc/AssetLabel";
@@ -15,12 +14,11 @@ import Tabs from "../misc/Tabs";
 import TermLink from "./TermLink";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {fetchVocabularyTerms} from "../../action/AsyncActions";
+import {loadTerms} from "../../action/AsyncActions";
 
 interface TermMetadataProps extends HasI18n {
-    vocabulary: Vocabulary;
     term: Term;
-    loadSubTerms: (term: Term, vocabulary: Vocabulary) => Promise<Term[]>;
+    loadSubTerms: (term: Term, vocabularyIri: IRI) => Promise<Term[]>;
 }
 
 interface TermMetadataState {
@@ -41,13 +39,22 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     }
 
     public componentDidMount(): void {
-        this.props.loadSubTerms(this.props.term, this.props.vocabulary).then((data: Term[]) => this.setState({subTerms: data}));
+        this.loadSubTerms();
     }
 
     public componentDidUpdate(prevProps: Readonly<TermMetadataProps>): void {
         if (prevProps.term.iri !== this.props.term.iri) {
-            this.props.loadSubTerms(this.props.term, this.props.vocabulary).then((data: Term[]) => this.setState({subTerms: data}));
+            this.loadSubTerms();
         }
+    }
+
+    private loadSubTerms() {
+        const term = this.props.term;
+        if (!term.vocabulary) {
+            return;
+        }
+        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
+        this.props.loadSubTerms(term, vocabularyIri).then((data: Term[]) => this.setState({subTerms: data}));
     }
 
     private onTabSelect = (tabId: string) => {
@@ -83,7 +90,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     <Label className="attribute-label">{i18n("term.metadata.comment")}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    <Label>{term.comment}</Label>
+                    <Label id="term-metadata-comment">{term.comment}</Label>
                 </Col>
             </Row>
             <Row>
@@ -91,7 +98,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     <Label className="attribute-label">{i18n("term.metadata.source")}</Label>
                 </Col>
                 <Col xl={10} md={8}>
-                    {this.renderItems(term.sources)}
+                    {this.renderItems(term.sources, "term-metadata-sources")}
                 </Col>
             </Row>
             <Row>
@@ -115,7 +122,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         if (source.length === 0) {
             return null;
         }
-        return <ul className="term-items">{source.map(item => <li key={item.iri}>
+        return <ul id="term-metadata-subterms" className="term-items">{source.map(item => <li key={item.iri}>
             <TermLink term={item}/>
         </li>)}
         </ul>;
@@ -124,24 +131,23 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     private renderTypes() {
         // Ensures that the implicit TERM type is not rendered
         const types = this.props.term.types;
-        return this.renderItems(types ? types.filter(t => t !== VocabularyUtils.TERM) : types);
+        return this.renderItems(types ? types.filter(t => t !== VocabularyUtils.TERM) : types, "term-metadata-types");
     }
 
-    private renderItems(items: string[] | string | undefined) {
+    private renderItems(items: string[] | string | undefined, containerId?: string) {
         if (!items) {
             return null;
         }
         const source = Utils.sanitizeArray(items);
-        return <ul className="term-items">{source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
-            <OutgoingLink iri={item} label={<AssetLabel iri={item}/>}/> : <Label>{item}</Label>}</li>)}</ul>;
+        return <ul id={containerId} className="term-items">
+            {source.map((item: string) => <li key={item}>{Utils.isLink(item) ?
+                <OutgoingLink iri={item} label={<AssetLabel iri={item}/>}/> : <Label>{item}</Label>}</li>)}
+        </ul>;
     }
 }
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
-        loadSubTerms: (term: Term, vocabulary: Vocabulary) => {
-            const vocabularyIri = VocabularyUtils.create(vocabulary.iri);
-            return dispatch(fetchVocabularyTerms({optionID: term.iri}, vocabularyIri.fragment, vocabularyIri.namespace));
-        }
-    }
+        loadSubTerms: (term: Term, vocabularyIri: IRI) => dispatch(loadTerms({optionID: term.iri}, vocabularyIri))
+    };
 })(injectIntl(withI18n(TermMetadata)));

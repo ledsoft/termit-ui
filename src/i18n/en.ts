@@ -156,9 +156,6 @@ export default {
         'glossary.createTerm.breadcrumb': 'Create term',
         'glossary.form.header': 'Create new term',
         'glossary.form.tooltipLabel': 'Didn\'t find your term? Create new one.',
-        'glossary.form.field.label': 'Label (required)',
-        'glossary.form.field.uri': 'URI (required)',
-        'glossary.form.field.description': 'Description',
         'glossary.form.field.selectParent': 'Select parent ...',
         'glossary.form.field.selectChildren': 'Select children ...',
         'glossary.form.field.source': 'Term source',
@@ -247,6 +244,11 @@ export default {
         "type.resource": "Resource",
         "type.document": "Document",
         "type.file": "File",
-        "type.dataset": "Dataset"
+        "type.dataset": "Dataset",
+
+        "log-viewer.title": "Error log",
+        "log-viewer.timestamp": "Timestamp",
+        "log-viewer.error": "Error",
+        "log-viewer.clear": "Clear log"
     }
 }

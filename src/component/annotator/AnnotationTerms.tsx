@@ -12,9 +12,9 @@ import {selectVocabularyTerm} from "../../action/SyncActions";
 import {RouteComponentProps, withRouter} from "react-router";
 import FetchOptionsFunction from "../../model/Functions";
 import Term, {TermData} from "../../model/Term";
-import {fetchVocabularyTerms} from "../../action/AsyncActions";
+import {loadTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from "../../util/Types";
-import Vocabulary2 from "../../util/VocabularyUtils";
+import Vocabulary2, {IRI} from "../../util/VocabularyUtils";
 import {GoPlus} from "react-icons/go";
 import Routes from "../../util/Routes";
 import Routing from "../../util/Routing";
@@ -24,7 +24,7 @@ interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
     counter: number;
     selectVocabularyTerm: (selectedTerms: Term | null) => void;
-    fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
+    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
 }
 
 interface AnnotationTermsProps extends GlossaryTermsProps {
@@ -53,8 +53,7 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
     }
 
     private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
-        const vocabularyName = Vocabulary2.create(this.props.vocabulary!.iri).fragment
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, vocabularyName);
+        return this.props.fetchTerms({searchString, optionID, limit, offset}, Vocabulary2.create(this.props.vocabulary!.iri));
     };
 
     private handleCreateClick = () =>  {
@@ -142,6 +141,6 @@ export default withRouter(connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
-        fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => dispatch(fetchVocabularyTerms(fetchOptions, normalizedName)),
+        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
     };
 })(injectIntl(withI18n(AnnotationTerms))));

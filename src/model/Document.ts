@@ -1,6 +1,7 @@
 import OntologicalVocabulary from "../util/VocabularyUtils";
 import File, {CONTEXT as FILE_CONTEXT} from "./File";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "./Resource";
+import Utils from "../util/Utils";
 
 const ctx = {
     "files": {
@@ -20,7 +21,7 @@ export default class Document extends Resource implements DocumentData {
 
     constructor(data: DocumentData) {
         super(data);
-        this.files = data.files;
+        this.files = Utils.sanitizeArray(data.files);
     }
 
     public toJsonLd(): {} {

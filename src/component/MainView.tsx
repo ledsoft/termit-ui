@@ -110,24 +110,24 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                     <Collapse isOpen={this.state.isMainMenuOpen} navbar={true}>
                         <Nav navbar={true} className={"flex-grow-1 justify-content-end"}>
                             <NavItem active={path.startsWith(Routes.vocabularies.path)}>
-                                <NavLink
-                                    href={MainView.hashPath(Routes.vocabularies.path)}>{i18n("main.nav.vocabularies")}</NavLink>
+                                <NavLink id="main-nav-vocabularies"
+                                         href={MainView.hashPath(Routes.vocabularies.path)}>{i18n("main.nav.vocabularies")}</NavLink>
                             </NavItem>
                             <NavItem active={path.startsWith(Routes.resources.path)}>
-                                <NavLink
-                                    href={MainView.hashPath(Routes.resources.path)}>{i18n("main.nav.resources")}</NavLink>
+                                <NavLink id="main-nav-resources"
+                                         href={MainView.hashPath(Routes.resources.path)}>{i18n("main.nav.resources")}</NavLink>
                             </NavItem>
                             <NavItem active={path.startsWith(Routes.statistics.path)}>
-                                <NavLink
-                                    href={MainView.hashPath(Routes.statistics.path)}>{i18n("main.nav.statistics")}</NavLink>
+                                <NavLink id="main-nav-statistics"
+                                         href={MainView.hashPath(Routes.statistics.path)}>{i18n("main.nav.statistics")}</NavLink>
                             </NavItem>
                             <NavItem active={path.startsWith(Routes.search.path)}>
-                                <NavLink
-                                    href={MainView.hashPath(Routes.search.path)}>{i18n("main.nav.search")}</NavLink>
+                                <NavLink id="main-nav-search"
+                                         href={MainView.hashPath(Routes.search.path)}>{i18n("main.nav.search")}</NavLink>
                             </NavItem>
                         </Nav>
                         <Nav navbar={true} className="nav-menu-user">
-                            <UncontrolledDropdown id="logout" nav={true} inNavbar={true}>
+                            <UncontrolledDropdown id="main-menu-user" nav={true} inNavbar={true}>
                                 <DropdownToggle nav={true} caret={true}>
                                     {user.abbreviatedName}
                                 </DropdownToggle>

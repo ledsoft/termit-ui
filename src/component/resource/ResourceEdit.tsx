@@ -60,35 +60,36 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput label={i18n("asset.iri")} value={this.props.resource.iri}
+                        <CustomInput name="edit-resource-iri" label={i18n("asset.iri")} value={this.props.resource.iri}
                                      disabled={true}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="resource-edit-label" label={i18n("asset.label")}
+                        <CustomInput name="edit-resource-label" label={i18n("asset.label")}
                                      value={this.state.label} onChange={this.onChange}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TextArea name="resource-edit-description" label={i18n("resource.metadata.description")} rows={3}
+                        <TextArea name="edit-resource-description" label={i18n("resource.metadata.description")}
+                                  rows={3}
                                   value={this.state.description} onChange={this.onChange}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <ResourceRelatedTermsEdit
-                            terms={this.state.terms}
-                            onChange={this.onTagsChange}/>
+                        <ResourceRelatedTermsEdit terms={this.state.terms} onChange={this.onTagsChange}/>
                     </Col>
                 </Row>
 
                 <Row>
                     <Col xl={6} md={12}>
                         <ButtonToolbar className="pull-right">
-                            <Button name="edit-resource.submit" onClick={this.onSave} color="success" size="sm">{i18n("save")}</Button>
-                            <Button name="edit-resource.cancel" onClick={this.props.cancel} key="cancel" color="secondary" size="sm">{i18n("cancel")}</Button>
+                            <Button id="edit-resource-submit" onClick={this.onSave} color="success"
+                                    size="sm">{i18n("save")}</Button>
+                            <Button id="edit-resource-cancel" onClick={this.props.cancel} key="cancel" color="secondary"
+                                    size="sm">{i18n("cancel")}</Button>
                         </ButtonToolbar>
                     </Col>
                 </Row>

@@ -1,14 +1,13 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
+import * as React from "react";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Button, ButtonToolbar, Col, Form, Row} from "reactstrap";
-import Term, {TermData} from "../../model/Term";
+import Term, {CONTEXT, TermData} from "../../model/Term";
 import "./TermMetadata.scss";
 import CustomInput from "../misc/CustomInput";
 import TextArea from "../misc/TextArea";
-import Vocabulary from "../../model/Vocabulary";
 import Ajax, {params} from "../../util/Ajax";
-import Constants from '../../util/Constants';
+import Constants from "../../util/Constants";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import TermSourcesEdit from "./TermSourcesEdit";
 import TermTypesEdit from "./TermTypesEdit";
@@ -18,7 +17,6 @@ import {AssetData} from "../../model/Asset";
 import UnmappedPropertiesEdit from "../genericmetadata/UnmappedPropertiesEdit";
 
 interface TermMetadataEditProps extends HasI18n {
-    vocabulary: Vocabulary,
     term: Term,
     save: (term: Term) => void;
     cancel: () => void;
@@ -37,7 +35,7 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const change = {};
-        change[e.currentTarget.name] = e.currentTarget.value;
+        change[e.currentTarget.name.substring(e.currentTarget.name.lastIndexOf("-") + 1)] = e.currentTarget.value;
         this.setState(change);
     };
 
@@ -48,8 +46,8 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         if (label === this.props.term.label) {
             return;
         }
-        const vocabIri = VocabularyUtils.create(this.props.vocabulary.iri);
-        const url = Constants.API_PREFIX + '/vocabularies/' + vocabIri.fragment + '/terms/name';
+        const vocabIri = VocabularyUtils.create(this.props.term.vocabulary!.iri!);
+        const url = Constants.API_PREFIX + "/vocabularies/" + vocabIri.fragment + "/terms/name";
         Ajax.get(url, params({namespace: vocabIri.namespace, value: label})).then((data) => {
             this.setState({labelExists: data === true});
         });
@@ -84,32 +82,34 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
 
     public render() {
         const i18n = this.props.i18n;
-        return <div className='term-edit-panel'>
+        return <div className="term-edit-panel">
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name='iri' onChange={this.onChange} value={this.state.iri} disabled={true}
-                                     label={i18n('term.metadata.identifier')}/>
+                        <CustomInput name="edit-term-iri" onChange={this.onChange} value={this.state.iri}
+                                     disabled={true}
+                                     label={i18n("term.metadata.identifier")}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name='label' value={this.state.label} onChange={this.onLabelChange}
-                                     label={i18n('term.metadata.label')} invalid={this.state.labelExists}
-                                     invalidMessage={this.state.labelExists ? this.props.formatMessage('term.metadata.labelExists.message', {label: this.state.label}) : undefined}/>
+                        <CustomInput name="edit-term-label" value={this.state.label} onChange={this.onLabelChange}
+                                     label={i18n("term.metadata.label")} invalid={this.state.labelExists}
+                                     invalidMessage={this.state.labelExists ? this.props.formatMessage("term.metadata.labelExists.message", {label: this.state.label}) : undefined}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TextArea name='comment' value={this.state.comment}
-                                  onChange={this.onChange} rows={3} label={i18n('term.metadata.comment')}/>
+                        <TextArea name="edit-term-comment" value={this.state.comment}
+                                  onChange={this.onChange} rows={3} label={i18n("term.metadata.comment")}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
                         <TermSubTermsEdit subTerms={Utils.sanitizeArray(this.state.subTerms)}
                                           termIri={this.props.term.iri}
-                                          vocabulary={this.props.vocabulary} onChange={this.onSubTermsChange}/>
+                                          vocabularyIri={this.props.term.vocabulary!.iri!}
+                                          onChange={this.onSubTermsChange}/>
                     </Col>
                 </Row>
                 <Row>
@@ -126,21 +126,28 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 <Row>
                     <Col md={12}>
                         <UnmappedPropertiesEdit properties={this.state.unmappedProperties}
+                                                ignoredProperties={TermMetadataEdit.mappedPropertiesToIgnore()}
                                                 onChange={this.onPropertiesChange}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <ButtonToolbar className='pull-right term-edit-buttons'>
-                            <Button name="edit-term.submit" size='sm' color='success' disabled={!this.isValid()}
-                                    onClick={this.onSave}>{i18n('save')}</Button>
-                            <Button name="edit-termi.cancel" size='sm' color='secondary'
-                                    onClick={this.props.cancel}>{i18n('cancel')}</Button>
+                        <ButtonToolbar className="pull-right term-edit-buttons">
+                            <Button id="edit-term-submit" size="sm" color="success" disabled={!this.isValid()}
+                                    onClick={this.onSave}>{i18n("save")}</Button>
+                            <Button id="edit-term-cancel" size="sm" color="secondary"
+                                    onClick={this.props.cancel}>{i18n("cancel")}</Button>
                         </ButtonToolbar>
                     </Col>
                 </Row>
             </Form>
         </div>;
+    }
+
+    private static mappedPropertiesToIgnore() {
+        const toIgnore = Object.getOwnPropertyNames(CONTEXT).map(n => CONTEXT[n]);
+        toIgnore.push(VocabularyUtils.RDF_TYPE);
+        return toIgnore;
     }
 }
 

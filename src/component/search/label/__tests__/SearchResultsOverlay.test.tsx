@@ -83,7 +83,7 @@ describe("SearchResultsOverlay", () => {
         wrapper = mountWithIntl(<MemoryRouter><SearchResultsOverlay targetId="root" show={true} searchResults={results}
                                                                     onClose={onClose}
                                                                     onOpenSearch={onOpenSearch} {...intlFunctions()}/></MemoryRouter>, {attachTo: element});
-        const links = document.getElementsByClassName("asset-link");
+        const links = document.getElementsByClassName("m-asset-link");
         expect(links.length).toEqual(MAX_RENDERED_RESULTS);
     });
 

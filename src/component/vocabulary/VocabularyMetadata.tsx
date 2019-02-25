@@ -24,7 +24,7 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
                     <Label className="attribute-label">{i18n("asset.author")}</Label>
                 </Col>
                 <Col md={10}>
-                    {vocabulary.author && vocabulary.author.fullName}
+                    <Label id="vocabulary-metadata-author">{vocabulary.author && vocabulary.author.fullName}</Label>
                 </Col>
             </Row>
             <Row>
@@ -32,7 +32,8 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
                     <Label className="attribute-label">{i18n("asset.created")}</Label>
                 </Col>
                 <Col md={10}>
-                    {vocabulary.created && new Date(vocabulary.created).toLocaleString()}
+                    <Label
+                        id="vocabulary-metadata-created">{vocabulary.created && new Date(vocabulary.created).toLocaleString()}</Label>
                 </Col>
             </Row>
             <Row>
@@ -40,7 +41,7 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
                     <Label className="attribute-label">{i18n("vocabulary.comment")}</Label>
                 </Col>
                 <Col md={10}>
-                    <Label>{vocabulary.comment}</Label>
+                    <Label id="vocabulary-metadata-comment">{vocabulary.comment}</Label>
                 </Col>
             </Row>
             <Row>

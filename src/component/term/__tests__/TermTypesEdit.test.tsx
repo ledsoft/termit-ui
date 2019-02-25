@@ -49,4 +49,17 @@ describe("TermTypesEdit", () => {
         expect(newTypes.indexOf(selected.iri)).not.toEqual(-1);
         expect(newTypes.indexOf(VocabularyUtils.TERM)).not.toEqual(-1);
     });
+
+    it("invokes onChange handler with implicit Term type only when reset button is clicked", () => {
+        const iri = Generator.generateUri();
+        const availableTypes = {};
+        availableTypes[VocabularyUtils.TERM] = new Term({iri: VocabularyUtils.TERM, label: "Term"});
+        availableTypes[iri] = new Term({iri, label: "Other type"});
+        const types = [VocabularyUtils.TERM, iri];
+        const wrapper = shallow(<TermTypesEdit termTypes={types} availableTypes={availableTypes}
+                                               onChange={onChange} {...intlFunctions()} {...intlDataForShallow()}/>);
+        // Simulate tree reset (using the real component did not work)
+        (wrapper.instance() as TermTypesEdit).onChange(null);
+        expect(onChange).toHaveBeenCalledWith([VocabularyUtils.TERM]);
+    });
 });
