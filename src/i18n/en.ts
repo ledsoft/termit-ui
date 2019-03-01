@@ -118,6 +118,7 @@ export default {
 
         'resource.management': 'Resources management',
         'resource.management.resources': 'Resources',
+        "resource.management.empty": "No resources found. Start by registering some.",
         "resource.management.create.tooltip": "Create or upload a new resource",
         "resource.created.message": "Resource successfully created.",
         'resource.updated.message': 'Resource successfully updated.',

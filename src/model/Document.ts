@@ -21,7 +21,11 @@ export default class Document extends Resource implements DocumentData {
 
     constructor(data: DocumentData) {
         super(data);
-        this.files = Utils.sanitizeArray(data.files);
+        this.files = Utils.sanitizeArray(data.files).map(fd => new File(fd));
+    }
+
+    public clone() {
+        return new Document(this);
     }
 
     public toJsonLd(): {} {

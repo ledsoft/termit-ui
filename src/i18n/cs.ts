@@ -123,6 +123,7 @@ export default {
 
         "resource.create.title": "Vytvořit zdroj",
         "resource.create.type": "Typ zdroje",
+        "resource.management.empty": "Žádné zdroje nenalezeny. Vytvořte nějaký...",
         "resource.management.create.text": "Vytvořit",
         "resource.management.create.tooltip": "Vytvořit či zaregistrovat zdroj",
         'resource.metadata.description': 'Popis',

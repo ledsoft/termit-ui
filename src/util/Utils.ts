@@ -84,8 +84,9 @@ export default {
     /**
      * Determines primary asset type from the specified data.
      *
-     * Primary asset type is the most specific ontological class the specified asset data carry. For instance, for a resource of type file, which would contain both
-     * file and resource in its "types" definition, file is the primary one, as it is more specific than resource.
+     * Primary asset type is the most specific ontological class the specified asset data carry. For instance, for a
+     * resource of type file, which would contain both file and resource in its "types" definition, file is the primary
+     * one, as it is more specific than resource.
      *
      * The type is determined using the "types" attribute.
      * @param asset Asset whose type should be determined
@@ -133,5 +134,12 @@ export default {
             default:
                 return undefined;
         }
+    },
+
+    /**
+     * Calculates the height of the asset tree selector.
+     */
+    calculateAssetListHeight() {
+        return document.getElementById("content-container")!.clientHeight * 0.8;
     }
 }

@@ -29,7 +29,8 @@ import TermAssignment, {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} 
 import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
-import File from "../model/File";
+import {CONTEXT as DOCUMENT_CONTEXT} from "../model/Document";
+import File, {CONTEXT as FILE_CONTEXT} from "../model/File";
 import {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
@@ -57,6 +58,8 @@ import {Action} from "redux";
 function isActionRequestPending(state: TermItState, action: Action) {
     return state.pendingActions[action.type] !== undefined;
 }
+
+const JOINED_RESOURCE_CONTEXT = Object.assign({}, DOCUMENT_CONTEXT, FILE_CONTEXT);
 
 export function loadUser() {
     const action = {
@@ -196,7 +199,7 @@ export function loadResource(iri: IRI) {
         dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
-            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, RESOURCE_CONTEXT))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, JOINED_RESOURCE_CONTEXT))
             .then((data: ResourceData) =>
                 dispatch(asyncActionSuccessWithPayload(action, new Resource(data))))
             .catch((error: ErrorData) => {
@@ -217,9 +220,9 @@ export function loadResources() {
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/resources")
             .then((data: object[]) =>
-                data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, RESOURCE_CONTEXT) : [])
+                data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, JOINED_RESOURCE_CONTEXT) : [])
             .then((data: ResourceData[]) =>
-                dispatch(asyncActionSuccessWithPayload(action, data.map(v => new Resource(v)))))
+                dispatch(asyncActionSuccessWithPayload(action, data.map(v => AssetFactory.createResource(v)))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
