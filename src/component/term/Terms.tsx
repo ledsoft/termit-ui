@@ -137,7 +137,6 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                                        showSettings={false}
                                        maxHeight={Utils.calculateAssetListHeight()}
                                        valueRenderer={Terms._valueRenderer}
-                                       displayInfoOnHover={true}
                 />
             </CardBody>
         </Card>;

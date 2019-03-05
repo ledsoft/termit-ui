@@ -25,7 +25,7 @@ import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
-import TermAssignment, {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
+import {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
 import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
@@ -623,7 +623,7 @@ export function loadTermAssignments(term: Term) {
             .then((data: object) => JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENT_CONTEXT))
             .then((data: TermAssignmentData[]) => {
                 dispatch(asyncActionSuccess(action));
-                return data.map(tad => new TermAssignment(tad));
+                return data.map(tad => AssetFactory.createTermAssignment(tad));
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));

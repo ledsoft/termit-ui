@@ -6,6 +6,8 @@ import File, {FileData} from "../model/File";
 import Term, {TermData} from "../model/Term";
 import Utils from "./Utils";
 import VocabularyUtils from "./VocabularyUtils";
+import TermAssignment, {TermAssignmentData} from "../model/TermAssignment";
+import TermOccurrence from "../model/TermOccurrence";
 
 
 export default {
@@ -49,5 +51,19 @@ export default {
             default:
                 throw new TypeError("Unsupported type of resource data " + JSON.stringify(data));
         }
+    },
+
+    /**
+     * Creates an instance of TermAssignment or TermOccurrence based on the specified data.
+     * @param data Data instantiation
+     */
+    createTermAssignment(data: TermAssignmentData): TermAssignment {
+        const types = Utils.sanitizeArray(data.types);
+        if (types.indexOf(VocabularyUtils.TERM_OCCURRENCE) !== -1) {
+            return new TermOccurrence(data);
+        } else if (types.indexOf(VocabularyUtils.TERM_ASSIGNMENT) !== -1) {
+            return new TermAssignment(data);
+        }
+        throw new TypeError("Unsupported type of assignment data " + JSON.stringify(data));
     }
 };

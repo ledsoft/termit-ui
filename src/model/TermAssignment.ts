@@ -33,4 +33,8 @@ export default class TermAssignment implements TermAssignmentData {
         Object.assign(this, data);
         this.term = new Term(data.term);
     }
+
+    public isSuggested() {
+        return false;
+    }
 }
