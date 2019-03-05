@@ -25,14 +25,16 @@ interface ResourceListProps extends HasI18n {
 class ResourceListItem extends Resource {
     public parent?: string;
     public children: string[];
+    public tooltip: string;
 
-    constructor(resource: Resource) {
+    constructor(resource: Resource, i18n: (str?: string) => string) {
         super(resource);
         if (resource instanceof Document) {
             this.children = Utils.sanitizeArray(resource.files).map(f => f.iri);
         } else {
             this.children = [];
         }
+        this.tooltip = this.label + " - " + i18n(Utils.getAssetTypeLabelId(this));
     }
 }
 
@@ -42,8 +44,8 @@ class ResourceList extends React.Component<ResourceListProps> {
         this.props.loadResources();
     }
 
-    private static _valueRenderer(option: Resource) {
-        return <span><ResourceBadge resource={option}/>{option.label}</span>
+    private static valueRenderer(option: Resource) {
+        return <div><ResourceBadge resource={option} className="resource-list-badge"/><span>{option.label}</span></div>
     }
 
     private onChange = (res: Resource | null) => {
@@ -61,7 +63,7 @@ class ResourceList extends React.Component<ResourceListProps> {
     private flattenAndSetParents(resources: Resource[]): ResourceListItem[] {
         let result: ResourceListItem[] = [];
         for (let i = 0, len = resources.length; i < len; i++) {
-            const item: ResourceListItem = new ResourceListItem(resources[i]);
+            const item: ResourceListItem = new ResourceListItem(resources[i], this.props.i18n);
             result.push(item);
             if (resources[i] instanceof Document && (resources[i] as Document).files) {
                 const filesCopy = this.flattenAndSetParents((resources[i] as Document).files);
@@ -90,10 +92,11 @@ class ResourceList extends React.Component<ResourceListProps> {
                                    isMenuOpen={true}
                                    multi={false}
                                    showSettings={false}
-                                   displayInfoOnHover={false}
+                                   displayInfoOnHover={true}
                                    renderAsTree={true}
                                    maxHeight={height}
-                                   valueRenderer={ResourceList._valueRenderer}
+                                   valueRenderer={ResourceList.valueRenderer}
+                                   tooltipKey={"tooltip"}
             />
         </div>;
     }

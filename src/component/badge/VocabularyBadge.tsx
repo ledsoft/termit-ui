@@ -3,9 +3,12 @@ import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Badge} from "reactstrap";
 
+interface VocabularyBadgeProps extends HasI18n {
+    className?: string;
+}
 
-const VocabularyBadge: React.SFC<HasI18n> = (props: HasI18n) => <Badge
-    color="info">{props.i18n("type.vocabulary")}</Badge>;
+const VocabularyBadge: React.SFC<VocabularyBadgeProps> = (props: VocabularyBadgeProps) => <Badge color="info"
+                                                                                                 className={props.className}>{props.i18n("type.vocabulary")}</Badge>;
 
 
 export default injectIntl(withI18n(VocabularyBadge));

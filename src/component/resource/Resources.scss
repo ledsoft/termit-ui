@@ -7,3 +7,13 @@
 .resource-terms .resource-term-link:last-child {
   border-right: 1px solid rgba(0, 0, 0, 0.15) !important;
 }
+
+.resource-list-badge {
+  vertical-align: text-bottom !important;
+  margin-right: 0.125rem;
+  display: inline-block;
+}
+
+.VirtualizedTreeSelectTooltip {
+  word-break: normal !important;
+}

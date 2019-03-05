@@ -6,7 +6,8 @@ import Resource from "../../model/Resource";
 import Utils from "../../util/Utils";
 
 interface ResourceBadgeProps extends HasI18n {
-    resource?: Resource
+    resource?: Resource;
+    className?: string;
 }
 
 const ResourceBadge: React.SFC<ResourceBadgeProps> = (props: ResourceBadgeProps) => {
@@ -14,7 +15,7 @@ const ResourceBadge: React.SFC<ResourceBadgeProps> = (props: ResourceBadgeProps)
     if (!typeLabel) {
         typeLabel = "type.resource";
     }
-    return <Badge color="warning">{props.i18n(typeLabel)}</Badge>;
+    return <Badge color="warning" className={props.className}>{props.i18n(typeLabel)}</Badge>;
 };
 
 export default injectIntl(withI18n(ResourceBadge));

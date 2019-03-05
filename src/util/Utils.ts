@@ -140,6 +140,7 @@ export default {
      * Calculates the height of the asset tree selector.
      */
     calculateAssetListHeight() {
-        return document.getElementById("content-container")!.clientHeight * 0.8;
+        const container = document.getElementById("content-container");
+        return container? container.clientHeight * 0.8 : window.innerHeight / 2;
     }
 }
