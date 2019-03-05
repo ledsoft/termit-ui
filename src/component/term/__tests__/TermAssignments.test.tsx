@@ -11,6 +11,7 @@ import {Badge} from "reactstrap";
 import {MemoryRouter} from "react-router";
 import {ResourceLink} from "../../resource/ResourceLink";
 import TermOccurrence from "../../../model/TermOccurrence";
+import {GoCheck} from "react-icons/go";
 
 describe("TermAssignments", () => {
 
@@ -62,8 +63,7 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: Generator.generateUri(),
-                    label: "Test resource",
-                    terms: []
+                    label: "Test resource"
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT]
@@ -111,8 +111,7 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: Generator.generateUri(),
-                    label: "Test resource",
-                    terms: []
+                    label: "Test resource"
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT]
@@ -138,8 +137,7 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: fileIri,
-                    label: fileName,
-                    terms: []
+                    label: fileName
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
@@ -149,8 +147,7 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: fileIri,
-                    label: fileName,
-                    terms: []
+                    label: fileName
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
@@ -174,8 +171,7 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: fileIri,
-                    label: fileName,
-                    terms: []
+                    label: fileName
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
@@ -185,8 +181,7 @@ describe("TermAssignments", () => {
             target: {
                 source: {
                     iri: fileIri,
-                    label: fileName,
-                    terms: []
+                    label: fileName
                 }
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
@@ -199,6 +194,52 @@ describe("TermAssignments", () => {
             const badge = mounted.find(Badge);
             expect(badge.exists()).toBeTruthy();
             expect(badge.text()).toEqual("2");
+        });
+    });
+
+    it("renders term assignments, term occurrences and suggested term occurrences for the same resource correctly", () => {
+        const fileIri = Generator.generateUri();
+        const fileName = "Test file";
+        const occurrences = [new TermOccurrence({
+            iri: Generator.generateUri(),
+            term,
+            target: {
+                source: {
+                    iri: fileIri,
+                    label: fileName
+                }
+            },
+            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
+        }), new TermAssignment({
+            iri: Generator.generateUri(),
+            term,
+            target: {
+                source: {
+                    iri: fileIri,
+                    label: fileName
+                }
+            },
+            types: [VocabularyUtils.TERM_ASSIGNMENT]
+        }), new TermOccurrence({
+            iri: Generator.generateUri(),
+            term,
+            target: {
+                source: {
+                    iri: fileIri,
+                    label: fileName
+                }
+            },
+            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE, VocabularyUtils.SUGGESTED_TERM_OCCURRENCE]
+        })];
+        loadTermAssignments = jest.fn().mockImplementation(() => Promise.resolve(occurrences));
+        mounted = mountWithIntl(<MemoryRouter><TermAssignments term={term} onAssignmentsLoad={onAssignmentsLoad}
+                                                               loadTermAssignments={loadTermAssignments} {...intlFunctions()}/></MemoryRouter>, {attachTo: element});
+        return Promise.resolve().then(() => {
+            mounted.update();
+            const checks = mounted.find(GoCheck);
+            expect(checks.length).toEqual(3);
+            const badges = mounted.find(Badge);
+            expect(badges.length).toEqual(2);
         });
     });
 });
