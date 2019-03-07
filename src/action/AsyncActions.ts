@@ -251,6 +251,30 @@ export function loadResourceTerms(iri: IRI) {
     };
 }
 
+export function loadResourceTermAssignments(resourceIri: IRI) {
+    const action = {
+        type: ActionType.LOAD_RESOURCE_TERM_ASSIGNMENTS
+    };
+    return (dispatch: ThunkDispatch, getState: GetStoreState) => {
+        if (isActionRequestPending(getState(), action)) {
+            return Promise.resolve([]);
+        }
+        dispatch(asyncActionRequest(action));
+        return Ajax.get(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/terms", param("namespace", resourceIri.namespace))
+            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENT_CONTEXT) : [])
+            .then((data: TermAssignmentData[]) => {
+                dispatch(asyncActionSuccess(action));
+                // TODO Don't return, set it on the resource in state, they will be reused for edit
+                return data.map(d => AssetFactory.createTermAssignment(d));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return [];
+            });
+    };
+}
+
 export function createResource(resource: Resource) {
     const action = {
         type: ActionType.CREATE_RESOURCE
