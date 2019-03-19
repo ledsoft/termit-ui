@@ -177,7 +177,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                 this.getProcessingInstructions()
             ));
 
-        return <>
+        return <div>
             <Legend/>
             <div id={"annotator"}
             ref={r => {
@@ -186,7 +186,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
             onMouseUp={this.handleMouseLeave}>
             {Annotator.attachKeys(reactComponents)}
         </div>
-            </>
+            </div>
     }
 
     private reconstructHtml(htmlBodyContent: string) {
