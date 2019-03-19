@@ -64,3 +64,12 @@
 .popover-header {
   background-color: rgba(220, 220, 220,1);
 }
+
+.legend-sticky {
+  border-style: groove;
+  opacity: 0.9;
+  display:inline-block;
+  position: sticky;
+  top: 0;
+  background-color: whitesmoke;
+}
