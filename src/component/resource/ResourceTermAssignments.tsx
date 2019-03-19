@@ -109,7 +109,7 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
         const items: JSX.Element[] = [];
         assignmentMap.forEach((v, k) => {
             if (v.assignment) {
-                items.push(<span key={k} className="resource-term-link">
+                items.push(<span key={k} className="resource-term-link m-term-assignment">
                             <TermLink term={v.term}/>
                         </span>);
             }
@@ -123,13 +123,13 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
             if (v.occurrenceCount === 0 && v.suggestedOccurrenceCount === 0) {
                 return;
             }
-            items.push(<span key={k} className="resource-term-link">
+            items.push(<span key={k} className="resource-term-link m-term-occurrence">
                             <TermLink term={v.term}/>
                 {v.occurrenceCount > 0 &&
-                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.confirmed.tooltip")}
+                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.confirmed.tooltip")} className="m-term-occurrence-confirmed"
                        color="secondary">{this.props.formatMessage("resource.metadata.terms.occurrences.confirmed", {count: v.occurrenceCount})}</Badge>}
                 {v.suggestedOccurrenceCount > 0 &&
-                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.suggested.tooltip")}
+                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.suggested.tooltip")} className="m-term-occurrence-suggested"
                        color="secondary">{this.props.formatMessage("resource.metadata.terms.occurrences.suggested", {count: v.suggestedOccurrenceCount})}</Badge>}
                         </span>);
         });
