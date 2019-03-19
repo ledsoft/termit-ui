@@ -1027,6 +1027,14 @@ describe("Async actions", () => {
             label: "Test resource"
         });
 
+        it("sends request to correct endpoint", () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadResourceTermAssignments(VocabularyUtils.create(resource.iri)))).then(() => {
+                const endpoint = (Ajax.get as jest.Mock).mock.calls[0][0];
+                expect(endpoint).toEqual(Constants.API_PREFIX + "/resources/" + VocabularyUtils.create(resource.iri).fragment + "/assignments");
+            });
+        });
+
         it("returns loaded assignments", () => {
             const data = [{
                 "@context": TERM_ASSIGNMENT_CONTEXT,

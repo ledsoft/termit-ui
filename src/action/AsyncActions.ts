@@ -260,7 +260,7 @@ export function loadResourceTermAssignments(resourceIri: IRI) {
             return Promise.resolve([]);
         }
         dispatch(asyncActionRequest(action));
-        return Ajax.get(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/terms", param("namespace", resourceIri.namespace))
+        return Ajax.get(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/assignments", param("namespace", resourceIri.namespace))
             .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENT_CONTEXT) : [])
             .then((data: TermAssignmentData[]) => {
                 dispatch(asyncActionSuccess(action));

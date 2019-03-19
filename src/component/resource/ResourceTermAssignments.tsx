@@ -1,7 +1,7 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import Resource from "../../model/Resource";
+import Resource, {EMPTY_RESOURCE} from "../../model/Resource";
 import TermAssignment from "../../model/TermAssignment";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
@@ -10,7 +10,7 @@ import VocabularyUtils from "../../util/VocabularyUtils";
 import IntlData from "../../model/IntlData";
 import Term from "../../model/Term";
 import TermOccurrence from "../../model/TermOccurrence";
-import {Col, Label, Row} from "reactstrap";
+import {Badge, Col, Label, Row} from "reactstrap";
 import TermLink from "../term/TermLink";
 
 interface ResourceTermAssignmentsOwnProps {
@@ -34,26 +34,43 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
     }
 
     public componentDidMount(): void {
-        this.props.loadTermAssignments(this.props.resource).then(data => this.setState({assignments: data}));
+        if (this.props.resource !== EMPTY_RESOURCE) {
+            this.loadAssignments();
+        }
     }
 
     public componentDidUpdate(prevProps: Readonly<ResourceTermAssignmentsProps>): void {
-        if (prevProps.resource.iri !== this.props.resource.iri) {
-            this.props.loadTermAssignments(this.props.resource).then(data => this.setState({assignments: data}));
+        if (prevProps.resource.iri !== this.props.resource.iri && this.props.resource !== EMPTY_RESOURCE) {
+            this.loadAssignments();
         }
+    }
+
+    private loadAssignments() {
+        this.props.loadTermAssignments(this.props.resource).then(data => this.setState({assignments: data}));
     }
 
     public render() {
         const i18n = this.props.i18n;
         const assignmentMap = this.mapAssignments();
-        // TODO Render occurrences with count info
         return <>
             <Row>
                 <Col md={2}>
-                    <Label className="attribute-label">{i18n("resource.metadata.terms")}</Label>
+                    <Label className="attribute-label" title={i18n("resource.metadata.terms.assigned.tooltip")}>
+                        {i18n("resource.metadata.terms.assigned")}
+                    </Label>
                 </Col>
                 <Col md={10} className="resource-terms">
                     {this.renderAssignedTerms(assignmentMap)}
+                </Col>
+            </Row>
+            <Row>
+                <Col md={2}>
+                    <Label className="attribute-label" title={i18n("resource.metadata.terms.occurrences.tooltip")}>
+                        {i18n("resource.metadata.terms.occurrences")}
+                    </Label>
+                </Col>
+                <Col md={10} className="resource-terms">
+                    {this.renderTermOccurrences(assignmentMap)}
                 </Col>
             </Row>
         </>;
@@ -96,6 +113,25 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
                             <TermLink term={v.term}/>
                         </span>);
             }
+        });
+        return items;
+    }
+
+    private renderTermOccurrences(assignmentMap: Map<string, { term: Term, occurrenceCount: number, suggestedOccurrenceCount: number }>) {
+        const items: JSX.Element[] = [];
+        assignmentMap.forEach((v, k) => {
+            if (v.occurrenceCount === 0 && v.suggestedOccurrenceCount === 0) {
+                return;
+            }
+            items.push(<span key={k} className="resource-term-link">
+                            <TermLink term={v.term}/>
+                {v.occurrenceCount > 0 &&
+                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.confirmed.tooltip")}
+                       color="secondary">{this.props.formatMessage("resource.metadata.terms.occurrences.confirmed", {count: v.occurrenceCount})}</Badge>}
+                {v.suggestedOccurrenceCount > 0 &&
+                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.suggested.tooltip")}
+                       color="secondary">{this.props.formatMessage("resource.metadata.terms.occurrences.suggested", {count: v.suggestedOccurrenceCount})}</Badge>}
+                        </span>);
         });
         return items;
     }
