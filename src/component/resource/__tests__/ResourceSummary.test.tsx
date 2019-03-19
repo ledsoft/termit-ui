@@ -15,7 +15,6 @@ describe("ResourceSummary", () => {
     const resourceName = "test-resource";
 
     let loadResource: (iri: IRI) => Promise<any>;
-    let loadResourceTerms: (iri: IRI) => Promise<any>;
     let saveResource: (resource: Resource) => Promise<any>;
     let removeResource: (resource: Resource) => Promise<any>;
     let clearResource: () => void;
@@ -28,11 +27,10 @@ describe("ResourceSummary", () => {
 
     beforeEach(() => {
         loadResource = jest.fn().mockImplementation(() => Promise.resolve());
-        loadResourceTerms = jest.fn().mockImplementation(() => Promise.resolve());
         saveResource = jest.fn().mockImplementation(() => Promise.resolve());
         removeResource = jest.fn().mockImplementation(() => Promise.resolve());
         clearResource = jest.fn();
-        resourceHandlers = {loadResource, loadResourceTerms, saveResource, removeResource, clearResource};
+        resourceHandlers = {loadResource, saveResource, removeResource, clearResource};
 
         location = {
             pathname: "/resource/" + resourceName,

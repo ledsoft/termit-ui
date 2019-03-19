@@ -1045,10 +1045,7 @@ describe("Async actions", () => {
                     types: [VocabularyUtils.TERM]
                 },
                 target: {
-                    source: {
-                        iri: Generator.generateUri(),
-                        label: "Test resource"
-                    }
+                    source: resource
                 },
                 types: [VocabularyUtils.TERM_ASSIGNMENT]
             }];
@@ -1057,6 +1054,41 @@ describe("Async actions", () => {
                 expect(result.length).toEqual(1);
                 expect(result[0]).toBeInstanceOf(TermAssignment);
                 expect(result[0].term.iri).toEqual(data[0].term.iri);
+            });
+        });
+
+        it("passes loaded terms assigned to resource to store", () => {
+            const data = [{
+                "@context": TERM_ASSIGNMENT_CONTEXT,
+                iri: Generator.generateUri(),
+                term: {
+                    iri: Generator.generateUri(),
+                    label: "Test term",
+                    types: [VocabularyUtils.TERM]
+                },
+                target: {
+                    source: resource
+                },
+                types: [VocabularyUtils.TERM_ASSIGNMENT]
+            }, {
+                "@context": TERM_ASSIGNMENT_CONTEXT,
+                iri: Generator.generateUri(),
+                term: {
+                    iri: Generator.generateUri(),
+                    label: "Test term two",
+                    types: [VocabularyUtils.TERM]
+                },
+                target: {
+                    source: resource
+                },
+                types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
+            }];
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadResourceTermAssignments(VocabularyUtils.create(resource.iri)))).then(() => {
+                const actions = store.getActions();
+                const termsAction = actions.find(a => a.type === ActionType.LOAD_RESOURCE_TERMS);
+                expect(termsAction).toBeDefined();
+                expect(termsAction.payload).toEqual([new Term(data[0].term)]);
             });
         });
     });

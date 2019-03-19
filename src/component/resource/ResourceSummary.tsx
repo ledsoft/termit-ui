@@ -4,7 +4,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadResource, loadResourceTerms, removeResource, updateResourceTerms} from "../../action/AsyncActions";
+import {loadResource, removeResource, updateResourceTerms} from "../../action/AsyncActions";
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
@@ -22,7 +22,6 @@ import RemoveAssetDialog from "../asset/RemoveAssetDialog";
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
     loadResource: (iri: IRI) => Promise<any>;
-    loadResourceTerms: (iri: IRI) => Promise<any>;
     saveResource: (resource: Resource) => Promise<any>;
     removeResource: (resource: Resource) => Promise<any>;
     clearResource: () => void;
@@ -68,8 +67,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
     private forceReload() {
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         const normalizedName = this.props.match.params.name;
-        this.props.loadResource({fragment: normalizedName, namespace}).then(() =>
-            this.props.loadResourceTerms({fragment: normalizedName, namespace}));
+        this.props.loadResource({fragment: normalizedName, namespace});
     }
 
     private onRemoveClick = () => {
@@ -121,7 +119,6 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         loadResource: (iri: IRI) => dispatch(loadResource(iri)),
-        loadResourceTerms: (iri: IRI) => dispatch(loadResourceTerms(iri)),
         saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
         removeResource: (resource: Resource) => dispatch(removeResource(resource)),
         clearResource: () => dispatch(clearResource())

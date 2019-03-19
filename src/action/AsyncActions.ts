@@ -230,27 +230,6 @@ export function loadResources() {
     };
 }
 
-export function loadResourceTerms(iri: IRI) {
-    const action = {
-        type: ActionType.LOAD_RESOURCE_TERMS
-    };
-    return (dispatch: ThunkDispatch, getState: GetStoreState) => {
-        if (isActionRequestPending(getState(), action)) {
-            return Promise.resolve({});
-        }
-        dispatch(asyncActionRequest(action));
-        return Ajax.get(Constants.API_PREFIX + "/resources/" + iri.fragment + "/terms", param("namespace", iri.namespace))
-            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
-            .then((data: TermData[]) => {
-                const terms = data.map(d => new Term(d));
-                return dispatch(asyncActionSuccessWithPayload(action, terms));
-            }).catch((error: ErrorData) => {
-                dispatch(asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-            });
-    };
-}
-
 export function loadResourceTermAssignments(resourceIri: IRI) {
     const action = {
         type: ActionType.LOAD_RESOURCE_TERM_ASSIGNMENTS
@@ -264,8 +243,10 @@ export function loadResourceTermAssignments(resourceIri: IRI) {
             .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENT_CONTEXT) : [])
             .then((data: TermAssignmentData[]) => {
                 dispatch(asyncActionSuccess(action));
-                // TODO Don't return, set it on the resource in state, they will be reused for edit
-                return data.map(d => AssetFactory.createTermAssignment(d));
+                const assignments = data.map(d => AssetFactory.createTermAssignment(d));
+                const assignedTerms = assignments.filter(a => a.types.indexOf(VocabularyUtils.TERM_OCCURRENCE) === -1).map(a => a.term);
+                dispatch(asyncActionSuccessWithPayload({type: ActionType.LOAD_RESOURCE_TERMS}, assignedTerms));
+                return assignments;
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
