@@ -1,3 +1,15 @@
+##### Version 1.1.1
+
+- Display legend in the file content annotator.
+- Hierarchical resource list visualization.
+- Display terms assigned and occurring in a resource.
+- Display resources to which a term is assigned or in which it occurs.
+
+##### Version 1.1.0
+
+- Performance optimizations.
+- Minor bug fixes.
+
 ##### Version 1.0.0
 
 - Support for resource management and assigning terms to resources.
