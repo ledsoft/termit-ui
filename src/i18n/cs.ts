@@ -157,7 +157,7 @@ export default {
         "term.metadata.assignments.assignment.not.assigned": "Zdroj pojmem anotován není",
         "term.metadata.assignments.assignment.help": "Anotace zdroje pojmem reprezentuje situaci kdy je pojem přiřazen zdroji jako takovému.",
         "term.metadata.assignments.occurrence": "Výskyt",
-        "term.metadata.assignments.occurrence.help": "Výskyt pojmu popisuje situaci, kdy se pojem vyskytuje v obsahu datového zdroje (obvykle v textu) a tento konkrétní výskyt lze identifikovat.",
+        "term.metadata.assignments.occurrence.help": "Výskyt pojmu popisuje situaci, kdy je výskyt pojmu lokalizován v obsahu datového zdroje (obvykle v textu).",
         "term.metadata.assignments.suggestedOccurrence": "Navržený výskyt",
         "term.metadata.assignments.suggestedOccurrence.help": "Navržený výskyt reprezentuje výskyt pojmu navržený systémem, např. na základě automatizované analýzy obsahu.",
         "term.metadata.assignments.count.tooltip": "Pojem se v tomto zdroji vyskytuje {count, plural, one {jednou} other {# -krát}}",

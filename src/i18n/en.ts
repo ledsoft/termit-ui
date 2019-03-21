@@ -157,7 +157,7 @@ export default {
         "term.metadata.assignments.assignment.not.assigned": "Term is not assigned to this resource",
         "term.metadata.assignments.assignment.help": "Term assignment represents situations when term is assigned to the resource as a whole.",
         "term.metadata.assignments.occurrence": "Occurrence",
-        "term.metadata.assignments.occurrence.help": "Term occurrence denotes situations when term occurs somewhere in the resource (usually a file) content and it is possible to find this occurrence.",
+        "term.metadata.assignments.occurrence.help": "Term occurrence denotes situations when an occurrence of the term is localized in the resource (usually a file) content.",
         "term.metadata.assignments.suggestedOccurrence": "Suggested occurrence",
         "term.metadata.assignments.suggestedOccurrence.help": "Suggested term occurrence represents a term occurrence suggested by the system, e.g., based on the analysis of the content.",
         "term.metadata.assignments.count.tooltip": "The term occurs {count, plural, one {# time} other {# times}} in this resource",
