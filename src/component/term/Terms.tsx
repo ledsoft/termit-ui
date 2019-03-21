@@ -135,6 +135,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                                        isMenuOpen={true}
                                        multi={false}
                                        showSettings={false}
+                                       maxHeight={Utils.calculateAssetListHeight()}
                                        valueRenderer={Terms._valueRenderer}
                 />
             </CardBody>

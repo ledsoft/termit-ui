@@ -22,6 +22,8 @@ export default {
     JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovniku",
     RESOURCE: _NS_POPIS_DAT + "zdroj",
     TERM_ASSIGNMENT: _NS_POPIS_DAT + "prirazeni-termu",
+    TERM_OCCURRENCE: _NS_POPIS_DAT + "vyskyt-termu",
+    SUGGESTED_TERM_OCCURRENCE: _NS_POPIS_DAT + "navrzeny-vyskyt-termu",
     HAS_AUTHOR: _NS_POPIS_DAT + "ma-autora",
     CREATED: "http://purl.org/dc/terms/created",
     HAS_LAST_EDITOR: _NS_TERMIT + "ma-posledniho-editora",

@@ -3,7 +3,7 @@ import VocabularyUtils from "../../util/VocabularyUtils";
 
 export default class Generator {
 
-    public static readonly URI_BASE = 'http://onto.fel.cvut.cz/ontologies/application/termit';
+    public static readonly URI_BASE = "http://onto.fel.cvut.cz/ontologies/application/termit";
 
     public static randomInt(min: number = 0, max: number = Number.MAX_SAFE_INTEGER) {
         return Math.floor(Math.random() * (max - min)) + min;
@@ -14,7 +14,7 @@ export default class Generator {
     }
 
     public static generateUri() {
-        return Generator.URI_BASE + '/instance-' + Generator.randomInt();
+        return Generator.URI_BASE + "/instance-" + Generator.randomInt();
     }
 
     public static generateUser() {

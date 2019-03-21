@@ -1,3 +1,15 @@
+##### Verze 1.1.1
+
+- Zobrazení legendy v anotátoru obsahu souboru.
+- Hierarchická vizualizace seznamu zdrojů dat.
+- Zobrazení pojmů přiřazených a vyskytujících se ve zdroji dat.
+- Zobrazení zdrojů, kterým je pojem přiřazen či se v nich vyskytuje.
+
+##### Verze 1.1.0
+
+- Optimalizace výkonu aplikace.
+- Opravy drobných chyb (především v uživatelském rozhraní).
+
 ##### Verze 1.0.0
 
 - Podpora správy datových zdrojů a přiřazování pojmů k těmto zdrojům.

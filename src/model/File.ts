@@ -2,7 +2,8 @@ import OntologicalVocabulary from "../util/VocabularyUtils";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "./Resource";
 
 const ctx = {
-    "content": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor/content"
+    "content": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor/content",
+    "owner": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-casti-dokumentu"
 };
 
 export const CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx);
@@ -20,6 +21,10 @@ export default class File extends Resource implements FileData {
         super(data);
         this.origin = data.origin ? data.origin : "";
         this.content = data.content;
+    }
+
+    public clone() {
+        return new File(this);
     }
 
     public toJsonLd(): {} {

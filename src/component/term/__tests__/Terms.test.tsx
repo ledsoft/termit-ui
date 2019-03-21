@@ -10,6 +10,8 @@ import createMemoryHistory from "history/createMemoryHistory";
 import {match as Match} from "react-router";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
+import Utils from "../../../util/Utils";
+import {IRI} from "../../../util/VocabularyUtils";
 
 jest.mock("../../../util/Routing");
 
@@ -18,10 +20,11 @@ describe("Terms", () => {
     const vocabularyName = "test-vocabulary";
     const termName = "test-term";
 
+    const consumeNotification = jest.fn();
     const counter = 0;
     const selectedTerms: Term | null = null;
     let selectVocabularyTerm: (term: Term | null) => void;
-    let fetchTerms: (fetchOptions: FetchOptionsFunction, normalizedName: string) => Promise<Term[]>;
+    let fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
 
     let location: Location;
     const history = createMemoryHistory();
@@ -29,13 +32,14 @@ describe("Terms", () => {
 
     beforeEach(() => {
         jest.resetAllMocks();   // Prevent Routing mock state leaking into subsequent tests
+        Utils.calculateAssetListHeight = jest.fn().mockImplementation(() => 100);
         selectVocabularyTerm = jest.fn();
         fetchTerms = jest.fn().mockImplementation(() => Promise.resolve([]));
 
         location = {
-            pathname: '/vocabulary/' + vocabularyName + '/term/',
-            search: '',
-            hash: '',
+            pathname: "/vocabulary/" + vocabularyName + "/term/",
+            search: "",
+            hash: "",
             state: {}
         };
         match = {
@@ -44,12 +48,13 @@ describe("Terms", () => {
             },
             path: location.pathname,
             isExact: true,
-            url: 'http://localhost:3000/' + location.pathname
+            url: "http://localhost:3000/" + location.pathname
         };
     });
 
     it("transitions to term detail on term select", () => {
         const wrapper = shallow(<Terms counter={counter} selectedTerms={selectedTerms}
+                                       notifications={[]} consumeNotification={consumeNotification}
                                        selectVocabularyTerm={selectVocabularyTerm}
                                        fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
                                        location={location} match={match} history={history}/>);
@@ -68,6 +73,7 @@ describe("Terms", () => {
         const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
         location.search = "?namespace=" + namespace;
         const wrapper = shallow(<Terms counter={counter} selectedTerms={selectedTerms}
+                                       notifications={[]} consumeNotification={consumeNotification}
                                        selectVocabularyTerm={selectVocabularyTerm}
                                        fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
                                        location={location} match={match} history={history}/>);
@@ -82,6 +88,7 @@ describe("Terms", () => {
 
     it("invokes term selected on term select", () => {
         const wrapper = shallow(<Terms counter={counter} selectedTerms={selectedTerms}
+                                       notifications={[]} consumeNotification={consumeNotification}
                                        selectVocabularyTerm={selectVocabularyTerm}
                                        fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
                                        location={location} match={match} history={history}/>);
@@ -98,6 +105,7 @@ describe("Terms", () => {
         const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
         location.search = "?namespace=" + namespace;
         const wrapper = shallow(<Terms counter={counter} selectedTerms={selectedTerms}
+                                       notifications={[]} consumeNotification={consumeNotification}
                                        selectVocabularyTerm={selectVocabularyTerm}
                                        fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
                                        location={location} match={match} history={history}/>);

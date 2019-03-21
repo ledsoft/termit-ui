@@ -25,11 +25,12 @@ import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
-import TermAssignment, {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
+import {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
 import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
-import File from "../model/File";
+import {CONTEXT as DOCUMENT_CONTEXT} from "../model/Document";
+import File, {CONTEXT as FILE_CONTEXT} from "../model/File";
 import {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
@@ -57,6 +58,8 @@ import {Action} from "redux";
 function isActionRequestPending(state: TermItState, action: Action) {
     return state.pendingActions[action.type] !== undefined;
 }
+
+const JOINED_RESOURCE_CONTEXT = Object.assign({}, DOCUMENT_CONTEXT, FILE_CONTEXT);
 
 export function loadUser() {
     const action = {
@@ -196,7 +199,7 @@ export function loadResource(iri: IRI) {
         dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
-            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, RESOURCE_CONTEXT))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, JOINED_RESOURCE_CONTEXT))
             .then((data: ResourceData) =>
                 dispatch(asyncActionSuccessWithPayload(action, new Resource(data))))
             .catch((error: ErrorData) => {
@@ -217,9 +220,9 @@ export function loadResources() {
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/resources")
             .then((data: object[]) =>
-                data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, RESOURCE_CONTEXT) : [])
+                data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, JOINED_RESOURCE_CONTEXT) : [])
             .then((data: ResourceData[]) =>
-                dispatch(asyncActionSuccessWithPayload(action, data.map(v => new Resource(v)))))
+                dispatch(asyncActionSuccessWithPayload(action, data.map(v => AssetFactory.createResource(v)))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
@@ -227,23 +230,28 @@ export function loadResources() {
     };
 }
 
-export function loadResourceTerms(iri: IRI) {
+export function loadResourceTermAssignments(resourceIri: IRI) {
     const action = {
-        type: ActionType.LOAD_RESOURCE_TERMS
+        type: ActionType.LOAD_RESOURCE_TERM_ASSIGNMENTS
     };
     return (dispatch: ThunkDispatch, getState: GetStoreState) => {
         if (isActionRequestPending(getState(), action)) {
-            return Promise.resolve({});
+            return Promise.resolve([]);
         }
         dispatch(asyncActionRequest(action));
-        return Ajax.get(Constants.API_PREFIX + "/resources/" + iri.fragment + "/terms", param("namespace", iri.namespace))
-            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
-            .then((data: TermData[]) => {
-                const terms = data.map(d => new Term(d));
-                return dispatch(asyncActionSuccessWithPayload(action, terms));
-            }).catch((error: ErrorData) => {
+        return Ajax.get(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/assignments", param("namespace", resourceIri.namespace))
+            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENT_CONTEXT) : [])
+            .then((data: TermAssignmentData[]) => {
+                dispatch(asyncActionSuccess(action));
+                const assignments = data.map(d => AssetFactory.createTermAssignment(d));
+                const assignedTerms = assignments.filter(a => a.types.indexOf(VocabularyUtils.TERM_OCCURRENCE) === -1).map(a => a.term);
+                dispatch(asyncActionSuccessWithPayload({type: ActionType.LOAD_RESOURCE_TERMS}, assignedTerms));
+                return assignments;
+            })
+            .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return [];
             });
     };
 }
@@ -620,7 +628,7 @@ export function loadTermAssignments(term: Term) {
             .then((data: object) => JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENT_CONTEXT))
             .then((data: TermAssignmentData[]) => {
                 dispatch(asyncActionSuccess(action));
-                return data.map(tad => new TermAssignment(tad));
+                return data.map(tad => AssetFactory.createTermAssignment(tad));
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));

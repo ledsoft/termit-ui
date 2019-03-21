@@ -12,10 +12,13 @@ import {
     CardBody,
     CardHeader,
     CardTitle,
+    Col,
     Collapse,
     FormFeedback,
     FormGroup,
+    FormText,
     Input,
+    Row,
 } from "reactstrap";
 import {validateLengthMin3, validateLengthMin5, validateNotSameAsParent} from "./forms/newOptionValidate";
 import {injectIntl} from "react-intl";
@@ -35,6 +38,7 @@ import {AssetData} from "../../model/Asset";
 import IntlData from "../../model/IntlData";
 import Utils from "../../util/Utils";
 import {IRI} from "../../util/VocabularyUtils";
+import TextArea from "../misc/TextArea";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -64,6 +68,7 @@ const ErrorText = asField(({fieldState, ...props}: any) => {
                 <Input name={props.name} type={"text"} autoComplete={"off"} placeholder={props.label} {...attributes}
                        onChange={_onChange} value={props.value}/>
                 {fieldState.error ? (<FormFeedback style={{color: "red"}}>{fieldState.error}</FormFeedback>) : null}
+                {props.help ? <FormText>{props.help}</FormText> : null}
             </FormGroup>
         )
     }
@@ -141,6 +146,7 @@ interface CreateVocabularyTermState {
     siblings: Term[],
     modalAdvancedSectionVisible: boolean,
     optionUriValue: string,
+    comment: string,
     generateUri: boolean
 }
 
@@ -178,9 +184,14 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             siblings: [],
             modalAdvancedSectionVisible: false,
             optionUriValue: "",
+            comment: "",
             generateUri: true,
         }
     }
+
+    private onCommentChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({comment: e.currentTarget.value});
+    };
 
     private cancelCreation() {
         const normalizedName = this.props.match.params.name;
@@ -302,28 +313,43 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             </CardHeader>
             <CardBody>
                 <Form onSubmit={this.createNewOption}>
-                    <ErrorText field="optionLabel" name="create-term-label" label={i18n("asset.label")}
+                    <Row>
+                        <Col xl={6} md={12}>
+                            <label className={"attribute-label"}>{i18n("asset.label")}</label>
+                            <ErrorText field="optionLabel" name="create-term-label"
                                validate={this.validateLengthMin5}
                                validateOnChange={true}
                                validateOnBlur={true}
                                onChange={this.getOptionUri}
-                    />
-                    <ErrorText field="optionURI" name="create-term-iri" label={i18n("asset.iri")}
+                             />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xl={6} md={12}>
+                            <label className={"attribute-label"}>{i18n("asset.iri")}</label>
+                            <ErrorText field="optionURI" name="create-term-iri"
                                validate={this.validateLengthMin5}
                                validateOnChange={true}
+                               help={i18n("asset.create.iri.help")}
                                validateOnBlur={true}
                                onChange={this.handleOnChange}
                                value={this.state.optionUriValue}
-                    />
-                    <TextInput field="optionDescription"
-                               name="create-term-comment"
-                               label={i18n("term.metadata.comment")}/>
+                            />
+                        </Col>
+                    </Row>
+                   <Row>
+                        <Col xl={6} md={12}>
+                            <TextArea name="create-vocabulary-comment" label={i18n("vocabulary.comment")}
+                                      type="textarea" rows={3} value={this.state.comment} help={i18n("optional")}
+                                      onChange={this.onCommentChange}/>
+                        </Col>
+                    </Row>
 
+                    <label>{i18n("glossary.form.field.selectType")}</label>
                     <Select field={"typeOption"}
                             name={"create-term-types-" + this.props.match.params.name}
                             options={types}
                             multi={false}
-                            placeholder={i18n("glossary.form.field.selectType")}
                             valueKey={"iri"}
                             labelKey={"label"}
                             childrenKey="plainSubTerms"
@@ -341,10 +367,10 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
 
                     <Collapse isOpen={this.state.modalAdvancedSectionVisible}>
 
+                        <label>{i18n("glossary.form.field.selectParent")}</label>
                         <Select field={"parentOption"} id="create-term-parent"
                                 fetchOptions={this.fetchOptions}
                                 multi={false}
-                                placeholder={i18n("glossary.form.field.selectParent")}
                                 valueKey={"iri"}
                                 labelKey={"label"}
                                 childrenKey="plainSubTerms"
@@ -354,8 +380,9 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                                 renderAsTree={true}
                         />
 
+                        <label>{i18n("glossary.form.field.source")}</label>
                         <TextInput field="optionSource" name="create-term-source"
-                                   label={i18n("glossary.form.field.source")}/>
+                                   />
                     </Collapse>
                     <ButtonToolbar className={"d-flex justify-content-end"}>
                         <Button id="create-term-submit" color="success" type="submit"

@@ -32,6 +32,10 @@ export default class Resource extends Asset implements ResourceData {
         }
     }
 
+    public clone() {
+        return new Resource(this);
+    }
+
     public toJsonLd(): {} {
         return Object.assign({}, this, {"@context": CONTEXT});
     }

@@ -6,6 +6,7 @@ import HtmlParserUtils from "./HtmlParserUtils";
 import AnnotationDomHelper from "./AnnotationDomHelper";
 import Term from "../../model/Term";
 import HtmlDomUtils from "./HtmlDomUtils";
+import Legend from "./Legend";
 
 interface AnnotatorProps {
     html: string
@@ -176,13 +177,16 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
                 this.getProcessingInstructions()
             ));
 
-        return <div
+        return <div>
+            <Legend/>
+            <div id={"annotator"}
             ref={r => {
                 this.containerElement = r
             }}
             onMouseUp={this.handleMouseLeave}>
             {Annotator.attachKeys(reactComponents)}
         </div>
+            </div>
     }
 
     private reconstructHtml(htmlBodyContent: string) {

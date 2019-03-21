@@ -146,7 +146,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
             </header>
             <SearchTypeTabs/>
             <Messages/>
-            <Container fluid={true} className="mt-5 mb-5 flex-grow-1">
+            <Container id="content-container" fluid={true} className="mt-5 mb-5 flex-grow-1">
                 <Switch>
                     <BreadcrumbRoute title={i18n("main.nav.resources")} path={Routes.resources.path}
                                      component={ResourceManagement}/>
