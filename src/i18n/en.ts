@@ -252,6 +252,7 @@ export default {
         'annotator.legend.proposed.existing.term.tooltip': 'Occurrence of a term was identified by the text analysis service and the term is in a vocabulary associated to this document.',
         'annotator.legend.proposed.missing.term': 'Proposed occurrence of a missing term',
         'annotator.legend.proposed.missing.term.tooltip': 'Occurrence of a term was accepted by the text analysis service but a vocabulary related to the term and associated to this document is missing.',
+        'annotator.legend.toggle': 'Show/Hide legend',
 
         'message.welcome': 'Welcome to TermIt!',
         'link.external.title': '{url} - open in a new browser tab',

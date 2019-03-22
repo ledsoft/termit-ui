@@ -253,6 +253,7 @@ export default {
         'annotator.legend.proposed.existing.term.tooltip': 'Výskyt pojmu byl identifikován automatizovanou službou textové analýzy a tento pojem je ve slovníku asociovaném s tímto dokumentem.',
         'annotator.legend.proposed.missing.term': 'Navrhovaný výskyt chybějícího pojmu',
         'annotator.legend.proposed.missing.term.tooltip': 'Výskyt pojmu byl identifikován automatizovanou službou textové analýzy avšak slovník, ve kterém je pojem definován není asociovaný s tímto dokumentem.',
+        'annotator.legend.toggle': 'Zobrazit/Skrýt legendu',
 
         'message.welcome': 'Vítejte v aplikaci TermIt!',
         'link.external.title': '{url} - otevřít v nové záložce',

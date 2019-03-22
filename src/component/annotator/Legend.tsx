@@ -5,7 +5,7 @@ import withI18n from "../hoc/withI18n";
 
 export default injectIntl(withI18n((props: HasI18n) => {
     const i18n = props.i18n;
-    return <div id={"legend"} className={"legend-sticky px-1"}>
+    return <div>
         <div className={"mt-1"}>
             <span className="loading-term-occurrence"
                   title={i18n("annotator.legend.confirmed.loading.tooltip")}>{i18n("annotator.legend.confirmed.loading")}</span>&nbsp;
