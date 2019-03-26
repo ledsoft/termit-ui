@@ -25,7 +25,7 @@ class LegendToggle extends React.Component<HasI18n, LegendToggleState> {
     public render () {
         return  <div id={"legend"} className={"legend-sticky d-inline-flex px-1"}>
                 <span onClick={this.toggleLegend}
-                      title={this.props.i18n("annotator.legend.toggle")}><GoTriangleRight/></span>
+                      title={this.props.i18n("annotator.legend.toggle")}>{this.props.i18n("annotator.legend.toggle.label")}<GoTriangleRight/></span>
                 {this.state.showLegend ? <Legend/> : null}
             </div>
     }
