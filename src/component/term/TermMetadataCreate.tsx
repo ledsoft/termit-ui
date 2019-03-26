@@ -242,7 +242,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         this.props.onCreate(new Term({
             iri: data.optionURI as string,
             label: data.optionLabel as string,
-            comment: data.optionDescription as string,
+            comment: this.state.comment,
             subTerms: children,
             parent: parent as string,
             types: data.typeOption ? [data.typeOption.iri] : [],
@@ -339,7 +339,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                     </Row>
                    <Row>
                         <Col xl={6} md={12}>
-                            <TextArea name="create-vocabulary-comment" label={i18n("vocabulary.comment")}
+                            <TextArea name="create-term-comment" label={i18n("vocabulary.comment")}
                                       type="textarea" rows={3} value={this.state.comment} help={i18n("optional")}
                                       onChange={this.onCommentChange}/>
                         </Col>
