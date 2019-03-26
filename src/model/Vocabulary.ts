@@ -4,12 +4,13 @@ import Asset, {ASSET_CONTEXT, AssetData, HasProvenanceData, PROVENANCE_CONTEXT} 
 import Document, {CONTEXT as DOCUMENT_CONTEXT} from "./Document";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import Utils from "../util/Utils";
+import VocabularyUtils from "../util/VocabularyUtils";
 
 // @id and @type are merged from USER_CONTEXT
 const ctx = {
-    "document": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument",
-    "glossary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar",
-    "model": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model"
+    "document": VocabularyUtils.PREFIX + "popisuje-dokument",
+    "glossary": VocabularyUtils.PREFIX + "má-glosář",
+    "model": VocabularyUtils.PREFIX + "má-model"
 };
 
 export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT, DOCUMENT_CONTEXT);

@@ -1,10 +1,11 @@
 import Utils from "../util/Utils";
+import VocabularyUtils from "../util/VocabularyUtils";
 
 export const CONTEXT = {
     "iri": "@id",
-    "firstName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno",
-    "lastName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni",
-    "username": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno",
+    "firstName": VocabularyUtils.PREFIX + "má-křestní-jméno",
+    "lastName": VocabularyUtils.PREFIX + "má-příjmení",
+    "username": VocabularyUtils.PREFIX + "má-uživatelské-jméno",
     "types": "@type"
 };
 

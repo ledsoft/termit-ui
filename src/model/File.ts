@@ -3,7 +3,7 @@ import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "./Resource";
 
 const ctx = {
     "content": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor/content",
-    "owner": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-casti-dokumentu"
+    "owner": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-částí-dokumentu"
 };
 
 export const CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx);

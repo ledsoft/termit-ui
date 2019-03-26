@@ -5,7 +5,7 @@ import Utils from "../util/Utils";
 
 const ctx = {
     "files": {
-        "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-soubor",
+        "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-soubor",
         "@container": "@set"
     }
 };

@@ -5,7 +5,7 @@ import Utils from "../util/Utils";
 import VocabularyUtils from "../util/VocabularyUtils";
 
 const ctx = {
-    description: "http://purl.org/dc/elements/1.1/description"
+    description: VocabularyUtils.DC_DESCRIPTION
 };
 
 export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);

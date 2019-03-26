@@ -1,7 +1,7 @@
 PREFIX a-popis-dat-pojem: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX termit: <http://onto.fel.cvut.cz/ontologies/application/termit/>
+PREFIX termit: <http://onto.fel.cvut.cz/ontologies/application/termit/pojem/>
 
 CONSTRUCT {
     ?slovnik termit:has-count ?count .
@@ -9,7 +9,7 @@ CONSTRUCT {
 } WHERE {
     SELECT ?slovnik ?labelSlovniku ( COUNT(DISTINCT ?pojem) AS ?count ) {
 	    ?pojem a a-popis-dat-pojem:term ;
-           	a-popis-dat-pojem:je-pojmem-ze-slovniku ?slovnik .
+           	a-popis-dat-pojem:je-pojmem-ze-slovníku ?slovnik .
         OPTIONAL {
        	    ?slovnik rdfs:label ?labelS .
        	}

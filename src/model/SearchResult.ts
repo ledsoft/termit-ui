@@ -4,10 +4,10 @@ import {AssetData} from "./Asset";
 export const CONTEXT = {
     "iri": "@id",
     "label": "http://www.w3.org/2000/01/rdf-schema#label",
-    "vocabulary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku",
-    "snippetText": "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-text",
-    "snippetField": "http://onto.fel.cvut.cz/ontologies/application/termit/fts/snippet-field",
-    "score": "http://onto.fel.cvut.cz/ontologies/application/termit/fts/score",
+    "vocabulary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku",
+    "snippetText": "http://onto.fel.cvut.cz/ontologies/application/termit/slovník/fts/snippet-text",
+    "snippetField": "http://onto.fel.cvut.cz/ontologies/application/termit/slovník/fts/snippet-field",
+    "score": "http://onto.fel.cvut.cz/ontologies/application/termit/slovník/fts/score",
     "types": "@type"
 };
 

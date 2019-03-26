@@ -7,7 +7,7 @@ import VocabularyUtils from "../util/VocabularyUtils";
 const ctx = {
     subTerms: "http://www.w3.org/2004/02/skos/core#narrower",
     sources: "http://purl.org/dc/elements/1.1/source",
-    vocabulary: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku",
+    vocabulary: VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU,
     types: "@type"
 };
 
