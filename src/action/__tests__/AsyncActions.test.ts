@@ -771,11 +771,11 @@ describe("Async actions", () => {
             const data = [{
                 "@id": Generator.generateUri(),
                 "@type": [VocabularyUtils.TERM_ASSIGNMENT],
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-prirazenim-termu": require("../../rest-mock/terms")[0],
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-cil": {
+                "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/je-přiřazením-termu": require("../../rest-mock/terms")[0],
+                "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/má-cíl": {
                     "@id": Generator.generateUri(),
-                    "@type": ["http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/cil"],
-                    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-zdroj": {
+                    "@type": ["http://onto.fel.cvut.cz/ontologies/application/termit/pojem/cíl"],
+                    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-zdroj": {
                         "@id": Generator.generateUri(),
                         "@type": [VocabularyUtils.RESOURCE]
                     }

@@ -5,7 +5,7 @@
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "pojem 6",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku": {
       "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"
     }
   },
@@ -15,7 +15,7 @@
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "pojem 7",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku": {
       "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"
     }
   }

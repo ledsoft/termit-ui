@@ -69,9 +69,9 @@ describe("JsonLdUtils", () => {
             const input = require("../../rest-mock/terms");
             input[0][VocabularyUtils.HAS_AUTHOR] = {
                 "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/test-author",
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno": "Author",
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni": "Surname",
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno": "username"
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-křestní-jméno": "Author",
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-příjmení": "Surname",
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-uživatelské-jméno": "username"
             };
             input[0][VocabularyUtils.HAS_LAST_EDITOR] = {
                 "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/test-author"

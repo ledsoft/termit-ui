@@ -7,79 +7,79 @@
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/aaaaa",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/ahojsvete",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/bbbbbbbb",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/bbbbbbbbbbbbbbbb",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/fffff",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/ggggg",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/ufo/object" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/hhhhh",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/ufo/event" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/jjjjj",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/ufo/event" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/person",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/ufo/object-type" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/pokuspojem",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/xxxxx",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/xxxxxxxxxxxxxxxxxxxxxxx",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
   "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik/pojem/zzzzzzzzzzz",
   "@type" : [ "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled" ],
-  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku" : [ {
+  "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku" : [ {
     "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik"
   } ]
 }, {
