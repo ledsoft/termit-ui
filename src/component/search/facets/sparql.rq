@@ -62,7 +62,7 @@ SELECT * WHERE {
 #    # END UNCOMMENT
 
 #    OPTIONAL {
-        ?id a-popis-dat:je-pojmem-ze-slovniku ?slovnik__id .
+        ?id a-popis-dat:je-pojmem-ze-slovníku ?slovnik__id .
         BIND(iri(concat(replace(str(?slovnik__id),"http://onto.fel.cvut.cz/ontologies/slovnik/","http://kbss.felk.cvut.cz/termit-dev/#/vocabularies/"),"?namespace=http://onto.fel.cvut.cz/ontologies/slovnik/")) AS ?slovnik__link)
         OPTIONAL {
             ?slovnik__id rdfs:label ?slovnik__nazev

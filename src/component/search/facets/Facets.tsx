@@ -129,7 +129,7 @@ export class Facets extends React.Component<Props, State> {
             slovnik: {
                 enabled: true,
                 facetId: 'glosar',
-                predicate: '(^skos:narrower)*/<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar>',
+                predicate: '(^skos:narrower)*/<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-glosář>',
                 name: this.props.i18n('search.slovnik'),
             },
 
