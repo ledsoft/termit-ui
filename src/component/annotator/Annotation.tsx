@@ -7,13 +7,13 @@ import {Button} from "reactstrap";
 import SimplePopupWithActions from "./SimplePopupWithActions";
 import "./Annotation.scss";
 import TermItState from "../../model/TermItState";
-import OutgoingLink from "../misc/OutgoingLink";
 import {ThunkDispatch} from "../../util/Types";
 import AnnotationTerms from "./AnnotationTerms";
 import {AnnotationSpanProps} from "./Annotator";
 import {GoPencil} from "react-icons/go";
 import {TiTimes, TiTrash} from "react-icons/ti";
 import {FaCheck} from "react-icons/fa";
+import TermLink from "../term/TermLink";
 
 interface AnnotationProps extends HasI18n, AnnotationSpanProps {
     about: string
@@ -207,9 +207,7 @@ export class Annotation extends React.Component<AnnotationProps, AnnotationState
         </tr> : null;
         const labelRow = (this.state.term) ? <tr>
             <td className={"label"}>{i18n("annotation.term.assigned-occurrence.termLabel")}</td>
-            <td><OutgoingLink
-                label={this.state.term!.label}
-                iri={this.state.term!.iri}/></td>
+            <td><TermLink term={this.state.term!}/></td>
         </tr> : null;
         let outputComponent = <div/>;
         switch (this.getTermState()) {
