@@ -39,7 +39,7 @@ class Footer extends React.Component<FooterProps, FooterState> {
             <Row className="justify-content-between">
                 <Col className="footer-copyright text-left p-3 flex-grow-1">
                     &copy; <a href="https://kbss.felk.cvut.cz" target="_blank"
-                              title={i18n("footer.copyright")}>{i18n("footer.copyright")}</a>, 2018
+                              title={i18n("footer.copyright")}>{i18n("footer.copyright")}</a>, 2019
                 </Col>
                 <div className="p-2">
                     <LanguageSelector/>
