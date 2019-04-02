@@ -17,7 +17,7 @@ import {
     FormFeedback,
     FormGroup,
     FormText,
-    Input,
+    Input, Label,
     Row,
 } from "reactstrap";
 import {validateLengthMin3, validateLengthMin5, validateNotSameAsParent} from "./forms/newOptionValidate";
@@ -242,7 +242,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         this.props.onCreate(new Term({
             iri: data.optionURI as string,
             label: data.optionLabel as string,
-            comment: data.optionDescription as string,
+            comment: this.state.comment,
             subTerms: children,
             parent: parent as string,
             types: data.typeOption ? [data.typeOption.iri] : [],
@@ -315,81 +315,95 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                 <Form onSubmit={this.createNewOption}>
                     <Row>
                         <Col xl={6} md={12}>
-                            <label className={"attribute-label"}>{i18n("asset.label")}</label>
+                            <Label className="attribute-label">{i18n("asset.label")}</Label>
                             <ErrorText field="optionLabel" name="create-term-label"
-                               validate={this.validateLengthMin5}
-                               validateOnChange={true}
-                               validateOnBlur={true}
-                               onChange={this.getOptionUri}
-                             />
+                                       validate={this.validateLengthMin5}
+                                       validateOnChange={true}
+                                       validateOnBlur={true}
+                                       onChange={this.getOptionUri}
+                            />
                         </Col>
                     </Row>
                     <Row>
                         <Col xl={6} md={12}>
-                            <label className={"attribute-label"}>{i18n("asset.iri")}</label>
+                            <Label className="attribute-label">{i18n("asset.iri")}</Label>
                             <ErrorText field="optionURI" name="create-term-iri"
-                               validate={this.validateLengthMin5}
-                               validateOnChange={true}
-                               help={i18n("asset.create.iri.help")}
-                               validateOnBlur={true}
-                               onChange={this.handleOnChange}
-                               value={this.state.optionUriValue}
+                                       validate={this.validateLengthMin5}
+                                       validateOnChange={true}
+                                       help={i18n("asset.create.iri.help")}
+                                       validateOnBlur={true}
+                                       onChange={this.handleOnChange}
+                                       value={this.state.optionUriValue}
                             />
                         </Col>
                     </Row>
-                   <Row>
+                    <Row>
                         <Col xl={6} md={12}>
-                            <TextArea name="create-vocabulary-comment" label={i18n("vocabulary.comment")}
+                            <TextArea name="create-term-comment" label={i18n("vocabulary.comment")}
                                       type="textarea" rows={3} value={this.state.comment} help={i18n("optional")}
                                       onChange={this.onCommentChange}/>
                         </Col>
                     </Row>
 
-                    <label>{i18n("glossary.form.field.selectType")}</label>
-                    <Select field={"typeOption"}
-                            name={"create-term-types-" + this.props.match.params.name}
-                            options={types}
-                            multi={false}
-                            valueKey={"iri"}
-                            labelKey={"label"}
-                            childrenKey="plainSubTerms"
-                            filterOptions={this.filterParentOptions}
-                            displayInfoOnHover={true}
-                            expanded={true}
-                            renderAsTree={true}
-                    />
+                    <Row>
+                        <Col xl={6} md={12}>
+                            <Label className="attribute-label">{i18n("glossary.form.field.type")}</Label>
+                            <Select field={"typeOption"}
+                                    name={"create-term-types-" + this.props.match.params.name}
+                                    options={types}
+                                    multi={false}
+                                    valueKey={"iri"}
+                                    labelKey={"label"}
+                                    childrenKey="plainSubTerms"
+                                    filterOptions={this.filterParentOptions}
+                                    displayInfoOnHover={true}
+                                    expanded={true}
+                                    renderAsTree={true}
+                            />
+                        </Col>
+                    </Row>
 
-                    <Button color="link" id="create-term-toggle-advanced"
-                            onClick={this.toggleAdvancedSection}>
-                        {(this.state.modalAdvancedSectionVisible ? i18n("glossary.form.button.hideAdvancedSection") : i18n("glossary.form.button.showAdvancedSection"))}
+                    <Button color="link" id="create-term-toggle-advanced" onClick={this.toggleAdvancedSection}>
+                        {this.state.modalAdvancedSectionVisible ? i18n("glossary.form.button.hideAdvancedSection") : i18n("glossary.form.button.showAdvancedSection")}
                     </Button>
 
 
                     <Collapse isOpen={this.state.modalAdvancedSectionVisible}>
 
-                        <label>{i18n("glossary.form.field.selectParent")}</label>
-                        <Select field={"parentOption"} id="create-term-parent"
-                                fetchOptions={this.fetchOptions}
-                                multi={false}
-                                valueKey={"iri"}
-                                labelKey={"label"}
-                                childrenKey="plainSubTerms"
-                                filterOptions={this.filterParentOptions}
-                                expanded={true}
-                                simpleTreeData={true}
-                                renderAsTree={true}
-                        />
+                        <Row>
+                            <Col xl={6} md={12}>
+                                <Label className="attribute-label">{i18n("glossary.form.field.parent")}</Label>
+                                <Select field={"parentOption"} id="create-term-parent"
+                                        fetchOptions={this.fetchOptions}
+                                        multi={false}
+                                        valueKey={"iri"}
+                                        labelKey={"label"}
+                                        childrenKey="plainSubTerms"
+                                        filterOptions={this.filterParentOptions}
+                                        expanded={true}
+                                        simpleTreeData={true}
+                                        renderAsTree={true}
+                                />
+                            </Col>
+                        </Row>
 
-                        <label>{i18n("glossary.form.field.source")}</label>
-                        <TextInput field="optionSource" name="create-term-source"
-                                   />
+                        <Row>
+                            <Col xl={6} md={12}>
+                                <Label className="attribute-label">{i18n("glossary.form.field.source")}</Label>
+                                <TextInput field="optionSource" name="create-term-source"/>
+                            </Col>
+                        </Row>
                     </Collapse>
-                    <ButtonToolbar className={"d-flex justify-content-end"}>
-                        <Button id="create-term-submit" color="success" type="submit"
-                                size="sm">{i18n("glossary.form.button.submit")}</Button>
-                        <Button id="create-term-cancel" color="secondary" size="sm"
-                                onClick={this.cancelCreation}>{i18n("glossary.form.button.cancel")}</Button>
-                    </ButtonToolbar>
+                    <Row>
+                        <Col xl={6} md={12}>
+                            <ButtonToolbar className={"d-flex justify-content-end"}>
+                                <Button id="create-term-submit" color="success" type="submit"
+                                        size="sm">{i18n("glossary.form.button.submit")}</Button>
+                                <Button id="create-term-cancel" color="secondary" size="sm"
+                                        onClick={this.cancelCreation}>{i18n("glossary.form.button.cancel")}</Button>
+                            </ButtonToolbar>
+                        </Col>
+                    </Row>
                 </Form>
             </CardBody>
         </Card>;

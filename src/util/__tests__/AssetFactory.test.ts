@@ -54,7 +54,7 @@ describe("AssetFactory", () => {
         const data = {
             iri: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/prirazeni-termu/instance1741423723",
             types: [
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/prirazeni-termu"
+                "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/přiřazení-termu"
             ],
             term: {
                 iri: "http://onto.fel.cvut.cz/ontologies/slovnik/sb-z-2006-183/pojem/nezastavene-uzemi",
@@ -66,7 +66,7 @@ describe("AssetFactory", () => {
             target: {
                 iri: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/cil/instance-873441519",
                 types: [
-                    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/cil"
+                    "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/cíl"
                 ],
                 source: {
                     iri: "http://onto.fel.cvut.cz/ontologies/zdroj/ml-test",

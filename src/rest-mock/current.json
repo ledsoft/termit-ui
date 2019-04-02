@@ -1,9 +1,9 @@
 {
   "@context": {
     "iri": "@id",
-    "firstName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno",
-    "lastName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni",
-    "username": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno",
+    "firstName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-křestní-jméno",
+    "lastName": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-příjmení",
+    "username": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-uživatelské-jméno",
     "types": "@type"
   },
   "iri": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
@@ -11,6 +11,6 @@
   "lastName": "Halsey",
   "username": "halsey@unsc.org",
   "types": [
-    "http://onto.fel.cvut.cz/ontologies/termit/admin"
+    "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/administrátor-termitu"
   ]
 }

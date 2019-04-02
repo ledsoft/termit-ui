@@ -4,8 +4,8 @@ import VocabularyUtils from "../util/VocabularyUtils";
 
 export const CONTEXT = {
     iri: "@id",
-    label: "http://www.w3.org/2000/01/rdf-schema#label",
-    comment: "http://www.w3.org/2000/01/rdf-schema#comment",
+    label: VocabularyUtils.RDFS_LABEL,
+    comment: VocabularyUtils.RDFS_COMMENT,
     types: "@type"
 };
 

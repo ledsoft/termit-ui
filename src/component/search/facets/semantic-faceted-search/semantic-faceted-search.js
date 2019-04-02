@@ -735,6 +735,9 @@ function dumpQuery(query, caller)
             ' } \n';
 
             var defaultConfig = {
+                headers: {
+                    'Content-type' : 'application/x-www-form-urlencoded; charset=UTF-8'
+                },
                 labelPart: labelPart,
                 noSelectionString: NO_SELECTION_STRING,
                 preferredLang: 'fi',

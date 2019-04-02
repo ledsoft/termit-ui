@@ -79,7 +79,7 @@ describe("Annotation", () => {
     });
 
     it("recognizes invalid occurrence", () => {
-        const fetchTermReject = (termIri: string) => Promise.reject("Term not found.");
+        const fetchTermReject = () => Promise.reject("Term not found.");
         const wrapper = shallow(
             <Annotation
                 {...intlFunctions()}
@@ -153,8 +153,6 @@ describe("Annotation", () => {
                 {...assignedOccProps}
             />);
 
-        // @ts-ignore
-        const annotationComponentClass = Annotation;
         showOccurrenceViewForm(wrapper, popupComponentClass);
         wrapper.find(Annotation).simulate("click");
 
@@ -181,7 +179,7 @@ describe("Annotation", () => {
         expect(wrapper.find(popupComponentClass)
             .props().actions.some((a: any) => a.key === "annotation.remove")
         ).toEqual(true);
-    })
+    });
 
     it("does not register remove action if onRemove is not bound", () => {
         const wrapper = mountWithIntlAttached(
@@ -197,7 +195,7 @@ describe("Annotation", () => {
         expect(wrapper.find(popupComponentClass)
             .props().actions.some((a: any) => a.key === "annotation.remove")
         ).toEqual(false);
-    })
+    });
 
     it("registers edit action for occurrence view form", () => {
         const wrapper = mountWithIntlAttached(
@@ -213,7 +211,7 @@ describe("Annotation", () => {
         expect(wrapper.find(popupComponentClass)
             .props().actions.some((a: any) => a.key === "annotation.edit")
         ).toEqual(true);
-    })
+    });
 
     // it('does not register edit action for occurrence edit form', () => {})
 
@@ -231,7 +229,5 @@ describe("Annotation", () => {
         expect(wrapper.find(popupComponentClass)
             .props().actions.some((a: any) => a.key === "annotation.close")
         ).toEqual(true);
-    })
-
-
+    });
 });

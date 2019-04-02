@@ -106,7 +106,7 @@ export function search(searchString: string, disableLoading: boolean = true) {
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.asyncActionRequest(action, disableLoading));
-        return Ajax.get(Constants.API_PREFIX + "/search/label", params({searchString}))
+        return Ajax.get(Constants.API_PREFIX + "/search/fts", params({searchString}))
             .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, SEARCH_RESULT_CONTEXT) : [])
             .then((data: SearchResultData[]) => {
                 dispatch(searchResult(data.map(d => new SearchResult(d))));
@@ -124,7 +124,7 @@ export function autocompleteSearch(searchString: string, disableLoading: boolean
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(SyncActions.asyncActionRequest(action, disableLoading));
-        return Ajax.get(Constants.API_PREFIX + "/search/label", params({searchString}))
+        return Ajax.get(Constants.API_PREFIX + "/search/fts", params({searchString}))
             .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, SEARCH_RESULT_CONTEXT) : [])
             .then((data: SearchResultData[]) => {
                 dispatch(SyncActions.asyncActionSuccess(action));

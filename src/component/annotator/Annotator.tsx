@@ -6,7 +6,7 @@ import HtmlParserUtils from "./HtmlParserUtils";
 import AnnotationDomHelper from "./AnnotationDomHelper";
 import Term from "../../model/Term";
 import HtmlDomUtils from "./HtmlDomUtils";
-import Legend from "./Legend";
+import LegendToggle from "./LegendToggle";
 
 interface AnnotatorProps {
     html: string
@@ -178,7 +178,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
             ));
 
         return <div>
-            <Legend/>
+            <LegendToggle/>
             <div id={"annotator"}
             ref={r => {
                 this.containerElement = r

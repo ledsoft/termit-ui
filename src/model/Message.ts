@@ -1,6 +1,6 @@
 import MType from "./MessageType";
 
-export type MessageType = 'success' | 'danger' | 'warning' | 'info';
+export type MessageType = "success" | "danger" | "warning" | "info";
 
 export interface MessageData {
     message?: string;

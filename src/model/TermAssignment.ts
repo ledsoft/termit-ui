@@ -1,12 +1,13 @@
 import Term, {CONTEXT as TERM_CONTEXT, TermData} from "./Term";
 import {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "./Resource";
 import {AssetData} from "./Asset";
+import VocabularyUtils from "../util/VocabularyUtils";
 
 const ctx = {
-    "term": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-prirazenim-termu",
-    "description": "http://purl.org/dc/elements/1.1/description",
-    "target": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-cil",
-    "source": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-zdroj"
+    "term": VocabularyUtils.NS_TERMIT + "je-přiřazením-termu",
+    "description": VocabularyUtils.DC_DESCRIPTION,
+    "target": VocabularyUtils.NS_TERMIT + "má-cíl",
+    "source": VocabularyUtils.PREFIX + "má-zdroj"
 };
 
 export const CONTEXT = Object.assign({}, ctx, TERM_CONTEXT, RESOURCE_CONTEXT);

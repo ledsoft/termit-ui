@@ -8,28 +8,28 @@ export interface IRI {
 }
 
 const _NS_POPIS_DAT = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/";
-const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/";
+const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
 const _NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const _NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
 
 export default {
     PREFIX: _NS_POPIS_DAT,
-    VOCABULARY: _NS_POPIS_DAT + "slovnik",
+    VOCABULARY: _NS_POPIS_DAT + "slovník",
     TERM: _NS_POPIS_DAT + "term",
     FILE: _NS_POPIS_DAT + "soubor",
     DOCUMENT: _NS_POPIS_DAT + "dokument",
     DATASET: "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
-    JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovniku",
+    JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovníku",
     RESOURCE: _NS_POPIS_DAT + "zdroj",
-    TERM_ASSIGNMENT: _NS_POPIS_DAT + "prirazeni-termu",
-    TERM_OCCURRENCE: _NS_POPIS_DAT + "vyskyt-termu",
-    SUGGESTED_TERM_OCCURRENCE: _NS_POPIS_DAT + "navrzeny-vyskyt-termu",
-    HAS_AUTHOR: _NS_POPIS_DAT + "ma-autora",
-    CREATED: "http://purl.org/dc/terms/created",
-    HAS_LAST_EDITOR: _NS_TERMIT + "ma-posledniho-editora",
-    LAST_MODIFIED: _NS_TERMIT + "ma-posledni-modifikaci",
+    TERM_ASSIGNMENT: _NS_TERMIT + "přiřazení-termu",
+    TERM_OCCURRENCE: _NS_TERMIT + "výskyt-termu",
+    SUGGESTED_TERM_OCCURRENCE: _NS_TERMIT + "navržený-výskyt-termu",
+    HAS_AUTHOR: _NS_POPIS_DAT + "má-autora",
+    CREATED: _NS_POPIS_DAT + "má-datum-a-čas-vytvoření",
+    HAS_LAST_EDITOR: _NS_POPIS_DAT + "má-posledního-editora",
+    LAST_MODIFIED: _NS_POPIS_DAT + "má-datum-a-čas-poslední-modifikace",
     NS_TERMIT: _NS_TERMIT,
-    USER: _NS_TERMIT + "uzivatel-termitu",
+    USER: _NS_TERMIT + "uživatel-termitu",
     HAS_COUNT: _NS_TERMIT + "has-count",
     PREFIX_RDFS: _NS_RDFS,
     RDF_TYPE: _NS_RDF + "type",
@@ -37,6 +37,7 @@ export default {
     RDFS_COMMENT: _NS_RDFS + "comment",
     RDFS_RESOURCE: _NS_RDFS + "Resource",
     RDF_PROPERTY: _NS_RDF + "Property",
+    DC_DESCRIPTION: "http://purl.org/dc/terms/description",
 
     getFragment(iri: string): string {
         return this.create(iri).fragment;
