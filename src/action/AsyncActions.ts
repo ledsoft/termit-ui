@@ -487,7 +487,7 @@ export function saveFileContent(fileIri: IRI, fileContent: string) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax
-            .post(
+            .put(
                 Constants.API_PREFIX + "/resources/" + fileIri.fragment + "/content",
                 contentType(Constants.MULTIPART_FORM_DATA).formData(formData)
             )
