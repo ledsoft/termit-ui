@@ -91,3 +91,7 @@ It is possible to adjust the styling of the application. We are using Bootstrap 
 documentation [here](https://getbootstrap.com/docs/4.0/getting-started/webpack/#importing-precompiled-sass) and [here](https://getbootstrap.com/docs/4.0/getting-started/theming/),
 there is the `_custom.scss` file in `src`. This file allows to override default Bootstrap styles and its content is automatically imported in the application.
 
+## License
+
+Licensed under GPL v3.0.
+
