@@ -38,7 +38,6 @@ describe("TermAssignments", () => {
     });
 
     afterEach(() => {
-        mounted.unmount();
         jest.clearAllTimers();
         document.body.removeChild(element);
     });

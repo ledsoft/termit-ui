@@ -47,6 +47,7 @@ export default function SparqlWidget<P extends PublicProps>(Component: React.Com
         }
     }
 
+    // @ts-ignore
     return connect((state: TermItState) => {
         return {
             queryResults: state.queryResults
