@@ -5,7 +5,7 @@ export default {
     getSelectionRange(rootElement: HTMLElement): Range | null {
         const sel = window.getSelection();
 
-        if (!sel.isCollapsed) {
+        if (sel && !sel.isCollapsed) {
             if (sel.rangeCount) {
                 return sel.getRangeAt(0);
             }
@@ -28,7 +28,7 @@ export default {
         const newRange = toRange(xpathRange.start, xpathRange.startOffset, xpathRange.end, xpathRange.endOffset, clonedElement);
 
         const doc = clonedElement.ownerDocument;
-        const template = doc.createElement("template");
+        const template = doc!.createElement("template");
         template.innerHTML = surroundingElementHtml;
         const surroundingElement = template.content.childNodes[0] as HTMLElement;
         const text = surroundingElement.textContent;

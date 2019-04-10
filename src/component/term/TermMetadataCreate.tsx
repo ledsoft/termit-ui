@@ -229,7 +229,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             return [];
         }
         const ids: Term[] = JSON.parse(JSON.stringify(children));
-        return ids.map(obj => Object.assign({}, obj.iri));
+        return ids.map(obj => Object.assign({}, {iri: obj.iri}));
     }
 
     private createNewOption(data: NewOptionData) {

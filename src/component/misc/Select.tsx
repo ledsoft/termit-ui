@@ -1,15 +1,15 @@
-import * as React from 'react';
-import {FormFeedback, FormGroup, Input} from 'reactstrap';
+import * as React from "react";
+import {FormFeedback, FormGroup, Input} from "reactstrap";
 import AbstractInput, {AbstractInputProps} from "./AbstractInput";
 
 export default class Select extends AbstractInput<AbstractInputProps> {
 
-    private input: any;
+    protected input: any;
 
     public render() {
         return <FormGroup>
             {this.renderLabel()}
-            <Input type='select' ref={(c: any) => this.input = c} {...this.inputProps()}>
+            <Input type="select" ref={(c: any) => this.input = c} {...this.inputProps()}>
                 {this.props.children}
             </Input>
             <FormFeedback>{this.props.invalidMessage}</FormFeedback>
