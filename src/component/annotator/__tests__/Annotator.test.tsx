@@ -26,11 +26,13 @@ describe("Annotator", () => {
     let mockedCallbackProps: {
         onUpdate(newHtml: string): void
         onFetchTerm(termIri: string): Promise<Term>
+        onCreateTerm(term: Term): Promise<Term>
     };
     beforeEach(() => {
         mockedCallbackProps = {
             onUpdate: jest.fn(),
-            onFetchTerm: jest.fn()
+            onFetchTerm: jest.fn(),
+            onCreateTerm: jest.fn()
         }
     });
 

@@ -21,7 +21,7 @@ describe("JsonLdUtils", () => {
                 },
                 lastModified: Date.now()
             };
-            const result = JsonLdUtils.resolveReferences(data);
+            const result:any = JsonLdUtils.resolveReferences(data);
             expect(result.lastEditor).toEqual(data.author);
         });
 
@@ -45,7 +45,7 @@ describe("JsonLdUtils", () => {
                 }],
                 lastModified: Date.now()
             };
-            const result = JsonLdUtils.resolveReferences(data);
+            const result:any = JsonLdUtils.resolveReferences(data);
             expect(result.editors[0]).toEqual(data.author);
         });
     });
@@ -56,7 +56,7 @@ describe("JsonLdUtils", () => {
             input[VocabularyUtils.HAS_LAST_EDITOR] = {
                 "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey"
             };
-            return JsonLdUtils.compactAndResolveReferences(input, VOCABULARY_CONTEXT).then(result => {
+            return JsonLdUtils.compactAndResolveReferences(input, VOCABULARY_CONTEXT).then((result:any) => {
                 expect(result.author).toBeDefined();
                 expect(result.lastEditor).toBeDefined();
                 expect(result.lastEditor).toEqual(result.author);
@@ -76,7 +76,7 @@ describe("JsonLdUtils", () => {
             input[0][VocabularyUtils.HAS_LAST_EDITOR] = {
                 "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/test-author"
             };
-            return JsonLdUtils.compactAndResolveReferencesAsArray(input, TERM_CONTEXT).then(result => {
+            return JsonLdUtils.compactAndResolveReferencesAsArray(input, TERM_CONTEXT).then((result:any[]) => {
                 expect(Array.isArray(result)).toBeTruthy();
                 expect(result[0].author).toBeDefined();
                 expect(result[0].lastEditor).toBeDefined();
@@ -89,7 +89,7 @@ describe("JsonLdUtils", () => {
             input[0][VocabularyUtils.HAS_LAST_EDITOR] = {
                 "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey"
             };
-            return JsonLdUtils.compactAndResolveReferencesAsArray(input, VOCABULARY_CONTEXT).then(result => {
+            return JsonLdUtils.compactAndResolveReferencesAsArray(input, VOCABULARY_CONTEXT).then((result:any[]) => {
                 expect(Array.isArray(result)).toBeTruthy();
                 expect(result.length).toEqual(1);
                 expect(result[0].author).toBeDefined();

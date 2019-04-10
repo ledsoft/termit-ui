@@ -11,7 +11,6 @@ import {Button} from "reactstrap";
 import TermMetadataEdit from "../TermMetadataEdit";
 import Term from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
-import Vocabulary from "../../../model/Vocabulary";
 import AppNotification from "../../../model/AppNotification";
 import NotificationType from "../../../model/NotificationType";
 import {IRI} from "../../../util/VocabularyUtils";
@@ -33,7 +32,6 @@ describe("TermDetail", () => {
     let onPublishNotification: (notification: AppNotification) => void;
 
     let term: Term;
-    let vocabulary: Vocabulary;
 
     beforeEach(() => {
         location = {
@@ -55,19 +53,15 @@ describe("TermDetail", () => {
         onUpdate = jest.fn().mockImplementation(() => Promise.resolve());
         onLoadTerms = jest.fn();
         onPublishNotification = jest.fn();
-        vocabulary = new Vocabulary({
-            iri: Generator.generateUri(),
-            label: "Test vocabulary"
-        });
         term = new Term({
             iri: Generator.generateUri(),
             label: "Test term",
-            vocabulary: {iri: vocabulary.iri}
+            vocabulary: {iri: Generator.generateUri()}
         });
     });
 
     it("loads term on mount", () => {
-        shallow(<TermDetail term={null} vocabulary={null} loadTerm={onLoad} updateTerm={onUpdate}
+        shallow(<TermDetail term={null} loadTerm={onLoad} updateTerm={onUpdate}
                             reloadVocabularyTerms={onLoadTerms} publishNotification={onPublishNotification}
                             history={history} location={location} match={match}
                             {...intlFunctions()} {...intlDataForShallow()}/>);
@@ -77,7 +71,7 @@ describe("TermDetail", () => {
     it("provides namespace to term loading when specified in url", () => {
         const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
         location.search = "?namespace=" + namespace;
-        shallow(<TermDetail term={null} vocabulary={null} loadTerm={onLoad} updateTerm={onUpdate}
+        shallow(<TermDetail term={null} loadTerm={onLoad} updateTerm={onUpdate}
                             reloadVocabularyTerms={onLoadTerms} history={history}
                             location={location} match={match} publishNotification={onPublishNotification}
                             {...intlFunctions()} {...intlDataForShallow()}/>);
@@ -85,7 +79,7 @@ describe("TermDetail", () => {
     });
 
     it("renders term metadata by default", () => {
-        const wrapper = mountWithIntl(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad}
+        const wrapper = mountWithIntl(<TermDetail term={term} loadTerm={onLoad}
                                                   updateTerm={onUpdate} publishNotification={onPublishNotification}
                                                   reloadVocabularyTerms={onLoadTerms} history={history}
                                                   location={location} match={match}
@@ -94,7 +88,7 @@ describe("TermDetail", () => {
     });
 
     it("renders term editor after clicking edit button", () => {
-        const wrapper = mountWithIntl(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad}
+        const wrapper = mountWithIntl(<TermDetail term={term} loadTerm={onLoad}
                                                   updateTerm={onUpdate} publishNotification={onPublishNotification}
                                                   reloadVocabularyTerms={onLoadTerms} history={history}
                                                   location={location} match={match}
@@ -104,7 +98,7 @@ describe("TermDetail", () => {
     });
 
     it("invokes termUpdate action on save", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
@@ -114,7 +108,7 @@ describe("TermDetail", () => {
     });
 
     it("closes term metadata edit on save success", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad}
                                             updateTerm={onUpdate} publishNotification={onPublishNotification}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
@@ -128,7 +122,7 @@ describe("TermDetail", () => {
     });
 
     it("reloads term on successful save", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
@@ -140,7 +134,7 @@ describe("TermDetail", () => {
     });
 
     it("closes edit when different term is selected", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
@@ -163,7 +157,7 @@ describe("TermDetail", () => {
     });
 
     it("reloads vocabulary terms on successful save", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
@@ -175,7 +169,7 @@ describe("TermDetail", () => {
     });
 
     it("does not render edit button when editing", () => {
-        const wrapper = mountWithIntl(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad}
+        const wrapper = mountWithIntl(<TermDetail term={term} loadTerm={onLoad}
                                                   updateTerm={onUpdate} publishNotification={onPublishNotification}
                                                   reloadVocabularyTerms={onLoadTerms} history={history}
                                                   location={location} match={match}
@@ -188,7 +182,7 @@ describe("TermDetail", () => {
     });
 
     it("publishes term update notification when sub terms change", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
