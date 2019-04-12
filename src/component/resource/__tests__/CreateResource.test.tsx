@@ -7,6 +7,8 @@ import Routes from "../../../util/Routes";
 import Resource from "../../../model/Resource";
 import {CreateResource} from "../CreateResource";
 import VocabularyUtils from "../../../util/VocabularyUtils";
+import {CreateFileMetadata} from "../CreateFileMetadata";
+import {CreateResourceMetadata} from "../CreateResourceMetadata";
 
 jest.mock("../../../util/Routing");
 jest.mock("../../../util/Ajax", () => ({
@@ -49,5 +51,20 @@ describe("CreateResource", () => {
         const resource = (onCreate as jest.Mock).mock.calls[0][0];
         expect(resource.types).toBeDefined();
         expect(resource.types.indexOf(VocabularyUtils.DATASET)).not.toEqual(-1);
+    });
+
+    it("renders CreateFileMetadata component when File type is selected", () => {
+        const wrapper = mountWithIntl(<CreateResource onCreate={onCreate}  {...intlFunctions()}/>);
+        wrapper.find("button#create-resource-type-file").simulate("click");
+        expect(wrapper.find(CreateFileMetadata).exists()).toBeTruthy();
+    });
+
+    it("renders CreateResourceMetadata component for all resource types except File", () => {
+        const wrapper = mountWithIntl(<CreateResource onCreate={onCreate}  {...intlFunctions()}/>);
+        expect(wrapper.find(CreateResourceMetadata).exists()).toBeTruthy();
+        wrapper.find("button#create-resource-type-dataset").simulate("click");
+        expect(wrapper.find(CreateResourceMetadata).exists()).toBeTruthy();
+        wrapper.find("button#create-resource-type-document").simulate("click");
+        expect(wrapper.find(CreateResourceMetadata).exists()).toBeTruthy();
     });
 });

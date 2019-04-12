@@ -126,6 +126,7 @@ export default {
 
         "resource.create.title": "Create resource",
         "resource.create.type": "Type",
+        "resource.create.file.select.label": "Drag & drop a file here, or click to select file",
         'resource.metadata.description': 'Description',
         "resource.metadata.terms.assigned": "Assigned terms",
         "resource.metadata.terms.assigned.tooltip": "Terms assigned to the resource as a whole",

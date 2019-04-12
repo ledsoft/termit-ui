@@ -123,6 +123,7 @@ export default {
 
         "resource.create.title": "Vytvořit zdroj",
         "resource.create.type": "Typ zdroje",
+        "resource.create.file.select.label": "Přetáhněte sem soubor myší, nebo klikněte pro výběr pomocí dialogu",
         "resource.management.empty": "Žádné zdroje nenalezeny. Vytvořte nějaký...",
         "resource.management.create.text": "Vytvořit",
         "resource.management.create.tooltip": "Vytvořit či zaregistrovat zdroj",

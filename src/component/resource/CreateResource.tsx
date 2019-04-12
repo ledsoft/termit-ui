@@ -10,6 +10,7 @@ import {ThunkDispatch} from "../../util/Types";
 import {createResource} from "../../action/AsyncActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import CreateResourceMetadata from "./CreateResourceMetadata";
+import CreateFileMetadata from "./CreateFileMetadata";
 
 interface CreateResourceProps extends HasI18n {
     onCreate: (resource: Resource) => void;
@@ -79,9 +80,17 @@ export class CreateResource extends React.Component<CreateResourceProps, CreateR
                         </Row>
                     </Col>
                 </Row>
-                <CreateResourceMetadata onCreate={this.onCreate} onCancel={CreateResource.onCancel}/>
+                {this.renderMetadataForm()}
             </CardBody>
         </Card>;
+    }
+
+    private renderMetadataForm() {
+        if (this.state.type === VocabularyUtils.FILE) {
+            return <CreateFileMetadata onCreate={this.onCreate} onCancel={CreateResource.onCancel}/>;
+        } else {
+            return <CreateResourceMetadata onCreate={this.onCreate} onCancel={CreateResource.onCancel}/>;
+        }
     }
 }
 

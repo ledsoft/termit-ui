@@ -9,17 +9,17 @@ import {Button, ButtonToolbar, Col, Form, Row} from "reactstrap";
 import CustomInput from "../misc/CustomInput";
 import TextArea from "../misc/TextArea";
 
-interface CreateResourceMetadataProps extends HasI18n {
+export interface CreateResourceMetadataProps extends HasI18n {
     onCreate: (resource: Resource) => void;
     onCancel: () => void;
 }
 
-interface CreateResourceMetadataState extends AbstractCreateAssetState, ResourceData {
+export interface CreateResourceMetadataState extends AbstractCreateAssetState, ResourceData {
     description: string;
     types: string;
 }
 
-export class CreateResourceMetadata extends AbstractCreateAsset<CreateResourceMetadataProps, CreateResourceMetadataState> {
+export class CreateResourceMetadata<S extends CreateResourceMetadataState = CreateResourceMetadataState> extends AbstractCreateAsset<CreateResourceMetadataProps, S> {
 
     constructor(props: CreateResourceMetadataProps) {
         super(props);
@@ -29,7 +29,7 @@ export class CreateResourceMetadata extends AbstractCreateAsset<CreateResourceMe
             description: "",
             types: VocabularyUtils.RESOURCE,
             generateIri: true
-        };
+        } as S;
     }
 
     protected get identifierGenerationEndpoint(): string {
@@ -46,8 +46,15 @@ export class CreateResourceMetadata extends AbstractCreateAsset<CreateResourceMe
     };
 
     public render() {
-        const i18n = this.props.i18n;
         return <Form>
+            {this.renderBasicMetadataInputs()}
+            {this.renderSubmitButtons()}
+        </Form>;
+    }
+
+    protected renderBasicMetadataInputs() {
+        const i18n = this.props.i18n;
+        return <>
             <Row>
                 <Col xl={6} md={12}>
                     <CustomInput name="create-resource-label" label={i18n("asset.label")}
@@ -69,18 +76,22 @@ export class CreateResourceMetadata extends AbstractCreateAsset<CreateResourceMe
                               onChange={this.onDescriptionChange}/>
                 </Col>
             </Row>
-            <Row>
-                <Col xl={6} md={12}>
-                    <ButtonToolbar className="pull-right">
-                        <Button id="create-resource-submit" onClick={this.onCreate} color="success" size="sm"
-                                disabled={this.state.label.trim().length === 0}>{i18n("create")}</Button>
-                        <Button id="create-resource-cancel" onClick={this.props.onCancel}
-                                color="secondary"
-                                size="sm">{i18n("cancel")}</Button>
-                    </ButtonToolbar>
-                </Col>
-            </Row>
-        </Form>;
+        </>;
+    }
+
+    protected renderSubmitButtons() {
+        const i18n = this.props.i18n;
+        return <Row>
+            <Col xl={6} md={12}>
+                <ButtonToolbar className="pull-right">
+                    <Button id="create-resource-submit" onClick={this.onCreate} color="success" size="sm"
+                            disabled={this.state.label.trim().length === 0}>{i18n("create")}</Button>
+                    <Button id="create-resource-cancel" onClick={this.props.onCancel}
+                            color="secondary"
+                            size="sm">{i18n("cancel")}</Button>
+                </ButtonToolbar>
+            </Col>
+        </Row>;
     }
 }
 
