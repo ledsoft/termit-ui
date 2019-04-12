@@ -19,7 +19,7 @@ function formatBytes(bytes: number, decimals = 2) {
 
     const k = 1024;
     const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    const sizes = ["B", "KB", "MB", "GB", "TB"];
 
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
@@ -46,9 +46,11 @@ export class CreateFileMetadata extends CreateResourceMetadata<CreateFileMetadat
         }
     }
 
-    private onFileSelected = (files: File[]) => {
+    public onFileSelected = (files: File[]) => {
         // There should be exactly one file
-        this.setState({file: files[0], dragActive: false});
+        const file = files[0];
+        this.setState({file, label: file.name, dragActive: false});
+        this.generateIri(file.name);
     };
 
     private onDragEnter = () => {
