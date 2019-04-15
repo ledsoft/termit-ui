@@ -53,7 +53,7 @@ export default class Namespaces {
      * @param prefixed Prefixed IRI to expand
      */
     public static getFullIri(prefixed: string): string {
-        const split = prefixed.split(':');
+        const split = prefixed.split(":");
         if (split.length !== 2) {
             return prefixed;
         }

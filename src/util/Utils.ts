@@ -141,6 +141,6 @@ export default {
      */
     calculateAssetListHeight() {
         const container = document.getElementById("content-container");
-        return container? container.clientHeight * 0.8 : window.innerHeight / 2;
+        return container ? container.clientHeight * 0.8 : window.innerHeight / 2;
     }
 }
