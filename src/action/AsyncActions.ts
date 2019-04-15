@@ -30,7 +30,7 @@ import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
 import {CONTEXT as DOCUMENT_CONTEXT} from "../model/Document";
-import File, {CONTEXT as FILE_CONTEXT} from "../model/File";
+import TermitFile, {CONTEXT as FILE_CONTEXT} from "../model/File";
 import {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
@@ -277,6 +277,35 @@ export function createResource(resource: Resource) {
     };
 }
 
+export function uploadFileContent(fileIri: string, data: File) {
+    const action = {
+        type: ActionType.SAVE_FILE_CONTENT
+    };
+    const iri = VocabularyUtils.create(fileIri);
+    const formData = new FormData();
+    formData.append("file", data, iri.fragment);
+    if (iri.namespace) {
+        formData.append("namespace", iri.namespace);
+    }
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.put(Constants.API_PREFIX + "/resources/" + iri.fragment + "/content",
+            contentType(Constants.MULTIPART_FORM_DATA).formData(formData)
+        )
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                return dispatch(SyncActions.publishMessage(new Message({
+                    messageId: "file.content.upload.success",
+                    values: {fileName: data.name}
+                }, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    };
+}
+
 export function removeResource(resource: Resource) {
     const action = {
         type: ActionType.REMOVE_RESOURCE
@@ -430,7 +459,7 @@ export function loadTypes(language: string) {
     };
 }
 
-export function startFileTextAnalysis(file: File) {
+export function startFileTextAnalysis(file: TermitFile) {
     const action = {
         type: ActionType.START_FILE_TEXT_ANALYSIS
     };
@@ -473,6 +502,7 @@ export function loadFileContent(fileIri: IRI) {
     };
 }
 
+// TODO This has been is superseded by uploadFileContent and should internally make use of it
 export function saveFileContent(fileIri: IRI, fileContent: string) {
     const action = {
         type: ActionType.SAVE_FILE_CONTENT

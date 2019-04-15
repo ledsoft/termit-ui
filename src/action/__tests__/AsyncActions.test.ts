@@ -21,7 +21,7 @@ import {
     removeResource,
     updateResourceTerms,
     updateTerm,
-    updateVocabulary
+    updateVocabulary, uploadFileContent
 } from "../AsyncActions";
 import Constants from "../../util/Constants";
 import Ajax from "../../util/Ajax";
@@ -47,7 +47,7 @@ import AsyncActionStatus from "../AsyncActionStatus";
 import ExportType from "../../util/ExportType";
 import fileContent from "../../rest-mock/file";
 import Asset from "../../model/Asset";
-import File from "../../model/File";
+import TermItFile from "../../model/File";
 import {UserAccountData} from "../../model/User";
 
 jest.mock("../../util/Routing");
@@ -57,6 +57,8 @@ jest.mock("../../util/Ajax", () => ({
     params: require.requireActual("../../util/Ajax").params,
     param: require.requireActual("../../util/Ajax").param,
     accept: require.requireActual("../../util/Ajax").accept,
+    contentType: require.requireActual("../../util/Ajax").contentType,
+    formData: require.requireActual("../../util/Ajax").formData
 }));
 
 const mockStore = configureMockStore<TermItState>([thunk]);
@@ -922,7 +924,7 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadLastEditedAssets())).then((result: Asset[]) => {
                 expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + "/assets/last-edited");
                 expect(result.length).toEqual(data.length);
-                expect(result[0]).toBeInstanceOf(File);
+                expect(result[0]).toBeInstanceOf(TermItFile);
                 expect(result[1]).toBeInstanceOf(Vocabulary);
                 expect(result[2]).toBeInstanceOf(Term);
             });
@@ -1084,6 +1086,24 @@ describe("Async actions", () => {
                 const termsAction = actions.find(a => a.type === ActionType.LOAD_RESOURCE_TERMS);
                 expect(termsAction).toBeDefined();
                 expect(termsAction.payload).toEqual([new Term(data[0].term)]);
+            });
+        });
+    });
+
+    describe("uploadFileContent", () => {
+        const fileIri = "http://onto.fel.cvut.cz/ontologies/termit/resources/test.html";
+        const fileName = "test.html";
+
+        it ("attaches file data to server request", () => {
+            Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
+            const blob = new Blob([""], {type: "text/html"});
+            // @ts-ignore
+            blob["name"] = fileName;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(uploadFileContent(fileIri, blob as File))).then(() => {
+                const actions = store.getActions();
+                expect(actions[0].type).toEqual(ActionType.SAVE_FILE_CONTENT);
+                const args = (Ajax.put as jest.Mock).mock.calls[0];
+                expect(args[1].getFormData().get("file").name).toEqual(fileName);
             });
         });
     });

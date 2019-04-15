@@ -10,7 +10,7 @@ import CustomInput from "../misc/CustomInput";
 import TextArea from "../misc/TextArea";
 
 export interface CreateResourceMetadataProps extends HasI18n {
-    onCreate: (resource: Resource) => void;
+    onCreate: (resource: Resource) => Promise<string>;
     onCancel: () => void;
 }
 
@@ -19,9 +19,10 @@ export interface CreateResourceMetadataState extends AbstractCreateAssetState, R
     types: string;
 }
 
-export class CreateResourceMetadata<S extends CreateResourceMetadataState = CreateResourceMetadataState> extends AbstractCreateAsset<CreateResourceMetadataProps, S> {
+export class CreateResourceMetadata<P extends CreateResourceMetadataProps = CreateResourceMetadataProps, S extends CreateResourceMetadataState = CreateResourceMetadataState>
+    extends AbstractCreateAsset<P, S> {
 
-    constructor(props: CreateResourceMetadataProps) {
+    constructor(props: P) {
         super(props);
         this.state = {
             iri: "",
@@ -40,7 +41,7 @@ export class CreateResourceMetadata<S extends CreateResourceMetadataState = Crea
         this.setState({description: e.currentTarget.value});
     };
 
-    private onCreate = (): void => {
+    public onCreate = (): void => {
         const {generateIri, ...data} = this.state;
         this.props.onCreate(new Resource(data));
     };

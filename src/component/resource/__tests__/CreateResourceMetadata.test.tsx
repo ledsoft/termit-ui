@@ -18,12 +18,12 @@ jest.mock("../../../util/Ajax", () => ({
 describe("CreateResourceMetadata", () => {
     const iri = "http://onto.fel.cvut.cz/ontologies/termit/resource/test";
 
-    let onCreate: (resource: Resource) => void;
+    let onCreate: (resource: Resource) => Promise<string>;
     let onCancel: () => void;
 
     beforeEach(() => {
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(iri));
-        onCreate = jest.fn();
+        onCreate = jest.fn().mockImplementation(() => Promise.resolve(iri));
         onCancel = jest.fn();
     });
 

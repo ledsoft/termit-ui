@@ -188,6 +188,7 @@ export default {
         'file.text-analysis.started.message': 'Soubor \'{fileName}\' zařazen do fronty pro textovou analýzu',
         'file.metadata.startTextAnalysis': 'Spustit textovou analýzu',
         'file.metadata.startTextAnalysis.text': 'Analyzovat',
+        "file.content.upload.success": "Soubor \'{fileName}\' úspěšně nahrán na server.",
 
         'statistics.vocabulary.count': 'Počet slovníků',
         'statistics.term.count': 'Počet pojmů',

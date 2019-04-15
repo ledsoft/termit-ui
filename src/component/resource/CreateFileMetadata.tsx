@@ -11,6 +11,10 @@ import {Col, Form, Label, Row} from "reactstrap";
 import Dropzone from "react-dropzone";
 import {GoCloudUpload} from "react-icons/go";
 import classNames from "classnames";
+import {connect} from "react-redux";
+import {ThunkDispatch} from "../../util/Types";
+import {uploadFileContent} from "../../action/AsyncActions";
+import Resource from "../../model/Resource";
 
 function formatBytes(bytes: number, decimals = 2) {
     if (bytes === 0) {
@@ -26,14 +30,18 @@ function formatBytes(bytes: number, decimals = 2) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
 
+interface CreateFileMetadataProps extends CreateResourceMetadataProps {
+    uploadFileContent: (fileIri: string, file: File) => void;
+}
+
 interface CreateFileMetadataState extends CreateResourceMetadataState {
     file?: File;
     dragActive: boolean;
 }
 
-export class CreateFileMetadata extends CreateResourceMetadata<CreateFileMetadataState> {
+export class CreateFileMetadata extends CreateResourceMetadata<CreateFileMetadataProps, CreateFileMetadataState> {
 
-    constructor(props: CreateResourceMetadataProps) {
+    constructor(props: CreateFileMetadataProps) {
         super(props);
         this.state = {
             iri: "",
@@ -59,6 +67,15 @@ export class CreateFileMetadata extends CreateResourceMetadata<CreateFileMetadat
 
     private onDragLeave = () => {
         this.setState({dragActive: false});
+    };
+
+    public onCreate = () => {
+        const {generateIri, file, dragActive, ...data} = this.state;
+        this.props.onCreate(new Resource(data)).then((iri: string) => {
+            if (this.state.file) {
+                this.props.uploadFileContent(this.state.iri, this.state.file);
+            }
+        });
     };
 
     public render() {
@@ -90,4 +107,8 @@ export class CreateFileMetadata extends CreateResourceMetadata<CreateFileMetadat
     }
 }
 
-export default injectIntl(withI18n(CreateFileMetadata));
+export default connect(undefined, (dispatch: ThunkDispatch) => {
+    return {
+        uploadFileContent: (fileIri: string, file: File) => dispatch(uploadFileContent(fileIri, file))
+    };
+})(injectIntl(withI18n(CreateFileMetadata)));

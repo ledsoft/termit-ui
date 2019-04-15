@@ -1,6 +1,6 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
-import Routing from './Routing';
-import Constants from './Constants';
+import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
+import Routing from "./Routing";
+import Constants from "./Constants";
 import Routes from "./Routes";
 import MockAdapter from "axios-mock-adapter";
 import Authentication from "./Authentication";
@@ -12,7 +12,7 @@ class RequestConfigBuilder {
     private mParams?: {};
     private mFormData?: {};
     private mAccept: string;
-    private mResponseType?: 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream';
+    private mResponseType?: "arraybuffer" | "blob" | "document" | "json" | "text" | "stream";
 
     constructor() {
         this.mContentType = Constants.JSON_LD_MIME_TYPE;
@@ -204,10 +204,13 @@ export class Ajax {
         const conf = {
             params: config.getParams(),
             headers: {
-                'Accept': config.getAccept(),
-                'Content-Type': config.getContentType()
+                "Accept": config.getAccept(),
+                "Content-Type": config.getContentType()
             }
         };
+        if (config.getContentType() === Constants.MULTIPART_FORM_DATA && config.getFormData()) {
+            return this.axiosInstance.put(path, config.getFormData(), conf);
+        }
         return this.axiosInstance.put(path, config.getContent(), conf);
     }
 
@@ -340,7 +343,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(/\/rest\/resources\/.+\/content/).reply(200, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
 
     // Mock update file content
-    mock.onPost(/\/rest\/resources\/.+\/content/).reply(204, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
+    mock.onPut(/\/rest\/resources\/.+\/content/).reply(204, fileContent, Object.assign({}, header, {"content-type": Constants.HTML_MIME_TYPE}));
 
     // Mock resource terms retrieval endpoint
     mock.onGet(/\/rest\/resources\/.+\/terms/).reply(200, require('../rest-mock/resourceTerms'), Object.assign({}, header, {

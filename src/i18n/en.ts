@@ -187,6 +187,7 @@ export default {
         'file.text-analysis.started.message': 'File \'{fileName}\' successfully queued for text analysis',
         'file.metadata.startTextAnalysis': 'Start text analysis',
         'file.metadata.startTextAnalysis.text': 'Analyze',
+        "file.content.upload.success": "Content of file \'{fileName}\' successfully uploaded.",
 
         'statistics.vocabulary.count': 'Vocabulary Count',
         'statistics.term.count': 'Term Count',
