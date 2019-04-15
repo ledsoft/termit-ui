@@ -11,9 +11,10 @@ import {createResource} from "../../action/AsyncActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import CreateResourceMetadata from "./CreateResourceMetadata";
 import CreateFileMetadata from "./CreateFileMetadata";
+import IdentifierResolver from "../../util/IdentifierResolver";
 
 interface CreateResourceProps extends HasI18n {
-    onCreate: (resource: Resource) => void;
+    onCreate: (resource: Resource) => Promise<string>;
 }
 
 interface CreateResourceState {
@@ -33,12 +34,17 @@ export class CreateResource extends React.Component<CreateResourceProps, CreateR
         this.setState({type});
     };
 
-    private onCreate = (resource: Resource): void => {
+    public onCreate = (resource: Resource): Promise<string> => {
         resource.types!.push(this.state.type);
-        this.props.onCreate(resource);
+        return this.props.onCreate(resource).then(iri => {
+            if (iri) {
+                Routing.transitionTo(Routes.resourceSummary, IdentifierResolver.routingOptionsFromLocation(iri));
+            }
+            return iri;
+        });
     };
 
-    private static onCancel(): void {
+    public static onCancel(): void {
         Routing.transitionTo(Routes.resources);
     }
 

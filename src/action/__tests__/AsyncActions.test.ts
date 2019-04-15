@@ -947,20 +947,15 @@ describe("Async actions", () => {
             });
         });
 
-        it("transitions to resource detail on success", () => {
+        it("returns new resource IRI on success", () => {
             const resource = new Resource({
                 iri: "http://onto.fel.cvut.cz/ontologies/termit/resources/test-resource",
                 label: "Test resource"
             });
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({headers: {location: resource.iri}}));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(createResource(resource))).then(() => {
-                expect(Routing.transitionTo).toHaveBeenCalled();
-                const args = (Routing.transitionTo as jest.Mock).mock.calls[0];
-                expect(args[0]).toEqual(Routes.resourceSummary);
-                expect(args[1]).toEqual({
-                    params: new Map([["name", "test-resource"]]),
-                    query: new Map()
-                });
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createResource(resource))).then((res: string) => {
+                expect(res).toEqual(resource.iri);
             });
         });
 

@@ -266,9 +266,8 @@ export function createResource(resource: Resource) {
             .then((resp: AxiosResponse) => {
                 dispatch(asyncActionSuccess(action));
                 dispatch(loadResources());
-                const location = resp.headers[Constants.LOCATION_HEADER];
-                Routing.transitionTo(Routes.resourceSummary, IdentifierResolver.routingOptionsFromLocation(location));
-                return dispatch(SyncActions.publishMessage(new Message({messageId: "resource.created.message"}, MessageType.SUCCESS)));
+                dispatch(SyncActions.publishMessage(new Message({messageId: "resource.created.message"}, MessageType.SUCCESS)));
+                return resp.headers[Constants.LOCATION_HEADER];
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));

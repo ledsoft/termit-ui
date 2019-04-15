@@ -1,6 +1,6 @@
 import * as React from "react";
 import Ajax from "../../../util/Ajax";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
@@ -9,6 +9,7 @@ import {CreateResource} from "../CreateResource";
 import VocabularyUtils from "../../../util/VocabularyUtils";
 import {CreateFileMetadata} from "../CreateFileMetadata";
 import {CreateResourceMetadata} from "../CreateResourceMetadata";
+import {shallow} from "enzyme";
 
 jest.mock("../../../util/Routing");
 jest.mock("../../../util/Ajax", () => ({
@@ -22,16 +23,16 @@ jest.mock("../../../util/Ajax", () => ({
 describe("CreateResource", () => {
     const iri = "http://onto.fel.cvut.cz/ontologies/termit/resource/test";
 
-    let onCreate: (resource: Resource) => void;
+    let onCreate: (resource: Resource) => Promise<string>;
 
     beforeEach(() => {
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(iri));
-        onCreate = jest.fn();
+        onCreate = jest.fn().mockImplementation(() => Promise.resolve(iri));
     });
 
     it("returns to Resource Management on cancel", () => {
-        const wrapper = mountWithIntl(<CreateResource onCreate={onCreate} {...intlFunctions()}/>);
-        wrapper.find("button#create-resource-cancel").simulate("click");
+        shallow<CreateResource>(<CreateResource onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+        CreateResource.onCancel();
         expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.resources);
     });
 
@@ -66,5 +67,26 @@ describe("CreateResource", () => {
         expect(wrapper.find(CreateResourceMetadata).exists()).toBeTruthy();
         wrapper.find("button#create-resource-type-document").simulate("click");
         expect(wrapper.find(CreateResourceMetadata).exists()).toBeTruthy();
+    });
+
+    it("transitions to Resource detail on successful creation", () => {
+        const wrapper = shallow<CreateResource>(<CreateResource
+            onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+        wrapper.instance().onCreate(new Resource({iri, label: "Test"}));
+        return Promise.resolve().then(() => {
+            expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.resourceSummary, {
+                params: new Map([["name", "test"]]),
+                query: new Map()
+            });
+        })
+    });
+
+    it("returns resolved identifier on successful creation", () => {
+        const wrapper = shallow<CreateResource>(<CreateResource
+            onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+        return wrapper.instance().onCreate(new Resource({iri, label: "Test"})).then(result => {
+            expect(result).toBeDefined();
+            expect(result).toEqual(iri);
+        })
     });
 });
