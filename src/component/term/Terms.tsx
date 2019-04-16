@@ -37,7 +37,7 @@ interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
 
 export class Terms extends React.Component<GlossaryTermsProps> {
 
-    private treeComponent: React.RefObject<IntelligentTreeSelect>;
+    private readonly treeComponent: React.RefObject<IntelligentTreeSelect>;
 
     constructor(props: GlossaryTermsProps) {
         super(props);

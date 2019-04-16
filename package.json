@@ -32,7 +32,7 @@
     "html-webpack-plugin": "2.29.0",
     "htmlparser2": "^3.10.1",
     "informed": "1.10.8",
-    "intelligent-tree-select": "0.6.3",
+    "intelligent-tree-select": "0.6.4",
     "javascript-time-ago": "2.0.1",
     "jest": "24.7.1",
     "jquery": "^3.3.1",
