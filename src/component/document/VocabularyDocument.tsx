@@ -10,11 +10,12 @@ import CreateFileMetadata from "../resource/CreateFileMetadata";
 import File from "../../model/File";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {createFileInDocument} from "../../action/AsyncActions";
+import {createFileInDocument, loadVocabulary} from "../../action/AsyncActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
 
 interface VocabularyDocumentDispatchProps {
     createFile: (file: File, documentIri: string) => Promise<string>;
+    loadVocabulary: (vocabularyIri: string) => void;
 }
 
 interface VocabularyDocumentProps extends HasI18n {
@@ -53,6 +54,7 @@ export class VocabularyDocument extends React.Component<ActualProps, VocabularyD
         file.addType(VocabularyUtils.FILE);
         return this.props.createFile(file, this.props.vocabulary.document!.iri).then(str => {
             this.setState({createFileDialogOpen: false});
+            this.props.loadVocabulary(this.props.vocabulary.iri);
             return str;
         });
     };
@@ -102,6 +104,7 @@ export class VocabularyDocument extends React.Component<ActualProps, VocabularyD
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
-        createFile: (file: File, documentIri: string) => dispatch(createFileInDocument(file, VocabularyUtils.create(documentIri)))
+        createFile: (file: File, documentIri: string) => dispatch(createFileInDocument(file, VocabularyUtils.create(documentIri))),
+        loadVocabulary: (vocabularyIri: string) => dispatch(loadVocabulary(VocabularyUtils.create(vocabularyIri)))
     };
 })(injectIntl(withI18n(VocabularyDocument)));

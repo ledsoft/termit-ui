@@ -17,6 +17,7 @@ describe("VocabularyDocument", () => {
     let vocabulary: Vocabulary;
 
     let createFile: (file: File, documentIri: string) => Promise<string>;
+    let loadVocabulary: (vocabularyIri: string) => void;
 
     beforeEach(() => {
         vocabulary = new Vocabulary({
@@ -29,10 +30,12 @@ describe("VocabularyDocument", () => {
             })
         });
         createFile = jest.fn().mockImplementation(() => Promise.resolve(fileIri));
+        loadVocabulary = jest.fn().mockImplementation(() => Promise.resolve());
     });
 
     it("adds file type to data submitted to create action", () => {
         const wrapper = shallow<VocabularyDocument>(<VocabularyDocument vocabulary={vocabulary}
+                                                                        loadVocabulary={loadVocabulary}
                                                                         createFile={createFile} {...intlFunctions()} {...intlDataForShallow()}/>);
         const file = new File({
             iri: fileIri,
@@ -47,6 +50,7 @@ describe("VocabularyDocument", () => {
 
     it("closes file creation dialog on successful creation", () => {
         const wrapper = shallow<VocabularyDocument>(<VocabularyDocument vocabulary={vocabulary}
+                                                                        loadVocabulary={loadVocabulary}
                                                                         createFile={createFile} {...intlFunctions()} {...intlDataForShallow()}/>);
         wrapper.instance().setState({createFileDialogOpen: true});
         const file = new File({
@@ -56,6 +60,20 @@ describe("VocabularyDocument", () => {
         wrapper.instance().createFile(file);
         return Promise.resolve().then(() => {
             expect(wrapper.instance().state.createFileDialogOpen).toBeFalsy();
+        });
+    });
+
+    it("reloads vocabulary after successful file creation", () => {
+        const wrapper = shallow<VocabularyDocument>(<VocabularyDocument vocabulary={vocabulary}
+                                                                        loadVocabulary={loadVocabulary}
+                                                                        createFile={createFile} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const file = new File({
+            iri: fileIri,
+            label: fileName
+        });
+        wrapper.instance().createFile(file);
+        return Promise.resolve().then(() => {
+            expect(loadVocabulary).toHaveBeenCalledWith(vocabulary.iri);
         });
     });
 });
