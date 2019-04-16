@@ -82,7 +82,7 @@ export class CreateFileMetadata extends CreateResourceMetadata<CreateFileMetadat
         const containerClasses = classNames("form-group", "create-resource-dropzone", {"active": this.state.dragActive});
         return <Form>
             <Row>
-                <Col md={12} xl={6}>
+                <Col xl={this.props.wide ? 12 : 6} md={12}>
                     <Dropzone onDrop={this.onFileSelected} onDragEnter={this.onDragEnter}
                               onDragLeave={this.onDragLeave} multiple={false}>
                         {({getRootProps, getInputProps}) => (
@@ -109,6 +109,6 @@ export class CreateFileMetadata extends CreateResourceMetadata<CreateFileMetadat
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
-        uploadFileContent: (fileIri: string, file: File) => dispatch(uploadFileContent(fileIri, file))
+        uploadFileContent: (fileIri: string, file: File) => dispatch(uploadFileContent(VocabularyUtils.create(fileIri), file))
     };
 })(injectIntl(withI18n(CreateFileMetadata)));

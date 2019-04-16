@@ -62,5 +62,14 @@ export default abstract class Asset implements AssetData, HasProvenanceData {
         return this.lastEditor ? this.lastEditor : this.author;
     }
 
+    public addType(type: string) {
+        if (!this.types) {
+            this.types = [];
+        }
+        if (this.types.indexOf(type) === -1) {
+            this.types.push(type);
+        }
+    }
+
     public abstract toJsonLd(): {};
 }

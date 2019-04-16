@@ -53,6 +53,8 @@ import {Action} from "redux";
  *      _create${ASSET}_  - creating an asset, e.g. `createVocabulary`
  *      _update${ASSET}_  - updating an asset, e.g. `updateVocabulary`
  *      _remove${ASSET}_  - removing an asset, e.g. `removeVocabulary`
+ *
+ * TODO Consider splitting this file into multiple, it is becoming too long
  */
 
 function isActionRequestPending(state: TermItState, action: Action) {
@@ -277,19 +279,39 @@ export function createResource(resource: Resource) {
     };
 }
 
-export function uploadFileContent(fileIri: string, data: File) {
+export function createFileInDocument(file: TermitFile, documentIri: IRI) {
+    const action = {
+        type: ActionType.CREATE_RESOURCE
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.post(Constants.API_PREFIX + "/resources/" + documentIri.fragment + "/files", content(file.toJsonLd()).param("namespace", documentIri.namespace))
+            .then((resp: AxiosResponse) => {
+                dispatch(asyncActionSuccess(action));
+                dispatch(loadResources());
+                dispatch(SyncActions.publishMessage(new Message({messageId: "resource.created.message"}, MessageType.SUCCESS)));
+                return resp.headers[Constants.LOCATION_HEADER];
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return undefined;
+            });
+    };
+}
+
+export function uploadFileContent(fileIri: IRI, data: File) {
     const action = {
         type: ActionType.SAVE_FILE_CONTENT
     };
-    const iri = VocabularyUtils.create(fileIri);
     const formData = new FormData();
-    formData.append("file", data, iri.fragment);
-    if (iri.namespace) {
-        formData.append("namespace", iri.namespace);
+    formData.append("file", data, fileIri.fragment);
+    if (fileIri.namespace) {
+        formData.append("namespace", fileIri.namespace);
     }
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
-        return Ajax.put(Constants.API_PREFIX + "/resources/" + iri.fragment + "/content",
+        return Ajax.put(Constants.API_PREFIX + "/resources/" + fileIri.fragment + "/content",
             contentType(Constants.MULTIPART_FORM_DATA).formData(formData)
         )
             .then(() => {

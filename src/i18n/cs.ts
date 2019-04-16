@@ -110,6 +110,8 @@ export default {
         'vocabulary.detail.tabs.termdetail': 'Detail pojmu',
         'vocabulary.detail.files': 'Soubory',
         'vocabulary.detail.files.file': 'Název souboru',
+        "vocabulary.detail.files.create.tooltip": "Přidat nový soubor do dokumentu tohoto slovníku",
+        "vocabulary.detail.files.create.dialog.title": "Nový soubor",
         'vocabulary.detail.noTermSelected': 'Vyberte pojem ve stromečku vlevo.',
 
         'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',

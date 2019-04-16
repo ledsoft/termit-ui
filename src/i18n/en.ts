@@ -111,6 +111,8 @@ export default {
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
         'vocabulary.detail.files': 'Files',
         'vocabulary.detail.files.file': 'Filename',
+        "vocabulary.detail.files.create.tooltip": "Add new file to this vocabulary\'s document",
+        "vocabulary.detail.files.create.dialog.title": "New file",
         'vocabulary.detail.noTermSelected': 'Start by selecting a term in the tree on the left.',
 
         'vocabulary.term.created.message': 'Term successfully created.',

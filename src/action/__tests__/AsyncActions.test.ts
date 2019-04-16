@@ -1,5 +1,6 @@
 import configureMockStore, {MockStoreEnhanced} from "redux-mock-store";
 import {
+    createFileInDocument,
     createProperty,
     createResource,
     createTerm,
@@ -1094,16 +1095,34 @@ describe("Async actions", () => {
         const fileIri = "http://onto.fel.cvut.cz/ontologies/termit/resources/test.html";
         const fileName = "test.html";
 
-        it ("attaches file data to server request", () => {
+        it("attaches file data to server request", () => {
             Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
             const blob = new Blob([""], {type: "text/html"});
             // @ts-ignore
             blob["name"] = fileName;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(uploadFileContent(fileIri, blob as File))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(uploadFileContent(VocabularyUtils.create(fileIri), blob as File))).then(() => {
                 const actions = store.getActions();
                 expect(actions[0].type).toEqual(ActionType.SAVE_FILE_CONTENT);
                 const args = (Ajax.put as jest.Mock).mock.calls[0];
                 expect(args[1].getFormData().get("file").name).toEqual(fileName);
+            });
+        });
+    });
+
+    describe("createFileInDocument", () => {
+        it("POSTs File metadata to server under the specified Document identifier", () => {
+            const file = new TermItFile({
+                iri: Generator.generateUri(),
+                label: "test.html"
+            });
+            const docName = "test-document";
+            const documentIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/resources/test-document");
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({headers: {location: file.iri}}));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createFileInDocument(file, documentIri))).then(() => {
+                const actions = store.getActions();
+                expect(actions[0].type).toEqual(ActionType.CREATE_RESOURCE);
+                expect((Ajax.post as jest.Mock).mock.calls[0][0]).toEqual(Constants.API_PREFIX + "/resources/" + docName + "/files");
+                expect((Ajax.post as jest.Mock).mock.calls[0][1].getContent()).toEqual(file.toJsonLd());
             });
         });
     });

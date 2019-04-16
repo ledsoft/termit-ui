@@ -12,6 +12,7 @@ import TextArea from "../misc/TextArea";
 export interface CreateResourceMetadataProps extends HasI18n {
     onCreate: (resource: Resource) => Promise<string>;
     onCancel: () => void;
+    wide?: boolean;
 }
 
 export interface CreateResourceMetadataState extends AbstractCreateAssetState, ResourceData {
@@ -21,6 +22,10 @@ export interface CreateResourceMetadataState extends AbstractCreateAssetState, R
 
 export class CreateResourceMetadata<P extends CreateResourceMetadataProps = CreateResourceMetadataProps, S extends CreateResourceMetadataState = CreateResourceMetadataState>
     extends AbstractCreateAsset<P, S> {
+
+    public static defaultProps = {
+        wide: false
+    };
 
     constructor(props: P) {
         super(props);
@@ -55,23 +60,24 @@ export class CreateResourceMetadata<P extends CreateResourceMetadataProps = Crea
 
     protected renderBasicMetadataInputs() {
         const i18n = this.props.i18n;
+        const wide = this.props.wide;
         return <>
             <Row>
-                <Col xl={6} md={12}>
+                <Col xl={wide ? 12 : 6} md={12}>
                     <CustomInput name="create-resource-label" label={i18n("asset.label")}
                                  value={this.state.label}
                                  onChange={this.onLabelChange}/>
                 </Col>
             </Row>
             <Row>
-                <Col xl={6} md={12}>
+                <Col xl={wide ? 12 : 6} md={12}>
                     <CustomInput name="create-resource-iri" label={i18n("asset.iri")}
                                  value={this.state.iri}
                                  onChange={this.onIriChange} help={i18n("asset.create.iri.help")}/>
                 </Col>
             </Row>
             <Row>
-                <Col xl={6} md={12}>
+                <Col xl={wide ? 12 : 6} md={12}>
                     <TextArea name="create-resource-description" label={i18n("resource.metadata.description")}
                               type="textarea" rows={3} value={this.state.description} help={i18n("optional")}
                               onChange={this.onDescriptionChange}/>
@@ -83,7 +89,7 @@ export class CreateResourceMetadata<P extends CreateResourceMetadataProps = Crea
     protected renderSubmitButtons() {
         const i18n = this.props.i18n;
         return <Row>
-            <Col xl={6} md={12}>
+            <Col xl={this.props.wide ? 12 : 6} md={12}>
                 <ButtonToolbar className="pull-right">
                     <Button id="create-resource-submit" onClick={this.onCreate} color="success" size="sm"
                             disabled={this.state.label.trim().length === 0}>{i18n("create")}</Button>

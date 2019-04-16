@@ -14,7 +14,7 @@ export interface FileData extends ResourceData {
 }
 
 export default class File extends Resource implements FileData {
-    public origin: string;
+    public origin?: string;
     public content?: string;
 
     constructor(data: FileData) {
