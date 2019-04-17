@@ -2,22 +2,26 @@ import OntologicalVocabulary from "../util/VocabularyUtils";
 import File, {CONTEXT as FILE_CONTEXT} from "./File";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "./Resource";
 import Utils from "../util/Utils";
+import {AssetData} from "./Asset";
 
 const ctx = {
     "files": {
         "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-soubor",
         "@container": "@set"
-    }
+    },
+    "vocabulary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-dokumentový-slovník"
 };
 
 export const CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx, FILE_CONTEXT);
 
 export interface DocumentData extends ResourceData {
-    files: File[],
+    files: File[];
+    vocabulary?: AssetData;
 }
 
 export default class Document extends Resource implements DocumentData {
     public files: File[];
+    public vocabulary?: AssetData;
 
     constructor(data: DocumentData) {
         super(data);

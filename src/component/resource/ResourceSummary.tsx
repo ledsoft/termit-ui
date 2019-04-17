@@ -13,6 +13,7 @@ import {ThunkDispatch} from "../../util/Types";
 import EditableComponent, {EditableComponentState} from "../misc/EditableComponent";
 import Utils from "../../util/Utils";
 import {default as Resource, EMPTY_RESOURCE} from "../../model/Resource";
+import Document from "../../model/Document";
 import ResourceMetadata from "./ResourceMetadata";
 import ResourceEdit from "./ResourceEdit";
 import "./Resources.scss";
@@ -83,6 +84,11 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         this.setState({showRemoveDialog: false});
     };
 
+    private canRemove() {
+        const resource = this.props.resource;
+        return resource && !(resource as Document).vocabulary && Utils.sanitizeArray((resource as Document).files).length === 0;
+    }
+
     public render() {
         const i18n = this.props.i18n;
         const buttons = [];
@@ -91,9 +97,11 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
                                  title={i18n("edit")}
                                  onClick={this.onEdit}><GoPencil/>&nbsp;{i18n("edit")}</Button>);
         }
-        buttons.push(<Button id="resource-detail-remove" key="resource.summary.remove" size="sm" color="secondary"
-                             title={i18n("asset.remove.tooltip")}
-                             onClick={this.onRemoveClick}><GoX/>&nbsp;{i18n("remove")}</Button>);
+        if (this.canRemove()) {
+            buttons.push(<Button id="resource-detail-remove" key="resource.summary.remove" size="sm" color="secondary"
+                                 title={i18n("asset.remove.tooltip")}
+                                 onClick={this.onRemoveClick}><GoX/>&nbsp;{i18n("remove")}</Button>);
+        }
         const actions = [<ButtonToolbar key="resource.summary.actions">{buttons}</ButtonToolbar>];
 
         const component = this.state.edit ?

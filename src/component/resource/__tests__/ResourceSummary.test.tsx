@@ -3,7 +3,9 @@ import {IRI} from "../../../util/VocabularyUtils";
 import {shallow} from "enzyme";
 import {ResourceSummary} from "../ResourceSummary";
 import Resource, {EMPTY_RESOURCE} from "../../../model/Resource";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
+import Document from "../../../model/Document";
+import File from "../../../model/File";
+import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {Location} from "history";
 import createMemoryHistory from "history/createMemoryHistory";
@@ -12,6 +14,7 @@ import Generator from "../../../__tests__/environment/Generator";
 
 describe("ResourceSummary", () => {
 
+    const namespace = "http://onto.fel.cvut.cz/ontologies/termit/resources/";
     const resourceName = "test-resource";
 
     let loadResource: (iri: IRI) => Promise<any>;
@@ -79,7 +82,6 @@ describe("ResourceSummary", () => {
     });
 
     it("uses namespace for resource loading when it is present in URL", () => {
-        const namespace = "http://onto.fel.cvut.cz/ontologies/termit/resources/";
         location.search = "?namespace=" + namespace;
         shallow(<ResourceSummary
             resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
@@ -102,7 +104,7 @@ describe("ResourceSummary", () => {
 
     it("clears resource on unmnount", () => {
         const resource = new Resource({
-            iri: "http://onto.fel.cvut.cz/ontologies/termit/resources/" + resourceName,
+            iri: namespace + resourceName,
             label: resourceName
         });
         const wrapper = shallow(<ResourceSummary
@@ -114,7 +116,7 @@ describe("ResourceSummary", () => {
 
     it("invokes remove action and closes remove confirmation dialog on remove", () => {
         const resource = new Resource({
-            iri: "http://onto.fel.cvut.cz/ontologies/termit/resources/" + resourceName,
+            iri: namespace + resourceName,
             label: resourceName
         });
         const wrapper = shallow(<ResourceSummary
@@ -123,5 +125,28 @@ describe("ResourceSummary", () => {
         (wrapper.instance() as ResourceSummary).onRemove();
         expect(removeResource).toHaveBeenCalledWith(resource);
         expect(wrapper.state("showRemoveDialog")).toBeFalsy();
+    });
+
+    it("does not render remove button for Document related to Vocabulary", () => {
+        const doc = new Document({
+            iri: namespace + resourceName,
+            label: resourceName,
+            files: [],
+            vocabulary: {iri: Generator.generateUri()}
+        });
+        const wrapper = mountWithIntl(<ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()}
+                                                       history={history} location={location} match={match}/>);
+        expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
+    });
+
+    it("does not render remove button for Document containing files", () => {
+        const doc = new Document({
+            iri: namespace + resourceName,
+            label: resourceName,
+            files: [new File({iri: Generator.generateUri(), label: "test.html"})]
+        });
+        const wrapper = mountWithIntl(<ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()}
+                                                       history={history} location={location} match={match}/>);
+        expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
     });
 });
