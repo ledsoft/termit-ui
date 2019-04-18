@@ -12,6 +12,7 @@ export interface AssetData {
  * JSON-LD context definition for asset data.
  */
 export const ASSET_CONTEXT = {
+    "@version": 1.1,
     iri: "@id",
     label: OntologicalVocabulary.RDFS_LABEL,
     comment: OntologicalVocabulary.RDFS_COMMENT,

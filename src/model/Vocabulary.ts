@@ -8,12 +8,16 @@ import VocabularyUtils from "../util/VocabularyUtils";
 
 // @id and @type are merged from USER_CONTEXT
 const ctx = {
-    "document": VocabularyUtils.PREFIX + "popisuje-dokument",
+    "document": {
+        "@id": VocabularyUtils.PREFIX + "popisuje-dokument",
+        "@context": DOCUMENT_CONTEXT
+
+    },
     "glossary": VocabularyUtils.PREFIX + "má-glosář",
     "model": VocabularyUtils.PREFIX + "má-model"
 };
 
-export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT, DOCUMENT_CONTEXT);
+export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
 
 const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "lastEditor", "lastModified", "document", "types", "glossary", "model"];
 

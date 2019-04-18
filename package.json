@@ -37,7 +37,7 @@
     "jest": "24.7.1",
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
-    "jsonld": "1.5.0",
+    "jsonld": "1.6.0",
     "ld-query": "^2.0.0",
     "lodash": "^4.17.11",
     "object-assign": "4.1.1",
