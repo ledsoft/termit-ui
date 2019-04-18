@@ -52,7 +52,7 @@ class ResourceList extends React.Component<ResourceListProps> {
     }
 
     public componentDidUpdate(prevProps: Readonly<ResourceListProps>): void {
-        if (this.props.resources !== prevProps.resources) {
+        if (Object.keys(prevProps.resources).length > 0 && this.props.resources !== prevProps.resources) {
             this.treeComponent.current.resetOptions();
         }
     }

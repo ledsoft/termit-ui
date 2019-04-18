@@ -35,7 +35,7 @@ export class CreateResource extends React.Component<CreateResourceProps, CreateR
     };
 
     public onCreate = (resource: Resource): Promise<string> => {
-        resource.types!.push(this.state.type);
+        resource.addType(this.state.type);
         return this.props.onCreate(resource).then(iri => {
             if (iri) {
                 Routing.transitionTo(Routes.resourceSummary, IdentifierResolver.routingOptionsFromLocation(iri));
