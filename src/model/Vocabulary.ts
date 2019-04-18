@@ -1,23 +1,19 @@
 import {CONTEXT as USER_CONTEXT} from "./User";
 import OntologicalVocabulary from "../util/VocabularyUtils";
+import VocabularyUtils from "../util/VocabularyUtils";
 import Asset, {ASSET_CONTEXT, AssetData, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
 import Document, {CONTEXT as DOCUMENT_CONTEXT} from "./Document";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import Utils from "../util/Utils";
-import VocabularyUtils from "../util/VocabularyUtils";
 
 // @id and @type are merged from USER_CONTEXT
 const ctx = {
-    "document": {
-        "@id": VocabularyUtils.PREFIX + "popisuje-dokument",
-        "@context": DOCUMENT_CONTEXT
-
-    },
+    "document": VocabularyUtils.PREFIX + "popisuje-dokument",
     "glossary": VocabularyUtils.PREFIX + "má-glosář",
     "model": VocabularyUtils.PREFIX + "má-model"
 };
 
-export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
+export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT, DOCUMENT_CONTEXT);
 
 const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "lastEditor", "lastModified", "document", "types", "glossary", "model"];
 

@@ -721,6 +721,9 @@ export function loadLastEditedAssets() {
         type: ActionType.LOAD_LAST_EDITED
     };
     const context = Object.assign({}, RESOURCE_CONTEXT, TERM_CONTEXT, VOCABULARY_CONTEXT);
+    // Workaround for context conflict. This is because jsonld-java, used by JB4JSON-LD does not support JSON-LD
+    // version 1.1 specification in context
+    context.vocabulary = TERM_CONTEXT.vocabulary;
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/assets/last-edited")
