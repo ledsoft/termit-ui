@@ -11,6 +11,7 @@ const _NS_POPIS_DAT = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis
 const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
 const _NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const _NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
+const _NS_SKOS = "http://www.w3.org/2004/02/skos/core#";
 
 export default {
     PREFIX: _NS_POPIS_DAT,
@@ -18,6 +19,8 @@ export default {
     TERM: _NS_POPIS_DAT + "term",
     FILE: _NS_POPIS_DAT + "soubor",
     DOCUMENT: _NS_POPIS_DAT + "dokument",
+    DEFINITION: _NS_SKOS + "definition",
+    NARROWER: _NS_SKOS + "narrower",
     DATASET: "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
     JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovníku",
     RESOURCE: _NS_POPIS_DAT + "zdroj",

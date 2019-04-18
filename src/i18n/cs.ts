@@ -140,11 +140,10 @@ export default {
         "resource.metadata.terms.occurrences.suggested.tooltip": "Výskyt navržen systémem",
         'resource.metadata-edit.terms': 'Související pojmy ze slovníku',
 
-        'term.metadata.identifier': 'Identifikátor',
-        'term.metadata.label': 'Název',
+        "term.metadata.definition": "Definice",
         'term.metadata.comment': 'Komentář',
         'term.metadata.subTerms': 'Podřazené pojmy',
-        'term.metadata.types': 'Typy pojmu',
+        'term.metadata.types': 'Typ pojmu',
         'term.metadata.source': 'Zdroj pojmu',
         'term.updated.message': 'Pojem úspěšně aktualizován.',
         'term.metadata.labelExists.message': 'Pojem s názvem \'{label}\' již v tomto slovníku existuje',

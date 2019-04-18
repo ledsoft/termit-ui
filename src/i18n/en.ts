@@ -140,11 +140,10 @@ export default {
         "resource.metadata.terms.occurrences.suggested.tooltip": "Occurrence suggested by the system",
         'resource.metadata-edit.terms': 'Related terms from the vocabulary',
 
-        'term.metadata.identifier': 'Identifier',
-        'term.metadata.label': 'Label',
+        "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',
         'term.metadata.subTerms': 'Sub terms',
-        'term.metadata.types': 'Types',
+        'term.metadata.types': 'Type',
         'term.metadata.source': 'Source',
         'term.updated.message': 'Term successfully updated.',
         'term.metadata.labelExists.message': 'Term with label \'{label}\' already exists in this vocabulary',

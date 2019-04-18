@@ -87,15 +87,20 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 <Row>
                     <Col xl={6} md={12}>
                         <CustomInput name="edit-term-iri" onChange={this.onChange} value={this.state.iri}
-                                     disabled={true}
-                                     label={i18n("term.metadata.identifier")}/>
+                                     disabled={true} label={i18n("asset.iri")}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
                         <CustomInput name="edit-term-label" value={this.state.label} onChange={this.onLabelChange}
-                                     label={i18n("term.metadata.label")} invalid={this.state.labelExists}
+                                     label={i18n("asset.label")} invalid={this.state.labelExists}
                                      invalidMessage={this.state.labelExists ? this.props.formatMessage("term.metadata.labelExists.message", {label: this.state.label}) : undefined}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xl={6} md={12}>
+                        <TextArea name="edit-term-definition" value={this.state.definition}
+                                  onChange={this.onChange} rows={3} label={i18n("term.metadata.definition")}/>
                     </Col>
                 </Row>
                 <Row>

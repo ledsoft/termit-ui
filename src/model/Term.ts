@@ -5,7 +5,8 @@ import {CONTEXT as USER_CONTEXT} from "./User";
 import VocabularyUtils from "../util/VocabularyUtils";
 
 const ctx = {
-    subTerms: "http://www.w3.org/2004/02/skos/core#narrower",
+    definition: VocabularyUtils.DEFINITION,
+    subTerms: VocabularyUtils.NARROWER,
     sources: "http://purl.org/dc/elements/1.1/source",
     vocabulary: VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU,
     types: "@type"
@@ -13,10 +14,12 @@ const ctx = {
 
 export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
 
-const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "lastEditor", "lastModified", "subTerms", "sources", "types", "parent", "plainSubTerms", "vocabulary"];
+const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "definition", "created", "author", "lastEditor", "lastModified",
+    "subTerms", "sources", "types", "parent", "plainSubTerms", "vocabulary"];
 
 export interface TermData extends AssetData, HasProvenanceData {
     label: string;
+    definition?: string;
     subTerms?: AssetData[];
     sources?: string[];
     parent?: string;
@@ -25,6 +28,7 @@ export interface TermData extends AssetData, HasProvenanceData {
 }
 
 export default class Term extends Asset implements TermData {
+    public definition?: string;
     public subTerms?: AssetData[];
     public parent?: string;
     public sources?: string[];

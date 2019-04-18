@@ -61,7 +61,7 @@ export class VocabularyDocument extends React.Component<ActualProps, VocabularyD
 
     public render() {
         const i18n = this.props.i18n;
-        if (this.props.vocabulary.document && this.props.vocabulary.document.files) {
+        if (this.props.vocabulary.document) {
             return <div className="card-no-margin-bottom">
                 {this.renderCreateFileDialog()}
                 <hr/>
