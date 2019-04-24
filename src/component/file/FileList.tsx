@@ -6,28 +6,60 @@ import File from "../../model/File";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
-import {startFileTextAnalysis} from "../../action/AsyncActions";
-import {GoClippy} from "react-icons/go";
+import {executeFileTextAnalysis} from "../../action/AsyncActions";
 import VocabularyFileLink from "../vocabulary/VocabularyFileLink";
 import Vocabulary, {EMPTY_VOCABULARY} from "../../model/Vocabulary";
+import {GoClippy} from "react-icons/go";
+import withInjectableLoading, {InjectsLoading} from "../hoc/withInjectableLoading";
+
 
 
 interface FileListProps extends HasI18n {
     vocabulary: Vocabulary,
     files: File[],
-    startFileTextAnalysis: (file: File) => void
+    executeFileTextAnalysis: (file: File) => Promise<any>
+}
+
+interface ButtonProps extends HasI18n {
+    onClick: () => Promise<any>
+}
+
+class ButtonWithInjectableLoading extends React.Component<InjectsLoading & ButtonProps>  {
+
+    constructor(props: InjectsLoading & ButtonProps) {
+        super(props);
+    }
+
+    private onClickWithLoading = () => {
+        // this.props.loadingOn();
+        this.props.onClick().then(
+            () => this.props.loadingOff(),
+            () => this.props.loadingOff()
+        );
+    };
+
+    public render() {
+        const i18n = this.props.i18n;
+        const icon = this.props.loading ? this.props.renderMask() : <GoClippy/> ;
+        return <Button className="link-to-resource" size="sm" color="primary"
+                       title={i18n("file.metadata.startTextAnalysis")}
+                       onClick={this.onClickWithLoading}> {icon} {i18n("file.metadata.startTextAnalysis.text")}
+        </Button>;
+    }
 }
 
 export class FileList extends React.Component<FileListProps> {
 
     private fileTextAnalysisCallback = (file: File) => {
-        return () => this.props.startFileTextAnalysis(file);
+        return () => this.props.executeFileTextAnalysis(file);
     };
 
     public render() {
         const i18n = this.props.i18n;
+        const ButtonWithLoading = withInjectableLoading(injectIntl(withI18n(ButtonWithInjectableLoading)));
+
         if (this.props.files.length > 0 && (this.props.vocabulary !== EMPTY_VOCABULARY)) {
-            const rows = this.props.files.map(v =>
+            const rows = this.props.files.map((v: File) =>
                 <tr key={v.iri}>
                     <td className="align-middle">
                         <VocabularyFileLink resource={v} vocabulary={this.props.vocabulary}/>
@@ -36,10 +68,7 @@ export class FileList extends React.Component<FileListProps> {
                         {v.comment}
                     </td>
                     <td className="pull-right">
-                        <Button className="link-to-resource" size="sm" color="primary"
-                                title={i18n("file.metadata.startTextAnalysis")}
-                                onClick={this.fileTextAnalysisCallback(v)}><GoClippy/> {i18n("file.metadata.startTextAnalysis.text")}
-                        </Button>
+                        <ButtonWithLoading onClick={this.fileTextAnalysisCallback(v)} />
                     </td>
                 </tr>
             );
@@ -69,6 +98,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        startFileTextAnalysis: (file: File) => dispatch(startFileTextAnalysis(file))
+        executeFileTextAnalysis: (file: File) => dispatch(executeFileTextAnalysis(file))
     };
 })(injectIntl(withI18n(FileList)));

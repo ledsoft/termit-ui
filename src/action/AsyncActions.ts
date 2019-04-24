@@ -481,9 +481,9 @@ export function loadTypes(language: string) {
     };
 }
 
-export function startFileTextAnalysis(file: TermitFile, vocabularyIri?: string) {
+export function executeFileTextAnalysis(file: TermitFile, vocabularyIri?: string) {
     const action = {
-        type: ActionType.START_FILE_TEXT_ANALYSIS
+        type: ActionType.EXECUTE_FILE_TEXT_ANALYSIS
     };
     const iri = VocabularyUtils.create(file.iri);
     return (dispatch: ThunkDispatch) => {
@@ -498,7 +498,7 @@ export function startFileTextAnalysis(file: TermitFile, vocabularyIri?: string) 
             .then(() => {
                 dispatch(asyncActionSuccess(action));
                 return dispatch(publishMessage(new Message({
-                    messageId: "file.text-analysis.started.message",
+                    messageId: "file.text-analysis.finished.message",
                     values: {"fileName": file.label}
                 }, MessageType.SUCCESS)));
             })

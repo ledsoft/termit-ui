@@ -4,7 +4,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadResource, removeResource, startFileTextAnalysis, updateResourceTerms} from "../../action/AsyncActions";
+import {loadResource, removeResource, executeFileTextAnalysis, updateResourceTerms} from "../../action/AsyncActions";
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
@@ -32,7 +32,7 @@ interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     removeResource: (resource: Resource) => Promise<any>;
     clearResource: () => void;
 
-    startFileTextAnalysis: (file: File, vocabularyIri?: string) => void
+    executeFileTextAnalysis: (file: File, vocabularyIri?: string) => void
 }
 
 interface ResourceSummaryState extends EditableComponentState {
@@ -107,7 +107,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
 
     private onVocabularySet = (voc: Vocabulary) => {
         const file = this.props.resource as File;
-        this.props.startFileTextAnalysis(file, voc.iri);
+        this.props.executeFileTextAnalysis(file, voc.iri);
     }
 
     private onSelectVocabularyCancel = () => {
@@ -117,7 +117,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
     public onAnalyze = () => {
         const file = this.props.resource as File;
         if (file.owner && file.owner.vocabulary) {
-             this.props.startFileTextAnalysis(file);
+             this.props.executeFileTextAnalysis(file);
         }
         else {
         this.setState({showSelectVocabulary: true});
@@ -184,6 +184,6 @@ export default connect((state: TermItState) => {
         saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
         removeResource: (resource: Resource) => dispatch(removeResource(resource)),
         clearResource: () => dispatch(clearResource()),
-        startFileTextAnalysis: (file: File, vocabularyIri: string) => dispatch(startFileTextAnalysis(file, vocabularyIri))
+        executeFileTextAnalysis: (file: File, vocabularyIri: string) => dispatch(executeFileTextAnalysis(file, vocabularyIri))
     };
 })(injectIntl(withI18n(ResourceSummary)));

@@ -337,7 +337,7 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     mock.onGet(Constants.API_PREFIX + "/resources/identifier").reply(200, "http://onto.fel.cvut.cz/ontologies/termit/resource/test-resource", header);
 
     // Mock text analysis invocation
-    mock.onPut(/\/rest\/resources\/.+\/text-analysis/).reply(202, null, header);
+    mock.onPut(/\/rest\/resources\/.+\/text-analysis/).reply(204, null, header);
 
     // Mock getting file content
     mock.onGet(/\/rest\/resources\/.+\/content/).reply(200, fileContent, Object.assign({}, header, {'content-type': Constants.HTML_MIME_TYPE}));
