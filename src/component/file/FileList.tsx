@@ -32,10 +32,11 @@ class ButtonWithInjectableLoading extends React.Component<InjectsLoading & Butto
 
     private onClickWithLoading = () => {
         // this.props.loadingOn();
-        this.props.onClick().then(
-            () => this.props.loadingOff(),
-            () => this.props.loadingOff()
-        );
+        this.props.onClick();
+        // .then(
+        //     () => this.props.loadingOff(),
+        //     () => this.props.loadingOff()
+        // );
     };
 
     public render() {
