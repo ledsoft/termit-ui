@@ -3,7 +3,7 @@ import {Provider} from "react-redux";
 import TermItStore from "./store/TermItStore";
 import IntlApp from "./IntlApp";
 
-const App: React.SFC = () => {
+const App: React.FC = () => {
     return <Provider store={TermItStore}>
             <IntlApp/>
         </Provider>;

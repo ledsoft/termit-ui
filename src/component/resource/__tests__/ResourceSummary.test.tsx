@@ -1,5 +1,5 @@
 import * as React from "react";
-import {IRI} from "../../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {shallow} from "enzyme";
 import {ResourceSummary} from "../ResourceSummary";
 import Resource, {EMPTY_RESOURCE} from "../../../model/Resource";
@@ -9,7 +9,7 @@ import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {Location} from "history";
 import createMemoryHistory from "history/createMemoryHistory";
-import {match as Match} from "react-router";
+import {match as Match, Router} from "react-router";
 import Generator from "../../../__tests__/environment/Generator";
 
 describe("ResourceSummary", () => {
@@ -149,4 +149,29 @@ describe("ResourceSummary", () => {
                                                        history={history} location={location} match={match}/>);
         expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
     });
+
+    it("renders content button for File", () => {
+        const file = new File({
+            iri: namespace + resourceName,
+            label: resourceName,
+            types: [VocabularyUtils.FILE]
+        });
+        const wrapper = mountWithIntl(<Router history={history}>
+            <ResourceSummary resource={file} {...resourceHandlers} {...intlFunctions()} history={history}
+                             location={location} match={match}/></Router>);
+        expect(wrapper.exists("a#resource-detail-view-content")).toBeTruthy();
+    });
+
+    it("does not render content button for non-File Resource", () => {
+        const doc = new Document({
+            iri: namespace + resourceName,
+            label: resourceName,
+            files: [],
+            types: [VocabularyUtils.DOCUMENT]
+        });
+        const wrapper = mountWithIntl(<Router history={history}>
+            <ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()} history={history}
+                             location={location} match={match}/></Router>);
+        expect(wrapper.exists("a#resource-detail-view-content")).toBeFalsy();
+    })
 });

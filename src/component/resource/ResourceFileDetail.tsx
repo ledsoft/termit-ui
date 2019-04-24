@@ -4,59 +4,30 @@ import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import FileDetail from "../file/FileDetail";
 import {connect} from "react-redux";
-import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
-import {loadVocabularies} from "../../action/AsyncActions";
-import {injectIntl} from "react-intl";
-import withI18n from "../hoc/withI18n";
-import Vocabulary from "../../model/Vocabulary";
+import {loadResource} from "../../action/AsyncActions";
+import Resource from "../../model/Resource";
+import File from "../../model/File";
+import TermItState from "../../model/TermItState";
 
-function isEmpty(obj: object): boolean {
-    return Object.getOwnPropertyNames(obj).length === 0;
+interface StoreStateProps {
+    resource: Resource;
 }
 
-interface ResourceFileDetailProps extends RouteComponentProps<any> {
-    vocabularies: { [key: string]: Vocabulary }
-    loadVocabularies: () => void
+interface DispatchProps {
+    loadResource: (resourceIri: IRI) => void;
 }
 
-interface ResourceFileDetailState {
-    vocabularyIri: IRI | null
-}
+type ResourceFileDetailProps = StoreStateProps & DispatchProps & RouteComponentProps<any>;
 
-export class ResourceFileDetail extends React.Component<ResourceFileDetailProps, ResourceFileDetailState> {
-    constructor(props: any) {
+export class ResourceFileDetail extends React.Component<ResourceFileDetailProps> {
+    constructor(props: ResourceFileDetailProps) {
         super(props);
-        this.state = {
-            vocabularyIri: null
-        }
     }
 
     public componentDidMount() {
-        if (isEmpty(this.props.vocabularies)) {
-            this.props.loadVocabularies();
-        }
+        this.props.loadResource(this.getFileIri());
     }
-
-    public componentDidUpdate() {
-        if (!isEmpty(this.props.vocabularies)) {
-            const iri = this.getVocabularyIri();
-            if (ResourceFileDetail.isDifferent(iri,this.state.vocabularyIri)) {
-                this.setState({
-                    vocabularyIri: iri
-                });
-            }
-        }
-    }
-
-    public render() {
-        if (this.state.vocabularyIri) {
-            const fileIri = this.getFileIri();
-            return <FileDetail iri={fileIri} vocabularyIri={this.state.vocabularyIri}/>
-        }
-        return null;
-    }
-
 
     private getFileIri = (): IRI => {
         const normalizedFileName = this.props.match.params.name;
@@ -64,46 +35,32 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
         return VocabularyUtils.create(fileNamespace + normalizedFileName);
     };
 
-    // TODO this is nasty hack => replace it through retrieval of /resources/$fileId
-    private getVocabularyIri = (): IRI | null => {
-        const HAS_FILE = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-soubor";
-        const iri = this.getFileIri().namespace + this.getFileIri().fragment;
+    public render() {
+        if (this.props.resource) {
+            const vocabularyIri = this.getVocabularyIri();
+            if (vocabularyIri == null) {
+                return null;    // Not supported, yet.
+            }
+            return <FileDetail iri={VocabularyUtils.create(this.props.resource.iri)} vocabularyIri={vocabularyIri}/>
+        }
+        return null;
+    }
 
-
-        const entries = Object.keys(this.props.vocabularies)
-            .map(k => [k, this.props.vocabularies[k]])
-            .filter((e: any) => e[1].document)
-            .map((e: any) => [e[0], e[1].document])
-            .filter((e: any) => {
-                const hasFile = e[1][HAS_FILE];
-                if (!hasFile) {
-                    return false;
-                }
-                const files = Array.isArray(hasFile) ? hasFile : [hasFile];
-                return files.filter(f => f.iri === iri).length !== 0
-            });
-        if (entries.length === 0) {
+    private getVocabularyIri(): IRI | null {
+        if (Utils.getPrimaryAssetType(this.props.resource) !== VocabularyUtils.FILE) {
             return null;
         }
-        return VocabularyUtils.create(entries[0][0]);
+        const file = this.props.resource as File;
+        return file.owner && file.owner.vocabulary ? VocabularyUtils.create(file.owner.vocabulary.iri!) : null;
     }
-
-    private static isDifferent(iri1: IRI | null, iri2: IRI|null) {
-        return ((!iri1) && iri2)
-            || (iri1 && (!iri2))
-            || (iri1!.fragment !== iri2!.fragment)
-            || (iri1!.namespace !== iri2!.namespace);
-    }
-
-
 }
 
 export default connect((state: TermItState) => {
     return {
-        vocabularies: state.vocabularies,
-    };
+        resource: state.resource
+    }
 }, (dispatch: ThunkDispatch) => {
     return {
-        loadVocabularies: () => dispatch(loadVocabularies()),
+        loadResource: (resourceIri: IRI) => dispatch(loadResource(resourceIri)),
     };
-})(injectIntl(withI18n(ResourceFileDetail)));
+})(ResourceFileDetail);

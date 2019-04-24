@@ -8,7 +8,7 @@ import {loadResource, removeResource, startFileTextAnalysis, updateResourceTerms
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
-import {GoClippy, GoPencil, GoX} from "react-icons/go";
+import {GoClippy, GoFile, GoPencil, GoX} from "react-icons/go";
 import {ThunkDispatch} from "../../util/Types";
 import EditableComponent, {EditableComponentState} from "../misc/EditableComponent";
 import Utils from "../../util/Utils";
@@ -22,6 +22,8 @@ import RemoveAssetDialog from "../asset/RemoveAssetDialog";
 import File from "../../model/File";
 import ResourceSelectVocabulary from "./ResourceSelectVocabulary";
 import Vocabulary from "../../model/Vocabulary";
+import Routes from "../../util/Routes";
+import {Link} from "react-router-dom";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
@@ -98,6 +100,11 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         return resource && !(resource as Document).vocabulary && Utils.sanitizeArray((resource as Document).files).length === 0;
     }
 
+    private canViewContent() {
+        const resource = this.props.resource;
+        return Utils.sanitizeArray(resource.types).indexOf(VocabularyUtils.FILE) !== -1;
+    }
+
     private onVocabularySet = (voc: Vocabulary) => {
         const file = this.props.resource as File;
         this.props.startFileTextAnalysis(file, voc.iri);
@@ -121,6 +128,16 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
     public render() {
         const i18n = this.props.i18n;
         const buttons = [];
+        if (this.canViewContent()) {
+            const iri = VocabularyUtils.create(this.props.resource.iri);
+            buttons.push(<Link id="resource-detail-view-content" key={"resource-detail-view-content"}
+                               to={Routes.annotateFile.link({name: iri.fragment}, {namespace: iri.namespace})}
+                               className="btn btn-primary btn-sm"
+                               title={i18n("resource.metadata.file.view-content.tooltip")}>
+                <GoFile/>&nbsp;
+                {i18n("resource.metadata.file.view-content")}
+            </Link>);
+        }
         const onSelectVocabularySubmit = this.onVocabularySet.bind(this);
         if (!this.state.edit) {
             buttons.push(<Button id="resource-detail-edit" key="resource.summary.edit" size="sm" color="primary"

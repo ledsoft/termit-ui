@@ -3,8 +3,30 @@
  */
 
 export interface IRI {
-    namespace?: string,
-    fragment: string,
+    namespace?: string;
+    fragment: string;
+}
+
+export class IRIImpl implements IRI {
+    public readonly fragment: string;
+    public readonly namespace?: string;
+
+    constructor(fragment: string, namespace?: string) {
+        this.fragment = fragment;
+        this.namespace = namespace;
+    }
+
+    public toString(): string {
+        return (this.namespace ? this.namespace : "") + this.fragment;
+    }
+
+    public equals(other?: IRI | null): boolean {
+        return other !== undefined && other !== null && this.fragment === other.fragment && this.namespace === other.namespace;
+    }
+
+    public static create(iri: IRI): IRIImpl {
+        return new IRIImpl(iri.fragment, iri.namespace);
+    }
 }
 
 const _NS_POPIS_DAT = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/";
@@ -27,6 +49,7 @@ export default {
     TERM_ASSIGNMENT: _NS_TERMIT + "přiřazení-termu",
     TERM_OCCURRENCE: _NS_TERMIT + "výskyt-termu",
     SUGGESTED_TERM_OCCURRENCE: _NS_TERMIT + "navržený-výskyt-termu",
+    HAS_FILE: _NS_POPIS_DAT + "má-soubor",
     HAS_AUTHOR: _NS_POPIS_DAT + "má-autora",
     CREATED: _NS_POPIS_DAT + "má-datum-a-čas-vytvoření",
     HAS_LAST_EDITOR: _NS_POPIS_DAT + "má-posledního-editora",
@@ -46,10 +69,10 @@ export default {
         return this.create(iri).fragment;
     },
 
-    create(iri: string): IRI {
+    create(iri: string): IRIImpl {
         const hashFragment = iri.indexOf("#");
         const slashFragment = iri.lastIndexOf("/");
         const fragment = hashFragment < 0 ? slashFragment : hashFragment;
-        return {fragment: iri.substr(fragment + 1), namespace: iri.substr(0, fragment + 1)};
+        return new IRIImpl(iri.substr(fragment + 1), iri.substr(0, fragment + 1));
     }
 }

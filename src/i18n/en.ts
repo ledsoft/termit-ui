@@ -140,6 +140,8 @@ export default {
         "resource.metadata.terms.occurrences.suggested": "{count} - suggested",
         "resource.metadata.terms.occurrences.suggested.tooltip": "Occurrence suggested by the system",
         'resource.metadata-edit.terms': 'Related terms from the vocabulary',
+        "resource.metadata.file.view-content": "Content",
+        "resource.metadata.file.view-content.tooltip": "View file content and annotate it",
 
         "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',
