@@ -481,15 +481,20 @@ export function loadTypes(language: string) {
     };
 }
 
-export function startFileTextAnalysis(file: TermitFile) {
+export function startFileTextAnalysis(file: TermitFile, vocabularyIri?: string) {
     const action = {
         type: ActionType.START_FILE_TEXT_ANALYSIS
     };
     const iri = VocabularyUtils.create(file.iri);
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
+        const reqParams: any = {};
+        reqParams.namespace = iri.namespace;
+        if (vocabularyIri) {
+            reqParams.vocabulary = vocabularyIri
+        }
         return Ajax
-            .put(Constants.API_PREFIX + "/resources/" + iri.fragment + "/text-analysis", param("namespace", iri.namespace))
+            .put(Constants.API_PREFIX + "/resources/" + iri.fragment + "/text-analysis", params(reqParams))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
                 return dispatch(publishMessage(new Message({

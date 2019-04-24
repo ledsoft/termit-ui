@@ -12,6 +12,8 @@ const ctx = {
     "vocabulary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-dokumentový-slovník"
 };
 
+export const OWN_CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx);
+
 export const CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx, FILE_CONTEXT);
 
 export interface DocumentData extends ResourceData {

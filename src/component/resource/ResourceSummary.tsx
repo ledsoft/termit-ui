@@ -4,11 +4,11 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadResource, removeResource, updateResourceTerms} from "../../action/AsyncActions";
+import {loadResource, removeResource, startFileTextAnalysis, updateResourceTerms} from "../../action/AsyncActions";
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
-import {GoPencil, GoX} from "react-icons/go";
+import {GoClippy, GoPencil, GoX} from "react-icons/go";
 import {ThunkDispatch} from "../../util/Types";
 import EditableComponent, {EditableComponentState} from "../misc/EditableComponent";
 import Utils from "../../util/Utils";
@@ -19,6 +19,9 @@ import ResourceEdit from "./ResourceEdit";
 import "./Resources.scss";
 import {clearResource} from "../../action/SyncActions";
 import RemoveAssetDialog from "../asset/RemoveAssetDialog";
+import File from "../../model/File";
+import ResourceSelectVocabulary from "./ResourceSelectVocabulary";
+import Vocabulary from "../../model/Vocabulary";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
@@ -26,10 +29,14 @@ interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     saveResource: (resource: Resource) => Promise<any>;
     removeResource: (resource: Resource) => Promise<any>;
     clearResource: () => void;
+
+    startFileTextAnalysis: (file: File, vocabularyIri?: string) => void
 }
 
 interface ResourceSummaryState extends EditableComponentState {
     showRemoveDialog: boolean;
+    showSelectVocabulary: boolean;
+    vocabulary: Vocabulary | null;
 }
 
 export class ResourceSummary extends EditableComponent<ResourceSummaryProps, ResourceSummaryState> {
@@ -38,7 +45,9 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         super(props);
         this.state = {
             edit: false,
-            showRemoveDialog: false
+            showRemoveDialog: false,
+            showSelectVocabulary: false,
+            vocabulary: null,
         };
     }
 
@@ -89,9 +98,30 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         return resource && !(resource as Document).vocabulary && Utils.sanitizeArray((resource as Document).files).length === 0;
     }
 
+    private onVocabularySet = (voc: Vocabulary) => {
+        const file = this.props.resource as File;
+        this.props.startFileTextAnalysis(file, voc.iri);
+    }
+
+    private onSelectVocabularyCancel = () => {
+        this.setState({showSelectVocabulary: false})
+    }
+
+    public onAnalyze = () => {
+        const file = this.props.resource as File;
+        if (file.owner && file.owner.vocabulary) {
+             this.props.startFileTextAnalysis(file);
+        }
+        else {
+        this.setState({showSelectVocabulary: true});
+        }
+    }
+
+
     public render() {
         const i18n = this.props.i18n;
         const buttons = [];
+        const onSelectVocabularySubmit = this.onVocabularySet.bind(this);
         if (!this.state.edit) {
             buttons.push(<Button id="resource-detail-edit" key="resource.summary.edit" size="sm" color="primary"
                                  title={i18n("edit")}
@@ -101,6 +131,11 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
             buttons.push(<Button id="resource-detail-remove" key="resource.summary.remove" size="sm" color="secondary"
                                  title={i18n("asset.remove.tooltip")}
                                  onClick={this.onRemoveClick}><GoX/>&nbsp;{i18n("remove")}</Button>);
+        }
+        if (Utils.getPrimaryAssetType(this.props.resource) === VocabularyUtils.FILE) {
+            buttons.push(<Button id="resource-file-analyze" key="resource.file.analyze" size="sm" color="primary"
+                                 title={i18n("file.metadata.startTextAnalysis.text")}
+                                 onClick={this.onAnalyze}><GoClippy/>&nbsp;{i18n("file.metadata.startTextAnalysis.text")}</Button>);
         }
         const actions = [<ButtonToolbar key="resource.summary.actions">{buttons}</ButtonToolbar>];
 
@@ -115,6 +150,8 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
                                  actions={actions}>
             <RemoveAssetDialog show={this.state.showRemoveDialog} asset={this.props.resource}
                                onCancel={this.onRemoveCancel} onSubmit={this.onRemove}/>
+            <ResourceSelectVocabulary show={this.state.showSelectVocabulary} asset={this.props.resource}
+                                      onCancel={this.onSelectVocabularyCancel} onSubmit={onSelectVocabularySubmit}/>
             {component}
         </PanelWithActions>;
     }
@@ -129,6 +166,7 @@ export default connect((state: TermItState) => {
         loadResource: (iri: IRI) => dispatch(loadResource(iri)),
         saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
         removeResource: (resource: Resource) => dispatch(removeResource(resource)),
-        clearResource: () => dispatch(clearResource())
+        clearResource: () => dispatch(clearResource()),
+        startFileTextAnalysis: (file: File, vocabularyIri: string) => dispatch(startFileTextAnalysis(file, vocabularyIri))
     };
 })(injectIntl(withI18n(ResourceSummary)));

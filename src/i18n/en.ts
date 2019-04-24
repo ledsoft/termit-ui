@@ -14,6 +14,7 @@ export default {
         'optional': 'Optional',
         'actions': 'Actions',
         'description': 'Description',
+        'submit' : 'Submit',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
