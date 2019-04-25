@@ -49,7 +49,7 @@ class ResourceSelectVocabulary extends React.Component<ResourceSelectVocabularyP
             <ModalFooter>
                 <ButtonToolbar className="pull-right">
                     <Button id="select-vocabulary-submit" color="primary" size="sm"
-                            onClick={this.onSubmit}>{this.props.i18n("submit")}</Button>
+                            onClick={this.onSubmit}>{this.props.i18n("file.metadata.startTextAnalysis.text")}</Button>
                     <Button id="select-vocabulary-cancel" color="secondary" size="sm"
                             onClick={this.props.onCancel}>{this.props.i18n("cancel")}</Button>
                 </ButtonToolbar>

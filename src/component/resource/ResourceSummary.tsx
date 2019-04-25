@@ -113,18 +113,16 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
 
     private onSelectVocabularyCancel = () => {
         this.setState({showSelectVocabulary: false})
-    }
+    };
 
     public onAnalyze = () => {
         const file = this.props.resource as File;
         if (file.owner && file.owner.vocabulary) {
-             this.props.executeFileTextAnalysis(file);
+            this.props.executeFileTextAnalysis(file);
+        } else {
+            this.setState({showSelectVocabulary: true});
         }
-        else {
-        this.setState({showSelectVocabulary: true});
-        }
-    }
-
+    };
 
     public render() {
         const i18n = this.props.i18n;
@@ -139,7 +137,12 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
                 {i18n("resource.metadata.file.view-content")}
             </Link>);
         }
-        const onSelectVocabularySubmit = this.onVocabularySet.bind(this);
+        if (Utils.getPrimaryAssetType(this.props.resource) === VocabularyUtils.FILE) {
+            buttons.push(<Button id="resource-file-analyze" key="resource.file.analyze" size="sm" color="primary"
+                                 title={i18n("file.metadata.startTextAnalysis.text")}
+                                 onClick={this.onAnalyze}><GoClippy/>&nbsp;{i18n("file.metadata.startTextAnalysis.text")}
+            </Button>);
+        }
         if (!this.state.edit) {
             buttons.push(<Button id="resource-detail-edit" key="resource.summary.edit" size="sm" color="primary"
                                  title={i18n("edit")}
@@ -149,11 +152,6 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
             buttons.push(<Button id="resource-detail-remove" key="resource.summary.remove" size="sm" color="secondary"
                                  title={i18n("asset.remove.tooltip")}
                                  onClick={this.onRemoveClick}><GoX/>&nbsp;{i18n("remove")}</Button>);
-        }
-        if (Utils.getPrimaryAssetType(this.props.resource) === VocabularyUtils.FILE) {
-            buttons.push(<Button id="resource-file-analyze" key="resource.file.analyze" size="sm" color="primary"
-                                 title={i18n("file.metadata.startTextAnalysis.text")}
-                                 onClick={this.onAnalyze}><GoClippy/>&nbsp;{i18n("file.metadata.startTextAnalysis.text")}</Button>);
         }
         const actions = [<ButtonToolbar key="resource.summary.actions">{buttons}</ButtonToolbar>];
 
@@ -169,7 +167,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
             <RemoveAssetDialog show={this.state.showRemoveDialog} asset={this.props.resource}
                                onCancel={this.onRemoveCancel} onSubmit={this.onRemove}/>
             <ResourceSelectVocabulary show={this.state.showSelectVocabulary} asset={this.props.resource}
-                                      onCancel={this.onSelectVocabularyCancel} onSubmit={onSelectVocabularySubmit}/>
+                                      onCancel={this.onSelectVocabularyCancel} onSubmit={this.onVocabularySet}/>
             {component}
         </PanelWithActions>;
     }
