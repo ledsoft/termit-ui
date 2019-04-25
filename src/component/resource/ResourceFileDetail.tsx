@@ -5,10 +5,11 @@ import Utils from "../../util/Utils";
 import FileDetail from "../file/FileDetail";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {loadResource} from "../../action/AsyncActions";
-import Resource from "../../model/Resource";
+import {loadLatestTextAnalysisRecord, loadResource} from "../../action/AsyncActions";
+import Resource, {EMPTY_RESOURCE} from "../../model/Resource";
 import File from "../../model/File";
 import TermItState from "../../model/TermItState";
+import {TextAnalysisRecord} from "../../model/TextAnalysisRecord";
 
 interface StoreStateProps {
     resource: Resource;
@@ -16,17 +17,40 @@ interface StoreStateProps {
 
 interface DispatchProps {
     loadResource: (resourceIri: IRI) => void;
+    loadLatestTextAnalysisRecord: (resourceIri: IRI) => Promise<TextAnalysisRecord | null>;
 }
 
 type ResourceFileDetailProps = StoreStateProps & DispatchProps & RouteComponentProps<any>;
 
-export class ResourceFileDetail extends React.Component<ResourceFileDetailProps> {
+interface ResourceFileDetailState {
+    vocabularyIri?: IRI;
+}
+
+export class ResourceFileDetail extends React.Component<ResourceFileDetailProps, ResourceFileDetailState> {
     constructor(props: ResourceFileDetailProps) {
         super(props);
+        this.state = {
+            vocabularyIri: undefined
+        };
     }
 
     public componentDidMount() {
         this.props.loadResource(this.getFileIri());
+    }
+
+    public componentDidUpdate(prevProps: Readonly<StoreStateProps & DispatchProps & RouteComponentProps<any>>): void {
+        if (this.props.resource !== EMPTY_RESOURCE && prevProps.resource === EMPTY_RESOURCE || !prevProps.resource) {
+            const vocabularyIri = this.getVocabularyIri();
+            if (vocabularyIri) {
+                this.setState({vocabularyIri});
+            } else {
+                this.props.loadLatestTextAnalysisRecord(this.getFileIri()).then((res: TextAnalysisRecord | null) => {
+                    if (res) {
+                        this.setState({vocabularyIri: VocabularyUtils.create(res.vocabularies[0].iri!)});
+                    }
+                });
+            }
+        }
     }
 
     private getFileIri = (): IRI => {
@@ -35,23 +59,23 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps>
         return VocabularyUtils.create(fileNamespace + normalizedFileName);
     };
 
-    public render() {
-        if (this.props.resource) {
-            const vocabularyIri = this.getVocabularyIri();
-            if (vocabularyIri == null) {
-                return null;    // Not supported, yet.
-            }
-            return <FileDetail iri={VocabularyUtils.create(this.props.resource.iri)} vocabularyIri={vocabularyIri}/>
-        }
-        return null;
-    }
-
     private getVocabularyIri(): IRI | null {
         if (Utils.getPrimaryAssetType(this.props.resource) !== VocabularyUtils.FILE) {
             return null;
         }
         const file = this.props.resource as File;
         return file.owner && file.owner.vocabulary ? VocabularyUtils.create(file.owner.vocabulary.iri!) : null;
+    }
+
+    public render() {
+        if (this.props.resource) {
+            if (!this.state.vocabularyIri) {
+                return null;
+            }
+            return <FileDetail iri={VocabularyUtils.create(this.props.resource.iri)}
+                               vocabularyIri={this.state.vocabularyIri}/>
+        }
+        return null;
     }
 }
 
@@ -62,5 +86,6 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         loadResource: (resourceIri: IRI) => dispatch(loadResource(resourceIri)),
+        loadLatestTextAnalysisRecord: (resourceIri: IRI) => dispatch(loadLatestTextAnalysisRecord(resourceIri))
     };
 })(ResourceFileDetail);

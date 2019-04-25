@@ -36,6 +36,11 @@ import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
 import JsonLdUtils from "../util/JsonLdUtils";
 import {Action} from "redux";
+import {
+    CONTEXT as TEXT_ANALYSIS_RECORD_CONTEXT,
+    TextAnalysisRecord,
+    TextAnalysisRecordData
+} from "../model/TextAnalysisRecord";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -740,6 +745,24 @@ export function loadLastEditedAssets() {
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return [];
+            });
+    }
+}
+
+export function loadLatestTextAnalysisRecord(resourceIri: IRI) {
+    const action = {
+        type: ActionType.LOAD_LATEST_TEXT_ANALYSIS_RECORD
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.get(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/text-analysis/records/latest", param("namespace", resourceIri.namespace))
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, TEXT_ANALYSIS_RECORD_CONTEXT))
+            .then((data: TextAnalysisRecordData) => {
+                dispatch(asyncActionSuccess(action));
+                return new TextAnalysisRecord(data);
+            }).catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return null;
             });
     }
 }
