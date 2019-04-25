@@ -108,6 +108,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
     private onVocabularySet = (voc: Vocabulary) => {
         const file = this.props.resource as File;
         this.props.executeFileTextAnalysis(file, voc.iri);
+        this.setState({showSelectVocabulary: false})
     }
 
     private onSelectVocabularyCancel = () => {
