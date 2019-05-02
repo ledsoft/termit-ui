@@ -10,7 +10,9 @@ import {
     getProperties,
     loadFileContent,
     loadLastEditedAssets,
-    loadResources, loadResourceTermAssignments,
+    loadLatestTextAnalysisRecord,
+    loadResources,
+    loadResourceTermAssignments,
     loadTerm,
     loadTermAssignments,
     loadTerms,
@@ -18,14 +20,16 @@ import {
     loadUser,
     loadVocabularies,
     loadVocabulary,
-    login, register,
+    login,
+    register,
     removeResource,
     updateResourceTerms,
     updateTerm,
-    updateVocabulary, uploadFileContent
+    updateVocabulary,
+    uploadFileContent
 } from "../AsyncActions";
 import Constants from "../../util/Constants";
-import Ajax from "../../util/Ajax";
+import Ajax, {param} from "../../util/Ajax";
 import thunk from "redux-thunk";
 import {Action} from "redux";
 import Routing from "../../util/Routing";
@@ -50,6 +54,7 @@ import fileContent from "../../rest-mock/file";
 import Asset from "../../model/Asset";
 import TermItFile from "../../model/File";
 import {UserAccountData} from "../../model/User";
+import {CONTEXT as TA_RECORD_CONTEXT, TextAnalysisRecord} from "../../model/TextAnalysisRecord";
 
 jest.mock("../../util/Routing");
 jest.mock("../../util/Ajax", () => ({
@@ -1123,6 +1128,36 @@ describe("Async actions", () => {
                 expect(actions[0].type).toEqual(ActionType.CREATE_RESOURCE);
                 expect((Ajax.post as jest.Mock).mock.calls[0][0]).toEqual(Constants.API_PREFIX + "/resources/" + docName + "/files");
                 expect((Ajax.post as jest.Mock).mock.calls[0][1].getContent()).toEqual(file.toJsonLd());
+            });
+        });
+    });
+
+    describe("loadLatestTextAnalysisRecord", () => {
+        it("loads text analysis record for specified resource", () => {
+            const resourceIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/resources/test-file.html");
+            const record = {
+                "@context": TA_RECORD_CONTEXT,
+                iri: Generator.generateUri(),
+                analyzedResource: {
+                    iri: resourceIri.toString(),
+                    label: "test-file.html"
+                },
+                vocabularies: [{iri: Generator.generateUri()}],
+                created: Date.now()
+            };
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(record));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadLatestTextAnalysisRecord(resourceIri))).then((data: TextAnalysisRecord) => {
+                expect(data.analyzedResource).toEqual(record.analyzedResource);
+                expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/text-analysis/records/latest", param("namespace", resourceIri.namespace));
+            });
+        });
+
+        it("returns null when no record exists", () => {
+            const resourceIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/resources/test-file.html");
+            Ajax.get = jest.fn().mockImplementation(() => Promise.reject({status: 404}));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadLatestTextAnalysisRecord(resourceIri))).then((data: TextAnalysisRecord | null) => {
+                expect(data).toBeNull();
+                expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/text-analysis/records/latest", param("namespace", resourceIri.namespace));
             });
         });
     });
