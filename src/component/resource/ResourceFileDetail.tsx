@@ -1,5 +1,6 @@
 import * as React from "react";
 import {RouteComponentProps} from "react-router";
+import {injectIntl} from "react-intl";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import FileDetail from "../file/FileDetail";
@@ -10,6 +11,8 @@ import Resource, {EMPTY_RESOURCE} from "../../model/Resource";
 import File from "../../model/File";
 import TermItState from "../../model/TermItState";
 import {TextAnalysisRecord} from "../../model/TextAnalysisRecord";
+import {Label} from "reactstrap";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 
 interface StoreStateProps {
     resource: Resource;
@@ -20,10 +23,10 @@ interface DispatchProps {
     loadLatestTextAnalysisRecord: (resourceIri: IRI) => Promise<TextAnalysisRecord | null>;
 }
 
-type ResourceFileDetailProps = StoreStateProps & DispatchProps & RouteComponentProps<any>;
+type ResourceFileDetailProps = StoreStateProps & DispatchProps & RouteComponentProps<any> & HasI18n;
 
 interface ResourceFileDetailState {
-    vocabularyIri?: IRI;
+    vocabularyIri?: IRI | null;
 }
 
 export class ResourceFileDetail extends React.Component<ResourceFileDetailProps, ResourceFileDetailState> {
@@ -38,7 +41,7 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
         this.props.loadResource(this.getFileIri());
     }
 
-    public componentDidUpdate(prevProps: Readonly<StoreStateProps & DispatchProps & RouteComponentProps<any>>): void {
+    public componentDidUpdate(prevProps: Readonly<ResourceFileDetailProps>): void {
         if (this.props.resource !== EMPTY_RESOURCE && prevProps.resource === EMPTY_RESOURCE || !prevProps.resource) {
             const vocabularyIri = this.getVocabularyIri();
             if (vocabularyIri) {
@@ -47,6 +50,8 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
                 this.props.loadLatestTextAnalysisRecord(this.getFileIri()).then((res: TextAnalysisRecord | null) => {
                     if (res) {
                         this.setState({vocabularyIri: VocabularyUtils.create(res.vocabularies[0].iri!)});
+                    } else {
+                        this.setState({vocabularyIri: null});
                     }
                 });
             }
@@ -69,8 +74,12 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
 
     public render() {
         if (this.props.resource) {
-            if (!this.state.vocabularyIri) {
+            if (this.state.vocabularyIri === undefined) {
                 return null;
+            }
+            if (this.state.vocabularyIri === null) {
+                return <Label id="file-detail-no-vocabulary"
+                              className="italics">{this.props.i18n("file.annotate.unknown-vocabulary")}</Label>
             }
             return <FileDetail iri={VocabularyUtils.create(this.props.resource.iri)}
                                vocabularyIri={this.state.vocabularyIri}/>
@@ -88,4 +97,4 @@ export default connect((state: TermItState) => {
         loadResource: (resourceIri: IRI) => dispatch(loadResource(resourceIri)),
         loadLatestTextAnalysisRecord: (resourceIri: IRI) => dispatch(loadLatestTextAnalysisRecord(resourceIri))
     };
-})(ResourceFileDetail);
+})(injectIntl(withI18n(ResourceFileDetail)));

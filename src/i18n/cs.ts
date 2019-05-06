@@ -193,6 +193,7 @@ export default {
         'file.metadata.startTextAnalysis': 'Spustit textovou analýzu',
         'file.metadata.startTextAnalysis.text': 'Analyzovat',
         "file.content.upload.success": "Soubor \'{fileName}\' úspěšně nahrán na server.",
+        "file.annotate.unknown-vocabulary": "Nelze určit slovník pro anotování tohoto souboru. Soubor nepatří slovníkovému dokumentu ani nebyl zpracován službou textové analýzy.",
 
         'statistics.vocabulary.count': 'Počet slovníků',
         'statistics.term.count': 'Počet pojmů',

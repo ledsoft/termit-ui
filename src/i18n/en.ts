@@ -192,6 +192,7 @@ export default {
         'file.metadata.startTextAnalysis': 'Start text analysis',
         'file.metadata.startTextAnalysis.text': 'Analyze',
         "file.content.upload.success": "Content of file \'{fileName}\' successfully uploaded.",
+        "file.annotate.unknown-vocabulary": "Unable to determine vocabulary for annotating this file. It neither belongs to a vocabulary document nor has been processed by text analysis.",
 
         'statistics.vocabulary.count': 'Vocabulary Count',
         'statistics.term.count': 'Term Count',
