@@ -78,6 +78,7 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
                 return null;
             }
             if (this.state.vocabularyIri === null) {
+                // This is temporary, annotator should support vocabulary selection
                 return <Label id="file-detail-no-vocabulary"
                               className="italics">{this.props.i18n("file.annotate.unknown-vocabulary")}</Label>
             }

@@ -4,7 +4,13 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps} from "react-router";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadResource, removeResource, executeFileTextAnalysis, updateResourceTerms} from "../../action/AsyncActions";
+import {
+    executeFileTextAnalysis,
+    hasFileContent,
+    loadResource,
+    removeResource,
+    updateResourceTerms
+} from "../../action/AsyncActions";
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
@@ -32,13 +38,15 @@ interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     removeResource: (resource: Resource) => Promise<any>;
     clearResource: () => void;
 
-    executeFileTextAnalysis: (file: File, vocabularyIri?: string) => void
+    executeFileTextAnalysis: (file: File, vocabularyIri?: string) => void;
+    hasContent: (iri: IRI) => Promise<boolean>;
 }
 
 interface ResourceSummaryState extends EditableComponentState {
     showRemoveDialog: boolean;
     showSelectVocabulary: boolean;
     vocabulary: Vocabulary | null;
+    hasContent: boolean;
 }
 
 export class ResourceSummary extends EditableComponent<ResourceSummaryProps, ResourceSummaryState> {
@@ -50,6 +58,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
             showRemoveDialog: false,
             showSelectVocabulary: false,
             vocabulary: null,
+            hasContent: false
         };
     }
 
@@ -79,7 +88,9 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
     private forceReload() {
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         const normalizedName = this.props.match.params.name;
-        this.props.loadResource({fragment: normalizedName, namespace});
+        const iri = VocabularyUtils.create(namespace + normalizedName);
+        this.props.loadResource(iri);
+        this.props.hasContent(iri).then((res: boolean) => this.setState({hasContent: res}));
     }
 
     private onRemoveClick = () => {
@@ -100,16 +111,11 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         return resource && !(resource as Document).vocabulary && Utils.sanitizeArray((resource as Document).files).length === 0;
     }
 
-    private canViewContent() {
-        const resource = this.props.resource;
-        return Utils.sanitizeArray(resource.types).indexOf(VocabularyUtils.FILE) !== -1;
-    }
-
     private onVocabularySet = (voc: Vocabulary) => {
         const file = this.props.resource as File;
         this.props.executeFileTextAnalysis(file, voc.iri);
         this.setState({showSelectVocabulary: false})
-    }
+    };
 
     private onSelectVocabularyCancel = () => {
         this.setState({showSelectVocabulary: false})
@@ -126,23 +132,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
 
     public render() {
         const i18n = this.props.i18n;
-        const buttons = [];
-        if (this.canViewContent()) {
-            const iri = VocabularyUtils.create(this.props.resource.iri);
-            buttons.push(<Link id="resource-detail-view-content" key={"resource-detail-view-content"}
-                               to={Routes.annotateFile.link({name: iri.fragment}, {namespace: iri.namespace})}
-                               className="btn btn-primary btn-sm"
-                               title={i18n("resource.metadata.file.view-content.tooltip")}>
-                <GoFile/>&nbsp;
-                {i18n("resource.metadata.file.view-content")}
-            </Link>);
-        }
-        if (Utils.getPrimaryAssetType(this.props.resource) === VocabularyUtils.FILE) {
-            buttons.push(<Button id="resource-file-analyze" key="resource.file.analyze" size="sm" color="primary"
-                                 title={i18n("file.metadata.startTextAnalysis.text")}
-                                 onClick={this.onAnalyze}><GoClippy/>&nbsp;{i18n("file.metadata.startTextAnalysis.text")}
-            </Button>);
-        }
+        const buttons = this.createContentRelatedButtons();
         if (!this.state.edit) {
             buttons.push(<Button id="resource-detail-edit" key="resource.summary.edit" size="sm" color="primary"
                                  title={i18n("edit")}
@@ -171,6 +161,26 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
             {component}
         </PanelWithActions>;
     }
+
+    private createContentRelatedButtons() {
+        if (Utils.getPrimaryAssetType(this.props.resource) === VocabularyUtils.FILE && this.state.hasContent) {
+            const i18n = this.props.i18n;
+            const iri = VocabularyUtils.create(this.props.resource.iri);
+            return [<Link id="resource-detail-view-content" key={"resource-detail-view-content"}
+                          to={Routes.annotateFile.link({name: iri.fragment}, {namespace: iri.namespace})}
+                          className="btn btn-primary btn-sm"
+                          title={i18n("resource.metadata.file.view-content.tooltip")}>
+                <GoFile/>&nbsp;
+                {i18n("resource.metadata.file.view-content")}
+            </Link>,
+                <Button id="resource-file-analyze" key="resource.file.analyze" size="sm" color="primary"
+                        title={i18n("file.metadata.startTextAnalysis.text")}
+                        onClick={this.onAnalyze}><GoClippy/>&nbsp;{i18n("file.metadata.startTextAnalysis.text")}
+                </Button>
+            ];
+        }
+        return [];
+    }
 }
 
 export default connect((state: TermItState) => {
@@ -183,6 +193,7 @@ export default connect((state: TermItState) => {
         saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
         removeResource: (resource: Resource) => dispatch(removeResource(resource)),
         clearResource: () => dispatch(clearResource()),
-        executeFileTextAnalysis: (file: File, vocabularyIri: string) => dispatch(executeFileTextAnalysis(file, vocabularyIri))
+        executeFileTextAnalysis: (file: File, vocabularyIri: string) => dispatch(executeFileTextAnalysis(file, vocabularyIri)),
+        hasContent: (iri: IRI) => dispatch(hasFileContent(iri))
     };
 })(injectIntl(withI18n(ResourceSummary)));

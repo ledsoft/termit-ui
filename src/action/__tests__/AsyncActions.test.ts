@@ -7,7 +7,7 @@ import {
     createVocabulary,
     exportGlossary,
     getLabel,
-    getProperties,
+    getProperties, hasFileContent,
     loadFileContent,
     loadLastEditedAssets,
     loadLatestTextAnalysisRecord,
@@ -1158,6 +1158,26 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadLatestTextAnalysisRecord(resourceIri))).then((data: TextAnalysisRecord | null) => {
                 expect(data).toBeNull();
                 expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/text-analysis/records/latest", param("namespace", resourceIri.namespace));
+            });
+        });
+    });
+
+    describe("hasFileContent", () => {
+        it("returns true when response is positive", () => {
+            const resourceIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/resources/test-file.html");
+            Ajax.head = jest.fn().mockImplementation(() => Promise.resolve({status: 204}));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(hasFileContent(resourceIri))).then((result: boolean) => {
+                expect(result).toBeTruthy();
+                expect(Ajax.head).toHaveBeenCalled();
+            });
+        });
+
+        it("returns false when response is negative", () => {
+            const resourceIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/resources/test-file.html");
+            Ajax.head = jest.fn().mockImplementation(() => Promise.reject({status: 404}));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(hasFileContent(resourceIri))).then((result: boolean) => {
+                expect(result).toBeFalsy();
+                expect(Ajax.head).toHaveBeenCalled();
             });
         });
     });

@@ -7,6 +7,7 @@ import Routes from "../Routes";
 import {AxiosInstance, AxiosRequestConfig} from "axios";
 import {ErrorData} from "../../model/ErrorInfo";
 import Authentication from "../Authentication";
+import VocabularyUtils from "../VocabularyUtils";
 
 jest.mock("../Routing");
 jest.mock("../Authentication");
@@ -87,7 +88,7 @@ describe("Ajax", () => {
         });
 
         it("returns unparseable error info message when response indicates error but its content is not error info in JSON", () => {
-            mock.onAny().reply(500, "<html>Fatal error occurred on server</html>");
+            mock.onAny().reply(500, "<html lang=\"en\">Fatal error occurred on server</html>");
             return sut.get("/users").catch(error => {
                 expect(error.messageId).toBeDefined();
                 return expect(error.messageId).toEqual("ajax.unparseable-error");
@@ -108,7 +109,7 @@ describe("Ajax", () => {
 
         it("provides response status when response content is not parseable JSON error info", () => {
             const status = 500;
-            mock.onAny().reply(status, "<html>Fatal error occurred on server</html>");
+            mock.onAny().reply(status, "<html lang=\"en\">Fatal error occurred on server</html>");
             return sut.get("/users").catch(error => {
                 expect(error.status).toEqual(status);
                 return expect(error.messageId).toEqual("ajax.unparseable-error");
@@ -264,6 +265,22 @@ describe("Ajax", () => {
                 expect(resp.status).toEqual(200);
                 expect(resp.headers).toBeDefined();
                 expect(resp.headers["Content-Disposition"]).toContain("attachment");
+            });
+        });
+    });
+
+    describe("head", () => {
+        it("performs head request with specified params", () => {
+            mock.onHead().reply(204, undefined, headers);
+            const spy = jest.spyOn(sut.axios, "head");
+            const resourceName = "test.html";
+            const namespace = VocabularyUtils.FILE + "/";
+            return sut.head("/resources/" + resourceName, param("namespace", namespace)).then((resp: any) => {
+                expect(resp.status).toEqual(204);
+                expect(spy.mock.calls.length).toEqual(1);
+                const reqConfig = spy.mock.calls[0][1];
+                expect(reqConfig).toBeDefined();
+                expect(reqConfig!.params.namespace).toEqual(namespace);
             });
         });
     });
