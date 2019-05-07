@@ -13,7 +13,6 @@ import {GoClippy} from "react-icons/go";
 import withInjectableLoading, {InjectsLoading} from "../hoc/withInjectableLoading";
 
 
-
 interface FileListProps extends HasI18n {
     vocabulary: Vocabulary,
     files: File[],
@@ -24,7 +23,7 @@ interface ButtonProps extends HasI18n {
     onClick: () => Promise<any>
 }
 
-class ButtonWithInjectableLoading extends React.Component<InjectsLoading & ButtonProps>  {
+class ButtonWithInjectableLoading extends React.Component<InjectsLoading & ButtonProps> {
 
     constructor(props: InjectsLoading & ButtonProps) {
         super(props);
@@ -35,10 +34,13 @@ class ButtonWithInjectableLoading extends React.Component<InjectsLoading & Butto
         const loadingOffFunc = () => {
             this.props.loadingOff();
         }
-        this.props.onClick().then(
-            () => loadingOffFunc(),
-            () => loadingOffFunc()
-        );
+        const p = this.props.onClick();
+        if (p) {
+            p.then(
+                () => loadingOffFunc(),
+                () => loadingOffFunc()
+            );
+        }
     };
 
     public render() {
@@ -72,7 +74,7 @@ export class FileList extends React.Component<FileListProps> {
                         {v.comment}
                     </td>
                     <td className="pull-right">
-                        <ButtonWithLoading onClick={this.fileTextAnalysisCallback(v)} />
+                        <ButtonWithLoading onClick={this.fileTextAnalysisCallback(v)}/>
                     </td>
                 </tr>
             );
