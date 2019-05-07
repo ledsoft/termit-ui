@@ -88,7 +88,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
     private forceReload() {
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         const normalizedName = this.props.match.params.name;
-        const iri = VocabularyUtils.create(namespace + normalizedName);
+        const iri = {fragment: normalizedName, namespace};
         this.props.loadResource(iri);
         this.props.hasContent(iri).then((res: boolean) => this.setState({hasContent: res}));
     }

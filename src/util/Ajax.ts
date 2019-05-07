@@ -41,9 +41,11 @@ class RequestConfigBuilder {
     }
 
     public param(paramName: string, paramValue?: string): RequestConfigBuilder {
-        const p = {};
-        p[paramName] = paramValue;
-        this.mParams = Object.assign({}, this.mParams, p);
+        if (paramValue !== undefined) {
+            const p = {};
+            p[paramName] = paramValue;
+            this.mParams = Object.assign({}, this.mParams, p);
+        }
         return this;
     }
 
