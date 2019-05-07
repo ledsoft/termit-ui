@@ -31,17 +31,20 @@ class ButtonWithInjectableLoading extends React.Component<InjectsLoading & Butto
     }
 
     private onClickWithLoading = () => {
-        // this.props.loadingOn();
-        this.props.onClick();
-        // .then(
-        //     () => this.props.loadingOff(),
-        //     () => this.props.loadingOff()
-        // );
+        this.props.loadingOn();
+        const loadingOffFunc = () => {
+            this.props.loadingOff();
+        }
+        this.props.onClick().then(
+            () => loadingOffFunc(),
+            () => loadingOffFunc()
+        );
     };
 
     public render() {
         const i18n = this.props.i18n;
-        const icon = this.props.loading ? this.props.renderMask() : <GoClippy/> ;
+        // const icon = this.props.loading ? this.props.renderMask() : <GoClippy/> ;
+        const icon = <GoClippy/>;
         return <Button className="link-to-resource" size="sm" color="primary"
                        title={i18n("file.metadata.startTextAnalysis")}
                        onClick={this.onClickWithLoading}> {icon} {i18n("file.metadata.startTextAnalysis.text")}
