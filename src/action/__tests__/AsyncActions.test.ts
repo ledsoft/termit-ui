@@ -5,6 +5,7 @@ import {
     createResource,
     createTerm,
     createVocabulary,
+    executeFileTextAnalysis,
     exportGlossary,
     getLabel,
     getProperties, hasFileContent,
@@ -54,6 +55,7 @@ import fileContent from "../../rest-mock/file";
 import Asset from "../../model/Asset";
 import TermItFile from "../../model/File";
 import {UserAccountData} from "../../model/User";
+import MessageType from "../../model/MessageType";
 import {CONTEXT as TA_RECORD_CONTEXT, TextAnalysisRecord} from "../../model/TextAnalysisRecord";
 
 jest.mock("../../util/Routing");
@@ -352,6 +354,33 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(createTerm(term, vocabularyIri))).then(() => {
                 const config = mock.mock.calls[0][1];
                 expect(config.getParams().namespace).toEqual(vocabularyIri.namespace);
+            });
+        });
+    });
+
+    describe("execute file text analysis", () => {
+        const file = new TermItFile({
+            iri: Generator.generateUri(),
+            label: "test.html"
+        });
+
+        it("publishes message on error", () => {
+            Ajax.put = jest.fn().mockImplementation(() => Promise.reject("An error"));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(executeFileTextAnalysis(file))).then(() => {
+                const actions: Action[] = store.getActions();
+                const found = actions.find(a => a.type === ActionType.PUBLISH_MESSAGE);
+                expect(found).toBeDefined();
+                expect((found as MessageAction).message.type).toBe(MessageType.ERROR);
+            });
+        });
+
+        it("publishes message on success", () => {
+            Ajax.put = jest.fn().mockImplementation(() => Promise.resolve("Success"));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(executeFileTextAnalysis(file))).then(() => {
+                const actions: Action[] = store.getActions();
+                const found = actions.find(a => a.type === ActionType.PUBLISH_MESSAGE);
+                expect(found).toBeDefined();
+                expect((found as MessageAction).message.type).toBe(MessageType.SUCCESS);
             });
         });
     });

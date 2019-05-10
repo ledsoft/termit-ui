@@ -13,7 +13,6 @@ import {GoClippy} from "react-icons/go";
 import withInjectableLoading, {InjectsLoading} from "../hoc/withInjectableLoading";
 
 
-
 interface FileListProps extends HasI18n {
     vocabulary: Vocabulary,
     files: File[],
@@ -24,24 +23,30 @@ interface ButtonProps extends HasI18n {
     onClick: () => Promise<any>
 }
 
-class ButtonWithInjectableLoading extends React.Component<InjectsLoading & ButtonProps>  {
+class ButtonWithInjectableLoading extends React.Component<InjectsLoading & ButtonProps> {
 
     constructor(props: InjectsLoading & ButtonProps) {
         super(props);
     }
 
     private onClickWithLoading = () => {
-        // this.props.loadingOn();
-        this.props.onClick();
-        // .then(
-        //     () => this.props.loadingOff(),
-        //     () => this.props.loadingOff()
-        // );
+        this.props.loadingOn();
+        const loadingOffFunc = () => {
+            this.props.loadingOff();
+        }
+        const p = this.props.onClick();
+        if (p) {
+            p.then(
+                () => loadingOffFunc(),
+                () => loadingOffFunc()
+            );
+        }
     };
 
     public render() {
         const i18n = this.props.i18n;
-        const icon = this.props.loading ? this.props.renderMask() : <GoClippy/> ;
+        // const icon = this.props.loading ? this.props.renderMask() : <GoClippy/> ;
+        const icon = <GoClippy/>;
         return <Button className="link-to-resource" size="sm" color="primary"
                        title={i18n("file.metadata.startTextAnalysis")}
                        onClick={this.onClickWithLoading}> {icon} {i18n("file.metadata.startTextAnalysis.text")}
@@ -69,7 +74,7 @@ export class FileList extends React.Component<FileListProps> {
                         {v.comment}
                     </td>
                     <td className="pull-right">
-                        <ButtonWithLoading onClick={this.fileTextAnalysisCallback(v)} />
+                        <ButtonWithLoading onClick={this.fileTextAnalysisCallback(v)}/>
                     </td>
                 </tr>
             );
