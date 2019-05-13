@@ -41,6 +41,7 @@ import {
     TextAnalysisRecord,
     TextAnalysisRecordData
 } from "../model/TextAnalysisRecord";
+import {CONTEXT as RESOURCE_TERM_ASSIGNMENTS_CONTEXT, ResourceTermAssignments} from "../model/ResourceTermAssignments";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -237,7 +238,7 @@ export function loadResources() {
     };
 }
 
-export function loadResourceTermAssignments(resourceIri: IRI) {
+export function loadResourceTermAssignmentsInfo(resourceIri: IRI) {
     const action = {
         type: ActionType.LOAD_RESOURCE_TERM_ASSIGNMENTS
     };
@@ -246,14 +247,17 @@ export function loadResourceTermAssignments(resourceIri: IRI) {
             return Promise.resolve([]);
         }
         dispatch(asyncActionRequest(action));
-        return Ajax.get(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/assignments", param("namespace", resourceIri.namespace))
-            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENT_CONTEXT) : [])
-            .then((data: TermAssignmentData[]) => {
+        return Ajax.get(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/assignments/aggregated", param("namespace", resourceIri.namespace))
+            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, RESOURCE_TERM_ASSIGNMENTS_CONTEXT) : [])
+            .then((data: ResourceTermAssignments[]) => {
                 dispatch(asyncActionSuccess(action));
-                const assignments = data.map(d => AssetFactory.createTermAssignment(d));
-                const assignedTerms = assignments.filter(a => a.types.indexOf(VocabularyUtils.TERM_OCCURRENCE) === -1).map(a => a.term);
+                const assignedTerms = data.filter(a => a.types.indexOf(VocabularyUtils.TERM_OCCURRENCE) === -1).map(a => new Term({
+                    iri: a.term.iri,
+                    label: a.label,
+                    vocabulary: a.vocabulary
+                }));
                 dispatch(asyncActionSuccessWithPayload({type: ActionType.LOAD_RESOURCE_TERMS}, assignedTerms));
-                return assignments;
+                return data;
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));

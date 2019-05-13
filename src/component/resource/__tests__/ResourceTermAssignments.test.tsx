@@ -1,21 +1,21 @@
 import * as React from "react";
 import Resource from "../../../model/Resource";
 import Generator from "../../../__tests__/environment/Generator";
-import TermAssignment from "../../../model/TermAssignment";
 import {shallow} from "enzyme";
 import {ResourceTermAssignments} from "../ResourceTermAssignments";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import VocabularyUtils from "../../../util/VocabularyUtils";
 import TermLink from "../../term/TermLink";
-import TermOccurrence from "../../../model/TermOccurrence";
+import {ResourceTermAssignments as TermAssignmentInfo} from "../../../model/ResourceTermAssignments";
+import {MemoryRouter} from "react-router";
 
 describe("ResourceTermAssignments", () => {
     const resource: Resource = new Resource({
         iri: Generator.generateUri(),
         label: "Test resource"
     });
-    let onLoadAssignments: (resource: Resource) => Promise<TermAssignment[]>;
+    let onLoadAssignments: (resource: Resource) => Promise<TermAssignmentInfo[]>;
 
     beforeEach(() => {
         onLoadAssignments = jest.fn().mockImplementation(() => Promise.resolve([]));
@@ -50,20 +50,20 @@ describe("ResourceTermAssignments", () => {
     });
 
     it("renders assigned terms", () => {
-        const assignments = [new TermAssignment({
-            iri: Generator.generateUri(),
+        const assignments: TermAssignmentInfo[] = [{
             term: {
-                iri: Generator.generateUri(),
-                label: "Test term"
+                iri: Generator.generateUri()
             },
-            target: {
-                source: resource
+            label: "Test term",
+            resource,
+            vocabulary: {
+                iri: Generator.generateUri()
             },
             types: [VocabularyUtils.TERM_ASSIGNMENT]
-        })];
+        }];
         onLoadAssignments = jest.fn().mockImplementation(() => Promise.resolve(assignments));
-        const wrapper = mountWithIntl(<ResourceTermAssignments resource={resource}
-                                                         loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><ResourceTermAssignments resource={resource}
+                                                                             loadTermAssignments={onLoadAssignments} {...intlFunctions()}/></MemoryRouter>);
         return Promise.resolve().then(() => {
             wrapper.update();
             expect(wrapper.find(TermLink).length).toEqual(1);
@@ -72,20 +72,21 @@ describe("ResourceTermAssignments", () => {
     });
 
     it("renders confirmed term occurrences", () => {
-        const assignments = [new TermOccurrence({
-            iri: Generator.generateUri(),
+        const assignments = [{
             term: {
-                iri: Generator.generateUri(),
-                label: "Test term"
+                iri: Generator.generateUri()
             },
-            target: {
-                source: resource
+            label: "Test term",
+            resource,
+            vocabulary: {
+                iri: Generator.generateUri()
             },
+            count: 1,
             types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
-        })];
+        }];
         onLoadAssignments = jest.fn().mockImplementation(() => Promise.resolve(assignments));
-        const wrapper = mountWithIntl(<ResourceTermAssignments resource={resource}
-                                                               loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><ResourceTermAssignments resource={resource}
+                                                                             loadTermAssignments={onLoadAssignments} {...intlFunctions()}/></MemoryRouter>);
         return Promise.resolve().then(() => {
             wrapper.update();
             expect(wrapper.find(TermLink).length).toEqual(1);
@@ -94,20 +95,21 @@ describe("ResourceTermAssignments", () => {
     });
 
     it("renders suggested term occurrences", () => {
-        const assignments = [new TermOccurrence({
-            iri: Generator.generateUri(),
+        const assignments = [{
             term: {
-                iri: Generator.generateUri(),
-                label: "Test term"
+                iri: Generator.generateUri()
             },
-            target: {
-                source: resource
+            label: "Test term",
+            resource,
+            vocabulary: {
+                iri: Generator.generateUri()
             },
+            count: 1,
             types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE, VocabularyUtils.SUGGESTED_TERM_OCCURRENCE]
-        })];
+        }];
         onLoadAssignments = jest.fn().mockImplementation(() => Promise.resolve(assignments));
-        const wrapper = mountWithIntl(<ResourceTermAssignments resource={resource}
-                                                               loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><ResourceTermAssignments resource={resource}
+                                                                             loadTermAssignments={onLoadAssignments} {...intlFunctions()}/></MemoryRouter>);
         return Promise.resolve().then(() => {
             wrapper.update();
             expect(wrapper.find(TermLink).length).toEqual(1);
@@ -115,26 +117,23 @@ describe("ResourceTermAssignments", () => {
         });
     });
 
-    it("renders multiple occurrences of same term once with counter", () => {
+    it("renders term occurrences info with counter", () => {
         const term = {iri: Generator.generateUri(), label: "Test term"};
-        const assignments = [new TermOccurrence({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: resource
+        const assignments = [{
+            term: {
+                iri: term.iri
             },
-            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
-        }), new TermOccurrence({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: resource
+            label: term.label,
+            resource,
+            vocabulary: {
+                iri: Generator.generateUri()
             },
+            count: 2,
             types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
-        })];
+        }];
         onLoadAssignments = jest.fn().mockImplementation(() => Promise.resolve(assignments));
-        const wrapper = mountWithIntl(<ResourceTermAssignments resource={resource}
-                                                               loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><ResourceTermAssignments resource={resource}
+                                                                             loadTermAssignments={onLoadAssignments} {...intlFunctions()}/></MemoryRouter>);
         return Promise.resolve().then(() => {
             wrapper.update();
             expect(wrapper.find(TermLink).length).toEqual(1);
