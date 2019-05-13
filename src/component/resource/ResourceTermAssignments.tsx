@@ -1,5 +1,6 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
+import classNames from "classnames";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Resource, {EMPTY_RESOURCE} from "../../model/Resource";
 import {connect} from "react-redux";
@@ -57,6 +58,8 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
 
     public render() {
         const i18n = this.props.i18n;
+        const assignments = this.renderAssignedTerms();
+        const occurrencesClass = classNames({"resource-term-occurrences-container": assignments.length > 0});
         return <>
             <Row>
                 <Col md={2}>
@@ -65,10 +68,10 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
                     </Label>
                 </Col>
                 <Col md={10} className="resource-terms">
-                    {this.renderAssignedTerms()}
+                    {assignments}
                 </Col>
             </Row>
-            <Row>
+            <Row className={occurrencesClass}>
                 <Col md={2}>
                     <Label className="attribute-label" title={i18n("resource.metadata.terms.occurrences.tooltip")}>
                         {i18n("resource.metadata.terms.occurrences")}
@@ -84,8 +87,9 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
     private renderAssignedTerms() {
         const items: JSX.Element[] = [];
         this.state.assignments.filter(rta => !isOccurrence(rta)).forEach((rta) => {
-                            items.push(<span key={rta.term.iri} className="resource-term-link m-term-assignment">
-                            <TermLink term={new Term({iri: rta.term.iri, label: rta.label, vocabulary: rta.vocabulary})}/>
+            items.push(<span key={rta.term.iri} className="resource-term-link m-term-assignment">
+                            <TermLink
+                                term={new Term({iri: rta.term.iri, label: rta.label, vocabulary: rta.vocabulary})}/>
                         </span>);
         });
         return items;
@@ -93,7 +97,7 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
 
     private renderTermOccurrences() {
         const items: JSX.Element[] = [];
-        const occurrences = new Map<string, {term: Term, suggestedCount: number, assertedCount: number}>();
+        const occurrences = new Map<string, { term: Term, suggestedCount: number, assertedCount: number }>();
         this.state.assignments.filter(isOccurrence).forEach(rta => {
             if (!occurrences.has(rta.term.iri!)) {
                 occurrences.set(rta.term.iri!, {
@@ -112,10 +116,12 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
             items.push(<span key={k} className="resource-term-link m-term-occurrence">
                             <TermLink term={v.term}/>
                 {v.assertedCount > 0 &&
-                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.confirmed.tooltip")} className="m-term-occurrence-confirmed"
+                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.confirmed.tooltip")}
+                       className="m-term-occurrence-confirmed"
                        color="secondary">{this.props.formatMessage("resource.metadata.terms.occurrences.confirmed", {count: v.assertedCount})}</Badge>}
                 {v.suggestedCount > 0 &&
-                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.suggested.tooltip")} className="m-term-occurrence-suggested"
+                <Badge title={this.props.i18n("resource.metadata.terms.occurrences.suggested.tooltip")}
+                       className="m-term-occurrence-suggested"
                        color="secondary">{this.props.formatMessage("resource.metadata.terms.occurrences.suggested", {count: v.suggestedCount})}</Badge>}
                         </span>);
         });
