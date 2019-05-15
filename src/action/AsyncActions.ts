@@ -25,7 +25,7 @@ import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
-import {CONTEXT as TERM_ASSIGNMENT_CONTEXT, TermAssignmentData} from "../model/TermAssignment";
+import {CONTEXT as TERM_ASSIGNMENTS_CONTEXT, TermAssignments} from "../model/TermAssignments";
 import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
@@ -691,19 +691,18 @@ export function createProperty(property: RdfsResource) {
     }
 }
 
-export function loadTermAssignments(term: Term) {
+export function loadTermAssignmentsInfo(termIri: IRI, vocabularyIri: IRI) {
     const action = {
         type: ActionType.LOAD_TERM_ASSIGNMENTS
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
-        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
-        const url = "/vocabularies/" + vocabularyIri.fragment + "/terms/" + VocabularyUtils.getFragment(term.iri) + "/assignments";
+        const url = "/vocabularies/" + vocabularyIri.fragment + "/terms/" + termIri.fragment + "/assignments";
         return Ajax.get(Constants.API_PREFIX + url, param("namespace", vocabularyIri.namespace))
-            .then((data: object) => JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENT_CONTEXT))
-            .then((data: TermAssignmentData[]) => {
+            .then((data: object) => JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_ASSIGNMENTS_CONTEXT))
+            .then((data: TermAssignments[]) => {
                 dispatch(asyncActionSuccess(action));
-                return data.map(tad => AssetFactory.createTermAssignment(tad));
+                return data;
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));

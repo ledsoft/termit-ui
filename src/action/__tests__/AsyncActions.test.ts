@@ -16,7 +16,7 @@ import {
     loadResources,
     loadResourceTermAssignmentsInfo,
     loadTerm,
-    loadTermAssignments,
+    loadTermAssignmentsInfo,
     loadTerms,
     loadTypes,
     loadUser,
@@ -47,7 +47,6 @@ import {ThunkDispatch} from "../../util/Types";
 import FetchOptionsFunction from "../../model/Functions";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT} from "../../model/RdfsResource";
 import TermItState from "../../model/TermItState";
-import TermAssignment from "../../model/TermAssignment";
 import Resource, {CONTEXT as RESOURCE_CONTEXT} from "../../model/Resource";
 import Utils from "../../util/Utils";
 import AsyncActionStatus from "../AsyncActionStatus";
@@ -62,6 +61,7 @@ import {
     CONTEXT as RESOURCE_TERM_ASSIGNMENT_CONTEXT,
     ResourceTermAssignments
 } from "../../model/ResourceTermAssignments";
+import {CONTEXT as TERM_ASSIGNMENTS_CONTEXT, TermAssignments} from "../../model/TermAssignments";
 
 jest.mock("../../util/Routing");
 jest.mock("../../util/Ajax", () => ({
@@ -784,23 +784,14 @@ describe("Async actions", () => {
         });
     });
 
-    describe("loadTermAssignments", () => {
+    describe("loadTermAssignmentsInfo", () => {
 
-        let term: Term;
-
-        beforeEach(() => {
-            term = new Term({
-                iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/test-vocabulary/terms/test-term",
-                label: "Test term",
-                vocabulary: {
-                    iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/test-vocabulary"
-                }
-            });
-        });
+        const termIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabularies/test-vocabulary/terms/test-term");
+        const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabularies/test-vocabulary");
 
         it("sends request to load term assignments from server", () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignments(term))).then(() => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignmentsInfo(termIri, vocabularyIri))).then(() => {
                 expect(Ajax.get).toHaveBeenCalled();
                 const url = (Ajax.get as jest.Mock).mock.calls[0][0];
                 expect(url.endsWith("/vocabularies/test-vocabulary/terms/test-term/assignments")).toBeTruthy();
@@ -811,30 +802,29 @@ describe("Async actions", () => {
 
         it("returns loaded data on success", () => {
             const data = [{
-                "@id": Generator.generateUri(),
-                "@type": [VocabularyUtils.TERM_ASSIGNMENT],
-                "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/je-přiřazením-termu": require("../../rest-mock/terms")[0],
-                "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/má-cíl": {
-                    "@id": Generator.generateUri(),
-                    "@type": ["http://onto.fel.cvut.cz/ontologies/application/termit/pojem/cíl"],
-                    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-zdroj": {
-                        "@id": Generator.generateUri(),
-                        "@type": [VocabularyUtils.RESOURCE]
-                    }
-                }
+                "@context": TERM_ASSIGNMENTS_CONTEXT,
+                iri: Generator.generateUri(),
+                term: {
+                    iri: termIri.toString()
+                },
+                resource: {
+                    iri: Generator.generateUri()
+                },
+                label: "Test resource",
+                types: [VocabularyUtils.TERM_ASSIGNMENT]
             }];
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignments(term))).then((result: TermAssignment[]) => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignmentsInfo(termIri, vocabularyIri))).then((result: TermAssignments[]) => {
                 expect(Ajax.get).toHaveBeenCalled();
                 expect(result).toBeDefined();
                 expect(result.length).toEqual(1);
-                expect(result[0].iri).toEqual(data[0]["@id"]);
+                expect(result[0].term.iri).toEqual(data[0].term.iri);
             });
         });
 
         it("returns empty array when loading fails", () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.reject({msg: "Error"}));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignments(term))).then((result: TermAssignment[]) => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTermAssignmentsInfo(termIri, vocabularyIri))).then((result: TermAssignments[]) => {
                 expect(Ajax.get).toHaveBeenCalled();
                 expect(result).toBeDefined();
                 expect(result.length).toEqual(0);

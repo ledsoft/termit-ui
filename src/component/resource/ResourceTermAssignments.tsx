@@ -15,6 +15,7 @@ import {
     ResourceTermAssignments as TermAssignmentInfo,
     ResourceTermOccurrences
 } from "../../model/ResourceTermAssignments";
+import Utils from "../../util/Utils";
 
 interface ResourceTermAssignmentsOwnProps {
     resource: Resource;
@@ -31,7 +32,7 @@ interface ResourceTermAssignmentsState {
 type ResourceTermAssignmentsProps = ResourceTermAssignmentsOwnProps & ResourceTermAssignmentsDispatchProps & HasI18n;
 
 function isOccurrence(item: TermAssignmentInfo) {
-    return item.types.indexOf(VocabularyUtils.TERM_OCCURRENCE) !== -1;
+    return Utils.sanitizeArray(item.types).indexOf(VocabularyUtils.TERM_OCCURRENCE) !== -1;
 }
 
 export class ResourceTermAssignments extends React.Component<ResourceTermAssignmentsProps, ResourceTermAssignmentsState> {
@@ -106,7 +107,7 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
                     assertedCount: 0
                 });
             }
-            if (rta.types.indexOf(VocabularyUtils.SUGGESTED_TERM_OCCURRENCE) !== -1) {
+            if (Utils.sanitizeArray(rta.types).indexOf(VocabularyUtils.SUGGESTED_TERM_OCCURRENCE) !== -1) {
                 occurrences.get(rta.term.iri!)!.suggestedCount = (rta as ResourceTermOccurrences).count;
             } else {
                 occurrences.get(rta.term.iri!)!.assertedCount = (rta as ResourceTermOccurrences).count;
