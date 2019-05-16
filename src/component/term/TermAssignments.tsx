@@ -59,8 +59,7 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
 
     private setAssignments = (assignments: AssignmentInfo[]) => {
         this.setState({assignments});
-        // TODO Pass correct number of distinct resources here (write a test!)
-        this.props.onAssignmentsLoad(assignments.length);
+        this.props.onAssignmentsLoad(new Set(assignments.map(a => a.resource.iri!)).size);
     };
 
     public render() {

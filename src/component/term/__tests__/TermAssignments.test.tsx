@@ -169,4 +169,32 @@ describe("TermAssignments", () => {
             expect(badges.length).toEqual(2);
         });
     });
+
+    it("passes correct number of unique resources to which term is assigned on load", () => {
+        const fileIri = Generator.generateUri();
+        const occurrences = [{
+            term: {iri: term.iri},
+            resource: {iri: Generator.generateUri()},
+            label: "a",
+            count: 2,
+            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
+        }, {
+            term: {iri: term.iri},
+            resource: {iri: fileIri},
+            label: "b",
+            types: [VocabularyUtils.TERM_ASSIGNMENT]
+        }, {
+            term: {iri: term.iri},
+            resource: {iri: fileIri},
+            label: "b",
+            count: 3,
+            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE, VocabularyUtils.SUGGESTED_TERM_OCCURRENCE]
+        }];
+        loadTermAssignments = jest.fn().mockImplementation(() => Promise.resolve(occurrences));
+        shallow(<TermAssignments term={term} loadTermAssignments={loadTermAssignments}
+                                 onAssignmentsLoad={onAssignmentsLoad} {...intlFunctions()} {...intlDataForShallow()}/>);
+        return Promise.resolve().then(() => {
+            expect(onAssignmentsLoad).toHaveBeenCalledWith(2);
+        });
+    });
 });

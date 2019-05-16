@@ -97,5 +97,13 @@ describe("JsonLdUtils", () => {
                 expect(result[0].lastEditor).toEqual(result[0].author);
             });
         });
+
+        it("returns an empty array when input JSON-LD is an empty array", () => {
+            const input:object = [];
+            return JsonLdUtils.compactAndResolveReferencesAsArray(input, VOCABULARY_CONTEXT).then((result:any[]) => {
+                expect(Array.isArray(result)).toBeTruthy();
+                expect(result.length).toEqual(0);
+            });
+        });
     });
 });
