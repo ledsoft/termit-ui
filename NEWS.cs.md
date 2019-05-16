@@ -1,3 +1,11 @@
+##### Verze 1.1.2
+
+- Implementováno nahrávání souborů do systému.
+- Podpora pro výběr slovníku pro textovou analýzu.
+- Pojmům přidán atribut skos:definition, vyjadřující normativní definici.
+- Automatické přiřazení pojmů vyskytujících se (na základě textové analýzy) v souboru souboru samotnému.
+- Zdrojový kód publikován na [GitHub](https://github.com/kbss-cvut).
+
 ##### Verze 1.1.1
 
 - Zobrazení legendy v anotátoru obsahu souboru.
