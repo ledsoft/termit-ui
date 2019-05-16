@@ -27,6 +27,9 @@ export default class JsonLdUtils {
      * @param context Context to use for JSON-LD compaction
      */
     public static compactAndResolveReferencesAsArray(input: JsonLdInput, context: JsonLdContext): Promise<JsonLdDictionary[]> {
+        if (Array.isArray(input) && input.length === 0) {
+            return Promise.resolve([]);
+        }
         return compact(input, context).then(JsonLdUtils.loadArrayFromCompactedGraph).then(arr => arr.map(JsonLdUtils.resolveReferences));
     }
 

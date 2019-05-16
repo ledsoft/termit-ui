@@ -14,6 +14,7 @@ export default {
         'optional': 'Optional',
         'actions': 'Actions',
         'description': 'Description',
+        'submit' : 'Submit',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
@@ -111,6 +112,8 @@ export default {
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
         'vocabulary.detail.files': 'Files',
         'vocabulary.detail.files.file': 'Filename',
+        "vocabulary.detail.files.create.tooltip": "Add new file to this vocabulary\'s document",
+        "vocabulary.detail.files.create.dialog.title": "New file",
         'vocabulary.detail.noTermSelected': 'Start by selecting a term in the tree on the left.',
 
         'vocabulary.term.created.message': 'Term successfully created.',
@@ -126,6 +129,7 @@ export default {
 
         "resource.create.title": "Create resource",
         "resource.create.type": "Type",
+        "resource.create.file.select.label": "Drag & drop a file here, or click to select file",
         'resource.metadata.description': 'Description',
         "resource.metadata.terms.assigned": "Assigned terms",
         "resource.metadata.terms.assigned.tooltip": "Terms assigned to the resource as a whole",
@@ -136,12 +140,13 @@ export default {
         "resource.metadata.terms.occurrences.suggested": "{count} - suggested",
         "resource.metadata.terms.occurrences.suggested.tooltip": "Occurrence suggested by the system",
         'resource.metadata-edit.terms': 'Related terms from the vocabulary',
+        "resource.metadata.file.view-content": "Content",
+        "resource.metadata.file.view-content.tooltip": "View file content and annotate it",
 
-        'term.metadata.identifier': 'Identifier',
-        'term.metadata.label': 'Label',
+        "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',
         'term.metadata.subTerms': 'Sub terms',
-        'term.metadata.types': 'Types',
+        'term.metadata.types': 'Type',
         'term.metadata.source': 'Source',
         'term.updated.message': 'Term successfully updated.',
         'term.metadata.labelExists.message': 'Term with label \'{label}\' already exists in this vocabulary',
@@ -183,9 +188,11 @@ export default {
         'glossary.form.validation.validateLengthMin3': 'Field must be at least 3 characters',
         'glossary.form.validation.validateNotSameAsParent': 'Child option cannot be same as parent option',
 
-        'file.text-analysis.started.message': 'File \'{fileName}\' successfully queued for text analysis',
+        'file.text-analysis.finished.message': 'Text analysis for file \'{fileName}\' successfully finished.',
         'file.metadata.startTextAnalysis': 'Start text analysis',
         'file.metadata.startTextAnalysis.text': 'Analyze',
+        "file.content.upload.success": "Content of file \'{fileName}\' successfully uploaded.",
+        "file.annotate.unknown-vocabulary": "Unable to determine vocabulary for annotating this file. It neither belongs to a vocabulary document nor has been processed by text analysis.",
 
         'statistics.vocabulary.count': 'Vocabulary Count',
         'statistics.term.count': 'Term Count',

@@ -13,7 +13,7 @@ import VocabularyFileLink from "../../vocabulary/VocabularyFileLink";
 describe("FileList", () => {
     let files: File[];
     let file: File;
-    let startFileTextAnalysis: (file: File) => void;
+    let executeFileTextAnalysis: (file: File)  => Promise<any>;
     let vocabulary: Vocabulary;
     beforeEach(() => {
         files = [
@@ -32,7 +32,7 @@ describe("FileList", () => {
             label: "Test vocabulary"
         });
         file = files[0];
-        startFileTextAnalysis = jest.fn();
+        executeFileTextAnalysis = jest.fn();
     });
 
     it("renders vocabulary file links", () => {
@@ -41,7 +41,7 @@ describe("FileList", () => {
                 <FileList
                     files={files}
                     vocabulary={vocabulary}
-                    startFileTextAnalysis={startFileTextAnalysis}
+                    executeFileTextAnalysis={executeFileTextAnalysis}
                     {...intlFunctions()}/>
             </MemoryRouter>
         );
@@ -55,7 +55,7 @@ describe("FileList", () => {
                 <FileList
                     files={files}
                     vocabulary={vocabulary}
-                    startFileTextAnalysis={startFileTextAnalysis}
+                    executeFileTextAnalysis={executeFileTextAnalysis}
                     {...intlFunctions()}/>
             </MemoryRouter>
         );
@@ -70,7 +70,7 @@ describe("FileList", () => {
                 <FileList
                     files={[file]}
                     vocabulary={vocabulary}
-                    startFileTextAnalysis={startFileTextAnalysis}
+                    executeFileTextAnalysis={executeFileTextAnalysis}
                     {...intlFunctions()}/>
             </MemoryRouter>
         );
@@ -83,13 +83,13 @@ describe("FileList", () => {
                 <FileList
                     files={[file]}
                     vocabulary={vocabulary}
-                    startFileTextAnalysis={startFileTextAnalysis}
+                    executeFileTextAnalysis={executeFileTextAnalysis}
                     {...intlFunctions()}/>
             </MemoryRouter>
         );
 
-        expect(startFileTextAnalysis).not.toBeCalled();
+        expect(executeFileTextAnalysis).not.toBeCalled();
         wrapper.find(Button).simulate("click");
-        expect(startFileTextAnalysis).toBeCalledWith(file);
+        expect(executeFileTextAnalysis).toBeCalledWith(file);
     });
 });

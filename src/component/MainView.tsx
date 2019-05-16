@@ -44,11 +44,9 @@ import Dashboard from "./dashboard/Dashboard";
 import SearchVocabularies from "./search/SearchVocabularies";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
-    user: User,
-    loadUser: () => void,
-    logout: () => void,
-    backgroundColor: string,
-    backgroundIsLight: boolean,
+    user: User;
+    loadUser: () => void;
+    logout: () => void;
 }
 
 interface MainViewState {

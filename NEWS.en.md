@@ -1,3 +1,11 @@
+##### Version 1.1.2
+
+- File content upload implementation.
+- Support for selecting vocabulary for text analysis.
+- Added skos:definition attribute to Terms.
+- Automatically assign Terms occurring in File content (based on text analysis) to the File.
+- Source code published on [GitHub](https://github.com/kbss-cvut).
+
 ##### Version 1.1.1
 
 - Display legend in the file content annotator.

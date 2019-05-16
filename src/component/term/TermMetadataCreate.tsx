@@ -143,22 +143,23 @@ declare type TermMetadataCreateProps =
     & RouteComponentProps<any>;
 
 interface CreateVocabularyTermState {
-    siblings: Term[],
-    modalAdvancedSectionVisible: boolean,
-    optionUriValue: string,
-    comment: string,
-    generateUri: boolean
+    siblings: Term[];
+    modalAdvancedSectionVisible: boolean;
+    optionUriValue: string;
+    comment: string;
+    definition: string;
+    generateUri: boolean;
 }
 
 interface NewOptionData {
     // siblings : Term[],
-    typeOption: Term,
-    optionURI: string,
-    parentOption: Term,
-    childOptions: Term[],
-    optionLabel: string,
-    optionDescription: string,
-    optionSource: string
+    typeOption: Term;
+    optionURI: string;
+    parentOption: Term;
+    childOptions: Term[];
+    optionLabel: string;
+    optionDescription: string;
+    optionSource: string;
 }
 
 export class TermMetadataCreate extends React.Component<TermMetadataCreateProps, CreateVocabularyTermState> {
@@ -185,9 +186,14 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             modalAdvancedSectionVisible: false,
             optionUriValue: "",
             comment: "",
+            definition: "",
             generateUri: true,
         }
     }
+
+    private onDefinitionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({definition: e.currentTarget.value});
+    };
 
     private onCommentChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({comment: e.currentTarget.value});
@@ -229,7 +235,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             return [];
         }
         const ids: Term[] = JSON.parse(JSON.stringify(children));
-        return ids.map(obj => Object.assign({}, obj.iri));
+        return ids.map(obj => Object.assign({}, {iri: obj.iri}));
     }
 
     private createNewOption(data: NewOptionData) {
@@ -242,6 +248,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         this.props.onCreate(new Term({
             iri: data.optionURI as string,
             label: data.optionLabel as string,
+            definition: this.state.definition,
             comment: this.state.comment,
             subTerms: children,
             parent: parent as string,
@@ -339,7 +346,14 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                     </Row>
                     <Row>
                         <Col xl={6} md={12}>
-                            <TextArea name="create-term-comment" label={i18n("vocabulary.comment")}
+                            <TextArea name="create-term-definition" label={i18n("term.metadata.definition")}
+                                      type="textarea" rows={3} value={this.state.definition} help={i18n("optional")}
+                                      onChange={this.onDefinitionChange}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xl={6} md={12}>
+                            <TextArea name="create-term-comment" label={i18n("term.metadata.comment")}
                                       type="textarea" rows={3} value={this.state.comment} help={i18n("optional")}
                                       onChange={this.onCommentChange}/>
                         </Col>

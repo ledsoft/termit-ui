@@ -3,14 +3,37 @@
  */
 
 export interface IRI {
-    namespace?: string,
-    fragment: string,
+    namespace?: string;
+    fragment: string;
+}
+
+export class IRIImpl implements IRI {
+    public readonly fragment: string;
+    public readonly namespace?: string;
+
+    constructor(fragment: string, namespace?: string) {
+        this.fragment = fragment;
+        this.namespace = namespace;
+    }
+
+    public toString(): string {
+        return (this.namespace ? this.namespace : "") + this.fragment;
+    }
+
+    public equals(other?: IRI | null): boolean {
+        return other !== undefined && other !== null && this.fragment === other.fragment && this.namespace === other.namespace;
+    }
+
+    public static create(iri: IRI): IRIImpl {
+        return new IRIImpl(iri.fragment, iri.namespace);
+    }
 }
 
 const _NS_POPIS_DAT = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/";
 const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
 const _NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const _NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
+const _NS_SKOS = "http://www.w3.org/2004/02/skos/core#";
 
 export default {
     PREFIX: _NS_POPIS_DAT,
@@ -18,12 +41,15 @@ export default {
     TERM: _NS_POPIS_DAT + "term",
     FILE: _NS_POPIS_DAT + "soubor",
     DOCUMENT: _NS_POPIS_DAT + "dokument",
+    DEFINITION: _NS_SKOS + "definition",
+    NARROWER: _NS_SKOS + "narrower",
     DATASET: "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
     JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovníku",
     RESOURCE: _NS_POPIS_DAT + "zdroj",
     TERM_ASSIGNMENT: _NS_TERMIT + "přiřazení-termu",
     TERM_OCCURRENCE: _NS_TERMIT + "výskyt-termu",
     SUGGESTED_TERM_OCCURRENCE: _NS_TERMIT + "navržený-výskyt-termu",
+    HAS_FILE: _NS_POPIS_DAT + "má-soubor",
     HAS_AUTHOR: _NS_POPIS_DAT + "má-autora",
     CREATED: _NS_POPIS_DAT + "má-datum-a-čas-vytvoření",
     HAS_LAST_EDITOR: _NS_POPIS_DAT + "má-posledního-editora",
@@ -43,10 +69,10 @@ export default {
         return this.create(iri).fragment;
     },
 
-    create(iri: string): IRI {
+    create(iri: string): IRIImpl {
         const hashFragment = iri.indexOf("#");
         const slashFragment = iri.lastIndexOf("/");
         const fragment = hashFragment < 0 ? slashFragment : hashFragment;
-        return {fragment: iri.substr(fragment + 1), namespace: iri.substr(0, fragment + 1)};
+        return new IRIImpl(iri.substr(fragment + 1), iri.substr(0, fragment + 1));
     }
 }

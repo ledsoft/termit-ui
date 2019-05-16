@@ -1,10 +1,10 @@
 import {CONTEXT as USER_CONTEXT} from "./User";
 import OntologicalVocabulary from "../util/VocabularyUtils";
+import VocabularyUtils from "../util/VocabularyUtils";
 import Asset, {ASSET_CONTEXT, AssetData, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
 import Document, {CONTEXT as DOCUMENT_CONTEXT} from "./Document";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import Utils from "../util/Utils";
-import VocabularyUtils from "../util/VocabularyUtils";
 
 // @id and @type are merged from USER_CONTEXT
 const ctx = {

@@ -2,18 +2,19 @@ import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Term from "../../model/Term";
-import TermAssignment from "../../model/TermAssignment";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {loadTermAssignments} from "../../action/AsyncActions";
+import {loadTermAssignmentsInfo} from "../../action/AsyncActions";
 import {Badge, Table, UncontrolledTooltip} from "reactstrap";
 import TermItState from "../../model/TermItState";
 import IntlData from "../../model/IntlData";
 import "./TermAssignments.scss";
 import Resource, {ResourceData} from "../../model/Resource";
-import TermOccurrence from "../../model/TermOccurrence";
 import ResourceLink from "../resource/ResourceLink";
 import {GoCheck, GoInfo, GoX} from "react-icons/go";
+import {TermAssignments as AssignmentInfo, TermOccurrences} from "../../model/TermAssignments";
+import VocabularyUtils from "../../util/VocabularyUtils";
+import Utils from "../../util/Utils";
 
 interface TermAssignmentsOwnProps {
     term: Term;
@@ -21,14 +22,22 @@ interface TermAssignmentsOwnProps {
 }
 
 interface StoreDispatchProps {
-    loadTermAssignments: (term: Term) => Promise<TermAssignment[] | any>;
+    loadTermAssignments: (term: Term) => Promise<AssignmentInfo[] | any>;
 }
 
 interface TermAssignmentsState {
-    assignments: TermAssignment[];
+    assignments: AssignmentInfo[];
 }
 
 type TermAssignmentsProps = TermAssignmentsOwnProps & HasI18n & StoreDispatchProps;
+
+function isOccurrence(item: AssignmentInfo) {
+    return Utils.sanitizeArray(item.types).indexOf(VocabularyUtils.TERM_OCCURRENCE) !== -1;
+}
+
+function isSuggestedOccurrence(item: AssignmentInfo) {
+    return Utils.sanitizeArray(item.types).indexOf(VocabularyUtils.SUGGESTED_TERM_OCCURRENCE) !== -1;
+}
 
 export class TermAssignments extends React.Component<TermAssignmentsProps, TermAssignmentsState> {
     constructor(props: TermAssignmentsProps) {
@@ -39,18 +48,18 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
     }
 
     public componentDidMount(): void {
-        this.props.loadTermAssignments(this.props.term).then((assignments: TermAssignment[]) => this.setAssignments(assignments));
+        this.props.loadTermAssignments(this.props.term).then((assignments: AssignmentInfo[]) => this.setAssignments(assignments));
     }
 
     public componentDidUpdate(prevProps: Readonly<TermAssignmentsProps>): void {
         if (this.props.term.iri !== prevProps.term.iri) {
-            this.props.loadTermAssignments(this.props.term).then((assignments: TermAssignment[]) => this.setAssignments(assignments));
+            this.props.loadTermAssignments(this.props.term).then((assignments: AssignmentInfo[]) => this.setAssignments(assignments));
         }
     }
 
-    private setAssignments = (assignments: TermAssignment[]) => {
+    private setAssignments = (assignments: AssignmentInfo[]) => {
         this.setState({assignments});
-        this.props.onAssignmentsLoad(assignments.length);
+        this.props.onAssignmentsLoad(new Set(assignments.map(a => a.resource.iri!)).size);
     };
 
     public render() {
@@ -123,26 +132,29 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
     private mapAssignments() {
         const assignmentsPerResource = new Map<string, { resource: ResourceData, assignmentCount: number, occurrenceCount: number, suggestedOccurrenceCount: number }>();
         this.state.assignments.forEach(ass => {
-            const resIri = ass.target.source.iri;
+            const resIri = ass.resource.iri!;
             let item;
             if (assignmentsPerResource.has(resIri)) {
                 item = assignmentsPerResource.get(resIri)!;
             } else {
                 item = {
-                    resource: ass.target.source,
+                    resource: {
+                        iri: resIri,
+                        label: ass.label
+                    },
                     assignmentCount: 0,
                     occurrenceCount: 0,
                     suggestedOccurrenceCount: 0
                 };
             }
-            if (ass instanceof TermOccurrence) {
-                if (ass.isSuggested()) {
-                    item.suggestedOccurrenceCount += 1;
+            if (isOccurrence(ass)) {
+                if (isSuggestedOccurrence(ass)) {
+                    item.suggestedOccurrenceCount = (ass as TermOccurrences).count;
                 } else {
-                    item.occurrenceCount += 1;
+                    item.occurrenceCount = (ass as TermOccurrences).count;
                 }
             } else {
-                item.assignmentCount += 1;
+                item.assignmentCount = 1;
             }
             assignmentsPerResource.set(resIri, item);
         });
@@ -170,6 +182,6 @@ export default connect<{ intl: IntlData }, StoreDispatchProps, TermAssignmentsOw
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        loadTermAssignments: (term: Term) => dispatch(loadTermAssignments(term))
+        loadTermAssignments: (term: Term) => dispatch(loadTermAssignmentsInfo(VocabularyUtils.create(term.iri), VocabularyUtils.create(term.vocabulary!.iri!)))
     };
 })(injectIntl(withI18n(TermAssignments)));

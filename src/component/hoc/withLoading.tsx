@@ -22,13 +22,13 @@ export interface WithLoadingStaticOptions {
  * @constructor
  */
 const withLoading = <P extends object>(Component: React.ComponentType<P>, options: WithLoadingStaticOptions = {tag: "div"}): React.SFC<P & WithLoadingProps> => {
-    const Wrapped: React.SFC<P & WithLoadingProps> = ({loading, loadingMsg, ...props}: WithLoadingProps) => {
+    const Wrapped: React.SFC<P & WithLoadingProps> = ({loading, loadingMsg, ...props}: P & WithLoadingProps) => {
         const tag = options.tag ? options.tag : "div";
         const className = classNames(options.containerClass, "relative");
 
         return React.createElement(tag, {className},
             loading && <Mask text={loadingMsg} classes={options.maskClass}/>,
-            <Component {...props}/>
+            <Component {...props as P}/>
         );
     };
     Wrapped.displayName = "LoadingWrapper(" + getDisplayName(Component) + ")";

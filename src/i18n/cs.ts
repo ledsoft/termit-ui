@@ -13,6 +13,7 @@ export default {
         'optional': 'Nepovinné',
         'actions': 'Akce',
         'description': 'Popis',
+        'submit' : 'Předložit',
 
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
@@ -110,6 +111,8 @@ export default {
         'vocabulary.detail.tabs.termdetail': 'Detail pojmu',
         'vocabulary.detail.files': 'Soubory',
         'vocabulary.detail.files.file': 'Název souboru',
+        "vocabulary.detail.files.create.tooltip": "Přidat nový soubor do dokumentu tohoto slovníku",
+        "vocabulary.detail.files.create.dialog.title": "Nový soubor",
         'vocabulary.detail.noTermSelected': 'Vyberte pojem ve stromečku vlevo.',
 
         'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',
@@ -123,6 +126,7 @@ export default {
 
         "resource.create.title": "Vytvořit zdroj",
         "resource.create.type": "Typ zdroje",
+        "resource.create.file.select.label": "Přetáhněte sem soubor myší, nebo klikněte pro výběr pomocí dialogu",
         "resource.management.empty": "Žádné zdroje nenalezeny. Vytvořte nějaký...",
         "resource.management.create.text": "Vytvořit",
         "resource.management.create.tooltip": "Vytvořit či zaregistrovat zdroj",
@@ -136,12 +140,13 @@ export default {
         "resource.metadata.terms.occurrences.suggested": "{count} - návrh",
         "resource.metadata.terms.occurrences.suggested.tooltip": "Výskyt navržen systémem",
         'resource.metadata-edit.terms': 'Související pojmy ze slovníku',
+        "resource.metadata.file.view-content": "Obsah",
+        "resource.metadata.file.view-content.tooltip": "Zobrazit obsah souboru a anotovat ho",
 
-        'term.metadata.identifier': 'Identifikátor',
-        'term.metadata.label': 'Název',
+        "term.metadata.definition": "Definice",
         'term.metadata.comment': 'Komentář',
         'term.metadata.subTerms': 'Podřazené pojmy',
-        'term.metadata.types': 'Typy pojmu',
+        'term.metadata.types': 'Typ pojmu',
         'term.metadata.source': 'Zdroj pojmu',
         'term.updated.message': 'Pojem úspěšně aktualizován.',
         'term.metadata.labelExists.message': 'Pojem s názvem \'{label}\' již v tomto slovníku existuje',
@@ -184,9 +189,11 @@ export default {
         'glossary.form.validation.validateLengthMin3': 'Pole musí mít alespoň 3 znaky',
         'glossary.form.validation.validateNotSameAsParent': 'Potomek nemůže být stejný jako předchůdce',
 
-        'file.text-analysis.started.message': 'Soubor \'{fileName}\' zařazen do fronty pro textovou analýzu',
+        'file.text-analysis.finished.message': 'Textová analýza souboru \'{fileName}\' úspěšně dokončena.',
         'file.metadata.startTextAnalysis': 'Spustit textovou analýzu',
         'file.metadata.startTextAnalysis.text': 'Analyzovat',
+        "file.content.upload.success": "Soubor \'{fileName}\' úspěšně nahrán na server.",
+        "file.annotate.unknown-vocabulary": "Nelze určit slovník pro anotování tohoto souboru. Soubor nepatří slovníkovému dokumentu ani nebyl zpracován službou textové analýzy.",
 
         'statistics.vocabulary.count': 'Počet slovníků',
         'statistics.term.count': 'Počet pojmů',

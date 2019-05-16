@@ -31,8 +31,9 @@ export interface AnnotationSpanProps {
     score?: string
 }
 
-export const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
-export const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
+// TODO This is dangerous. It should not rely on a particular prefix definition, full IRI should be used!!!
+export const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-výskytem-termu";
+export const DEFAULT_RDF_TYPEOF_VALUE = "ddo:výskyt-termu";
 const ANNOTATION_MINIMUM_SCORE_THRESHOLD = 0.65;
 
 interface HtmlSplit {

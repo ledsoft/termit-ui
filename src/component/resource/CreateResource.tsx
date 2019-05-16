@@ -1,59 +1,50 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
-import Resource, {ResourceData} from "../../model/Resource";
-import {AbstractCreateAsset, AbstractCreateAssetState} from "../asset/AbstractCreateAsset";
+import Resource from "../../model/Resource";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import Constants from "../../util/Constants";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
-import {Button, ButtonGroup, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Label, Row} from "reactstrap";
-import CustomInput from "../misc/CustomInput";
-import TextArea from "../misc/TextArea";
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Col, Label, Row} from "reactstrap";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {createResource} from "../../action/AsyncActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import CreateResourceMetadata from "./CreateResourceMetadata";
+import CreateFileMetadata from "./CreateFileMetadata";
+import IdentifierResolver from "../../util/IdentifierResolver";
 
 interface CreateResourceProps extends HasI18n {
-    onCreate: (resource: Resource) => void;
+    onCreate: (resource: Resource) => Promise<string>;
 }
 
-interface CreateResourceState extends AbstractCreateAssetState, ResourceData {
-    description: string;
-    types: string;
+interface CreateResourceState {
+    type: string
 }
 
-export class CreateResource extends AbstractCreateAsset<CreateResourceProps, CreateResourceState> {
+export class CreateResource extends React.Component<CreateResourceProps, CreateResourceState> {
 
     constructor(props: CreateResourceProps) {
         super(props);
         this.state = {
-            iri: "",
-            label: "",
-            description: "",
-            types: VocabularyUtils.RESOURCE,
-            generateIri: true
+            type: VocabularyUtils.RESOURCE
         };
     }
 
-    protected get identifierGenerationEndpoint(): string {
-        return Constants.API_PREFIX + "/resources/identifier";
-    }
-
-    private onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({description: e.currentTarget.value});
-    };
-
     private onTypeSelect = (type: string) => {
-        this.setState({types: type});
+        this.setState({type});
     };
 
-    private onCreate = (): void => {
-        const {generateIri, ...data} = this.state;
-        this.props.onCreate(new Resource(data));
+    public onCreate = (resource: Resource): Promise<string> => {
+        resource.addType(this.state.type);
+        return this.props.onCreate(resource).then(iri => {
+            if (iri) {
+                Routing.transitionTo(Routes.resourceSummary, IdentifierResolver.routingOptionsFromLocation(iri));
+            }
+            return iri;
+        });
     };
 
-    private static onCancel(): void {
+    public static onCancel(): void {
         Routing.transitionTo(Routes.resources);
     }
 
@@ -64,73 +55,48 @@ export class CreateResource extends AbstractCreateAsset<CreateResourceProps, Cre
                 <h5>{i18n("resource.create.title")}</h5>
             </CardHeader>
             <CardBody>
-                <Form>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <Row>
-                                <Col>
-                                    <Label className="attribute-label">{i18n("resource.create.type")}</Label>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <ButtonGroup className="d-flex form-group">
-                                        <Button id="create-resource-type-resource" color="info" size="sm"
-                                                className="w-100 create-resource-type-select" outline={true}
-                                                onClick={this.onTypeSelect.bind(null, VocabularyUtils.RESOURCE)}
-                                                active={this.state.types === VocabularyUtils.RESOURCE}>{i18n("type.resource")}</Button>
-                                        <Button id="create-resource-type-dataset" color="info" size="sm"
-                                                className="w-100 create-resource-type-select" outline={true}
-                                                onClick={this.onTypeSelect.bind(null, VocabularyUtils.DATASET)}
-                                                active={this.state.types === VocabularyUtils.DATASET}>{i18n("type.dataset")}</Button>
-                                        <Button id="create-resource-type-document" color="info" size="sm"
-                                                className="w-100 create-resource-type-select" outline={true}
-                                                onClick={this.onTypeSelect.bind(null, VocabularyUtils.DOCUMENT)}
-                                                active={this.state.types === VocabularyUtils.DOCUMENT}>{i18n("type.document")}</Button>
-                                        <Button id="create-resource-type-file" color="info" size="sm"
-                                                className="w-100 create-resource-type-select" outline={true}
-                                                onClick={this.onTypeSelect.bind(null, VocabularyUtils.FILE)}
-                                                active={this.state.types === VocabularyUtils.FILE}>{i18n("type.file")}</Button>
-                                    </ButtonGroup>
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <CustomInput name="create-resource-label" label={i18n("asset.label")}
-                                         value={this.state.label}
-                                         onChange={this.onLabelChange}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <CustomInput name="create-resource-iri" label={i18n("asset.iri")}
-                                         value={this.state.iri}
-                                         onChange={this.onIriChange} help={i18n("asset.create.iri.help")}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <TextArea name="create-resource-description" label={i18n("resource.metadata.description")}
-                                      type="textarea" rows={3} value={this.state.description} help={i18n("optional")}
-                                      onChange={this.onDescriptionChange}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <ButtonToolbar className="pull-right">
-                                <Button id="create-resource-submit" onClick={this.onCreate} color="success" size="sm"
-                                        disabled={this.state.label.trim().length === 0}>{i18n("create")}</Button>
-                                <Button id="create-resource-cancel" onClick={CreateResource.onCancel}
-                                        color="secondary"
-                                        size="sm">{i18n("cancel")}</Button>
-                            </ButtonToolbar>
-                        </Col>
-                    </Row>
-                </Form>
+                <Row>
+                    <Col xl={6} md={12}>
+                        <Row>
+                            <Col>
+                                <Label className="attribute-label">{i18n("resource.create.type")}</Label>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <ButtonGroup className="d-flex form-group">
+                                    <Button id="create-resource-type-resource" color="info" size="sm"
+                                            className="w-100 create-resource-type-select" outline={true}
+                                            onClick={this.onTypeSelect.bind(null, VocabularyUtils.RESOURCE)}
+                                            active={this.state.type === VocabularyUtils.RESOURCE}>{i18n("type.resource")}</Button>
+                                    <Button id="create-resource-type-dataset" color="info" size="sm"
+                                            className="w-100 create-resource-type-select" outline={true}
+                                            onClick={this.onTypeSelect.bind(null, VocabularyUtils.DATASET)}
+                                            active={this.state.type === VocabularyUtils.DATASET}>{i18n("type.dataset")}</Button>
+                                    <Button id="create-resource-type-document" color="info" size="sm"
+                                            className="w-100 create-resource-type-select" outline={true}
+                                            onClick={this.onTypeSelect.bind(null, VocabularyUtils.DOCUMENT)}
+                                            active={this.state.type === VocabularyUtils.DOCUMENT}>{i18n("type.document")}</Button>
+                                    <Button id="create-resource-type-file" color="info" size="sm"
+                                            className="w-100 create-resource-type-select" outline={true}
+                                            onClick={this.onTypeSelect.bind(null, VocabularyUtils.FILE)}
+                                            active={this.state.type === VocabularyUtils.FILE}>{i18n("type.file")}</Button>
+                                </ButtonGroup>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+                {this.renderMetadataForm()}
             </CardBody>
         </Card>;
+    }
+
+    private renderMetadataForm() {
+        if (this.state.type === VocabularyUtils.FILE) {
+            return <CreateFileMetadata onCreate={this.onCreate} onCancel={CreateResource.onCancel}/>;
+        } else {
+            return <CreateResourceMetadata onCreate={this.onCreate} onCancel={CreateResource.onCancel}/>;
+        }
     }
 }
 

@@ -13,24 +13,26 @@ describe("Annotator", () => {
     const generalHtmlContent = surroundWithHtml(sampleContent);
     const suggestedOccProps = {
         about: "_:-421713841",
-        property: "ddo:je-vyskytem-termu",
-        typeof: "ddo:vyskyt-termu"
+        property: "ddo:je-výskytem-termu",
+        typeof: "ddo:výskyt-termu"
     };
     const assignedOccProps = {
         about: "_:-421713841",
-        property: "ddo:je-vyskytem-termu",
+        property: "ddo:je-výskytem-termu",
         resource: "http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto",
         score: "1.0",
-        typeof: "ddo:vyskyt-termu"
+        typeof: "ddo:výskyt-termu"
     };
     let mockedCallbackProps: {
         onUpdate(newHtml: string): void
         onFetchTerm(termIri: string): Promise<Term>
+        onCreateTerm(term: Term): Promise<Term>
     };
     beforeEach(() => {
         mockedCallbackProps = {
             onUpdate: jest.fn(),
-            onFetchTerm: jest.fn()
+            onFetchTerm: jest.fn(),
+            onCreateTerm: jest.fn()
         }
     });
 

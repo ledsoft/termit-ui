@@ -12,9 +12,9 @@ describe("AnnotationDomHelper", () => {
         "      <h1>My Heading</h1>\n" +
         "\n" +
         "            <p>First paragraph.</p>\n" +
-        "            <span about=\"_:123\" property=\"ddo:je-vyskytem-termu\"\n" +
+        "            <span about=\"_:123\" property=\"ddo:je-výskytem-termu\"\n" +
         "                  resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-        "                  typeof=\"ddo:vyskyt-termu\">annotated-text</span>" +
+        "                  typeof=\"ddo:výskyt-termu\">annotated-text</span>" +
         "\n after annotation span" +
         "            <span about=\"_:111\" \n>not-annotation</span>" +
         "\n after text span" +
@@ -31,8 +31,8 @@ describe("AnnotationDomHelper", () => {
         const parser = new HtmlParser(handler, options);
         parser.parseComplete(html);
         dom =  handler.dom;
-        annotationSpan = du.find((n: Node) =>  n.name === "span", dom, true)[0];
-        otherSpan = du.find((n: Node) =>  n.name === "span", dom, true)[1];
+        annotationSpan = du.find((n: Node) =>  n.name === "span" && n.attribs.property, dom, true, 1)[0];
+        otherSpan = du.find((n: Node) =>  n.name === "span" && !n.attribs.property, dom, true, 1)[0];
     });
 
     it("isAnnotation recognizes annotation", () => {
@@ -50,7 +50,7 @@ describe("AnnotationDomHelper", () => {
 
     it("removeAnnotation replaces span with text", () => {
         const about = annotationSpan.attribs.about;
-        const text = annotationSpan.children[0].data;
+        const text = annotationSpan.children![0]!.data;
 
         expect(html).toContain(about);
         expect(html).toContain(text);
