@@ -1,6 +1,6 @@
 {
   "name": "termit-ui",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "homepage": "https://kbss.felk.cvut.cz/termit-dev/",
   "dependencies": {
