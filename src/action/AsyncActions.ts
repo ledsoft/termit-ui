@@ -248,7 +248,7 @@ export function loadResourceTermAssignmentsInfo(resourceIri: IRI) {
         }
         dispatch(asyncActionRequest(action));
         return Ajax.get(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/assignments/aggregated", param("namespace", resourceIri.namespace))
-            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, RESOURCE_TERM_ASSIGNMENTS_CONTEXT) : [])
+            .then((data: object[]) => JsonLdUtils.compactAndResolveReferencesAsArray(data, RESOURCE_TERM_ASSIGNMENTS_CONTEXT))
             .then((data: ResourceTermAssignments[]) => {
                 dispatch(asyncActionSuccess(action));
                 const assignedTerms = data.filter(a => a.types.indexOf(VocabularyUtils.TERM_OCCURRENCE) === -1).map(a => new Term({
