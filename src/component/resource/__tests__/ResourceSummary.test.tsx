@@ -11,6 +11,8 @@ import {Location} from "history";
 import createMemoryHistory from "history/createMemoryHistory";
 import {match as Match, Router} from "react-router";
 import Generator from "../../../__tests__/environment/Generator";
+import AppNotification from "../../../model/AppNotification";
+import NotificationType from "../../../model/NotificationType";
 
 describe("ResourceSummary", () => {
 
@@ -21,6 +23,7 @@ describe("ResourceSummary", () => {
     let saveResource: (resource: Resource) => Promise<any>;
     let removeResource: (resource: Resource) => Promise<any>;
     let clearResource: () => void;
+    let consumeNotification: (notification: AppNotification) => void;
     let hasContent: (iri: IRI) => Promise<boolean>;
 
     let resourceHandlers: any;
@@ -34,8 +37,9 @@ describe("ResourceSummary", () => {
         saveResource = jest.fn().mockImplementation(() => Promise.resolve());
         removeResource = jest.fn().mockImplementation(() => Promise.resolve());
         clearResource = jest.fn();
+        consumeNotification = jest.fn();
         hasContent = jest.fn().mockImplementation(() => Promise.resolve(true));
-        resourceHandlers = {loadResource, saveResource, removeResource, clearResource, hasContent};
+        resourceHandlers = {loadResource, saveResource, removeResource, clearResource, consumeNotification, hasContent};
 
         location = {
             pathname: "/resource/" + resourceName,
@@ -55,7 +59,8 @@ describe("ResourceSummary", () => {
 
     it("loads resource on mount", () => {
         shallow(<ResourceSummary
-            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={EMPTY_RESOURCE}
+            notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
             history={history}
             location={location}
             match={match}/>);
@@ -64,7 +69,8 @@ describe("ResourceSummary", () => {
 
     it("does not attempt to reload resource on update when it is empty resource", () => {
         const wrapper = shallow(<ResourceSummary
-            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={EMPTY_RESOURCE}
+            notifications={[]}{...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
             history={history} location={location} match={match}/>);
         wrapper.setProps({resource: EMPTY_RESOURCE});
         wrapper.update();
@@ -74,7 +80,8 @@ describe("ResourceSummary", () => {
     it("reloads resource when new resource identifier is passed in location props", () => {
         const oldResource = new Resource({iri: namespace + resourceName, label: resourceName, terms: []});
         const wrapper = shallow(<ResourceSummary
-            resource={oldResource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={oldResource}
+            notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
             history={history} location={location} match={match}/>);
         const newFragment = "another-resource";
         const newMatch = Object.assign({}, match);
@@ -90,7 +97,8 @@ describe("ResourceSummary", () => {
             label: resourceName
         });
         const wrapper = shallow(<ResourceSummary
-            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={EMPTY_RESOURCE}
+            notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
             history={history} location={location} match={match}/>);
         wrapper.setProps({resource});
         wrapper.update();
@@ -103,7 +111,7 @@ describe("ResourceSummary", () => {
             label: resourceName
         });
         const wrapper = shallow(<ResourceSummary
-            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={resource} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
             history={history} location={location} match={match}/>);
         return Promise.resolve().then(() => {
             wrapper.unmount();
@@ -117,7 +125,7 @@ describe("ResourceSummary", () => {
             label: resourceName
         });
         const wrapper = shallow(<ResourceSummary
-            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={resource} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
             history={history} location={location} match={match}/>);
         (wrapper.instance() as ResourceSummary).onRemove();
         expect(removeResource).toHaveBeenCalledWith(resource);
@@ -131,7 +139,8 @@ describe("ResourceSummary", () => {
             files: [],
             vocabulary: {iri: Generator.generateUri()}
         });
-        const wrapper = mountWithIntl(<ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()}
+        const wrapper = mountWithIntl(<ResourceSummary resource={doc}
+                                                       notifications={[]} {...resourceHandlers} {...intlFunctions()}
                                                        history={history} location={location} match={match}/>);
         expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
     });
@@ -142,7 +151,8 @@ describe("ResourceSummary", () => {
             label: resourceName,
             files: [new File({iri: Generator.generateUri(), label: "test.html"})]
         });
-        const wrapper = mountWithIntl(<ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()}
+        const wrapper = mountWithIntl(<ResourceSummary resource={doc}
+                                                       notifications={[]} {...resourceHandlers} {...intlFunctions()}
                                                        history={history} location={location} match={match}/>);
         expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
     });
@@ -154,7 +164,8 @@ describe("ResourceSummary", () => {
             types: [VocabularyUtils.FILE]
         });
         const wrapper = mountWithIntl(<Router history={history}>
-            <ResourceSummary resource={file} {...resourceHandlers} {...intlFunctions()} history={history}
+            <ResourceSummary resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()}
+                             history={history}
                              location={location} match={match}/></Router>);
         return Promise.resolve().then(() => {
             wrapper.update();
@@ -170,7 +181,8 @@ describe("ResourceSummary", () => {
             types: [VocabularyUtils.DOCUMENT]
         });
         const wrapper = mountWithIntl(<Router history={history}>
-            <ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()} history={history}
+            <ResourceSummary resource={doc} notifications={[]} {...resourceHandlers} {...intlFunctions()}
+                             history={history}
                              location={location} match={match}/></Router>);
         return Promise.resolve().then(() => {
             wrapper.update();
@@ -186,12 +198,49 @@ describe("ResourceSummary", () => {
         });
         (hasContent as jest.Mock).mockImplementation(() => Promise.resolve(false));
         const wrapper = shallow(<ResourceSummary
-            resource={file} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()} history={history}
+            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history}
             location={location} match={match}/>);
         return Promise.resolve().then(() => {
             wrapper.update();
             expect(wrapper.exists("#resource-detail-view-content")).toBeFalsy();
             expect(hasContent).toHaveBeenCalledWith(VocabularyUtils.create(file.iri));
         });
+    });
+
+    it("re-checks File content existence when file content uploaded notification is published", () => {
+        const file = new File({
+            iri: namespace + resourceName,
+            label: resourceName,
+            types: [VocabularyUtils.FILE]
+        });
+        const wrapper = shallow<ResourceSummary>(<ResourceSummary
+            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history}
+            location={location} match={match}/>);
+        const contentNotification: AppNotification = {source: {type: NotificationType.FILE_CONTENT_UPLOADED}};
+        wrapper.setProps({notifications: [contentNotification]});
+        wrapper.update();
+        // The original call + the one after notification
+        expect(hasContent).toHaveBeenCalledTimes(2);
+        wrapper.setProps({notifications: []});
+    });
+
+    it("consumes File content uploaded notification when it is published", () => {
+        const file = new File({
+            iri: namespace + resourceName,
+            label: resourceName,
+            types: [VocabularyUtils.FILE]
+        });
+        (loadResource as jest.Mock).mockImplementation(() => Promise.resolve(file));
+        const wrapper = shallow<ResourceSummary>(<ResourceSummary
+            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history}
+            location={location} match={match}/>);
+        const contentNotification: AppNotification = {source: {type: NotificationType.FILE_CONTENT_UPLOADED}};
+        wrapper.setProps({notifications: [contentNotification]});
+        wrapper.update();
+        expect(consumeNotification).toHaveBeenCalledWith(contentNotification);
+        wrapper.setProps({notifications: []});
     });
 });

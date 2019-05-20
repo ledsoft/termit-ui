@@ -23,20 +23,24 @@ import Document from "../../model/Document";
 import ResourceMetadata from "./ResourceMetadata";
 import ResourceEdit from "./ResourceEdit";
 import "./Resources.scss";
-import {clearResource} from "../../action/SyncActions";
+import {clearResource, consumeNotification} from "../../action/SyncActions";
 import RemoveAssetDialog from "../asset/RemoveAssetDialog";
 import File from "../../model/File";
 import ResourceSelectVocabulary from "./ResourceSelectVocabulary";
 import Vocabulary from "../../model/Vocabulary";
 import Routes from "../../util/Routes";
 import {Link} from "react-router-dom";
+import AppNotification from "../../model/AppNotification";
+import NotificationType from "../../model/NotificationType";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
+    notifications: AppNotification[];
     loadResource: (iri: IRI) => Promise<any>;
     saveResource: (resource: Resource) => Promise<any>;
     removeResource: (resource: Resource) => Promise<any>;
     clearResource: () => void;
+    consumeNotification: (notification: AppNotification) => void;
 
     executeFileTextAnalysis: (file: File, vocabularyIri?: string) => void;
     hasContent: (iri: IRI) => Promise<boolean>;
@@ -74,6 +78,11 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
             if (iri.fragment !== normalizedName || (namespace && iri.namespace !== namespace)) {
                 this.forceReload();
             }
+            const fileUploadNotification = this.props.notifications.find(n => n.source.type === NotificationType.FILE_CONTENT_UPLOADED);
+            if (fileUploadNotification) {
+                this.checkForContent(iri);
+                this.props.consumeNotification(fileUploadNotification);
+            }
         }
     }
 
@@ -90,6 +99,10 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         const normalizedName = this.props.match.params.name;
         const iri = {fragment: normalizedName, namespace};
         this.props.loadResource(iri);
+        this.checkForContent(iri);
+    }
+
+    private checkForContent(iri: IRI) {
         this.props.hasContent(iri).then((res: boolean) => this.setState({hasContent: res}));
     }
 
@@ -186,6 +199,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
 export default connect((state: TermItState) => {
     return {
         resource: state.resource,
+        notifications: state.notifications
     };
 }, (dispatch: ThunkDispatch) => {
     return {
@@ -193,6 +207,7 @@ export default connect((state: TermItState) => {
         saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
         removeResource: (resource: Resource) => dispatch(removeResource(resource)),
         clearResource: () => dispatch(clearResource()),
+        consumeNotification: (notification: AppNotification) => dispatch(consumeNotification(notification)),
         executeFileTextAnalysis: (file: File, vocabularyIri: string) => dispatch(executeFileTextAnalysis(file, vocabularyIri)),
         hasContent: (iri: IRI) => dispatch(hasFileContent(iri))
     };
