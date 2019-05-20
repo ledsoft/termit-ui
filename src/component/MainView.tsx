@@ -80,6 +80,10 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         alert("Not implemented, yet!");
     };
 
+    private isDashboardRoute() {
+        return this.props.location.pathname === Routes.dashboard.path;
+    }
+
     public render() {
         const {i18n, user} = this.props;
         const path = this.props.location.pathname;
@@ -140,7 +144,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         </Nav>
                     </Collapse>
                 </Navbar>
-                <Breadcrumbs className="breadcrumb-bar"/>
+                {!this.isDashboardRoute() && <Breadcrumbs className="breadcrumb-bar"/>}
             </header>
             <SearchTypeTabs/>
             <Messages/>
