@@ -7,7 +7,6 @@ import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {loadResourceTermAssignmentsInfo} from "../../action/AsyncActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
-import IntlData from "../../model/IntlData";
 import Term from "../../model/Term";
 import {Badge, Col, Label, Row} from "reactstrap";
 import TermLink from "../term/TermLink";
@@ -16,20 +15,33 @@ import {
     ResourceTermOccurrences
 } from "../../model/ResourceTermAssignments";
 import Utils from "../../util/Utils";
+import AppNotification from "../../model/AppNotification";
+import TermItState from "../../model/TermItState";
+import NotificationType from "../../model/NotificationType";
+import {consumeNotification} from "../../action/SyncActions";
 
 interface ResourceTermAssignmentsOwnProps {
     resource: Resource;
 }
 
+interface ResourceTermAssignmentsStateProps {
+    notifications: AppNotification[];
+}
+
 interface ResourceTermAssignmentsDispatchProps {
     loadTermAssignments: (resource: Resource) => Promise<TermAssignmentInfo[]>;
+    consumeNotification: (notification: AppNotification) => void;
 }
 
 interface ResourceTermAssignmentsState {
     assignments: TermAssignmentInfo[];
 }
 
-type ResourceTermAssignmentsProps = ResourceTermAssignmentsOwnProps & ResourceTermAssignmentsDispatchProps & HasI18n;
+type ResourceTermAssignmentsProps =
+    ResourceTermAssignmentsOwnProps
+    & ResourceTermAssignmentsStateProps
+    & ResourceTermAssignmentsDispatchProps
+    & HasI18n;
 
 function isOccurrence(item: TermAssignmentInfo) {
     return Utils.sanitizeArray(item.types).indexOf(VocabularyUtils.TERM_OCCURRENCE) !== -1;
@@ -50,6 +62,12 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
     public componentDidUpdate(prevProps: Readonly<ResourceTermAssignmentsProps>): void {
         if (prevProps.resource.iri !== this.props.resource.iri && this.props.resource !== EMPTY_RESOURCE) {
             this.loadAssignments();
+            return;
+        }
+        const analysisFinishedNotification = this.props.notifications.find(n => n.source.type === NotificationType.TEXT_ANALYSIS_FINISHED);
+        if (analysisFinishedNotification) {
+            this.loadAssignments();
+            this.props.consumeNotification(analysisFinishedNotification);
         }
     }
 
@@ -130,8 +148,13 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
     }
 }
 
-export default connect<{ intl: IntlData }, ResourceTermAssignmentsDispatchProps, ResourceTermAssignmentsOwnProps>(undefined, (dispatch: ThunkDispatch) => {
+export default connect<ResourceTermAssignmentsStateProps, ResourceTermAssignmentsDispatchProps, ResourceTermAssignmentsOwnProps>((state: TermItState) => {
     return {
-        loadTermAssignments: (resource: Resource) => dispatch(loadResourceTermAssignmentsInfo(VocabularyUtils.create(resource.iri)))
+        notifications: state.notifications
+    };
+}, (dispatch: ThunkDispatch) => {
+    return {
+        loadTermAssignments: (resource: Resource) => dispatch(loadResourceTermAssignmentsInfo(VocabularyUtils.create(resource.iri))),
+        consumeNotification: (notification: AppNotification) => dispatch(consumeNotification(notification))
     };
 })(injectIntl(withI18n(ResourceTermAssignments)));

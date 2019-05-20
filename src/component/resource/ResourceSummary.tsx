@@ -23,7 +23,7 @@ import Document from "../../model/Document";
 import ResourceMetadata from "./ResourceMetadata";
 import ResourceEdit from "./ResourceEdit";
 import "./Resources.scss";
-import {clearResource, consumeNotification} from "../../action/SyncActions";
+import {clearResource, consumeNotification, publishNotification} from "../../action/SyncActions";
 import RemoveAssetDialog from "../asset/RemoveAssetDialog";
 import File from "../../model/File";
 import ResourceSelectVocabulary from "./ResourceSelectVocabulary";
@@ -41,8 +41,9 @@ interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     removeResource: (resource: Resource) => Promise<any>;
     clearResource: () => void;
     consumeNotification: (notification: AppNotification) => void;
+    publishNotification: (notification: AppNotification) => void;
 
-    executeFileTextAnalysis: (file: File, vocabularyIri?: string) => void;
+    executeFileTextAnalysis: (file: File, vocabularyIri?: string) => Promise<any>;
     hasContent: (iri: IRI) => Promise<boolean>;
 }
 
@@ -124,9 +125,9 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         return resource && !(resource as Document).vocabulary && Utils.sanitizeArray((resource as Document).files).length === 0;
     }
 
-    private onVocabularySet = (voc: Vocabulary) => {
+    public onVocabularySet = (voc: Vocabulary) => {
         const file = this.props.resource as File;
-        this.props.executeFileTextAnalysis(file, voc.iri);
+        this.props.executeFileTextAnalysis(file, voc.iri).then(() => this.props.publishNotification({source: {type: NotificationType.TEXT_ANALYSIS_FINISHED}}));
         this.setState({showSelectVocabulary: false})
     };
 
@@ -137,7 +138,7 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
     public onAnalyze = () => {
         const file = this.props.resource as File;
         if (file.owner && file.owner.vocabulary) {
-            this.props.executeFileTextAnalysis(file);
+            this.props.executeFileTextAnalysis(file).then(() => this.props.publishNotification({source: {type: NotificationType.TEXT_ANALYSIS_FINISHED}}));
         } else {
             this.setState({showSelectVocabulary: true});
         }
@@ -208,6 +209,7 @@ export default connect((state: TermItState) => {
         removeResource: (resource: Resource) => dispatch(removeResource(resource)),
         clearResource: () => dispatch(clearResource()),
         consumeNotification: (notification: AppNotification) => dispatch(consumeNotification(notification)),
+        publishNotification: (notification: AppNotification) => dispatch(publishNotification(notification)),
         executeFileTextAnalysis: (file: File, vocabularyIri: string) => dispatch(executeFileTextAnalysis(file, vocabularyIri)),
         hasContent: (iri: IRI) => dispatch(hasFileContent(iri))
     };

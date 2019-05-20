@@ -13,6 +13,7 @@ import {match as Match, Router} from "react-router";
 import Generator from "../../../__tests__/environment/Generator";
 import AppNotification from "../../../model/AppNotification";
 import NotificationType from "../../../model/NotificationType";
+import Vocabulary from "../../../model/Vocabulary";
 
 describe("ResourceSummary", () => {
 
@@ -24,7 +25,9 @@ describe("ResourceSummary", () => {
     let removeResource: (resource: Resource) => Promise<any>;
     let clearResource: () => void;
     let consumeNotification: (notification: AppNotification) => void;
+    let publishNotification: (notification: AppNotification) => void;
     let hasContent: (iri: IRI) => Promise<boolean>;
+    let executeFileTextAnalysis: (file: File, vocabularyIri: string) => Promise<any>;
 
     let resourceHandlers: any;
 
@@ -38,8 +41,10 @@ describe("ResourceSummary", () => {
         removeResource = jest.fn().mockImplementation(() => Promise.resolve());
         clearResource = jest.fn();
         consumeNotification = jest.fn();
+        publishNotification = jest.fn();
         hasContent = jest.fn().mockImplementation(() => Promise.resolve(true));
-        resourceHandlers = {loadResource, saveResource, removeResource, clearResource, consumeNotification, hasContent};
+        executeFileTextAnalysis = jest.fn().mockImplementation(() => Promise.resolve());
+        resourceHandlers = {loadResource, saveResource, removeResource, clearResource, consumeNotification, publishNotification, hasContent, executeFileTextAnalysis};
 
         location = {
             pathname: "/resource/" + resourceName,
@@ -232,7 +237,6 @@ describe("ResourceSummary", () => {
             label: resourceName,
             types: [VocabularyUtils.FILE]
         });
-        (loadResource as jest.Mock).mockImplementation(() => Promise.resolve(file));
         const wrapper = shallow<ResourceSummary>(<ResourceSummary
             resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
             history={history}
@@ -242,5 +246,49 @@ describe("ResourceSummary", () => {
         wrapper.update();
         expect(consumeNotification).toHaveBeenCalledWith(contentNotification);
         wrapper.setProps({notifications: []});
+    });
+
+    it("publishes notification after text analysis finish for file with vocabulary", () => {
+        const file = new File({
+            iri: namespace + resourceName,
+            label: resourceName,
+            owner: {
+                iri: Generator.generateUri(),
+                label: "Document",
+                vocabulary: {iri: Generator.generateUri()},
+                files: []
+            },
+            types: [VocabularyUtils.FILE]
+        });
+        const wrapper = shallow<ResourceSummary>(<ResourceSummary
+            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history}
+            location={location} match={match}/>);
+        wrapper.instance().onAnalyze();
+        expect(executeFileTextAnalysis).toHaveBeenCalledWith(file);
+        return Promise.resolve().then(() => {
+            expect(publishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TEXT_ANALYSIS_FINISHED}});
+        });
+    });
+
+    it("publishes notification after text analysis finished when vocabulary was selected", () => {
+        const file = new File({
+            iri: namespace + resourceName,
+            label: resourceName,
+            types: [VocabularyUtils.FILE]
+        });
+        const wrapper = shallow<ResourceSummary>(<ResourceSummary
+            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history}
+            location={location} match={match}/>);
+        const vocabulary = new Vocabulary({
+            iri: Generator.generateUri(),
+            label: "Vocabulary"
+        });
+        wrapper.instance().onVocabularySet(vocabulary);
+        expect(executeFileTextAnalysis).toHaveBeenCalledWith(file, vocabulary.iri);
+        return Promise.resolve().then(() => {
+            expect(publishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TEXT_ANALYSIS_FINISHED}});
+        });
     });
 });
