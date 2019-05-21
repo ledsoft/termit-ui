@@ -6,12 +6,20 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {
     executeFileTextAnalysis,
+    exportFileContent,
     hasFileContent,
     loadResource,
     removeResource,
     updateResourceTerms
 } from "../../action/AsyncActions";
-import {Button, ButtonToolbar} from "reactstrap";
+import {
+    Button,
+    ButtonToolbar,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    UncontrolledButtonDropdown
+} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
 import {GoClippy, GoFile, GoPencil, GoX} from "react-icons/go";
@@ -29,9 +37,9 @@ import File from "../../model/File";
 import ResourceSelectVocabulary from "./ResourceSelectVocabulary";
 import Vocabulary from "../../model/Vocabulary";
 import Routes from "../../util/Routes";
-import {Link} from "react-router-dom";
 import AppNotification from "../../model/AppNotification";
 import NotificationType from "../../model/NotificationType";
+import Routing from "../../util/Routing";
 
 interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
     resource: Resource;
@@ -45,6 +53,7 @@ interface ResourceSummaryProps extends HasI18n, RouteComponentProps<any> {
 
     executeFileTextAnalysis: (file: File, vocabularyIri?: string) => Promise<any>;
     hasContent: (iri: IRI) => Promise<boolean>;
+    downloadContent: (iri: IRI) => void;
 }
 
 interface ResourceSummaryState extends EditableComponentState {
@@ -144,6 +153,19 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
         }
     };
 
+    private onViewContent = () => {
+        const iri = VocabularyUtils.create(this.props.resource.iri);
+        Routing.transitionTo(Routes.annotateFile, {
+            params: new Map([["name", iri.fragment]]),
+            query: new Map([["namespace", iri.namespace!]])
+        });
+    };
+
+    public onDownloadContent = () => {
+        const iri = VocabularyUtils.create(this.props.resource.iri);
+        this.props.downloadContent(iri);
+    };
+
     public render() {
         const i18n = this.props.i18n;
         const buttons = this.createContentRelatedButtons();
@@ -179,14 +201,20 @@ export class ResourceSummary extends EditableComponent<ResourceSummaryProps, Res
     private createContentRelatedButtons() {
         if (Utils.getPrimaryAssetType(this.props.resource) === VocabularyUtils.FILE && this.state.hasContent) {
             const i18n = this.props.i18n;
-            const iri = VocabularyUtils.create(this.props.resource.iri);
-            return [<Link id="resource-detail-view-content" key={"resource-detail-view-content"}
-                          to={Routes.annotateFile.link({name: iri.fragment}, {namespace: iri.namespace})}
-                          className="btn btn-primary btn-sm"
-                          title={i18n("resource.metadata.file.view-content.tooltip")}>
-                <GoFile/>&nbsp;
-                {i18n("resource.metadata.file.view-content")}
-            </Link>,
+            return [<UncontrolledButtonDropdown id="resource-detail-content" key="resource-detail-content" size="sm">
+                <DropdownToggle caret={true} color="primary"><GoFile/>&nbsp;{i18n("resource.metadata.file.content")}
+                </DropdownToggle>
+                <DropdownMenu className="glossary-export-menu">
+                    <DropdownItem id="resource-detail-content-view" className="btn-sm" onClick={this.onViewContent}
+                                  title={i18n("resource.metadata.file.content.view.tooltip")}>
+                        {i18n("resource.metadata.file.content.view")}
+                    </DropdownItem>
+                    <DropdownItem id="resource-detail-content-download" className="btn-sm"
+                                  onClick={this.onDownloadContent}>
+                        {i18n("resource.metadata.file.content.download")}
+                    </DropdownItem>
+                </DropdownMenu>
+            </UncontrolledButtonDropdown>,
                 <Button id="resource-file-analyze" key="resource.file.analyze" size="sm" color="primary"
                         title={i18n("file.metadata.startTextAnalysis.text")}
                         onClick={this.onAnalyze}><GoClippy/>&nbsp;{i18n("file.metadata.startTextAnalysis.text")}
@@ -211,6 +239,7 @@ export default connect((state: TermItState) => {
         consumeNotification: (notification: AppNotification) => dispatch(consumeNotification(notification)),
         publishNotification: (notification: AppNotification) => dispatch(publishNotification(notification)),
         executeFileTextAnalysis: (file: File, vocabularyIri: string) => dispatch(executeFileTextAnalysis(file, vocabularyIri)),
-        hasContent: (iri: IRI) => dispatch(hasFileContent(iri))
+        hasContent: (iri: IRI) => dispatch(hasFileContent(iri)),
+        downloadContent: (iri: IRI) => dispatch(exportFileContent(iri))
     };
 })(injectIntl(withI18n(ResourceSummary)));

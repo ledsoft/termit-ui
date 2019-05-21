@@ -28,6 +28,7 @@ describe("ResourceSummary", () => {
     let publishNotification: (notification: AppNotification) => void;
     let hasContent: (iri: IRI) => Promise<boolean>;
     let executeFileTextAnalysis: (file: File, vocabularyIri: string) => Promise<any>;
+    let downloadContent: (iri: IRI) => void;
 
     let resourceHandlers: any;
 
@@ -44,7 +45,18 @@ describe("ResourceSummary", () => {
         publishNotification = jest.fn();
         hasContent = jest.fn().mockImplementation(() => Promise.resolve(true));
         executeFileTextAnalysis = jest.fn().mockImplementation(() => Promise.resolve());
-        resourceHandlers = {loadResource, saveResource, removeResource, clearResource, consumeNotification, publishNotification, hasContent, executeFileTextAnalysis};
+        downloadContent = jest.fn();
+        resourceHandlers = {
+            loadResource,
+            saveResource,
+            removeResource,
+            clearResource,
+            consumeNotification,
+            publishNotification,
+            hasContent,
+            executeFileTextAnalysis,
+            downloadContent
+        };
 
         location = {
             pathname: "/resource/" + resourceName,
@@ -174,7 +186,7 @@ describe("ResourceSummary", () => {
                              location={location} match={match}/></Router>);
         return Promise.resolve().then(() => {
             wrapper.update();
-            expect(wrapper.exists("a#resource-detail-view-content")).toBeTruthy();
+            expect(wrapper.exists("button#resource-detail-content-view")).toBeTruthy();
         });
     });
 
@@ -191,7 +203,7 @@ describe("ResourceSummary", () => {
                              location={location} match={match}/></Router>);
         return Promise.resolve().then(() => {
             wrapper.update();
-            expect(wrapper.exists("a#resource-detail-view-content")).toBeFalsy();
+            expect(wrapper.exists("button#resource-detail-content-view")).toBeFalsy();
         });
     });
 
@@ -208,7 +220,7 @@ describe("ResourceSummary", () => {
             location={location} match={match}/>);
         return Promise.resolve().then(() => {
             wrapper.update();
-            expect(wrapper.exists("#resource-detail-view-content")).toBeFalsy();
+            expect(wrapper.exists("#resource-detail-content-view")).toBeFalsy();
             expect(hasContent).toHaveBeenCalledWith(VocabularyUtils.create(file.iri));
         });
     });
@@ -290,5 +302,19 @@ describe("ResourceSummary", () => {
         return Promise.resolve().then(() => {
             expect(publishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TEXT_ANALYSIS_FINISHED}});
         });
+    });
+
+    it("triggers File content download on content download button click", () => {
+        const file = new File({
+            iri: namespace + resourceName,
+            label: resourceName,
+            types: [VocabularyUtils.FILE]
+        });
+        const wrapper = shallow<ResourceSummary>(<ResourceSummary
+            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history}
+            location={location} match={match}/>);
+        wrapper.instance().onDownloadContent();
+        expect(downloadContent).toHaveBeenCalledWith(VocabularyUtils.create(file.iri));
     });
 });

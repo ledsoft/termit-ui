@@ -140,8 +140,10 @@ export default {
         "resource.metadata.terms.occurrences.suggested": "{count} - návrh",
         "resource.metadata.terms.occurrences.suggested.tooltip": "Výskyt navržen systémem",
         'resource.metadata-edit.terms': 'Související pojmy ze slovníku',
-        "resource.metadata.file.view-content": "Obsah",
-        "resource.metadata.file.view-content.tooltip": "Zobrazit obsah souboru a anotovat ho",
+        "resource.metadata.file.content": "Obsah",
+        "resource.metadata.file.content.view": "Zobrazit",
+        "resource.metadata.file.content.view.tooltip": "Zobrazit obsah souboru a anotovat ho",
+        "resource.metadata.file.content.download": "Stáhnout",
 
         "term.metadata.definition": "Definice",
         'term.metadata.comment': 'Komentář',

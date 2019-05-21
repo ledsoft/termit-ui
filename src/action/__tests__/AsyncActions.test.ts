@@ -5,7 +5,7 @@ import {
     createResource,
     createTerm,
     createVocabulary,
-    executeFileTextAnalysis,
+    executeFileTextAnalysis, exportFileContent,
     exportGlossary,
     getLabel,
     getProperties,
@@ -1205,6 +1205,49 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(hasFileContent(resourceIri))).then((result: boolean) => {
                 expect(result).toBeFalsy();
                 expect(Ajax.head).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe("exportFileContent", () => {
+        const fileName = "test-file.html";
+        const fileIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/resources/" + fileName);
+
+        it("sends request asking for content as attachment", () => {
+            Ajax.getRaw = jest.fn().mockImplementation(() => Promise.resolve({
+                data: "test",
+                headers: {
+                    "content-type": "text/html",
+                    "content-disposition": "attachment; filename=\"" + fileName + "\""
+                }
+            }));
+            Utils.fileDownload = jest.fn();
+            return Promise.resolve((store.dispatch as ThunkDispatch)(exportFileContent(fileIri))).then(() => {
+                expect(Ajax.getRaw).toHaveBeenCalled();
+                const url = (Ajax.getRaw as jest.Mock).mock.calls[0][0];
+                expect(url).toEqual(Constants.API_PREFIX + "/resources/" +fileName+ "/content");
+                const config = (Ajax.getRaw as jest.Mock).mock.calls[0][1];
+                expect(config.getParams().attachment).toEqual("true");
+                expect(config.getParams().namespace).toEqual(fileIri.namespace);
+            });
+        });
+
+        it("stores response attachment", () => {
+            const data = "<html lang=\"en\">test</html>";
+            Ajax.getRaw = jest.fn().mockImplementation(() => Promise.resolve({
+                data,
+                headers: {
+                    "content-type": "text/html",
+                    "content-disposition": "attachment; filename=\"" + fileName + "\""
+                }
+            }));
+            Utils.fileDownload = jest.fn();
+            return Promise.resolve((store.dispatch as ThunkDispatch)(exportFileContent(fileIri))).then(() => {
+                expect(Utils.fileDownload).toHaveBeenCalled();
+                const args = (Utils.fileDownload as jest.Mock).mock.calls[0];
+                expect(args[0]).toEqual(data);
+                expect(args[1]).toEqual(fileName);
+                expect(args[2]).toEqual("text/html");
             });
         });
     });

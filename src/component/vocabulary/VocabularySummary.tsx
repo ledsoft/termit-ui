@@ -123,7 +123,7 @@ export class VocabularySummary extends EditableComponent<VocabularySummaryProps>
         const i18n = this.props.i18n;
         return <UncontrolledButtonDropdown id="vocabulary-summary-export" key="vocabulary.summary.export"
                                            size="sm" title={i18n("vocabulary.summary.export.title")}>
-            <DropdownToggle caret={true} color="primary"><GoCloudDownload/> {i18n("vocabulary.summary.export.text")}
+            <DropdownToggle caret={true} color="primary"><GoCloudDownload/>&nbsp;{i18n("vocabulary.summary.export.text")}
             </DropdownToggle>
             <DropdownMenu className="glossary-export-menu">
                 <DropdownItem name="vocabulary-export-csv" className="btn-sm" onClick={this.onExportToCsv}
