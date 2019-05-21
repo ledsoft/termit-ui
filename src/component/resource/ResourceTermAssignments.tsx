@@ -150,7 +150,8 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
 
 export default connect<ResourceTermAssignmentsStateProps, ResourceTermAssignmentsDispatchProps, ResourceTermAssignmentsOwnProps>((state: TermItState) => {
     return {
-        notifications: state.notifications
+        notifications: state.notifications,
+        intl: state.intl    // Pass intl in props to force UI re-render on language switch
     };
 }, (dispatch: ThunkDispatch) => {
     return {
