@@ -47,6 +47,10 @@ function isOccurrence(item: TermAssignmentInfo) {
     return Utils.sanitizeArray(item.types).indexOf(VocabularyUtils.TERM_OCCURRENCE) !== -1;
 }
 
+function isFile(resource: Resource) {
+    return Utils.getPrimaryAssetType(resource) === VocabularyUtils.FILE;
+}
+
 export class ResourceTermAssignments extends React.Component<ResourceTermAssignmentsProps, ResourceTermAssignmentsState> {
     constructor(props: ResourceTermAssignmentsProps) {
         super(props);
@@ -90,7 +94,7 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
                     {assignments}
                 </Col>
             </Row>
-            <Row className={occurrencesClass}>
+            {isFile(this.props.resource) && <Row className={occurrencesClass}>
                 <Col md={2}>
                     <Label className="attribute-label" title={i18n("resource.metadata.terms.occurrences.tooltip")}>
                         {i18n("resource.metadata.terms.occurrences")}
@@ -99,7 +103,7 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
                 <Col md={10} className="resource-terms">
                     {this.renderTermOccurrences()}
                 </Col>
-            </Row>
+            </Row>}
         </>;
     }
 
