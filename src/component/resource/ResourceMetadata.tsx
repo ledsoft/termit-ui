@@ -4,7 +4,6 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Col, Label, Row} from "reactstrap";
 import OutgoingLink from "../misc/OutgoingLink";
 import Resource from "../../model/Resource";
-import ResourceTermAssignments from "./ResourceTermAssignments";
 
 interface ResourceMetadataProps extends HasI18n {
     resource: Resource;
@@ -15,14 +14,10 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
         super(props);
     }
 
-    protected clear = () => {
-        this.setState({searchString: "", results: null});
-    };
-
     public render() {
         const i18n = this.props.i18n;
         const resource = this.props.resource || {};
-        return <div className="metadata-panel">
+        return <>
             <Row>
                 <Col md={2}>
                     <Label className="attribute-label">{i18n("asset.iri")}</Label>
@@ -47,8 +42,7 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
                     <Label id="resource-metadata-description">{resource.description}</Label>
                 </Col>
             </Row>
-            <ResourceTermAssignments resource={resource}/>
-        </div>;
+        </>;
     }
 }
 

@@ -16,7 +16,8 @@ import File from "../../../model/File";
 describe("ResourceTermAssignments", () => {
     const file: File = new File({
         iri: Generator.generateUri(),
-        label: "test-file.html"
+        label: "test-file.html",
+        types: [VocabularyUtils.FILE]
     });
     let onLoadAssignments: (resource: Resource) => Promise<TermAssignmentInfo[]>;
     let consumeNotification: (notification: AppNotification) => void;

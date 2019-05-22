@@ -543,8 +543,14 @@ export function hasFileContent(fileIri: IRI) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax.head(Constants.API_PREFIX + "/resources/" + fileIri.fragment + "/content", param("namespace", fileIri.namespace))
-            .then(() => true)
-            .catch(() => false);
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                return true;
+            })
+            .catch(() => {
+                dispatch(asyncActionRequest(action));
+                return false;
+            });
     }
 }
 

@@ -2,18 +2,12 @@ import * as React from "react";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {shallow} from "enzyme";
 import {ResourceSummary} from "../ResourceSummary";
-import Resource, {EMPTY_RESOURCE} from "../../../model/Resource";
+import Resource from "../../../model/Resource";
 import Document from "../../../model/Document";
 import File from "../../../model/File";
 import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {Location} from "history";
-import createMemoryHistory from "history/createMemoryHistory";
-import {match as Match, Router} from "react-router";
 import Generator from "../../../__tests__/environment/Generator";
-import AppNotification from "../../../model/AppNotification";
-import NotificationType from "../../../model/NotificationType";
-import Vocabulary from "../../../model/Vocabulary";
 
 describe("ResourceSummary", () => {
 
@@ -23,117 +17,18 @@ describe("ResourceSummary", () => {
     let loadResource: (iri: IRI) => Promise<any>;
     let saveResource: (resource: Resource) => Promise<any>;
     let removeResource: (resource: Resource) => Promise<any>;
-    let clearResource: () => void;
-    let consumeNotification: (notification: AppNotification) => void;
-    let publishNotification: (notification: AppNotification) => void;
-    let hasContent: (iri: IRI) => Promise<boolean>;
-    let executeFileTextAnalysis: (file: File, vocabularyIri: string) => Promise<any>;
-    let downloadContent: (iri: IRI) => void;
 
     let resourceHandlers: any;
-
-    let location: Location;
-    const history = createMemoryHistory();
-    let match: Match<any>;
 
     beforeEach(() => {
         loadResource = jest.fn().mockImplementation(() => Promise.resolve());
         saveResource = jest.fn().mockImplementation(() => Promise.resolve());
         removeResource = jest.fn().mockImplementation(() => Promise.resolve());
-        clearResource = jest.fn();
-        consumeNotification = jest.fn();
-        publishNotification = jest.fn();
-        hasContent = jest.fn().mockImplementation(() => Promise.resolve(true));
-        executeFileTextAnalysis = jest.fn().mockImplementation(() => Promise.resolve());
-        downloadContent = jest.fn();
         resourceHandlers = {
             loadResource,
             saveResource,
-            removeResource,
-            clearResource,
-            consumeNotification,
-            publishNotification,
-            hasContent,
-            executeFileTextAnalysis,
-            downloadContent
+            removeResource
         };
-
-        location = {
-            pathname: "/resource/" + resourceName,
-            search: "?namespace=" + namespace,
-            hash: "",
-            state: {}
-        };
-        match = {
-            params: {
-                name: resourceName,
-            },
-            path: location.pathname,
-            isExact: true,
-            url: "http://localhost:3000/" + location.pathname
-        };
-    });
-
-    it("loads resource on mount", () => {
-        shallow(<ResourceSummary
-            resource={EMPTY_RESOURCE}
-            notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history}
-            location={location}
-            match={match}/>);
-        expect(loadResource).toHaveBeenCalledWith({fragment: resourceName, namespace});
-    });
-
-    it("does not attempt to reload resource on update when it is empty resource", () => {
-        const wrapper = shallow(<ResourceSummary
-            resource={EMPTY_RESOURCE}
-            notifications={[]}{...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history} location={location} match={match}/>);
-        wrapper.setProps({resource: EMPTY_RESOURCE});
-        wrapper.update();
-        expect(loadResource).toHaveBeenCalledTimes(1);
-    });
-
-    it("reloads resource when new resource identifier is passed in location props", () => {
-        const oldResource = new Resource({iri: namespace + resourceName, label: resourceName, terms: []});
-        const wrapper = shallow(<ResourceSummary
-            resource={oldResource}
-            notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history} location={location} match={match}/>);
-        const newFragment = "another-resource";
-        const newMatch = Object.assign({}, match);
-        newMatch.params.name = newFragment;
-        wrapper.setProps({match: newMatch});
-        expect(loadResource).toHaveBeenCalledWith({fragment: newFragment, namespace});
-        wrapper.setProps({resource: new Resource({iri: namespace + newFragment, label: newFragment, terms: []})});
-    });
-
-    it("does not attempt to reload resource when namespace is missing in location and fragment is identical", () => {
-        const resource = new Resource({
-            iri: "http://onto.fel.cvut.cz/ontologies/termit/resources/" + resourceName,
-            label: resourceName
-        });
-        const wrapper = shallow(<ResourceSummary
-            resource={EMPTY_RESOURCE}
-            notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history} location={location} match={match}/>);
-        wrapper.setProps({resource});
-        wrapper.update();
-        expect(loadResource).toHaveBeenCalledTimes(1);
-    });
-
-    it("clears resource on unmnount", () => {
-        const resource = new Resource({
-            iri: namespace + resourceName,
-            label: resourceName
-        });
-        const wrapper = shallow(<ResourceSummary
-            resource={resource} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history} location={location} match={match}/>);
-        return Promise.resolve().then(() => {
-            wrapper.unmount();
-            expect(clearResource).toHaveBeenCalled();
-        });
     });
 
     it("invokes remove action and closes remove confirmation dialog on remove", () => {
@@ -141,10 +36,10 @@ describe("ResourceSummary", () => {
             iri: namespace + resourceName,
             label: resourceName
         });
-        const wrapper = shallow(<ResourceSummary
-            resource={resource} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history} location={location} match={match}/>);
-        (wrapper.instance() as ResourceSummary).onRemove();
+        const wrapper = shallow<ResourceSummary>(<ResourceSummary
+            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+        />);
+        wrapper.instance().onRemove();
         expect(removeResource).toHaveBeenCalledWith(resource);
         expect(wrapper.state("showRemoveDialog")).toBeFalsy();
     });
@@ -156,9 +51,8 @@ describe("ResourceSummary", () => {
             files: [],
             vocabulary: {iri: Generator.generateUri()}
         });
-        const wrapper = mountWithIntl(<ResourceSummary resource={doc}
-                                                       notifications={[]} {...resourceHandlers} {...intlFunctions()}
-                                                       history={history} location={location} match={match}/>);
+        const wrapper = mountWithIntl(<ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()}
+        />);
         expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
     });
 
@@ -168,153 +62,22 @@ describe("ResourceSummary", () => {
             label: resourceName,
             files: [new File({iri: Generator.generateUri(), label: "test.html"})]
         });
-        const wrapper = mountWithIntl(<ResourceSummary resource={doc}
-                                                       notifications={[]} {...resourceHandlers} {...intlFunctions()}
-                                                       history={history} location={location} match={match}/>);
+        const wrapper = mountWithIntl(<ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()}
+        />);
         expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
     });
 
-    it("renders content button for File", () => {
-        const file = new File({
+    it("reloads resource after successful save", () => {
+        const resource = new Resource({
             iri: namespace + resourceName,
-            label: resourceName,
-            types: [VocabularyUtils.FILE]
-        });
-        const wrapper = mountWithIntl(<Router history={history}>
-            <ResourceSummary resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()}
-                             history={history}
-                             location={location} match={match}/></Router>);
-        return Promise.resolve().then(() => {
-            wrapper.update();
-            expect(wrapper.exists("button#resource-detail-content-view")).toBeTruthy();
-        });
-    });
-
-    it("does not render content button for non-File Resource", () => {
-        const doc = new Document({
-            iri: namespace + resourceName,
-            label: resourceName,
-            files: [],
-            types: [VocabularyUtils.DOCUMENT]
-        });
-        const wrapper = mountWithIntl(<Router history={history}>
-            <ResourceSummary resource={doc} notifications={[]} {...resourceHandlers} {...intlFunctions()}
-                             history={history}
-                             location={location} match={match}/></Router>);
-        return Promise.resolve().then(() => {
-            wrapper.update();
-            expect(wrapper.exists("button#resource-detail-content-view")).toBeFalsy();
-        });
-    });
-
-    it("does not render content button for File without content", () => {
-        const file = new File({
-            iri: namespace + resourceName,
-            label: resourceName,
-            types: [VocabularyUtils.FILE]
-        });
-        (hasContent as jest.Mock).mockImplementation(() => Promise.resolve(false));
-        const wrapper = shallow(<ResourceSummary
-            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history}
-            location={location} match={match}/>);
-        return Promise.resolve().then(() => {
-            wrapper.update();
-            expect(wrapper.exists("#resource-detail-content-view")).toBeFalsy();
-            expect(hasContent).toHaveBeenCalledWith(VocabularyUtils.create(file.iri));
-        });
-    });
-
-    it("re-checks File content existence when file content uploaded notification is published", () => {
-        const file = new File({
-            iri: namespace + resourceName,
-            label: resourceName,
-            types: [VocabularyUtils.FILE]
+            label: resourceName
         });
         const wrapper = shallow<ResourceSummary>(<ResourceSummary
-            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history}
-            location={location} match={match}/>);
-        const contentNotification: AppNotification = {source: {type: NotificationType.FILE_CONTENT_UPLOADED}};
-        wrapper.setProps({notifications: [contentNotification]});
-        wrapper.update();
-        // The original call + the one after notification
-        expect(hasContent).toHaveBeenCalledTimes(2);
-        wrapper.setProps({notifications: []});
-    });
-
-    it("consumes File content uploaded notification when it is published", () => {
-        const file = new File({
-            iri: namespace + resourceName,
-            label: resourceName,
-            types: [VocabularyUtils.FILE]
-        });
-        const wrapper = shallow<ResourceSummary>(<ResourceSummary
-            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history}
-            location={location} match={match}/>);
-        const contentNotification: AppNotification = {source: {type: NotificationType.FILE_CONTENT_UPLOADED}};
-        wrapper.setProps({notifications: [contentNotification]});
-        wrapper.update();
-        expect(consumeNotification).toHaveBeenCalledWith(contentNotification);
-        wrapper.setProps({notifications: []});
-    });
-
-    it("publishes notification after text analysis finish for file with vocabulary", () => {
-        const file = new File({
-            iri: namespace + resourceName,
-            label: resourceName,
-            owner: {
-                iri: Generator.generateUri(),
-                label: "Document",
-                vocabulary: {iri: Generator.generateUri()},
-                files: []
-            },
-            types: [VocabularyUtils.FILE]
-        });
-        const wrapper = shallow<ResourceSummary>(<ResourceSummary
-            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history}
-            location={location} match={match}/>);
-        wrapper.instance().onAnalyze();
-        expect(executeFileTextAnalysis).toHaveBeenCalledWith(file);
+            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+        />);
+        wrapper.instance().onSave(resource);
         return Promise.resolve().then(() => {
-            expect(publishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TEXT_ANALYSIS_FINISHED}});
+            expect(loadResource).toHaveBeenCalledWith(VocabularyUtils.create(resource.iri));
         });
-    });
-
-    it("publishes notification after text analysis finished when vocabulary was selected", () => {
-        const file = new File({
-            iri: namespace + resourceName,
-            label: resourceName,
-            types: [VocabularyUtils.FILE]
-        });
-        const wrapper = shallow<ResourceSummary>(<ResourceSummary
-            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history}
-            location={location} match={match}/>);
-        const vocabulary = new Vocabulary({
-            iri: Generator.generateUri(),
-            label: "Vocabulary"
-        });
-        wrapper.instance().onVocabularySet(vocabulary);
-        expect(executeFileTextAnalysis).toHaveBeenCalledWith(file, vocabulary.iri);
-        return Promise.resolve().then(() => {
-            expect(publishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TEXT_ANALYSIS_FINISHED}});
-        });
-    });
-
-    it("triggers File content download on content download button click", () => {
-        const file = new File({
-            iri: namespace + resourceName,
-            label: resourceName,
-            types: [VocabularyUtils.FILE]
-        });
-        const wrapper = shallow<ResourceSummary>(<ResourceSummary
-            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-            history={history}
-            location={location} match={match}/>);
-        wrapper.instance().onDownloadContent();
-        expect(downloadContent).toHaveBeenCalledWith(VocabularyUtils.create(file.iri));
     });
 });

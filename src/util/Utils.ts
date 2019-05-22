@@ -3,6 +3,8 @@
  */
 import Asset, {AssetData} from "../model/Asset";
 import VocabularyUtils from "./VocabularyUtils";
+import {match} from "react-router";
+import {Location} from "history";
 
 export default {
 
@@ -33,8 +35,19 @@ export default {
     extractQueryParam(queryString: string, paramName: string): string | undefined {
         queryString = decodeURI(queryString); // TODO This is a nasty hack, the problem with encoding seems to be
                                               // somewhere in thunk
-        const match = queryString.match(new RegExp(paramName + "=([^&]*)"));
-        return match ? match[1] : undefined;
+        const reqexpMatch = queryString.match(new RegExp(paramName + "=([^&]*)"));
+        return reqexpMatch ? reqexpMatch[1] : undefined;
+    },
+
+    /**
+     * Extracts asset IRI from the specified route props.
+     *
+     * Uses match param {@code name} as fragment value. Namespace is extracted from location search string.
+     */
+    extractAssetIri(routeMatch: match<any>, location: Location) {
+        const namespace = this.extractQueryParam(location.search, "namespace");
+        const normalizedName = routeMatch.params.name;
+        return {fragment: normalizedName, namespace};
     },
 
     /**
