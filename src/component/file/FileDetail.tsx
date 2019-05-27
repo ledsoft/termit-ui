@@ -18,6 +18,7 @@ import {Annotator} from "../annotator/Annotator";
 import Term from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
 import IdentifierResolver from "../../util/IdentifierResolver";
+import XXH from "xxhashjs";
 
 
 interface FileDetailProvidedProps {
@@ -58,7 +59,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     // TODO should not be responsibility of file detail
     private initializeTermFetching = (): void => {
-        this.createInitialFetchTermPromise(); // TODO ?! should be enough to call it on componentDidMount
+        this.ensureInitialFetchTermPromise(); // TODO ?! should be enough to call it on componentDidMount
         if (this.props.defaultTerms.length === 0) {
             this.props.loadDefaultTerms(this.props.vocabularyIri);
         } else {
@@ -73,7 +74,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
     }
 
     public componentDidUpdate(prevProps: FileDetailProps): void {
-        if (isDifferent(this.props.iri, prevProps.iri)) {
+        if (isDifferent(this.props.iri, prevProps.iri) || isDifferent(this.props.vocabularyIri, prevProps.vocabularyIri)) {
             this.loadFileContentData();
         }
         this.initializeTermFetching();
@@ -90,7 +91,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
         retrievedTerms.forEach((t: Term) => this.terms[t.iri] = t);
     }
 
-    private createInitialFetchTermPromise = (): void => {
+    private ensureInitialFetchTermPromise = (): void => {
         if (!this.lastExecutedPromise) {
             this.lastExecutedPromise = this.props.fetchTerms({}, this.props.vocabularyIri)
                 .then((terms: Term[]) => {
@@ -146,7 +147,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
         const term = this.terms[termIri];
         if (!term) {
             if (!this.lastExecutedPromise) { // TODO should be initialized here already
-                this.createInitialFetchTermPromise();
+                this.ensureInitialFetchTermPromise();
             }
             this.lastExecutedPromise = this.lastExecutedPromise!
                 .then((d) => d, (d) => d)
@@ -160,7 +161,8 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     public render() {
         return (this.props.fileContent) ?
-            <Annotator html={this.props.fileContent}
+            <Annotator key={hash(this.props.fileContent)}
+                       html={this.props.fileContent}
                        onCreateTerm={this.onCreateTerm} onFetchTerm={this.onFetchTerm}
                        onUpdate={this.onUpdate}
                        intl={this.props.intl}/> : null;
@@ -175,6 +177,11 @@ function isDifferent(iri1?: IRI, iri2?: IRI): boolean {
     return iri1Str !== iri2Str;
 }
 
+// TODO: optimize -- replace with detection of change in reference for state.fileContent
+//       (for MPP it takes about 0.5 seconds)
+function hash(str: string) {
+    return XXH.h32( str, 0xABCD ).toString(16);
+}
 
 export default connect((state: TermItState) => {
     return {
