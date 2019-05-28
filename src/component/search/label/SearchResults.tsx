@@ -23,8 +23,6 @@ class SearchResultItem extends SearchResult {
     }
 }
 
-const MULTIPLE_FIELDS_MATCH_FACTOR = 1.33;
-
 interface SearchResultsProps extends HasI18n {
     results: SearchResult[];
 }
@@ -109,7 +107,6 @@ export class SearchResults extends React.Component<SearchResultsProps> {
                         existing.snippets.push(r.snippetText);
                         existing.snippetFields.push(r.snippetField);
                     }
-                    existing.totalScore *= MULTIPLE_FIELDS_MATCH_FACTOR;
                 }
             }
         });
