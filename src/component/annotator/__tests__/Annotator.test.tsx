@@ -40,7 +40,7 @@ describe("Annotator", () => {
 
         const wrapper = mountWithIntl(<Annotator
             {...mockedCallbackProps}
-            html={generalHtmlContent}
+            initialHtml={generalHtmlContent}
             intl={intl()}
         />);
 
@@ -56,7 +56,7 @@ describe("Annotator", () => {
         );
         const wrapper = mountWithIntlAttached(<Annotator
             {...mockedCallbackProps}
-            html={htmlWithOccurrence}
+            initialHtml={htmlWithOccurrence}
             intl={intl()}
         />);
 
@@ -76,7 +76,7 @@ describe("Annotator", () => {
         );
         const wrapper = shallow(<Annotator
             {...mockedCallbackProps}
-            html={htmlWithOccurrence}
+            initialHtml={htmlWithOccurrence}
             intl={intl()}
         />);
 
@@ -93,7 +93,7 @@ describe("Annotator", () => {
         document.body.appendChild(div);
         const wrapper = mountWithIntl(<Annotator
             {...mockedCallbackProps}
-            html={generalHtmlContent}
+            initialHtml={generalHtmlContent}
             intl={intl()}
         />, {attachTo: div});
         const newSpan = div.querySelector("span");

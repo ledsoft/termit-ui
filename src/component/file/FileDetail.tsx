@@ -18,7 +18,6 @@ import {Annotator} from "../annotator/Annotator";
 import Term from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
 import IdentifierResolver from "../../util/IdentifierResolver";
-import XXH from "xxhashjs";
 
 
 interface FileDetailProvidedProps {
@@ -40,14 +39,19 @@ interface FileDetailOwnProps extends HasI18n {
 
 type FileDetailProps = FileDetailOwnProps & FileDetailProvidedProps;
 
+interface FileDetailState {
+    fileContentId: number
+}
+
 // TODO "file detail" --> "file content detail"
-export class FileDetail extends React.Component<FileDetailProps> {
+export class FileDetail extends React.Component<FileDetailProps, FileDetailState> {
 
     private terms: object = {};
     private lastExecutedPromise: Promise<Term> | null = null;
 
     constructor(props: FileDetailProps) {
         super(props);
+        this.state = { fileContentId: 1};
     }
 
     private loadFileContentData = (): void => {
@@ -70,12 +74,14 @@ export class FileDetail extends React.Component<FileDetailProps> {
     public componentDidMount(): void {
         this.loadFileContentData();
         this.initializeTermFetching();
-
     }
 
     public componentDidUpdate(prevProps: FileDetailProps): void {
         if (isDifferent(this.props.iri, prevProps.iri) || isDifferent(this.props.vocabularyIri, prevProps.vocabularyIri)) {
             this.loadFileContentData();
+        }
+        if (prevProps.fileContent !== this.props.fileContent) {
+            this.setState({fileContentId: this.state.fileContentId+1});
         }
         this.initializeTermFetching();
     }
@@ -161,8 +167,8 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     public render() {
         return (this.props.fileContent) ?
-            <Annotator key={hash(this.props.fileContent)}
-                       html={this.props.fileContent}
+            <Annotator key={this.state.fileContentId}
+                       initialHtml={this.props.fileContent}
                        onCreateTerm={this.onCreateTerm} onFetchTerm={this.onFetchTerm}
                        onUpdate={this.onUpdate}
                        intl={this.props.intl}/> : null;
@@ -177,11 +183,6 @@ function isDifferent(iri1?: IRI, iri2?: IRI): boolean {
     return iri1Str !== iri2Str;
 }
 
-// TODO: optimize -- replace with detection of change in reference for state.fileContent
-//       (for MPP it takes about 0.5 seconds)
-function hash(str: string) {
-    return XXH.h32( str, 0xABCD ).toString(16);
-}
 
 export default connect((state: TermItState) => {
     return {

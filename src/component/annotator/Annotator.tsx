@@ -9,7 +9,7 @@ import HtmlDomUtils from "./HtmlDomUtils";
 import LegendToggle from "./LegendToggle";
 
 interface AnnotatorProps {
-    html: string
+    initialHtml: string
     intl: IntlData
     onUpdate(newHtml: string): void
     onFetchTerm(termIri: string): Promise<Term>
@@ -50,7 +50,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     constructor(props: AnnotatorProps) {
         super(props);
         this.state = {
-            internalHtml: Annotator.matchHtml(props.html).body,
+            internalHtml: Annotator.matchHtml(props.initialHtml).body,
             stickyAnnotationId: ""
         };
     }
@@ -191,7 +191,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     }
 
     private reconstructHtml(htmlBodyContent: string) {
-        const htmlSplit = Annotator.matchHtml(this.props.html);
+        const htmlSplit = Annotator.matchHtml(this.props.initialHtml);
         return htmlSplit.prefix + htmlBodyContent + htmlSplit.suffix;
     }
 
