@@ -14,7 +14,6 @@ import ResourceLink from "../../resource/ResourceLink";
 describe("FileList", () => {
     let files: File[];
     let file: File;
-    let executeFileTextAnalysis: (file: File) => Promise<any>;
     let vocabulary: Vocabulary;
     beforeEach(() => {
         files = [
@@ -33,17 +32,11 @@ describe("FileList", () => {
             label: "Test vocabulary"
         });
         file = files[0];
-        executeFileTextAnalysis = jest.fn();
     });
 
     it("renders vocabulary file links", () => {
-
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList
-                    files={files}
-                    vocabulary={vocabulary}
-                    executeFileTextAnalysis={executeFileTextAnalysis}
-                    {...intlFunctions()}/>
+                <FileList files={files} vocabulary={vocabulary} {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.find(VocabularyFileContentLink).exists()).toBeTruthy();
@@ -51,13 +44,8 @@ describe("FileList", () => {
 
 
     it("renders file metadata", () => {
-
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList
-                    files={files}
-                    vocabulary={vocabulary}
-                    executeFileTextAnalysis={executeFileTextAnalysis}
-                    {...intlFunctions()}/>
+                <FileList files={files} vocabulary={vocabulary} {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.text()).toContain("fileName1");
@@ -65,42 +53,18 @@ describe("FileList", () => {
     });
 
     it("renders text analysis button", () => {
-
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList
-                    files={[file]}
-                    vocabulary={vocabulary}
-                    executeFileTextAnalysis={executeFileTextAnalysis}
-                    {...intlFunctions()}/>
+                <FileList files={[file]} vocabulary={vocabulary} {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.find(Button).exists()).toBeTruthy();
-    });
-
-    it("on text analysis button click starts the analysis", () => {
-
-        const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList
-                    files={[file]}
-                    vocabulary={vocabulary}
-                    executeFileTextAnalysis={executeFileTextAnalysis}
-                    {...intlFunctions()}/>
-            </MemoryRouter>
-        );
-
-        expect(executeFileTextAnalysis).not.toBeCalled();
-        wrapper.find(Button).simulate("click");
-        expect(executeFileTextAnalysis).toBeCalledWith(file);
     });
 
     it("renders Files ordered by label", () => {
         files[0].label = "b";
         files[1].label = "a";
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList files={files}
-                          vocabulary={vocabulary}
-                          executeFileTextAnalysis={executeFileTextAnalysis}
-                          {...intlFunctions()}/>
+                <FileList files={files} vocabulary={vocabulary} {...intlFunctions()}/>
             </MemoryRouter>
         );
         const links = wrapper.find(ResourceLink);
