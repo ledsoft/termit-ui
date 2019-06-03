@@ -5,22 +5,20 @@ import {ButtonToolbar, Table} from "reactstrap";
 import File from "../../model/File";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import Vocabulary, {EMPTY_VOCABULARY} from "../../model/Vocabulary";
 import ResourceLink from "../resource/ResourceLink";
-import VocabularyFileContentLink from "../vocabulary/VocabularyFileContentLink";
 import Utils from "../../util/Utils";
 import TextAnalysisInvocationButton from "../resource/file/TextAnalysisInvocationButton";
+import FileContentLink from "../resource/file/FileContentLink";
 
 
 interface FileListProps extends HasI18n {
-    vocabulary: Vocabulary;
     files: File[];
 }
 
 export class FileList extends React.Component<FileListProps> {
 
     public render() {
-        if (this.props.files.length > 0 && (this.props.vocabulary !== EMPTY_VOCABULARY)) {
+        if (this.props.files.length > 0) {
             const rows = this.props.files.slice().sort(Utils.labelComparator).map((v: File) =>
                 <tr key={v.iri}>
                     <td className="align-middle">
@@ -28,7 +26,7 @@ export class FileList extends React.Component<FileListProps> {
                     </td>
                     <td className="pull-right">
                         <ButtonToolbar>
-                            <VocabularyFileContentLink file={v} vocabulary={this.props.vocabulary}/>
+                            <FileContentLink file={v}/>
                             <TextAnalysisInvocationButton file={v}/>
                         </ButtonToolbar>
                     </td>

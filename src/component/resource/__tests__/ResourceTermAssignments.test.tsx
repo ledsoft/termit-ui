@@ -204,7 +204,7 @@ describe("ResourceTermAssignments", () => {
                                                                              consumeNotification={consumeNotification}
                                                                              loadTermAssignments={onLoadAssignments} {...intlFunctions()}/></MemoryRouter>);
         return Promise.resolve().then(() => {
-            expect(wrapper.exists(".resource-term-occurrences-container")).toBeFalsy();
+            expect(wrapper.exists(".m-resource-term-occurrences-container")).toBeFalsy();
         });
     });
 });

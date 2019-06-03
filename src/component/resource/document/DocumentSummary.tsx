@@ -18,6 +18,7 @@ import {Routing} from "../../../util/Routing";
 import Routes from "../../../util/Routes";
 import AssetIriLink from "../../misc/AssteIriLink";
 import Utils from "../../../util/Utils";
+import DocumentFiles from "./DocumentFiles";
 
 interface DocumentSummaryProps extends ResourceSummaryProps {
     resource: Document;
@@ -49,6 +50,7 @@ export class DocumentSummary extends ResourceSummary<DocumentSummaryProps> {
             <ResourceMetadata resource={this.props.resource}/>
             {this.renderVocabulary()}
             <ResourceTermAssignments resource={this.props.resource}/>
+            <DocumentFiles document={this.props.resource}/>
         </div>;
     }
 

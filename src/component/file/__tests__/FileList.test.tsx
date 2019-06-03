@@ -5,16 +5,13 @@ import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {MemoryRouter} from "react-router";
 import {Button} from "reactstrap";
-import Vocabulary from "../../../model/Vocabulary";
-import Generator from "../../../__tests__/environment/Generator";
-import VocabularyFileContentLink from "../../vocabulary/VocabularyFileContentLink";
 import ResourceLink from "../../resource/ResourceLink";
+import FileContentLink from "../../resource/file/FileContentLink";
 
 
 describe("FileList", () => {
     let files: File[];
     let file: File;
-    let vocabulary: Vocabulary;
     beforeEach(() => {
         files = [
             new File({
@@ -27,25 +24,21 @@ describe("FileList", () => {
                 label: "fileName2",
             })
         ];
-        vocabulary = new Vocabulary({
-            iri: Generator.generateUri(),
-            label: "Test vocabulary"
-        });
         file = files[0];
     });
 
     it("renders vocabulary file links", () => {
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList files={files} vocabulary={vocabulary} {...intlFunctions()}/>
+                <FileList files={files} {...intlFunctions()}/>
             </MemoryRouter>
         );
-        expect(wrapper.find(VocabularyFileContentLink).exists()).toBeTruthy();
+        expect(wrapper.find(FileContentLink).exists()).toBeTruthy();
     });
 
 
     it("renders file metadata", () => {
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList files={files} vocabulary={vocabulary} {...intlFunctions()}/>
+                <FileList files={files} {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.text()).toContain("fileName1");
@@ -54,7 +47,7 @@ describe("FileList", () => {
 
     it("renders text analysis button", () => {
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList files={[file]} vocabulary={vocabulary} {...intlFunctions()}/>
+                <FileList files={[file]} {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.find(Button).exists()).toBeTruthy();
@@ -64,7 +57,7 @@ describe("FileList", () => {
         files[0].label = "b";
         files[1].label = "a";
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList files={files} vocabulary={vocabulary} {...intlFunctions()}/>
+                <FileList files={files} {...intlFunctions()}/>
             </MemoryRouter>
         );
         const links = wrapper.find(ResourceLink);

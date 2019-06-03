@@ -82,7 +82,7 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
     public render() {
         const i18n = this.props.i18n;
         const assignments = this.renderAssignedTerms();
-        const occurrencesClass = classNames({"resource-term-occurrences-container": assignments.length > 0});
+        const occurrencesClass = classNames("mt-3", {"m-resource-term-occurrences-container": assignments.length > 0});
         return <>
             <Row>
                 <Col md={2}>

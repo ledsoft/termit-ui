@@ -33,7 +33,7 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
     constructor(props: ResourceFileDetailProps) {
         super(props);
         this.state = {
-            vocabularyIri: undefined
+            vocabularyIri: this.getVocabularyIri()
         };
     }
 
@@ -42,7 +42,7 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
     }
 
     public componentDidUpdate(prevProps: Readonly<ResourceFileDetailProps>): void {
-        if (this.props.resource !== EMPTY_RESOURCE && prevProps.resource === EMPTY_RESOURCE || !prevProps.resource) {
+        if (this.props.resource !== EMPTY_RESOURCE && prevProps.resource === EMPTY_RESOURCE || !prevProps.resource || prevProps.resource.iri !== this.props.resource.iri) {
             const vocabularyIri = this.getVocabularyIri();
             if (vocabularyIri) {
                 this.setState({vocabularyIri});

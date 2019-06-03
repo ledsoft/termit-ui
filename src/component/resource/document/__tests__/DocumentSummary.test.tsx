@@ -49,7 +49,8 @@ describe("DocumentSummary", () => {
 
     it("does not render remove button for Document containing files", () => {
         doc.files = [new File({iri: Generator.generateUri(), label: "test.html"})];
-        const wrapper = mountWithIntl(<DocumentSummary resource={doc} {...resourceHandlers} {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><DocumentSummary
+            resource={doc} {...resourceHandlers} {...intlFunctions()}/></MemoryRouter>);
         expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
     });
 
