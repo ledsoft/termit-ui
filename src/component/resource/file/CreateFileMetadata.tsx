@@ -4,20 +4,20 @@ import {
     CreateResourceMetadata,
     CreateResourceMetadataProps,
     CreateResourceMetadataState
-} from "./CreateResourceMetadata";
-import VocabularyUtils from "../../util/VocabularyUtils";
-import withI18n from "../hoc/withI18n";
+} from "../CreateResourceMetadata";
+import VocabularyUtils from "../../../util/VocabularyUtils";
+import withI18n from "../../hoc/withI18n";
 import {Col, Form, Label, Row} from "reactstrap";
 import Dropzone from "react-dropzone";
 import {GoCloudUpload} from "react-icons/go";
 import classNames from "classnames";
 import {connect} from "react-redux";
-import {ThunkDispatch} from "../../util/Types";
-import {uploadFileContent} from "../../action/AsyncActions";
-import Resource from "../../model/Resource";
-import AppNotification from "../../model/AppNotification";
-import {publishNotification} from "../../action/SyncActions";
-import NotificationType from "../../model/NotificationType";
+import {ThunkDispatch} from "../../../util/Types";
+import {uploadFileContent} from "../../../action/AsyncActions";
+import Resource from "../../../model/Resource";
+import AppNotification from "../../../model/AppNotification";
+import {publishNotification} from "../../../action/SyncActions";
+import NotificationType from "../../../model/NotificationType";
 
 function formatBytes(bytes: number, decimals = 2) {
     if (bytes === 0) {

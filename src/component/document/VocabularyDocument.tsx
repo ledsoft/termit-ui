@@ -6,7 +6,7 @@ import FileList from "../file/FileList";
 import {Button, Card, CardBody, CardHeader, Modal, ModalBody} from "reactstrap";
 import {GoPlus} from "react-icons/go";
 import "./VocabularyDocument.scss";
-import CreateFileMetadata from "../resource/CreateFileMetadata";
+import CreateFileMetadata from "../resource/file/CreateFileMetadata";
 import File from "../../model/File";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";

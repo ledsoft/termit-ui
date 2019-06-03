@@ -1,19 +1,19 @@
 import * as React from "react";
-import Resource from "../../../model/Resource";
-import Ajax from "../../../util/Ajax";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import Resource from "../../../../model/Resource";
+import Ajax from "../../../../util/Ajax";
+import {intlDataForShallow, mountWithIntl} from "../../../../__tests__/environment/Environment";
 import {CreateFileMetadata} from "../CreateFileMetadata";
-import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
+import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
 import {shallow} from "enzyme";
-import AppNotification from "../../../model/AppNotification";
-import NotificationType from "../../../model/NotificationType";
+import AppNotification from "../../../../model/AppNotification";
+import NotificationType from "../../../../model/NotificationType";
 
-jest.mock("../../../util/Ajax", () => ({
+jest.mock("../../../../util/Ajax", () => ({
     default: jest.fn(),
-    content: require.requireActual("../../../util/Ajax").content,
-    params: require.requireActual("../../../util/Ajax").params,
-    param: require.requireActual("../../../util/Ajax").param,
-    accept: require.requireActual("../../../util/Ajax").accept,
+    content: require.requireActual("../../../../util/Ajax").content,
+    params: require.requireActual("../../../../util/Ajax").params,
+    param: require.requireActual("../../../../util/Ajax").param,
+    accept: require.requireActual("../../../../util/Ajax").accept,
 }));
 
 describe("CreateFileMetadata", () => {

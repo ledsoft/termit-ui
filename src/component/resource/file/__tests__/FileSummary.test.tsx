@@ -1,12 +1,12 @@
 import * as React from "react";
-import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
-import Resource from "../../../model/Resource";
+import VocabularyUtils, {IRI} from "../../../../util/VocabularyUtils";
+import Resource from "../../../../model/Resource";
 import {shallow} from "enzyme";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
-import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import AppNotification from "../../../model/AppNotification";
-import NotificationType from "../../../model/NotificationType";
-import File from "../../../model/File";
+import {intlDataForShallow, mountWithIntl} from "../../../../__tests__/environment/Environment";
+import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
+import AppNotification from "../../../../model/AppNotification";
+import NotificationType from "../../../../model/NotificationType";
+import File from "../../../../model/File";
 import {FileSummary} from "../FileSummary";
 
 describe("FileSummary", () => {

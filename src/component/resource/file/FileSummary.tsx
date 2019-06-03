@@ -1,31 +1,31 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
-import withI18n from "../hoc/withI18n";
+import withI18n from "../../hoc/withI18n";
 import {connect} from "react-redux";
-import TermItState from "../../model/TermItState";
+import TermItState from "../../../model/TermItState";
 import {
     exportFileContent,
     hasFileContent,
     loadResource,
     removeResource,
     updateResourceTerms
-} from "../../action/AsyncActions";
+} from "../../../action/AsyncActions";
 import {ButtonToolbar, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown} from "reactstrap";
-import PanelWithActions from "../misc/PanelWithActions";
-import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
+import PanelWithActions from "../../misc/PanelWithActions";
+import {default as VocabularyUtils, IRI} from "../../../util/VocabularyUtils";
 import {GoFile} from "react-icons/go";
-import {ThunkDispatch} from "../../util/Types";
-import {default as Resource} from "../../model/Resource";
-import "./Resources.scss";
-import {consumeNotification} from "../../action/SyncActions";
-import RemoveAssetDialog from "../asset/RemoveAssetDialog";
-import File from "../../model/File";
-import Routes from "../../util/Routes";
-import AppNotification from "../../model/AppNotification";
-import NotificationType from "../../model/NotificationType";
-import Routing from "../../util/Routing";
-import {ResourceSummary, ResourceSummaryProps, ResourceSummaryState} from "./ResourceSummary";
-import TextAnalysisInvocationButton from "./file/TextAnalysisInvocationButton";
+import {ThunkDispatch} from "../../../util/Types";
+import Resource from "../../../model/Resource";
+import "../Resources.scss";
+import {consumeNotification} from "../../../action/SyncActions";
+import RemoveAssetDialog from "../../asset/RemoveAssetDialog";
+import File from "../../../model/File";
+import Routes from "../../../util/Routes";
+import AppNotification from "../../../model/AppNotification";
+import NotificationType from "../../../model/NotificationType";
+import Routing from "../../../util/Routing";
+import {ResourceSummary, ResourceSummaryProps, ResourceSummaryState} from "../ResourceSummary";
+import TextAnalysisInvocationButton from "./TextAnalysisInvocationButton";
 
 interface FileSummaryProps extends ResourceSummaryProps {
     resource: File;

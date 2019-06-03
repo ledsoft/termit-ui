@@ -1,13 +1,13 @@
 import * as React from "react";
-import Document from "../../../model/Document";
-import Generator from "../../../__tests__/environment/Generator";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
-import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import File from "../../../model/File";
-import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
-import Resource from "../../../model/Resource";
+import Document from "../../../../model/Document";
+import Generator from "../../../../__tests__/environment/Generator";
+import {mountWithIntl} from "../../../../__tests__/environment/Environment";
+import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
+import File from "../../../../model/File";
+import VocabularyUtils, {IRI} from "../../../../util/VocabularyUtils";
+import Resource from "../../../../model/Resource";
 import {DocumentSummary} from "../DocumentSummary";
-import AssetIriLink from "../../misc/AssteIriLink";
+import AssetIriLink from "../../../misc/AssteIriLink";
 import {MemoryRouter} from "react-router";
 
 describe("DocumentSummary", () => {

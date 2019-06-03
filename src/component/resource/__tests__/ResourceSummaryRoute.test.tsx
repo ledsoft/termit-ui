@@ -9,10 +9,10 @@ import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {ResourceSummaryRoute} from "../ResourceSummaryRoute";
 import File from "../../../model/File";
-import FileSummary from "../FileSummary";
+import FileSummary from "../file/FileSummary";
 import ResourceSummary from "../ResourceSummary";
 import Document from "../../../model/Document";
-import DocumentSummary from "../DocumentSummary";
+import DocumentSummary from "../document/DocumentSummary";
 
 describe("ResourceSummaryRoute", () => {
 

@@ -4,14 +4,14 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Utils from "../../util/Utils";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
-import FileSummary from "./FileSummary";
+import FileSummary from "./file/FileSummary";
 import ResourceSummary from "./ResourceSummary";
 import {RouteComponentProps} from "react-router";
 import {ThunkDispatch} from "../../util/Types";
 import {clearResource} from "../../action/SyncActions";
 import {loadResource} from "../../action/AsyncActions";
 import File from "../../model/File";
-import DocumentSummary from "./DocumentSummary";
+import DocumentSummary from "./document/DocumentSummary";
 import Document from "../../model/Document";
 
 interface ResourceSummaryRouteProps extends RouteComponentProps<any> {
