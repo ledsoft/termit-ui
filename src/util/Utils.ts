@@ -155,5 +155,16 @@ export default {
     calculateAssetListHeight() {
         const container = document.getElementById("content-container");
         return container ? container.clientHeight * 0.75 : window.innerHeight / 2;
+    },
+
+    /**
+     * Compares the specified asset data by their label.
+     *
+     * Internally uses String.localeCompare
+     * @param a Reference asset
+     * @param b Asset to compare it to
+     */
+    labelComparator(a: Asset, b: Asset) {
+        return a.label.localeCompare(b.label);
     }
 }

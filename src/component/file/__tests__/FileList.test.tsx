@@ -7,13 +7,14 @@ import {MemoryRouter} from "react-router";
 import {Button} from "reactstrap";
 import Vocabulary from "../../../model/Vocabulary";
 import Generator from "../../../__tests__/environment/Generator";
-import VocabularyFileLink from "../../vocabulary/VocabularyFileLink";
+import VocabularyFileContentLink from "../../vocabulary/VocabularyFileContentLink";
+import ResourceLink from "../../resource/ResourceLink";
 
 
 describe("FileList", () => {
     let files: File[];
     let file: File;
-    let executeFileTextAnalysis: (file: File)  => Promise<any>;
+    let executeFileTextAnalysis: (file: File) => Promise<any>;
     let vocabulary: Vocabulary;
     beforeEach(() => {
         files = [
@@ -45,7 +46,7 @@ describe("FileList", () => {
                     {...intlFunctions()}/>
             </MemoryRouter>
         );
-        expect(wrapper.find(VocabularyFileLink).exists()).toBeTruthy();
+        expect(wrapper.find(VocabularyFileContentLink).exists()).toBeTruthy();
     });
 
 
@@ -59,7 +60,6 @@ describe("FileList", () => {
                     {...intlFunctions()}/>
             </MemoryRouter>
         );
-        expect(wrapper.text()).toContain("comment1");
         expect(wrapper.text()).toContain("fileName1");
         expect(wrapper.text()).toContain("fileName2");
     });
@@ -91,5 +91,21 @@ describe("FileList", () => {
         expect(executeFileTextAnalysis).not.toBeCalled();
         wrapper.find(Button).simulate("click");
         expect(executeFileTextAnalysis).toBeCalledWith(file);
+    });
+
+    it("renders Files ordered by label", () => {
+        files[0].label = "b";
+        files[1].label = "a";
+        const wrapper = mountWithIntl(<MemoryRouter>
+                <FileList files={files}
+                          vocabulary={vocabulary}
+                          executeFileTextAnalysis={executeFileTextAnalysis}
+                          {...intlFunctions()}/>
+            </MemoryRouter>
+        );
+        const links = wrapper.find(ResourceLink);
+        expect(links.length).toEqual(2);
+        expect(links.at(0).text()).toContain(files[1].label);
+        expect(links.at(1).text()).toContain(files[0].label);
     });
 });

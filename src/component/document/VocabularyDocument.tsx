@@ -12,6 +12,7 @@ import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {createFileInDocument, loadVocabulary} from "../../action/AsyncActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import TermItState from "../../model/TermItState";
 
 interface VocabularyDocumentDispatchProps {
     createFile: (file: File, documentIri: string) => Promise<string>;
@@ -64,9 +65,8 @@ export class VocabularyDocument extends React.Component<ActualProps, VocabularyD
         if (this.props.vocabulary.document) {
             return <div className="card-no-margin-bottom">
                 {this.renderCreateFileDialog()}
-                <hr/>
                 <Card id="vocabulary-document">
-                    <CardHeader tag="h5" color="primary" className="d-flex align-items-center">
+                    <CardHeader tag="h6" color="primary" className="d-flex align-items-center">
                         <div className="flex-grow-1">{i18n("vocabulary.detail.files")}</div>
                         <div className="float-sm-right">
                             <Button color="primary" size="sm" onClick={this.openCreateFileDialog}
@@ -102,7 +102,7 @@ export class VocabularyDocument extends React.Component<ActualProps, VocabularyD
     }
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch) => {
+export default connect((state: TermItState) => ({intl: state.intl}), (dispatch: ThunkDispatch) => {
     return {
         createFile: (file: File, documentIri: string) => dispatch(createFileInDocument(file, VocabularyUtils.create(documentIri))),
         loadVocabulary: (vocabularyIri: string) => dispatch(loadVocabulary(VocabularyUtils.create(vocabularyIri)))

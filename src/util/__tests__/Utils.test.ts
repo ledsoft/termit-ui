@@ -142,4 +142,12 @@ describe("Utils", () => {
             expect(Utils.getAssetTypeLabelId(resource)).not.toBeDefined();
         });
     });
+
+    describe("labelComparator", () => {
+        it("compares specified assets by label", () => {
+            const aOne = new Resource({iri: Generator.generateUri(), label: "B"});
+            const aTwo = new Resource({iri: Generator.generateUri(), label: "A"});
+            expect(Utils.labelComparator(aOne, aTwo)).toEqual(1);
+        });
+    });
 });
