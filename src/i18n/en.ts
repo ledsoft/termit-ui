@@ -144,6 +144,7 @@ export default {
         "resource.metadata.file.content.view": "View",
         "resource.metadata.file.content.view.tooltip": "View file content and annotate it",
         "resource.metadata.file.content.download": "Download",
+        "resource.metadata.document.vocabulary": "Document vocabulary",
 
         "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',

@@ -11,6 +11,8 @@ import {ResourceSummaryRoute} from "../ResourceSummaryRoute";
 import File from "../../../model/File";
 import FileSummary from "../FileSummary";
 import ResourceSummary from "../ResourceSummary";
+import Document from "../../../model/Document";
+import DocumentSummary from "../DocumentSummary";
 
 describe("ResourceSummaryRoute", () => {
 
@@ -128,5 +130,19 @@ describe("ResourceSummaryRoute", () => {
             history={history} location={location} match={match}/>);
         expect(wrapper.exists(ResourceSummary)).toBeTruthy();
         expect(wrapper.exists(FileSummary)).toBeFalsy();
+    });
+
+    it("renders DocumentSummary component for Document resource", () => {
+        const doc = new Document({
+            iri: namespace + resourceName,
+            label: resourceName,
+            files: [],
+            types: [VocabularyUtils.DOCUMENT, VocabularyUtils.RESOURCE]
+        });
+        const wrapper = shallow(<ResourceSummaryRoute
+            resource={doc} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            history={history} location={location} match={match}/>);
+        expect(wrapper.exists(DocumentSummary)).toBeTruthy();
+        expect(wrapper.exists(ResourceSummary)).toBeFalsy();
     });
 });

@@ -3,11 +3,8 @@ import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {shallow} from "enzyme";
 import {ResourceSummary} from "../ResourceSummary";
 import Resource from "../../../model/Resource";
-import Document from "../../../model/Document";
-import File from "../../../model/File";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import Generator from "../../../__tests__/environment/Generator";
 
 describe("ResourceSummary", () => {
 
@@ -42,29 +39,6 @@ describe("ResourceSummary", () => {
         wrapper.instance().onRemove();
         expect(removeResource).toHaveBeenCalledWith(resource);
         expect(wrapper.state("showRemoveDialog")).toBeFalsy();
-    });
-
-    it("does not render remove button for Document related to Vocabulary", () => {
-        const doc = new Document({
-            iri: namespace + resourceName,
-            label: resourceName,
-            files: [],
-            vocabulary: {iri: Generator.generateUri()}
-        });
-        const wrapper = mountWithIntl(<ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()}
-        />);
-        expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
-    });
-
-    it("does not render remove button for Document containing files", () => {
-        const doc = new Document({
-            iri: namespace + resourceName,
-            label: resourceName,
-            files: [new File({iri: Generator.generateUri(), label: "test.html"})]
-        });
-        const wrapper = mountWithIntl(<ResourceSummary resource={doc} {...resourceHandlers} {...intlFunctions()}
-        />);
-        expect(wrapper.exists("button#resource-detail-remove")).toBeFalsy();
     });
 
     it("reloads resource after successful save", () => {

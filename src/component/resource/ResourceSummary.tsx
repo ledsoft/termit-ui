@@ -10,9 +10,7 @@ import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
 import {GoPencil, GoX} from "react-icons/go";
 import {ThunkDispatch} from "../../util/Types";
 import EditableComponent, {EditableComponentState} from "../misc/EditableComponent";
-import Utils from "../../util/Utils";
 import Resource from "../../model/Resource";
-import Document from "../../model/Document";
 import ResourceMetadata from "./ResourceMetadata";
 import ResourceEdit from "./ResourceEdit";
 import "./Resources.scss";
@@ -62,8 +60,7 @@ export class ResourceSummary<P extends ResourceSummaryProps = ResourceSummaryPro
     };
 
     protected canRemove() {
-        const resource = this.props.resource;
-        return resource && !(resource as Document).vocabulary && Utils.sanitizeArray((resource as Document).files).length === 0;
+        return true;
     }
 
     public render() {

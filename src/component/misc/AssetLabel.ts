@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {getLabel} from "../../action/AsyncActions";
@@ -35,7 +35,17 @@ export class AssetLabel extends React.Component<AssetLabelProps, AssetLabelState
     }
 
     public componentDidMount() {
-        this.props.getLabel(this.props.iri).then((data: string) => this.setState({label: data}));
+        this.loadLabel(this.props.iri);
+    }
+
+    public componentDidUpdate(prevProps: AssetLabelProps): void {
+        if (prevProps.iri !== this.props.iri) {
+            this.loadLabel(this.props.iri);
+        }
+    }
+
+    private loadLabel(iri: string) {
+        this.props.getLabel(iri).then((data: string) => this.setState({label: data}));
     }
 
     public render() {
@@ -48,7 +58,7 @@ export class AssetLabel extends React.Component<AssetLabelProps, AssetLabelState
         }
         const lastSlashIndex = iri.lastIndexOf("/");
         const lastHashIndex = iri.lastIndexOf(("#"));
-        return "..." + iri.substring(lastHashIndex > lastSlashIndex ? lastHashIndex: lastSlashIndex);
+        return "..." + iri.substring(lastHashIndex > lastSlashIndex ? lastHashIndex : lastSlashIndex);
     }
 }
 

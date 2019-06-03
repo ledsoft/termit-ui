@@ -11,6 +11,8 @@ import {ThunkDispatch} from "../../util/Types";
 import {clearResource} from "../../action/SyncActions";
 import {loadResource} from "../../action/AsyncActions";
 import File from "../../model/File";
+import DocumentSummary from "./DocumentSummary";
+import Document from "../../model/Document";
 
 interface ResourceSummaryRouteProps extends RouteComponentProps<any> {
     resource: Resource;
@@ -45,10 +47,13 @@ export class ResourceSummaryRoute extends React.Component<ResourceSummaryRoutePr
             return null;
         }
         const primaryType = Utils.getPrimaryAssetType(this.props.resource);
-        if (primaryType === VocabularyUtils.FILE) {
-            return <FileSummary resource={this.props.resource as File}/>;
-        } else {
-            return <ResourceSummary resource={this.props.resource}/>;
+        switch (primaryType) {
+            case VocabularyUtils.FILE:
+                return <FileSummary resource={this.props.resource as File}/>;
+            case VocabularyUtils.DOCUMENT:
+                return <DocumentSummary resource={this.props.resource as Document}/>;
+            default:
+                return <ResourceSummary resource={this.props.resource}/>;
         }
     }
 }

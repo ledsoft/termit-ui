@@ -144,6 +144,7 @@ export default {
         "resource.metadata.file.content.view": "Zobrazit",
         "resource.metadata.file.content.view.tooltip": "Zobrazit obsah souboru a anotovat ho",
         "resource.metadata.file.content.download": "Stáhnout",
+        "resource.metadata.document.vocabulary": "Dokumentový slovník",
 
         "term.metadata.definition": "Definice",
         'term.metadata.comment': 'Komentář',
