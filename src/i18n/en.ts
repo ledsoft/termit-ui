@@ -112,8 +112,6 @@ export default {
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
         'vocabulary.detail.files': 'Files',
         'vocabulary.detail.files.file': 'Filename',
-        "vocabulary.detail.files.create.tooltip": "Add new file to this vocabulary\'s document",
-        "vocabulary.detail.files.create.dialog.title": "New file",
         'vocabulary.detail.noTermSelected': 'Start by selecting a term in the tree on the left.',
 
         'vocabulary.term.created.message': 'Term successfully created.',
@@ -145,6 +143,8 @@ export default {
         "resource.metadata.file.content.view.tooltip": "View file content and annotate it",
         "resource.metadata.file.content.download": "Download",
         "resource.metadata.document.vocabulary": "Document vocabulary",
+        "resource.metadata.document.files.create.tooltip": "Add new file to this document",
+        "resource.metadata.document.files.create.dialog.title": "New file",
 
         "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',

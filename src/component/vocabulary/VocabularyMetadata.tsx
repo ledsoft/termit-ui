@@ -3,11 +3,12 @@ import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
 import {Col, Label, Row} from "reactstrap";
-import VocabularyDocument from "../document/VocabularyDocument";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
+import DocumentFiles from "../resource/document/DocumentFiles";
 
 interface VocabularyMetadataProps extends HasI18n {
-    vocabulary: Vocabulary
+    vocabulary: Vocabulary;
+    onFileAdded: () => void;
 }
 
 class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
@@ -49,7 +50,7 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
                     <UnmappedProperties properties={vocabulary.unmappedProperties}/>
                 </Col>
             </Row>
-            <VocabularyDocument vocabulary={vocabulary}/>
+            {vocabulary.document && <DocumentFiles document={vocabulary.document} onFileAdded={this.props.onFileAdded}/>}
         </div>;
     }
 }

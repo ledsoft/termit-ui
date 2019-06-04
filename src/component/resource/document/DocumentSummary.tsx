@@ -33,6 +33,10 @@ export class DocumentSummary extends ResourceSummary<DocumentSummaryProps> {
         return !this.props.resource.vocabulary && Utils.sanitizeArray(this.props.resource.files).length === 0;
     }
 
+    public onFileAdded = () => {
+        this.props.loadResource(VocabularyUtils.create(this.props.resource.iri));
+    };
+
     public render() {
         const actions = [<ButtonToolbar key="resource.summary.actions">{this.getActionButtons()}</ButtonToolbar>];
 
@@ -50,7 +54,7 @@ export class DocumentSummary extends ResourceSummary<DocumentSummaryProps> {
             <ResourceMetadata resource={this.props.resource}/>
             {this.renderVocabulary()}
             <ResourceTermAssignments resource={this.props.resource}/>
-            <DocumentFiles document={this.props.resource}/>
+            <DocumentFiles document={this.props.resource} onFileAdded={this.onFileAdded}/>
         </div>;
     }
 

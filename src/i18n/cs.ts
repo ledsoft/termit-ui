@@ -111,8 +111,6 @@ export default {
         'vocabulary.detail.tabs.termdetail': 'Detail pojmu',
         'vocabulary.detail.files': 'Soubory',
         'vocabulary.detail.files.file': 'Název souboru',
-        "vocabulary.detail.files.create.tooltip": "Přidat nový soubor do dokumentu tohoto slovníku",
-        "vocabulary.detail.files.create.dialog.title": "Nový soubor",
         'vocabulary.detail.noTermSelected': 'Vyberte pojem ve stromečku vlevo.',
 
         'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',
@@ -145,6 +143,8 @@ export default {
         "resource.metadata.file.content.view.tooltip": "Zobrazit obsah souboru a anotovat ho",
         "resource.metadata.file.content.download": "Stáhnout",
         "resource.metadata.document.vocabulary": "Dokumentový slovník",
+        "resource.metadata.document.files.create.tooltip": "Přidat nový soubor do tohoto dokumentu",
+        "resource.metadata.document.files.create.dialog.title": "Nový soubor",
 
         "term.metadata.definition": "Definice",
         'term.metadata.comment': 'Komentář',

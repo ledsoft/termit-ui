@@ -1,7 +1,7 @@
 import * as React from "react";
 import Document from "../../../../model/Document";
 import Generator from "../../../../__tests__/environment/Generator";
-import {mountWithIntl} from "../../../../__tests__/environment/Environment";
+import {intlDataForShallow, mountWithIntl} from "../../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
 import File from "../../../../model/File";
 import VocabularyUtils, {IRI} from "../../../../util/VocabularyUtils";
@@ -9,6 +9,7 @@ import Resource from "../../../../model/Resource";
 import {DocumentSummary} from "../DocumentSummary";
 import AssetIriLink from "../../../misc/AssteIriLink";
 import {MemoryRouter} from "react-router";
+import {shallow} from "enzyme";
 
 describe("DocumentSummary", () => {
 
@@ -59,5 +60,12 @@ describe("DocumentSummary", () => {
         const wrapper = mountWithIntl(<MemoryRouter><DocumentSummary
             resource={doc} {...resourceHandlers} {...intlFunctions()}/></MemoryRouter>);
         expect(wrapper.exists(AssetIriLink)).toBeTruthy();
+    });
+
+    it("reloads document when file was added into it", () => {
+        const wrapper = shallow<DocumentSummary>(<DocumentSummary
+            resource={doc} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}/>);
+        wrapper.instance().onFileAdded();
+        expect(loadResource).toHaveBeenCalledWith(VocabularyUtils.create(doc.iri));
     });
 });
