@@ -4,7 +4,7 @@ import {ASSET_CONTEXT, AssetData} from "./Asset";
 const ctx = {
     "term": VocabularyUtils.NS_TERMIT + "je-přiřazením-termu",
     "label": VocabularyUtils.RDFS_LABEL,
-    "vocabulary": VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU,
+    "vocabulary": VocabularyUtils.IS_TERM_FROM_VOCABULARY,
     "resource": VocabularyUtils.PREFIX + "má-zdroj",
     "count": VocabularyUtils.NS_TERMIT + "počet"
 };

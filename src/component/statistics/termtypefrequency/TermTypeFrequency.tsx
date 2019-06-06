@@ -54,9 +54,9 @@ class TermTypeFrequency extends React.Component<Props> {
         // })
         const vocabularies = {};
         res.filter((r: any) => {
-            return r[VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU] !== undefined;
+            return r[VocabularyUtils.IS_TERM_FROM_VOCABULARY] !== undefined;
         }).forEach((r: any) => {
-            const voc = r[VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU][0];
+            const voc = r[VocabularyUtils.IS_TERM_FROM_VOCABULARY][0];
             const vocabulary = voc["@id"];
             let vocO = vocabularies[vocabulary];
             if (!vocO) {

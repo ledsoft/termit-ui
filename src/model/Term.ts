@@ -10,7 +10,7 @@ const ctx = {
     parentTerms: VocabularyUtils.BROADER,
     subTerms: VocabularyUtils.NARROWER,
     sources: "http://purl.org/dc/elements/1.1/source",
-    vocabulary: VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU,
+    vocabulary: VocabularyUtils.IS_TERM_FROM_VOCABULARY,
     types: "@type"
 };
 

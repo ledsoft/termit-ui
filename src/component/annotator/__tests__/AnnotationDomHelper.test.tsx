@@ -3,6 +3,7 @@ import {DomHandler, DomUtils, Parser as HtmlParser}  from "htmlparser2";
 import AnnotationDomHelper from "../AnnotationDomHelper";
 // @ts-ignore
 import {Node} from "html-to-react";
+import VocabularyUtils from "../../../util/VocabularyUtils";
 
 describe("AnnotationDomHelper", () => {
 
@@ -12,9 +13,9 @@ describe("AnnotationDomHelper", () => {
         "      <h1>My Heading</h1>\n" +
         "\n" +
         "            <p>First paragraph.</p>\n" +
-        "            <span about=\"_:123\" property=\"ddo:je-výskytem-termu\"\n" +
+        "            <span about=\"_:123\" property=\""+VocabularyUtils.IS_OCCURRENCE_OF_TERM+"\"\n" +
         "                  resource=\"http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/modernisticka-struktura-%28zastavba%29\"\n" +
-        "                  typeof=\"ddo:výskyt-termu\">annotated-text</span>" +
+        "                  typeof=\""+VocabularyUtils.TERM_OCCURRENCE+"\">annotated-text</span>" +
         "\n after annotation span" +
         "            <span about=\"_:111\" \n>not-annotation</span>" +
         "\n after text span" +
