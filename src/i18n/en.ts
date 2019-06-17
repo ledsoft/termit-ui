@@ -113,6 +113,7 @@ export default {
         'vocabulary.detail.files': 'Files',
         'vocabulary.detail.files.file': 'Filename',
         'vocabulary.detail.noTermSelected': 'Start by selecting a term in the tree on the left.',
+        "vocabulary.detail.imports": "Imports",
 
         'vocabulary.term.created.message': 'Term successfully created.',
         'vocabulary.select-vocabulary': 'Select a Vocabulary',

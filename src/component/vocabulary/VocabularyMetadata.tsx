@@ -5,6 +5,7 @@ import Vocabulary from "../../model/Vocabulary";
 import {Col, Label, Row} from "reactstrap";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import DocumentFiles from "../resource/document/DocumentFiles";
+import ImportedVocabulariesList from "./ImportedVocabulariesList";
 
 interface VocabularyMetadataProps extends HasI18n {
     vocabulary: Vocabulary;
@@ -45,12 +46,14 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
                     <Label id="vocabulary-metadata-comment">{vocabulary.comment}</Label>
                 </Col>
             </Row>
-            <Row>
+            <ImportedVocabulariesList vocabularies={vocabulary.importedVocabularies}/>
+            <Row className="mt-3">
                 <Col xs={12}>
                     <UnmappedProperties properties={vocabulary.unmappedProperties}/>
                 </Col>
             </Row>
-            {vocabulary.document && <DocumentFiles document={vocabulary.document} onFileAdded={this.props.onFileAdded}/>}
+            {vocabulary.document &&
+            <DocumentFiles document={vocabulary.document} onFileAdded={this.props.onFileAdded}/>}
         </div>;
     }
 }

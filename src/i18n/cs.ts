@@ -112,6 +112,7 @@ export default {
         'vocabulary.detail.files': 'Soubory',
         'vocabulary.detail.files.file': 'Název souboru',
         'vocabulary.detail.noTermSelected': 'Vyberte pojem ve stromečku vlevo.',
+        "vocabulary.detail.imports": "Importuje",
 
         'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',
         'vocabulary.select-vocabulary': 'Vyber slovník',
