@@ -114,6 +114,7 @@ export default {
         'vocabulary.detail.noTermSelected': 'Vyberte pojem ve stromečku vlevo.',
         "vocabulary.detail.imports": "Importuje",
         "vocabulary.detail.imports.edit": "Importuje slovníky",
+        "vocabulary.detail.document": "Dokument",
 
         'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',
         'vocabulary.select-vocabulary': 'Vyber slovník',

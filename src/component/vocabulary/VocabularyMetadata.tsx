@@ -6,13 +6,14 @@ import {Col, Label, Row} from "reactstrap";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import DocumentFiles from "../resource/document/DocumentFiles";
 import ImportedVocabulariesList from "./ImportedVocabulariesList";
+import ResourceLink from "../resource/ResourceLink";
 
 interface VocabularyMetadataProps extends HasI18n {
     vocabulary: Vocabulary;
     onFileAdded: () => void;
 }
 
-class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
+export class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
     constructor(props: VocabularyMetadataProps) {
         super(props);
     }
@@ -47,6 +48,7 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
                 </Col>
             </Row>
             <ImportedVocabulariesList vocabularies={vocabulary.importedVocabularies}/>
+            {this.renderVocabularyDocument()}
             <Row className="mt-3">
                 <Col xs={12}>
                     <UnmappedProperties properties={vocabulary.unmappedProperties}/>
@@ -55,6 +57,22 @@ class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
             {vocabulary.document &&
             <DocumentFiles document={vocabulary.document} onFileAdded={this.props.onFileAdded}/>}
         </div>;
+    }
+
+    private renderVocabularyDocument() {
+        const document = this.props.vocabulary.document;
+        if (!document) {
+            return null;
+        } else {
+            return <Row>
+                <Col md={2}>
+                    <Label className="attribute-label">{this.props.i18n("vocabulary.detail.document")}</Label>
+                </Col>
+                <Col md={10}>
+                    <ResourceLink id="vocabulary-metadata-document" resource={document}/>
+                </Col>
+            </Row>
+        }
     }
 }
 
