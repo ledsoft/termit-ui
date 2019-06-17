@@ -6,7 +6,7 @@ import TermItState from "../../../model/TermItState";
 import {ThunkDispatch} from "../../../util/Types";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {loadResource, removeResource, updateResourceTerms} from "../../../action/AsyncActions";
-import {default as Resource} from "../../../model/Resource";
+import Resource from "../../../model/Resource";
 import {injectIntl} from "react-intl";
 import withI18n from "../../hoc/withI18n";
 import {ButtonToolbar, Col, Label, Row} from "reactstrap";
@@ -14,11 +14,9 @@ import PanelWithActions from "../../misc/PanelWithActions";
 import RemoveAssetDialog from "../../asset/RemoveAssetDialog";
 import ResourceMetadata from "../ResourceMetadata";
 import ResourceTermAssignments from "../ResourceTermAssignments";
-import {Routing} from "../../../util/Routing";
-import Routes from "../../../util/Routes";
-import AssetIriLink from "../../misc/AssteIriLink";
 import Utils from "../../../util/Utils";
 import DocumentFiles from "./DocumentFiles";
+import VocabularyIriLink from "../../vocabulary/VocabularyIriLink";
 
 interface DocumentSummaryProps extends ResourceSummaryProps {
     resource: Document;
@@ -60,19 +58,13 @@ export class DocumentSummary extends ResourceSummary<DocumentSummaryProps> {
 
     private renderVocabulary() {
         if (this.props.resource.vocabulary) {
-            const i18n = this.props.i18n;
-            const iri = VocabularyUtils.create(this.props.resource.vocabulary.iri!);
-            const path = Routing.getTransitionPath(Routes.vocabularySummary,
-                {
-                    params: new Map([["name", iri.fragment]]),
-                    query: new Map([["namespace", iri.namespace!]])
-                });
             return <Row>
                 <Col md={2}>
-                    <Label className="attribute-label">{i18n("resource.metadata.document.vocabulary")}</Label>
+                    <Label
+                        className="attribute-label">{this.props.i18n("resource.metadata.document.vocabulary")}</Label>
                 </Col>
                 <Col md={10}>
-                    <AssetIriLink assetIri={iri.toString()} path={path} tooltip={i18n("asset.link.tooltip")}/>
+                    <VocabularyIriLink iri={this.props.resource.vocabulary.iri!}/>
                 </Col>
             </Row>;
         } else {
