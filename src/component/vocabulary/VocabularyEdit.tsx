@@ -81,7 +81,7 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
                                   value={this.state.comment} onChange={this.onInputChange}/>
                     </Col>
                 </Row>
-                <ImportedVocabulariesListEdit importedVocabularies={this.state.importedVocabularies}
+                <ImportedVocabulariesListEdit vocabulary={this.props.vocabulary} importedVocabularies={this.state.importedVocabularies}
                                               onChange={this.onChange}/>
                 <Row>
                     <Col xs={12}>

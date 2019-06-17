@@ -11,6 +11,7 @@ import TermItState from "../../model/TermItState";
 import Utils from "../../util/Utils";
 
 interface ImportedVocabulariesListEditProps extends HasI18n {
+    vocabulary: Vocabulary;
     vocabularies: { [key: string]: Vocabulary };
     importedVocabularies?: AssetData[];
     onChange: (change: object) => void;
@@ -25,12 +26,13 @@ export class ImportedVocabulariesListEdit extends React.Component<ImportedVocabu
 
     public render() {
         const i18n = this.props.i18n;
-        const options = Object.keys(this.props.vocabularies).map((v) => this.props.vocabularies[v]);
+        const options = Object.keys(this.props.vocabularies).map((v) => this.props.vocabularies[v])
+            .filter(v => v.iri !== this.props.vocabulary.iri);
         const selected = Utils.sanitizeArray(this.props.importedVocabularies).map(v => v.iri!);
         return <Row>
             <Col xl={6} md={12}>
                 <FormGroup>
-                    <Label className="attribute-label">{i18n("vocabulary.detail.imports")}</Label>
+                    <Label className="attribute-label">{i18n("vocabulary.detail.imports.edit")}</Label>
                     <IntelligentTreeSelect className="p-0"
                                            onChange={this.onChange}
                                            value={selected}
