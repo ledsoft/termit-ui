@@ -9,6 +9,7 @@ import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {FormGroup, Label} from "reactstrap";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import Utils from "../../util/Utils";
 
 interface TermTypesEditProps extends HasI18n {
     termTypes: string[];
@@ -20,10 +21,6 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
 
     public onChange = (val: Term | null) => {
         this.props.onChange(val ? [val.iri, VocabularyUtils.TERM] : [VocabularyUtils.TERM]);
-    };
-
-    private valueRenderer = (option: Term) => {
-        return option.label;
     };
 
     private resolveSelectedTypes(types: Term[]): string | undefined {
@@ -66,7 +63,7 @@ export class TermTypesEdit extends React.Component<TermTypesEditProps> {
                                    displayInfoOnHover={true}
                                    expanded={true}
                                    renderAsTree={true}
-                                   valueRenderer={this.valueRenderer}/>
+                                   valueRenderer={Utils.labelValueRenderer}/>
         </FormGroup>;
     }
 }

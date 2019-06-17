@@ -7,6 +7,8 @@ import CustomInput from "../misc/CustomInput";
 import UnmappedPropertiesEdit from "../genericmetadata/UnmappedPropertiesEdit";
 import TextArea from "../misc/TextArea";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import ImportedVocabulariesListEdit from "./ImportedVocabulariesListEdit";
+import {AssetData} from "../../model/Asset";
 
 interface VocabularyEditProps extends HasI18n {
     vocabulary: Vocabulary;
@@ -17,6 +19,7 @@ interface VocabularyEditProps extends HasI18n {
 interface VocabularyEditState {
     label: string;
     comment: string;
+    importedVocabularies?: AssetData[];
     unmappedProperties: Map<string, string[]>;
 }
 
@@ -26,13 +29,18 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
         this.state = {
             label: this.props.vocabulary.label,
             comment: this.props.vocabulary.comment ? this.props.vocabulary.comment : "",
+            importedVocabularies: this.props.vocabulary.importedVocabularies,
             unmappedProperties: this.props.vocabulary.unmappedProperties
         }
     }
 
-    private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    private onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const change = {};
         change[e.currentTarget.name.endsWith("label") ? "label" : "comment"] = e.currentTarget.value;
+        this.onChange(change);
+    };
+
+    public onChange = (change: object) => {
         this.setState(change);
     };
 
@@ -43,7 +51,8 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
     public onSave = () => {
         const newVocabulary = new Vocabulary(Object.assign({}, this.props.vocabulary, {
             label: this.state.label,
-            comment: this.state.comment
+            comment: this.state.comment,
+            importedVocabularies: this.state.importedVocabularies
         }));
         newVocabulary.unmappedProperties = this.state.unmappedProperties;
         this.props.save(newVocabulary);
@@ -55,22 +64,25 @@ export class VocabularyEdit extends React.Component<VocabularyEditProps, Vocabul
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="edit-vocabulary-iri" label={i18n("asset.iri")} value={this.props.vocabulary.iri}
+                        <CustomInput name="edit-vocabulary-iri" label={i18n("asset.iri")}
+                                     value={this.props.vocabulary.iri}
                                      disabled={true}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
                         <CustomInput name="edit-vocabulary-label" label={i18n("asset.label")}
-                                     value={this.state.label} onChange={this.onChange}/>
+                                     value={this.state.label} onChange={this.onInputChange}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
                         <TextArea name="edit-vocabulary-comment" label={i18n("vocabulary.comment")} rows={3}
-                                  value={this.state.comment} onChange={this.onChange}/>
+                                  value={this.state.comment} onChange={this.onInputChange}/>
                     </Col>
                 </Row>
+                <ImportedVocabulariesListEdit importedVocabularies={this.state.importedVocabularies}
+                                              onChange={this.onChange}/>
                 <Row>
                     <Col xs={12}>
                         <UnmappedPropertiesEdit properties={this.state.unmappedProperties}

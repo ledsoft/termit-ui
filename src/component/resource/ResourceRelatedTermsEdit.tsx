@@ -15,6 +15,7 @@ import Vocabulary from "../../model/Vocabulary";
 import TermItState from "../../model/TermItState";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import VocabularySelect from "../vocabulary/VocabularySelect";
+import Utils from "../../util/Utils";
 
 interface PropsExternal {
     terms: Term[];
@@ -56,10 +57,6 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
         }, vocabulary);
     };
 
-    private valueRenderer = (option: Term) => {
-        return option.label;
-    };
-
     private resolveSelectedSubTerms(): string[] {
         return this.props.terms.map(t => t.iri!);
     }
@@ -91,10 +88,11 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
                                          multi={true}
                                          displayInfoOnHover={true}
                                          renderAsTree={true}
-                                         valueRenderer={this.valueRenderer}/>;
+                                         valueRenderer={Utils.labelValueRenderer}/>;
         return <FormGroup>
             <Label className="attribute-label">{this.props.i18n("resource.metadata-edit.terms")}</Label>{" "}
-            <VocabularySelect id="edit-resource-terms-vocabulary" vocabulary={this.state.vocabulary} onVocabularySet={onVocabularySet}/>
+            <VocabularySelect id="edit-resource-terms-vocabulary" vocabulary={this.state.vocabulary}
+                              onVocabularySet={onVocabularySet}/>
             {this.state.vocabulary ? a : ""}
         </FormGroup>;
     }

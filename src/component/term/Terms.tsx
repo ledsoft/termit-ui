@@ -63,10 +63,6 @@ export class Terms extends React.Component<GlossaryTermsProps> {
         this.props.selectVocabularyTerm(null)
     }
 
-    private static _valueRenderer(option: Term) {
-        return option.label
-    }
-
     private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         return this.props.fetchTerms({searchString, optionID, limit, offset}, {
@@ -136,7 +132,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                                        multi={false}
                                        showSettings={false}
                                        maxHeight={Utils.calculateAssetListHeight()}
-                                       valueRenderer={Terms._valueRenderer}
+                                       valueRenderer={Utils.labelValueRenderer}
                 />
             </CardBody>
         </Card>;

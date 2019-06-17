@@ -166,5 +166,15 @@ export default {
      */
     labelComparator(a: Asset, b: Asset) {
         return a.label.localeCompare(b.label);
+    },
+
+    /**
+     * Value renderer for the intelligent tree select component.
+     *
+     * This renderer takes the specified option and renders its label.
+     * @param option Options to render
+     */
+    labelValueRenderer(option: AssetData) {
+        return option.label;
     }
 }

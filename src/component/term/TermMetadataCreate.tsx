@@ -99,10 +99,6 @@ const Select = asField(({fieldState, ...props}: any) => {
         return props.fieldApi.setValue(value);
     }
 
-    const valueRenderer = (option: Term) => {
-        return option.label;
-    };
-
     return (
         <FormGroup>
             <IntelligentTreeSelect name={props.name}
@@ -111,7 +107,7 @@ const Select = asField(({fieldState, ...props}: any) => {
                                    showSettings={false}
                                    maxHeight={150}
                                    fetchOptions={props.fetchOptions}
-                                   valueRenderer={valueRenderer}
+                                   valueRenderer={Utils.labelValueRenderer}
                                    {...props}
                                    style={fieldState.error ? {border: "solid 1px red"} : null}
             />

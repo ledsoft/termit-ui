@@ -19,6 +19,7 @@ import {GoPlus} from "react-icons/go";
 import Routes from "../../util/Routes";
 import Routing from "../../util/Routing";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import Utils from "../../util/Utils";
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
@@ -48,15 +49,16 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
         this.props.selectVocabularyTerm(null)
     }
 
-    private static _valueRenderer(option: Term) {
-        return option.label
-    }
-
     private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, Vocabulary2.create(this.props.vocabulary!.iri));
+        return this.props.fetchTerms({
+            searchString,
+            optionID,
+            limit,
+            offset
+        }, Vocabulary2.create(this.props.vocabulary!.iri));
     };
 
-    private handleCreateClick = () =>  {
+    private handleCreateClick = () => {
         // const normalizedName = this.props.match.params.name;
         // const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         const voc = VocabularyUtils.create(this.props.vocabulary!.iri);
@@ -76,7 +78,8 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
         } else {
             // The tree component adds depth and expanded attributes to the options when rendering,
             // We need to get rid of them before working with the term
-            // We are creating a defensive copy of the term so that the rest of the application and the tree component have their own versions
+            // We are creating a defensive copy of the term so that the rest of the application and the tree component
+            // have their own versions
             const cloneData = Object.assign({}, term);
             // @ts-ignore
             delete cloneData.expanded;
@@ -88,9 +91,9 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
             // const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
             // Routing.transitionTo(Routes.vocabularyTermDetail,
             //     {
-            //         params: new Map([['name', this.props.match.params.name], ['termName', VocabularyUtils.getFragment(clone.iri)]]),
-            //         query: namespace ? new Map([["namespace", namespace]]) : undefined
-            //     });
+            //         params: new Map([['name', this.props.match.params.name], ['termName',
+            // VocabularyUtils.getFragment(clone.iri)]]), query: namespace ? new Map([["namespace", namespace]]) :
+            // undefined });
         }
     };
 
@@ -109,7 +112,7 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
             isMenuOpen={false}
             multi={false}
             showSettings={false}
-            valueRenderer={AnnotationTerms._valueRenderer}
+            valueRenderer={Utils.labelValueRenderer}
         />;
 
         actions.push(
@@ -126,9 +129,9 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
         //     actions={actions}
         // />);
         return (<FormGroup>
-        <div> <Label className="attribute-label">{"Term:"}</Label> {actions[0]} </div>
-        {component}
-    </FormGroup>);
+            <div><Label className="attribute-label">{"Term:"}</Label> {actions[0]} </div>
+            {component}
+        </FormGroup>);
     }
 }
 
