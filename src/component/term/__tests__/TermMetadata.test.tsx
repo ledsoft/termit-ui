@@ -1,15 +1,15 @@
 import * as React from "react";
 import Term from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {TermMetadata} from "../TermMetadata";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Vocabulary from "../../../model/Vocabulary";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
-import {AssetLabel} from "../../misc/AssetLabel";
 import {shallow} from "enzyme";
-import {TermLink} from "../TermLink";
-import {MemoryRouter} from "react-router";
+import TermLink from "../TermLink";
+import AssetIriLink from "../../misc/AssteIriLink";
+import OutgoingLink from "../../misc/OutgoingLink";
 
 jest.mock("../../../util/Routing");
 jest.mock("../TermAssignments");
@@ -45,8 +45,8 @@ describe("TermMetadata", () => {
             vocabulary: {iri: vocabulary.iri}
         })];
         loadSubTerms = jest.fn().mockImplementation(() => Promise.resolve(subTerms));
-        const wrapper = mountWithIntl(<MemoryRouter><TermMetadata term={term}
-                                                                  loadSubTerms={loadSubTerms} {...intlFunctions()}/></MemoryRouter>);
+        const wrapper = shallow(<TermMetadata term={term}
+                                              loadSubTerms={loadSubTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
         return Promise.resolve().then(() => {
             wrapper.update();
             const subTermLinks = wrapper.find(TermLink);
@@ -70,10 +70,18 @@ describe("TermMetadata", () => {
 
     it("skips implicit term type when rendering types", () => {
         term.types = [VocabularyUtils.TERM, Generator.generateUri()];
-        const wrapper = mountWithIntl(<MemoryRouter><TermMetadata term={term}
-                                                                  loadSubTerms={loadSubTerms} {...intlFunctions()}/></MemoryRouter>);
-        const renderedTypes = wrapper.find(AssetLabel);
+        const wrapper = shallow(<TermMetadata term={term} loadSubTerms={loadSubTerms} {...intlFunctions()}/>);
+        const renderedTypes = wrapper.find(OutgoingLink);
         expect(renderedTypes.length).toEqual(1);
-        expect(renderedTypes.text()).toEqual(term.types[1]);
+        expect(renderedTypes.get(0).props.iri).toEqual(term.types[1]);
+    });
+
+    it("renders parent term link when parent term exists", () => {
+        term.parent = {iri: Generator.generateUri()};
+        const wrapper = shallow(<TermMetadata term={term}
+                                              loadSubTerms={loadSubTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const parentLink = wrapper.find(AssetIriLink);
+        expect(parentLink.exists()).toBeTruthy();
+        expect(parentLink.prop("id")).toEqual("term-metadata-parent");
     });
 });

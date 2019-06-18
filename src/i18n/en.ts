@@ -151,6 +151,7 @@ export default {
 
         "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',
+        "term.metadata.parent": "Parent term",
         'term.metadata.subTerms': 'Sub terms',
         'term.metadata.types': 'Type',
         'term.metadata.source': 'Source',

@@ -151,6 +151,7 @@ export default {
 
         "term.metadata.definition": "Definice",
         'term.metadata.comment': 'Komentář',
+        "term.metadata.parent": "Nadřazený pojem",
         'term.metadata.subTerms': 'Podřazené pojmy',
         'term.metadata.types': 'Typ pojmu',
         'term.metadata.source': 'Zdroj pojmu',
