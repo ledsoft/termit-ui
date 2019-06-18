@@ -12,9 +12,9 @@ import VocabularyUtils from "../../util/VocabularyUtils";
 import TermSourcesEdit from "./TermSourcesEdit";
 import TermTypesEdit from "./TermTypesEdit";
 import Utils from "../../util/Utils";
-import TermSubTermsEdit from "./TermSubTermsEdit";
-import {AssetData} from "../../model/Asset";
 import UnmappedPropertiesEdit from "../genericmetadata/UnmappedPropertiesEdit";
+import ParentTermSelector from "./ParentTermSelector";
+import {AssetData} from "../../model/Asset";
 
 interface TermMetadataEditProps extends HasI18n {
     term: Term,
@@ -33,16 +33,15 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.state = Object.assign({labelExists: false, unmappedProperties: props.term.unmappedProperties}, props.term);
     }
 
-    private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    private onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const change = {};
         change[e.currentTarget.name.substring(e.currentTarget.name.lastIndexOf("-") + 1)] = e.currentTarget.value;
         this.setState(change);
     };
 
     private onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.onChange(e);
-        this.setState({labelExists: false});
         const label = e.currentTarget.value;
+        this.setState({labelExists: false, label});
         if (label === this.props.term.label) {
             return;
         }
@@ -61,8 +60,8 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.setState({types: newTypes});
     };
 
-    private onSubTermsChange = (newChildren: AssetData[]) => {
-        this.setState({subTerms: newChildren, plainSubTerms: newChildren.map(t => t.iri!)});
+    public onParentChange = (parent?: AssetData) => {
+        this.setState({parent});
     };
 
     private onPropertiesChange = (update: Map<string, string[]>) => {
@@ -86,7 +85,7 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
-                        <CustomInput name="edit-term-iri" onChange={this.onChange} value={this.state.iri}
+                        <CustomInput name="edit-term-iri" onChange={this.onInputChange} value={this.state.iri}
                                      disabled={true} label={i18n("asset.iri")}/>
                     </Col>
                 </Row>
@@ -100,21 +99,20 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 <Row>
                     <Col xl={6} md={12}>
                         <TextArea name="edit-term-definition" value={this.state.definition}
-                                  onChange={this.onChange} rows={3} label={i18n("term.metadata.definition")}/>
+                                  onChange={this.onInputChange} rows={3} label={i18n("term.metadata.definition")}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
                         <TextArea name="edit-term-comment" value={this.state.comment}
-                                  onChange={this.onChange} rows={3} label={i18n("term.metadata.comment")}/>
+                                  onChange={this.onInputChange} rows={3} label={i18n("term.metadata.comment")}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <TermSubTermsEdit subTerms={Utils.sanitizeArray(this.state.subTerms)}
-                                          termIri={this.props.term.iri}
+                        <ParentTermSelector termIri={this.props.term.iri} parent={this.state.parent}
                                           vocabularyIri={this.props.term.vocabulary!.iri!}
-                                          onChange={this.onSubTermsChange}/>
+                                          onChange={this.onParentChange}/>
                     </Col>
                 </Row>
                 <Row>

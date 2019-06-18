@@ -1,33 +1,36 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {FormGroup, Label} from "reactstrap";
-// @ts-ignore
-import {IntelligentTreeSelect} from "intelligent-tree-select";
-import "intelligent-tree-select/lib/styles.css";
 import Term from "../../model/Term";
+import FetchOptionsFunction from "../../model/Functions";
+import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
-import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
-import {AssetData} from "../../model/Asset";
-import FetchOptionsFunction from "../../model/Functions";
 import {loadTerms} from "../../action/AsyncActions";
+import {FormGroup, Label} from "reactstrap";
+import Utils from "../../util/Utils";
+// @ts-ignore
+import {IntelligentTreeSelect} from "intelligent-tree-select";
+import {AssetData} from "../../model/Asset";
 
-interface TermSubTermsEditProps extends HasI18n {
-    subTerms: AssetData[];
+interface ParentTermSelectorProps extends HasI18n {
     termIri: string;
+    parent?: AssetData;
     vocabularyIri: string;
+    onChange: (parent?: AssetData) => void;
     vocabularyTerms: Term[];
-    onChange: (subTerms: AssetData[]) => void;
     loadTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
 }
 
-export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
+export class ParentTermSelector extends React.Component<ParentTermSelectorProps> {
 
-    private onChange = (val: Term[]) => {
-        const newSubTerms: AssetData[] = val.map(v => Object.assign({}, {iri: v.iri})).filter(v => this.props.termIri !== v.iri);
-        this.props.onChange(newSubTerms);
+    public onChange = (val: Term | null) => {
+        if (!val) {
+            this.props.onChange(undefined);
+        } else if (val.iri !== this.props.termIri) {
+            this.props.onChange({iri: val.iri});
+        }
     };
 
     private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
@@ -39,21 +42,12 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
         }, VocabularyUtils.create(this.props.vocabularyIri));
     };
 
-    private valueRenderer = (option: Term) => {
-        return option.label;
-    };
-
-    private resolveSelectedSubTerms(): string[] {
-        return this.props.subTerms.map(t => t.iri!);
-    }
-
     public render() {
-        const selected = this.resolveSelectedSubTerms();
         return <FormGroup>
-            <Label className="attribute-label">{this.props.i18n("term.metadata.subTerms")}</Label>
+            <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
             <IntelligentTreeSelect className="term-edit"
                                    onChange={this.onChange}
-                                   value={selected}
+                                   value={this.props.parent ? this.props.parent.iri : undefined}
                                    fetchOptions={this.fetchOptions}
                                    fetchLimit={100000}
                                    valueKey="iri"
@@ -62,10 +56,9 @@ export class TermSubTermsEdit extends React.Component<TermSubTermsEditProps> {
                                    simpleTreeData={true}
                                    showSettings={false}
                                    maxHeight={150}
-                                   multi={true}
-                                   displayInfoOnHover={true}
+                                   multi={false}
                                    renderAsTree={true}
-                                   valueRenderer={this.valueRenderer}/>
+                                   valueRenderer={Utils.labelValueRenderer}/>
         </FormGroup>;
     }
 }
@@ -78,4 +71,4 @@ export default connect((state: TermItState) => {
     return {
         loadTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
     }
-}))(injectIntl(withI18n(TermSubTermsEdit)));
+}))(injectIntl(withI18n(ParentTermSelector)));

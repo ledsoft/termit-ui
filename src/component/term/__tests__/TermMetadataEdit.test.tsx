@@ -8,8 +8,9 @@ import Ajax from "../../../util/Ajax";
 import {shallow} from "enzyme";
 import {UnmappedPropertiesEdit} from "../../genericmetadata/UnmappedPropertiesEdit";
 import VocabularyUtils from "../../../util/VocabularyUtils";
+import CustomInput from "../../misc/CustomInput";
 
-jest.mock("../TermSubTermsEdit");
+jest.mock("../ParentTermSelector");
 
 describe("Term edit", () => {
 
@@ -28,14 +29,10 @@ describe("Term edit", () => {
         onCancel = jest.fn();
     });
 
-    it("disables save button when identifier field is empty", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
-                                                        cancel={onCancel} {...intlFunctions()}/>);
-        const idInput = wrapper.find("input[name=\"edit-term-iri\"]");
-        (idInput.getDOMNode() as HTMLInputElement).value = "";
-        idInput.simulate("change", idInput);
-        const saveButton = wrapper.find("button#edit-term-submit");
-        expect(saveButton.getElement().props.disabled).toBeTruthy();
+    it("renders identifier input disabled", () => {
+        const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
+                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-iri").prop("disabled")).toBeTruthy();
     });
 
     it("disables save button when label field is empty", () => {
