@@ -77,7 +77,7 @@ describe("TermMetadata", () => {
     });
 
     it("renders parent term link when parent term exists", () => {
-        term.parent = {iri: Generator.generateUri()};
+        term.parentTerm = {iri: Generator.generateUri()};
         const wrapper = shallow(<TermMetadata term={term}
                                               loadSubTerms={loadSubTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
         const parentLink = wrapper.find(AssetIriLink);
