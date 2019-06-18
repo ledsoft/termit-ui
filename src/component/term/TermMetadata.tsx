@@ -130,10 +130,10 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     }
 
     private renderParentTerm() {
-        if (!this.props.term.parent) {
+        if (!this.props.term.parentTerm) {
             return null;
         }
-        const parentIri = VocabularyUtils.create(this.props.term.parent.iri!);
+        const parentIri = VocabularyUtils.create(this.props.term.parentTerm.iri!);
         const vocabularyIri = VocabularyUtils.create(this.props.term.vocabulary!.iri!);
         const path = Routing.getTransitionPath(Routes.vocabularyTermDetail,
             {

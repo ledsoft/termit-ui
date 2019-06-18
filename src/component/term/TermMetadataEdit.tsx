@@ -60,8 +60,8 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.setState({types: newTypes});
     };
 
-    public onParentChange = (parent?: AssetData) => {
-        this.setState({parent});
+    public onParentChange = (parentTerm?: AssetData) => {
+        this.setState({parentTerm});
     };
 
     private onPropertiesChange = (update: Map<string, string[]>) => {
@@ -110,9 +110,9 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <ParentTermSelector termIri={this.props.term.iri} parent={this.state.parent}
-                                          vocabularyIri={this.props.term.vocabulary!.iri!}
-                                          onChange={this.onParentChange}/>
+                        <ParentTermSelector termIri={this.props.term.iri} parentTerm={this.state.parentTerm}
+                                            vocabularyIri={this.props.term.vocabulary!.iri!}
+                                            onChange={this.onParentChange}/>
                     </Col>
                 </Row>
                 <Row>

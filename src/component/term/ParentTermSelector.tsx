@@ -16,7 +16,7 @@ import {AssetData} from "../../model/Asset";
 
 interface ParentTermSelectorProps extends HasI18n {
     termIri: string;
-    parent?: AssetData;
+    parentTerm?: AssetData;
     vocabularyIri: string;
     onChange: (parent?: AssetData) => void;
     vocabularyTerms: Term[];
@@ -47,7 +47,7 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps>
             <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
             <IntelligentTreeSelect className="term-edit"
                                    onChange={this.onChange}
-                                   value={this.props.parent ? this.props.parent.iri : undefined}
+                                   value={this.props.parentTerm ? this.props.parentTerm.iri : undefined}
                                    fetchOptions={this.fetchOptions}
                                    fetchLimit={100000}
                                    valueKey="iri"

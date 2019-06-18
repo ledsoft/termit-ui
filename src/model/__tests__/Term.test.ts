@@ -48,6 +48,12 @@ describe("Term tests", () => {
             expect(instance.author instanceof User).toBeTruthy();
             expect(instance.lastEditor instanceof User).toBeTruthy();
         });
+
+        it("sets parent based on parentTerm", () => {
+            termData.parentTerm = {iri: Generator.generateUri()};
+            const result = new Term(termData);
+            expect(result.parent).toEqual(termData.parentTerm.iri);
+        });
     });
 
     it("adds term type in constructor when it is missing in specified data", () => {

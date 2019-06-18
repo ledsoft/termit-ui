@@ -181,19 +181,18 @@ describe("TermDetail", () => {
         expect(editButtonAgain.exists()).toBeFalsy();
     });
 
-    it("publishes term update notification when sub terms change", () => {
-        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
+    it("publishes term update notification when parent term changes", () => {
+        const wrapper = shallow<TermDetail>(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
                                             {...intlFunctions()} {...intlDataForShallow()}/>);
         const update = new Term(Object.assign({}, term));
-        const newChild = Generator.generateUri();
-        update.subTerms = [{iri: newChild}];
-        update.plainSubTerms = [newChild];
-        (wrapper.instance() as TermDetail).onSave(update);
+        const newParent = Generator.generateUri();
+        update.parentTerm = {iri: newParent};
+        wrapper.instance().onSave(update);
         return Promise.resolve().then(() => {
-            expect(onPublishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TERM_CHILDREN_UPDATED}});
+            expect(onPublishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TERM_HIERARCHY_UPDATED}});
         });
     });
 });

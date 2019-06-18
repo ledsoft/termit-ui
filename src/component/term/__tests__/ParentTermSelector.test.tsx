@@ -25,7 +25,7 @@ describe("ParentTermSelector", () => {
         const parent = {
             iri: Generator.generateUri()
         };
-        const wrapper = shallow(<ParentTermSelector termIri={Generator.generateUri()} parent={parent}
+        const wrapper = shallow(<ParentTermSelector termIri={Generator.generateUri()} parentTerm={parent}
                                                     vocabularyIri={Generator.generateUri()} onChange={onChange}
                                                     vocabularyTerms={[]}
                                                     loadTerms={loadTerms} {...intlFunctions()} {...intlDataForShallow()}/>);

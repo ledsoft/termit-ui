@@ -6,7 +6,7 @@ import VocabularyUtils from "../util/VocabularyUtils";
 
 const ctx = {
     definition: VocabularyUtils.DEFINITION,
-    parent: VocabularyUtils.BROADER,
+    parentTerm: VocabularyUtils.BROADER,
     subTerms: VocabularyUtils.NARROWER,
     sources: "http://purl.org/dc/elements/1.1/source",
     vocabulary: VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU,
@@ -16,14 +16,15 @@ const ctx = {
 export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
 
 const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "definition", "created", "author", "lastEditor", "lastModified",
-    "subTerms", "sources", "types", "parent", "plainSubTerms", "vocabulary"];
+    "subTerms", "sources", "types", "parentTerm", "parent", "plainSubTerms", "vocabulary"];
 
 export interface TermData extends AssetData, HasProvenanceData {
     label: string;
     definition?: string;
     subTerms?: AssetData[];
     sources?: string[];
-    parent?: AssetData;
+    parentTerm?: AssetData;
+    parent?: string;    // Introduced in order to support the Intelligent Tree Select component
     plainSubTerms?: string[];   // Introduced in order to support the Intelligent Tree Select component
     vocabulary?: AssetData;
 }
@@ -31,7 +32,8 @@ export interface TermData extends AssetData, HasProvenanceData {
 export default class Term extends Asset implements TermData {
     public definition?: string;
     public subTerms?: AssetData[];
-    public parent?: AssetData;
+    public parentTerm?: AssetData;
+    public readonly parent?: string;
     public sources?: string[];
     public plainSubTerms?: string[];
     public readonly vocabulary?: AssetData;
@@ -48,12 +50,16 @@ export default class Term extends Asset implements TermData {
             this.subTerms = Utils.sanitizeArray(this.subTerms);
             this.plainSubTerms = Utils.sanitizeArray(this.subTerms).map(st => st.iri!);
         }
+        if (this.parentTerm) {
+            this.parent = this.parentTerm.iri;
+        }
     }
 
     public toTermData(): TermData {
         const result: any = {};
         Object.assign(result, this);
         delete result.plainSubTerms;
+        delete result.parent;
         return result;
     }
 

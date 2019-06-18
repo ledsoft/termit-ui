@@ -248,7 +248,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             definition: this.state.definition,
             comment: this.state.comment,
             subTerms: children,
-            parent: {iri: parent},
+            parentTerm: {iri: parent},
             types: data.typeOption ? [data.typeOption.iri] : [],
             sources: [data.optionSource],
         }), this.props.match.params.name);

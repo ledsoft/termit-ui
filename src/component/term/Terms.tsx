@@ -52,7 +52,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
             this.forceUpdate()
         }
         const termCreated = this.props.notifications.find(n => (n.source.type === ActionType.CREATE_VOCABULARY_TERM
-            && n.source.status === AsyncActionStatus.SUCCESS) || n.source.type === NotificationType.TERM_CHILDREN_UPDATED);
+            && n.source.status === AsyncActionStatus.SUCCESS) || n.source.type === NotificationType.TERM_HIERARCHY_UPDATED);
         if (termCreated && this.treeComponent.current) {
             this.treeComponent.current.resetOptions();
             this.props.consumeNotification(termCreated);

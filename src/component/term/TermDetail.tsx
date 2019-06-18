@@ -68,13 +68,13 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
     }
 
     public onSave = (term: Term) => {
-        const oldChildren = this.props.term!.plainSubTerms;
+        const oldParent = this.props.term!.parentTerm;
         this.props.updateTerm(term).then(() => {
             this.loadTerm();
             this.reloadVocabularyTerms();
             this.onCloseEdit();
-            if (term.plainSubTerms !== oldChildren) {
-                this.props.publishNotification({source: {type: NotificationType.TERM_CHILDREN_UPDATED}});
+            if (term.parentTerm !== oldParent) {
+                this.props.publishNotification({source: {type: NotificationType.TERM_HIERARCHY_UPDATED}});
             }
         });
     };
@@ -89,7 +89,8 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
         const component = this.state.edit ?
             <TermMetadataEdit save={this.onSave} term={this.props.term!} cancel={this.onCloseEdit}/> :
             <TermMetadata term={this.props.term!}/>;
-        return <PanelWithActions id="term-detail" title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
+        return <PanelWithActions id="term-detail"
+                                 title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
                                  actions={actions}>{component}</PanelWithActions>;
     }
 }
