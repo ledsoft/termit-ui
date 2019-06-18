@@ -1,7 +1,7 @@
 // @ts-ignore
 import {IntelligentTreeSelect} from "intelligent-tree-select";
 // @ts-ignore
-import {asField, BasicText, Form, Scope} from "informed";
+import {asField, Form} from "informed";
 
 import * as React from "react";
 import {ChangeEvent} from "react";
@@ -17,7 +17,8 @@ import {
     FormFeedback,
     FormGroup,
     FormText,
-    Input, Label,
+    Input,
+    Label,
     Row,
 } from "reactstrap";
 import {validateLengthMin3, validateLengthMin5, validateNotSameAsParent} from "./forms/newOptionValidate";
@@ -247,7 +248,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             definition: this.state.definition,
             comment: this.state.comment,
             subTerms: children,
-            parent: parent as string,
+            parent: {iri: parent},
             types: data.typeOption ? [data.typeOption.iri] : [],
             sources: [data.optionSource],
         }), this.props.match.params.name);

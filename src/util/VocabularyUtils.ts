@@ -42,6 +42,7 @@ export default {
     FILE: _NS_POPIS_DAT + "soubor",
     DOCUMENT: _NS_POPIS_DAT + "dokument",
     DEFINITION: _NS_SKOS + "definition",
+    BROADER: _NS_SKOS + "broader",
     NARROWER: _NS_SKOS + "narrower",
     DATASET: "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
     JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovníku",

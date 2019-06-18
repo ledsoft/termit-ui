@@ -6,6 +6,7 @@ import VocabularyUtils from "../util/VocabularyUtils";
 
 const ctx = {
     definition: VocabularyUtils.DEFINITION,
+    parent: VocabularyUtils.BROADER,
     subTerms: VocabularyUtils.NARROWER,
     sources: "http://purl.org/dc/elements/1.1/source",
     vocabulary: VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU,
@@ -22,7 +23,7 @@ export interface TermData extends AssetData, HasProvenanceData {
     definition?: string;
     subTerms?: AssetData[];
     sources?: string[];
-    parent?: string;
+    parent?: AssetData;
     plainSubTerms?: string[];   // Introduced in order to support the Intelligent Tree Select component
     vocabulary?: AssetData;
 }
@@ -30,7 +31,7 @@ export interface TermData extends AssetData, HasProvenanceData {
 export default class Term extends Asset implements TermData {
     public definition?: string;
     public subTerms?: AssetData[];
-    public parent?: string;
+    public parent?: AssetData;
     public sources?: string[];
     public plainSubTerms?: string[];
     public readonly vocabulary?: AssetData;

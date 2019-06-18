@@ -157,7 +157,7 @@ export function createTerm(term: Term, vocabularyIri: IRI) {
         dispatch(asyncActionRequest(action));
         let url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
         if (term.parent) {
-            url += "/" + VocabularyUtils.create(term.parent).fragment + "/subterms";
+            url += "/" + VocabularyUtils.create(term.parent.iri!).fragment + "/subterms";
         }
         return Ajax.post(url, content(term.toJsonLd()).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIri.namespace))
             .then((resp: AxiosResponse) => {
