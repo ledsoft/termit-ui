@@ -85,22 +85,22 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
         const occurrencesClass = classNames("mt-3", {"m-resource-term-occurrences-container": assignments.length > 0});
         return <>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className="attribute-label" title={i18n("resource.metadata.terms.assigned.tooltip")}>
                         {i18n("resource.metadata.terms.assigned")}
                     </Label>
                 </Col>
-                <Col md={10} className="resource-terms">
+                <Col xl={10} md={8} className="resource-terms">
                     {assignments}
                 </Col>
             </Row>
             {isFile(this.props.resource) && <Row className={occurrencesClass}>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className="attribute-label" title={i18n("resource.metadata.terms.occurrences.tooltip")}>
                         {i18n("resource.metadata.terms.occurrences")}
                     </Label>
                 </Col>
-                <Col md={10} className="resource-terms">
+                <Col xl={10} md={8} className="resource-terms">
                     {this.renderTermOccurrences()}
                 </Col>
             </Row>}

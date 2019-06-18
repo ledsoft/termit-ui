@@ -19,26 +19,26 @@ class ResourceMetadata extends React.Component<ResourceMetadataProps> {
         const resource = this.props.resource || {};
         return <>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className="attribute-label">{i18n("asset.iri")}</Label>
                 </Col>
-                <Col md={10}>
+                <Col xl={10} md={8}>
                     <Label id="resource-metadata-iri"><OutgoingLink iri={resource.iri} label={resource.iri}/></Label>
                 </Col>
             </Row>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className="attribute-label">{i18n("asset.label")}</Label>
                 </Col>
-                <Col md={10}>
+                <Col xl={10} md={8}>
                     <Label id="resource-metadata-label">{resource.label}</Label>
                 </Col>
             </Row>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className="attribute-label">{i18n("resource.metadata.description")}</Label>
                 </Col>
-                <Col md={10}>
+                <Col xl={10} md={8}>
                     <Label id="resource-metadata-description">{resource.description}</Label>
                 </Col>
             </Row>

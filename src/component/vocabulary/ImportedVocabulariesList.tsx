@@ -17,10 +17,10 @@ export const ImportedVocabulariesList: React.FC<ImportedVocabulariesListProps> =
     }
     vocabs.sort((a: AssetData, b: AssetData) => a.iri!.localeCompare(b.iri!));
     return <Row>
-        <Col md={2}>
+        <Col xl={2} md={4}>
             <Label className="attribute-label">{props.i18n("vocabulary.detail.imports")}</Label>
         </Col>
-        <Col md={10}>
+        <Col xl={10} md={8}>
             <ul id="vocabulary-metadata-importedVocabularies">
                 {vocabs.map(v => <li key={v.iri}><VocabularyIriLink iri={v.iri!}/></li>)}
             </ul>
