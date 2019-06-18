@@ -33,13 +33,13 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.state = Object.assign({labelExists: false, unmappedProperties: props.term.unmappedProperties}, props.term);
     }
 
-    private onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    public onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const change = {};
         change[e.currentTarget.name.substring(e.currentTarget.name.lastIndexOf("-") + 1)] = e.currentTarget.value;
         this.setState(change);
     };
 
-    private onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    public onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const label = e.currentTarget.value;
         this.setState({labelExists: false, label});
         if (label === this.props.term.label) {
