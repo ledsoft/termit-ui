@@ -156,8 +156,9 @@ export function createTerm(term: Term, vocabularyIri: IRI) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
         let url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
-        if (term.parentTerm) {
-            url += "/" + VocabularyUtils.create(term.parentTerm.iri!).fragment + "/subterms";
+        const parents = Utils.sanitizeArray(term.parentTerms);
+        if (parents.length > 0) {
+            url += "/" + VocabularyUtils.create(parents[0].iri!).fragment + "/subterms";
         }
         return Ajax.post(url, content(term.toJsonLd()).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIri.namespace))
             .then((resp: AxiosResponse) => {

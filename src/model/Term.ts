@@ -3,10 +3,11 @@ import Utils from "../util/Utils";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import {CONTEXT as USER_CONTEXT} from "./User";
 import VocabularyUtils from "../util/VocabularyUtils";
+import * as _ from "lodash";
 
 const ctx = {
     definition: VocabularyUtils.DEFINITION,
-    parentTerm: VocabularyUtils.BROADER,
+    parentTerms: VocabularyUtils.BROADER,
     subTerms: VocabularyUtils.NARROWER,
     sources: "http://purl.org/dc/elements/1.1/source",
     vocabulary: VocabularyUtils.JE_POJMEM_ZE_SLOVNIKU,
@@ -16,14 +17,15 @@ const ctx = {
 export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
 
 const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "definition", "created", "author", "lastEditor", "lastModified",
-    "subTerms", "sources", "types", "parentTerm", "parent", "plainSubTerms", "vocabulary"];
+    "subTerms", "sources", "types", "parentTerms", "parent", "plainSubTerms", "vocabulary"];
 
 export interface TermData extends AssetData, HasProvenanceData {
     label: string;
     definition?: string;
     subTerms?: AssetData[];
     sources?: string[];
-    parentTerm?: AssetData;
+    // Represents proper parent Term, stripped of broader terms representing other model relationships
+    parentTerms?: TermData[];
     parent?: string;    // Introduced in order to support the Intelligent Tree Select component
     plainSubTerms?: string[];   // Introduced in order to support the Intelligent Tree Select component
     vocabulary?: AssetData;
@@ -32,7 +34,7 @@ export interface TermData extends AssetData, HasProvenanceData {
 export default class Term extends Asset implements TermData {
     public definition?: string;
     public subTerms?: AssetData[];
-    public parentTerm?: AssetData;
+    public parentTerms?: Term[];
     public readonly parent?: string;
     public sources?: string[];
     public plainSubTerms?: string[];
@@ -48,16 +50,24 @@ export default class Term extends Asset implements TermData {
         }
         if (this.subTerms) {
             this.subTerms = Utils.sanitizeArray(this.subTerms);
-            this.plainSubTerms = Utils.sanitizeArray(this.subTerms).map(st => st.iri!);
+            this.plainSubTerms = this.subTerms.map(st => st.iri!);
         }
-        if (this.parentTerm) {
-            this.parent = this.parentTerm.iri;
+        if (this.parentTerms) {
+            this.parentTerms = Utils.sanitizeArray(this.parentTerms).map(pt => new Term(pt));
+            this.parent = this.resolveParent(this.parentTerms);
         }
     }
 
+    private resolveParent(parents: Term[]) {
+        const sameVocabulary = parents.find(t => _.isEqual(t.vocabulary, this.vocabulary));
+        if (sameVocabulary) {
+            return sameVocabulary.iri;
+        }
+        return undefined;
+    }
+
     public toTermData(): TermData {
-        const result: any = {};
-        Object.assign(result, this);
+        const result: any = Object.assign({}, this);
         delete result.plainSubTerms;
         delete result.parent;
         return result;

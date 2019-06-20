@@ -237,10 +237,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
 
     private createNewOption(data: NewOptionData) {
         const children = this._getIDs(data.childOptions);
-        let parent = "";
-        if (data.parentOption as Term) {
-            parent = data.parentOption.iri;
-        }
+        const parents = data.parentOption ? [data.parentOption as Term] : undefined;
 
         this.props.onCreate(new Term({
             iri: data.optionURI as string,
@@ -248,7 +245,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             definition: this.state.definition,
             comment: this.state.comment,
             subTerms: children,
-            parentTerm: {iri: parent},
+            parentTerms: parents,
             types: data.typeOption ? [data.typeOption.iri] : [],
             sources: [data.optionSource],
         }), this.props.match.params.name);

@@ -8,7 +8,6 @@ import Vocabulary from "../../../model/Vocabulary";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {shallow} from "enzyme";
 import TermLink from "../TermLink";
-import AssetIriLink from "../../misc/AssteIriLink";
 import OutgoingLink from "../../misc/OutgoingLink";
 
 jest.mock("../../../util/Routing");
@@ -77,11 +76,14 @@ describe("TermMetadata", () => {
     });
 
     it("renders parent term link when parent term exists", () => {
-        term.parentTerm = {iri: Generator.generateUri()};
+        term.parentTerms = [new Term({
+            iri: Generator.generateUri(),
+            label: "Parent",
+            vocabulary: {iri: Generator.generateUri()}
+        })];
         const wrapper = shallow(<TermMetadata term={term}
                                               loadSubTerms={loadSubTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
-        const parentLink = wrapper.find(AssetIriLink);
-        expect(parentLink.exists()).toBeTruthy();
-        expect(parentLink.prop("id")).toEqual("term-metadata-parent");
+        const parentLinks = wrapper.find(TermLink);
+        expect(parentLinks.length).toEqual(term.parentTerms.length);
     });
 });

@@ -19,6 +19,7 @@ import {publishNotification} from "../../action/SyncActions";
 import NotificationType from "../../model/NotificationType";
 import OutgoingLink from "../misc/OutgoingLink";
 import {IRI} from "../../util/VocabularyUtils";
+import * as _ from "lodash";
 
 interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
@@ -68,12 +69,12 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
     }
 
     public onSave = (term: Term) => {
-        const oldParent = this.props.term!.parentTerm;
+        const oldParent = this.props.term!.parentTerms;
         this.props.updateTerm(term).then(() => {
             this.loadTerm();
             this.reloadVocabularyTerms();
             this.onCloseEdit();
-            if (term.parentTerm !== oldParent) {
+            if (_.xorBy(oldParent, Utils.sanitizeArray(term.parentTerms), t => t.iri).length > 0) {
                 this.props.publishNotification({source: {type: NotificationType.TERM_HIERARCHY_UPDATED}});
             }
         });

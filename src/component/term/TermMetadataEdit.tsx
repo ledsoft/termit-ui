@@ -14,7 +14,6 @@ import TermTypesEdit from "./TermTypesEdit";
 import Utils from "../../util/Utils";
 import UnmappedPropertiesEdit from "../genericmetadata/UnmappedPropertiesEdit";
 import ParentTermSelector from "./ParentTermSelector";
-import {AssetData} from "../../model/Asset";
 
 interface TermMetadataEditProps extends HasI18n {
     term: Term,
@@ -60,8 +59,8 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
         this.setState({types: newTypes});
     };
 
-    public onParentChange = (parentTerm?: AssetData) => {
-        this.setState({parentTerm});
+    public onParentChange = (parentTerms?: Term[]) => {
+        this.setState({parentTerms});
     };
 
     private onPropertiesChange = (update: Map<string, string[]>) => {
@@ -110,7 +109,7 @@ export class TermMetadataEdit extends React.Component<TermMetadataEditProps, Ter
                 </Row>
                 <Row>
                     <Col xl={6} md={12}>
-                        <ParentTermSelector termIri={this.props.term.iri} parentTerm={this.state.parentTerm}
+                        <ParentTermSelector termIri={this.props.term.iri} parentTerms={this.state.parentTerms}
                                             vocabularyIri={this.props.term.vocabulary!.iri!}
                                             onChange={this.onParentChange}/>
                     </Col>

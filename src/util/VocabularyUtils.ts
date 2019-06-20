@@ -64,6 +64,8 @@ export default {
     RDFS_LABEL: _NS_RDFS + "label",
     RDFS_COMMENT: _NS_RDFS + "comment",
     RDFS_RESOURCE: _NS_RDFS + "Resource",
+    RDFS_SUB_CLASS_OF: _NS_RDFS + "subClassOf",
+    RDFS_SUB_PROPERTY_OF: _NS_RDFS + "subPropertyOf",
     RDF_PROPERTY: _NS_RDF + "Property",
     DC_DESCRIPTION: "http://purl.org/dc/terms/description",
 

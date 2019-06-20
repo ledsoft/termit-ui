@@ -308,7 +308,7 @@ describe("Async actions", () => {
                 {
                     label: "Test term 2",
                     iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/test-term-2",
-                    parentTerm: parentTerm
+                    parentTerms: [parentTerm]
                 },
             );
             const mock = jest.fn().mockImplementation(() => Promise.resolve());

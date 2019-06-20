@@ -2,7 +2,6 @@ import * as React from "react";
 import {shallow} from "enzyme";
 import {ParentTermSelector} from "../ParentTermSelector";
 import Generator from "../../../__tests__/environment/Generator";
-import {AssetData} from "../../../model/Asset";
 import FetchOptionsFunction from "../../../model/Functions";
 import {IRI} from "../../../util/VocabularyUtils";
 import Term from "../../../model/Term";
@@ -13,7 +12,7 @@ import {IntelligentTreeSelect} from "intelligent-tree-select";
 
 describe("ParentTermSelector", () => {
 
-    let onChange: (parent?: AssetData) => void;
+    let onChange: (parents: Term[]) => void;
     let loadTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
 
     beforeEach(() => {
@@ -21,15 +20,16 @@ describe("ParentTermSelector", () => {
         loadTerms = jest.fn().mockImplementation(() => Promise.resolve([]));
     });
 
-    it("passes selected parent's IRI as value to tree component", () => {
-        const parent = {
-            iri: Generator.generateUri()
-        };
-        const wrapper = shallow(<ParentTermSelector termIri={Generator.generateUri()} parentTerm={parent}
+    it("passes selected parent as value to tree component", () => {
+        const parent = [new Term({
+            iri: Generator.generateUri(),
+            label: "parent"
+        })];
+        const wrapper = shallow(<ParentTermSelector termIri={Generator.generateUri()} parentTerms={parent}
                                                     vocabularyIri={Generator.generateUri()} onChange={onChange}
                                                     vocabularyTerms={[]}
                                                     loadTerms={loadTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
-        expect(wrapper.find(IntelligentTreeSelect).prop("value")).toEqual(parent.iri);
+        expect(wrapper.find(IntelligentTreeSelect).prop("value")).toEqual([parent[0].iri]);
     });
 
     it("invokes onChange with correct parent object on selection", () => {
@@ -42,11 +42,11 @@ describe("ParentTermSelector", () => {
                                                                         onChange={onChange}
                                                                         vocabularyTerms={terms}
                                                                         loadTerms={loadTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
-        wrapper.instance().onChange(terms[0]);
-        expect(onChange).toHaveBeenCalledWith({iri: terms[0].iri});
+        wrapper.instance().onChange([terms[0]]);
+        expect(onChange).toHaveBeenCalledWith([terms[0]]);
     });
 
-    it("does nothing when selected parent is the same as the term itself", () => {
+    it("filters out selected parent if it is the same as the term itself", () => {
         const term = new Term({
             iri: Generator.generateUri(),
             label: "Parent"
@@ -56,11 +56,11 @@ describe("ParentTermSelector", () => {
                                                                         onChange={onChange}
                                                                         vocabularyTerms={[term]}
                                                                         loadTerms={loadTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
-        wrapper.instance().onChange(term);
-        expect(onChange).not.toHaveBeenCalled();
+        wrapper.instance().onChange([term]);
+        expect(onChange).toHaveBeenCalledWith([]);
     });
 
-    it("handles selection reset by passing undefined to onChange handler", () => {
+    it("handles selection reset by passing empty array to onChange handler", () => {
         const term = new Term({
             iri: Generator.generateUri(),
             label: "Parent"
@@ -71,6 +71,6 @@ describe("ParentTermSelector", () => {
                                                                         vocabularyTerms={[term]}
                                                                         loadTerms={loadTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
         wrapper.instance().onChange(null);
-        expect(onChange).toHaveBeenCalledWith(undefined);
+        expect(onChange).toHaveBeenCalledWith([]);
     });
 });

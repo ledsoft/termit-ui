@@ -49,10 +49,35 @@ describe("Term tests", () => {
             expect(instance.lastEditor instanceof User).toBeTruthy();
         });
 
-        it("sets parent based on parentTerm", () => {
-            termData.parentTerm = {iri: Generator.generateUri()};
+        it("does not set parent when no parentTerms are available", () => {
             const result = new Term(termData);
-            expect(result.parent).toEqual(termData.parentTerm.iri);
+            expect(result.parent).not.toBeDefined();
+        });
+
+        it("sets parent based on parentTerms", () => {
+            termData.vocabulary = {iri: Generator.generateUri()};
+            termData.parentTerms = [{
+                iri: Generator.generateUri(),
+                label: "Parent",
+                vocabulary: termData.vocabulary
+            }];
+            const result = new Term(termData);
+            expect(result.parent).toEqual(termData.parentTerms[0].iri);
+        });
+
+        it("sets parent to first parent with same vocabulary", () => {
+            termData.vocabulary = {iri: Generator.generateUri()};
+            termData.parentTerms = [{
+                iri: Generator.generateUri(),
+                label: "Parent",
+                vocabulary: {iri: Generator.generateUri()}
+            }, {
+                iri: Generator.generateUri(),
+                label: "Parent Two",
+                vocabulary: {iri: termData.vocabulary.iri}
+            }];
+            const result = new Term(termData);
+            expect(result.parent).toEqual(termData.parentTerms[1].iri);
         });
     });
 

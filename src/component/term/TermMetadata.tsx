@@ -15,9 +15,6 @@ import TermLink from "./TermLink";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {loadTerms} from "../../action/AsyncActions";
-import {Routing} from "../../util/Routing";
-import Routes from "../../util/Routes";
-import AssetIriLink from "../misc/AssteIriLink";
 
 interface TermMetadataProps extends HasI18n {
     term: Term;
@@ -88,7 +85,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     {this.renderTypes()}
                 </Col>
             </Row>
-            {this.renderParentTerm()}
+            {this.renderParentTerms()}
             <Row>
                 <Col xl={2} md={4}>
                     <Label className="attribute-label">{i18n("term.metadata.subTerms")}</Label>
@@ -129,23 +126,21 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         </div>;
     }
 
-    private renderParentTerm() {
-        if (!this.props.term.parentTerm) {
+    private renderParentTerms() {
+        const parents = Utils.sanitizeArray(this.props.term.parentTerms);
+        if (parents.length === 0) {
             return null;
         }
-        const parentIri = VocabularyUtils.create(this.props.term.parentTerm.iri!);
-        const vocabularyIri = VocabularyUtils.create(this.props.term.vocabulary!.iri!);
-        const path = Routing.getTransitionPath(Routes.vocabularyTermDetail,
-            {
-                params: new Map([["name", vocabularyIri.fragment], ["termName", parentIri.fragment]]),
-                query: new Map([["namespace", vocabularyIri.namespace!]])
-            });
         return <Row>
             <Col xl={2} md={4}>
                 <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
             </Col>
             <Col xl={10} md={8}>
-                <AssetIriLink id="term-metadata-parent" assetIri={parentIri.toString()} path={path}/>
+                <ul id="term-metadata-parentterms" className="term-items">
+                    {parents.map(item => <li key={item.iri}>
+                        <TermLink term={item}/>
+                    </li>)}
+                </ul>
             </Col>
         </Row>
     }

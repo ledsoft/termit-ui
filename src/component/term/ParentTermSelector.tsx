@@ -1,7 +1,7 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import Term from "../../model/Term";
+import Term, {TermData} from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {connect} from "react-redux";
@@ -12,24 +12,23 @@ import {FormGroup, Label} from "reactstrap";
 import Utils from "../../util/Utils";
 // @ts-ignore
 import {IntelligentTreeSelect} from "intelligent-tree-select";
-import {AssetData} from "../../model/Asset";
 
 interface ParentTermSelectorProps extends HasI18n {
     termIri: string;
-    parentTerm?: AssetData;
+    parentTerms?: TermData[];
     vocabularyIri: string;
-    onChange: (parent?: AssetData) => void;
+    onChange: (newParents: Term[]) => void;
     vocabularyTerms: Term[];
     loadTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
 }
 
 export class ParentTermSelector extends React.Component<ParentTermSelectorProps> {
 
-    public onChange = (val: Term | null) => {
+    public onChange = (val: Term[] | Term | null) => {
         if (!val) {
-            this.props.onChange(undefined);
-        } else if (val.iri !== this.props.termIri) {
-            this.props.onChange({iri: val.iri});
+            this.props.onChange([]);
+        } else {
+            this.props.onChange(Utils.sanitizeArray(val).filter(v => v.iri !== this.props.termIri));
         }
     };
 
@@ -47,7 +46,7 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps>
             <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
             <IntelligentTreeSelect className="term-edit"
                                    onChange={this.onChange}
-                                   value={this.props.parentTerm ? this.props.parentTerm.iri : undefined}
+                                   value={Utils.sanitizeArray(this.props.parentTerms).map(pt => pt.iri)}
                                    fetchOptions={this.fetchOptions}
                                    fetchLimit={100000}
                                    valueKey="iri"

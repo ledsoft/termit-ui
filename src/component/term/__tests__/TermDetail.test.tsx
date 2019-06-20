@@ -189,7 +189,7 @@ describe("TermDetail", () => {
                                             {...intlFunctions()} {...intlDataForShallow()}/>);
         const update = new Term(Object.assign({}, term));
         const newParent = Generator.generateUri();
-        update.parentTerm = {iri: newParent};
+        update.parentTerms = [new Term({iri: newParent, label: "New parent"})];
         wrapper.instance().onSave(update);
         return Promise.resolve().then(() => {
             expect(onPublishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TERM_HIERARCHY_UPDATED}});
