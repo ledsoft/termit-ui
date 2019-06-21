@@ -150,4 +150,18 @@ describe("Term tests", () => {
             expect(testTerm.unmappedProperties).toEqual(unmappedProps);
         });
     });
+
+    describe("toJsonLd", () => {
+        it("breaks possible circular dependencies by ensuring subTerms are always only references to objects", () => {
+            const sut = new Term(termData);
+            const parent = new Term({
+                iri: Generator.generateUri(),
+                label: "Parent",
+                subTerms: [sut]
+            });
+            sut.parentTerms = [parent];
+            const result = sut.toJsonLd();
+            expect(result.parentTerms![0].subTerms).toEqual([{iri: sut.iri}]);
+        });
+    });
 });

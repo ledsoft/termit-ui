@@ -68,6 +68,14 @@ export default class Term extends Asset implements TermData {
 
     public toTermData(): TermData {
         const result: any = Object.assign({}, this);
+        if (result.parentTerms) {
+            result.parentTerms = result.parentTerms.map((pt: Term) => pt.toTermData());
+        }
+        if (result.subTerms) {
+            // Prevent circular references possibly introduced by resolving references when deserializing JSON-LD on
+            // load
+            result.subTerms = Utils.sanitizeArray(result.subTerms).map((st: AssetData) => ({iri: st.iri}));
+        }
         delete result.plainSubTerms;
         delete result.parent;
         return result;

@@ -23,13 +23,14 @@ describe("ParentTermSelector", () => {
     it("passes selected parent as value to tree component", () => {
         const parent = [new Term({
             iri: Generator.generateUri(),
-            label: "parent"
+            label: "parent",
+            vocabulary: {iri: Generator.generateUri()}
         })];
         const wrapper = shallow(<ParentTermSelector termIri={Generator.generateUri()} parentTerms={parent}
-                                                    vocabularyIri={Generator.generateUri()} onChange={onChange}
+                                                    vocabularyIri={parent[0].vocabulary!.iri!} onChange={onChange}
                                                     vocabularyTerms={[]}
                                                     loadTerms={loadTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
-        expect(wrapper.find(IntelligentTreeSelect).prop("value")).toEqual([parent[0].iri]);
+        expect(wrapper.find(IntelligentTreeSelect).prop("value")).toEqual(parent[0].iri);
     });
 
     it("invokes onChange with correct parent object on selection", () => {

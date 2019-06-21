@@ -35,7 +35,6 @@ import TermItState from "../../model/TermItState";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
 import {loadTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from "../../util/Types";
-import {AssetData} from "../../model/Asset";
 import IntlData from "../../model/IntlData";
 import Utils from "../../util/Utils";
 import {IRI} from "../../util/VocabularyUtils";
@@ -153,7 +152,6 @@ interface NewOptionData {
     typeOption: Term;
     optionURI: string;
     parentOption: Term;
-    childOptions: Term[];
     optionLabel: string;
     optionDescription: string;
     optionSource: string;
@@ -227,16 +225,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         });
     }
 
-    private _getIDs(children: Term[]): AssetData[] {
-        if (!children) {
-            return [];
-        }
-        const ids: Term[] = JSON.parse(JSON.stringify(children));
-        return ids.map(obj => Object.assign({}, {iri: obj.iri}));
-    }
-
     private createNewOption(data: NewOptionData) {
-        const children = this._getIDs(data.childOptions);
         const parents = data.parentOption ? [data.parentOption as Term] : undefined;
 
         this.props.onCreate(new Term({
@@ -244,7 +233,6 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             label: data.optionLabel as string,
             definition: this.state.definition,
             comment: this.state.comment,
-            subTerms: children,
             parentTerms: parents,
             types: data.typeOption ? [data.typeOption.iri] : [],
             sources: [data.optionSource],
