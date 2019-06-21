@@ -2,7 +2,7 @@
   "name": "termit-ui",
   "version": "1.1.2",
   "private": true,
-  "homepage": "https://kbss.felk.cvut.cz/termit-dev/",
+  "homepage": ".",
   "dependencies": {
     "angular": "^1.7.4",
     "angular-bootstrap": "^0.12.2",
