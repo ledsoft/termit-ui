@@ -171,6 +171,11 @@ module.exports = {
                                 search: '__VERSION__',
                                 replace: require('../package.json').version,
                                 strict: true
+                            }, {
+                                // Deployment name is not important for dev build, so just make it empty
+                                search: '__DEPLOYMENT_NAME__',
+                                replace: '',
+                                strict: true
                             }]
                         }
                     },

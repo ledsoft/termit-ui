@@ -36,6 +36,11 @@ const env = getClientEnvironment(publicUrl);
 const serverUrl = process.env.serverUrl ? process.env.serverUrl : server['url'];
 console.log("Building with server URL: " + serverUrl);
 
+// This allows to parameterize deployment name, so that multiple deployments of TermIt accessed from one client do not
+// mess their data, e.g. auth token, language setting
+const deploymentName = process.env.deployment ? process.env.deployment : '';
+console.log("Building with deployment name: " + deploymentName);
+
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
 if (env.stringified['process.env'].NODE_ENV !== '"production"') {
@@ -178,6 +183,10 @@ module.exports = {
                             }, {
                                 search: '__VERSION__',
                                 replace: require('../package.json').version,
+                                strict: true
+                            }, {
+                                search: '__DEPLOYMENT_NAME__',
+                                replace: deploymentName,
                                 strict: true
                             }]
                         }
