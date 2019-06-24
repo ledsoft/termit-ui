@@ -1,12 +1,13 @@
 import * as React from "react";
 import {FileList} from "../FileList";
 import File from "../../../model/File";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {MemoryRouter} from "react-router";
 import {Button} from "reactstrap";
 import ResourceLink from "../../resource/ResourceLink";
 import FileContentLink from "../../resource/file/FileContentLink";
+import {shallow} from "enzyme";
 
 
 describe("FileList", () => {
@@ -64,5 +65,10 @@ describe("FileList", () => {
         expect(links.length).toEqual(2);
         expect(links.at(0).text()).toContain(files[1].label);
         expect(links.at(1).text()).toContain(files[0].label);
+    });
+
+    it("renders notice when no Files exist", () => {
+        const wrapper = shallow(<FileList files={[]} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(wrapper.exists("#file-list-empty")).toBeTruthy();
     });
 });

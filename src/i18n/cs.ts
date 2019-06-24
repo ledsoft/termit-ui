@@ -148,6 +148,7 @@ export default {
         "resource.metadata.document.vocabulary": "Dokumentový slovník",
         "resource.metadata.document.files.create.tooltip": "Přidat nový soubor do tohoto dokumentu",
         "resource.metadata.document.files.create.dialog.title": "Nový soubor",
+        "resource.metadata.document.files.empty": "Žádné soubory nenalezeny. Vytvořte nějaký...",
 
         "term.metadata.definition": "Definice",
         'term.metadata.comment': 'Komentář',

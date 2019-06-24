@@ -148,6 +148,7 @@ export default {
         "resource.metadata.document.vocabulary": "Document vocabulary",
         "resource.metadata.document.files.create.tooltip": "Add new file to this document",
         "resource.metadata.document.files.create.dialog.title": "New file",
+        "resource.metadata.document.files.empty": "No files found. Start by adding some.",
 
         "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',

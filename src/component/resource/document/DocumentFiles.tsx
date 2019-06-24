@@ -2,7 +2,6 @@ import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../../hoc/withI18n";
 import Document from "../../../model/Document";
-import Utils from "../../../util/Utils";
 import {Button, Card, CardBody, CardHeader, Modal, ModalBody} from "reactstrap";
 import FileList from "../../file/FileList";
 import CreateFileMetadata from "../file/CreateFileMetadata";
@@ -49,7 +48,7 @@ export class DocumentFiles extends React.Component<DocumentFilesProps, DocumentF
 
     public render() {
         const doc = this.props.document;
-        if (!doc || Utils.sanitizeArray(doc.files).length === 0) {
+        if (!doc) {
             return null;
         }
         const i18n = this.props.i18n;

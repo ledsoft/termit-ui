@@ -15,35 +15,33 @@ interface FileListProps extends HasI18n {
     files: File[];
 }
 
-export class FileList extends React.Component<FileListProps> {
-
-    public render() {
-        if (this.props.files.length > 0) {
-            const rows = this.props.files.slice().sort(Utils.labelComparator).map((v: File) =>
-                <tr key={v.iri}>
-                    <td className="align-middle">
-                        <ResourceLink resource={v}/>
-                    </td>
-                    <td className="pull-right">
-                        <ButtonToolbar>
-                            <FileContentLink file={v}/>
-                            <TextAnalysisInvocationButton file={v}/>
-                        </ButtonToolbar>
-                    </td>
-                </tr>
-            );
-            return <div>
-                <Table borderless={true}>
-                    <tbody>
-                    {rows}
-                    </tbody>
-                </Table>
-            </div>
-        } else {
-            return (null);
-        }
+export const FileList: React.FC<FileListProps> = (props: FileListProps) => {
+    if (Utils.sanitizeArray(props.files).length > 0) {
+        const rows = props.files.slice().sort(Utils.labelComparator).map((v: File) =>
+            <tr key={v.iri}>
+                <td className="align-middle">
+                    <ResourceLink resource={v}/>
+                </td>
+                <td className="pull-right">
+                    <ButtonToolbar>
+                        <FileContentLink file={v}/>
+                        <TextAnalysisInvocationButton file={v}/>
+                    </ButtonToolbar>
+                </td>
+            </tr>
+        );
+        return <div>
+            <Table borderless={true}>
+                <tbody>
+                {rows}
+                </tbody>
+            </Table>
+        </div>
+    } else {
+        return <div id="file-list-empty"
+                    className="italics">{props.i18n("resource.metadata.document.files.empty")}</div>;
     }
-}
+};
 
 export default connect((state: TermItState) => {
     return {
