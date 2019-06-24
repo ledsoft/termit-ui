@@ -66,7 +66,7 @@ const constants = {
 };
 
 const deployment = constants.DEPLOYMENT_NAME.length > 0 ? constants.DEPLOYMENT_NAME + "-" : "";
-constants.STORAGE_JWT_KEY = deployment + constants.APP_NAME + "-" + constants.AUTHORIZATION_HEADER;
-constants.STORAGE_LANG_KEY = deployment + constants.APP_NAME + "-LANG";
+constants.STORAGE_JWT_KEY = constants.APP_NAME + "-" + deployment + constants.AUTHORIZATION_HEADER;
+constants.STORAGE_LANG_KEY = constants.APP_NAME + "-" + deployment + "LANG";
 
 export default constants;
