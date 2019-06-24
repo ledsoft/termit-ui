@@ -46,8 +46,7 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps>
         const selected = Utils.sanitizeArray(this.props.parentTerms).find(t => t.vocabulary !== undefined && t.vocabulary!.iri === this.props.vocabularyIri);
         return <FormGroup>
             <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
-            <IntelligentTreeSelect className="term-edit"
-                                   onChange={this.onChange}
+            <IntelligentTreeSelect onChange={this.onChange}
                                    value={selected ? selected.iri : undefined}
                                    fetchOptions={this.fetchOptions}
                                    fetchLimit={100000}
