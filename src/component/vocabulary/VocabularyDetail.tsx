@@ -18,6 +18,7 @@ import TermDetail from "../term/TermDetail";
 import NoTermSelected from "../term/NoTermSelected";
 import BreadcrumbRoute from "../breadcrumb/BreadcrumbRoute";
 import DynamicBreadcrumbRoute from "../breadcrumb/DynamicBreadcrumbRoute";
+import Utils from "../../util/Utils";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
@@ -30,8 +31,9 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 
     public componentDidMount(): void {
         const normalizedName: string = this.props.match.params.name;
+        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         if (!this.props.vocabulary || VocabularyUtils.getFragment(this.props.vocabulary.iri) !== normalizedName) {
-            this.props.loadVocabulary({fragment: normalizedName});
+            this.props.loadVocabulary(VocabularyUtils.create(namespace + normalizedName));
         }
         this.props.loadTypes(this.props.lang);
     }
