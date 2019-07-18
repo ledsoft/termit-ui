@@ -406,6 +406,7 @@ export function loadTerms(fetchOptions: FetchOptionsFunction, vocabularyIri: IRI
         return Ajax.get(url,
             params(Object.assign({
                 searchString: fetchOptions.searchString,
+                includeImported: fetchOptions.includeImported,
                 namespace: vocabularyIri.namespace
             }, Utils.createPagingParams(fetchOptions.offset, fetchOptions.limit))))
             .then((data: object[]) => data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])

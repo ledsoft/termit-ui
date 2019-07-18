@@ -390,7 +390,7 @@ describe("Async actions", () => {
         });
     });
 
-    describe("fetch terms", () => {
+    describe("load terms", () => {
         it("extracts terms from incoming JSON-LD", () => {
             const terms = require("../../rest-mock/terms");
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
@@ -410,7 +410,7 @@ describe("Async actions", () => {
                 });
         });
 
-        it("provides parameters with request", () => {
+        it("provides search parameter with request when specified", () => {
             const terms = require("../../rest-mock/terms");
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
             const params: FetchOptionsFunction = {
@@ -460,6 +460,18 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms(params, {fragment: "test-vocabulary"}))).then(() => {
                 const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
                 expect(callConfig.getParams()).toEqual({page: 1, size: 100});
+            });
+        });
+
+        it("provides includeImported with request when specified", () => {
+            const terms = require("../../rest-mock/terms");
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(terms));
+            const params: FetchOptionsFunction = {
+                includeImported: true
+            };
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTerms(params, {fragment: "test-vocabulary"}))).then(() => {
+                const callConfig = (Ajax.get as jest.Mock).mock.calls[0][1];
+                expect(callConfig.getParams()).toEqual(params);
             });
         });
     });
@@ -1225,7 +1237,7 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(exportFileContent(fileIri))).then(() => {
                 expect(Ajax.getRaw).toHaveBeenCalled();
                 const url = (Ajax.getRaw as jest.Mock).mock.calls[0][0];
-                expect(url).toEqual(Constants.API_PREFIX + "/resources/" +fileName+ "/content");
+                expect(url).toEqual(Constants.API_PREFIX + "/resources/" + fileName + "/content");
                 const config = (Ajax.getRaw as jest.Mock).mock.calls[0][1];
                 expect(config.getParams().attachment).toEqual("true");
                 expect(config.getParams().namespace).toEqual(fileIri.namespace);

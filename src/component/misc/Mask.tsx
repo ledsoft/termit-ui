@@ -11,7 +11,7 @@ export interface MaskProps extends HasI18n {
     classes?: string
 }
 
-const Mask: React.SFC<MaskProps> = (props) => {
+const Mask: React.FC<MaskProps> = (props) => {
     const containerClasses = classNames("spinner-container", {"without-text": props.withoutText});
     const text = props.text ? props.text : props.i18n("please-wait");
     return <div className={props.classes ? props.classes : "mask"}>

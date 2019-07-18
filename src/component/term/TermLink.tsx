@@ -13,7 +13,7 @@ interface TermLinkProps extends HasI18n {
     id?: string;
 }
 
-export const TermLink: React.SFC<TermLinkProps> = (props) => {
+export const TermLink: React.FC<TermLinkProps> = (props) => {
     if (!props.term.vocabulary) {
         // This can happen e.g. when FTS returns a term in the predefined language used for term types
         return <OutgoingLink label={props.term.label} iri={props.term.iri}/>;

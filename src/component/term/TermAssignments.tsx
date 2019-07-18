@@ -5,16 +5,17 @@ import Term from "../../model/Term";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {loadTermAssignmentsInfo} from "../../action/AsyncActions";
-import {Badge, Table, UncontrolledTooltip} from "reactstrap";
+import {Badge, Table} from "reactstrap";
 import TermItState from "../../model/TermItState";
 import IntlData from "../../model/IntlData";
 import "./TermAssignments.scss";
 import Resource, {ResourceData} from "../../model/Resource";
 import ResourceLink from "../resource/ResourceLink";
-import {GoCheck, GoInfo, GoX} from "react-icons/go";
+import {GoCheck, GoX} from "react-icons/go";
 import {TermAssignments as AssignmentInfo, TermOccurrences} from "../../model/TermAssignments";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
+import InfoIcon from "../misc/InfoIcon";
 
 interface TermAssignmentsOwnProps {
     term: Term;
@@ -75,25 +76,18 @@ export class TermAssignments extends React.Component<TermAssignmentsProps, TermA
                     <th className="col-xs-9">{i18n("type.resource")}</th>
                     <th className="col-xs-1 text-center">
                         {i18n("term.metadata.assignments.assignment")}&nbsp;
-                        <GoInfo id="term-metadata-assignments-assignment-help"/>
-                        <UncontrolledTooltip target="term-metadata-assignments-assignment-help" placement="right">
-                            {i18n("term.metadata.assignments.assignment.help")}
-                        </UncontrolledTooltip>
+                        <InfoIcon text={i18n("term.metadata.assignments.assignment.help")}
+                                  id="term-metadata-assignments-assignment-help"/>
                     </th>
                     <th className="col-xs-1 text-center">
                         {i18n("term.metadata.assignments.occurrence")}&nbsp;
-                        <GoInfo id="term-metadata-assignments-occurrence-help"/>
-                        <UncontrolledTooltip target="term-metadata-assignments-occurrence-help" placement="right">
-                            {i18n("term.metadata.assignments.occurrence.help")}
-                        </UncontrolledTooltip>
+                        <InfoIcon text={i18n("term.metadata.assignments.occurrence.help")}
+                                  id="term-metadata-assignments-occurrence-help"/>
                     </th>
                     <th className="col-xs-1 text-center">
                         {i18n("term.metadata.assignments.suggestedOccurrence")}&nbsp;
-                        <GoInfo id="term-metadata-assignments-suggestedOccurrence-help"/>
-                        <UncontrolledTooltip target="term-metadata-assignments-suggestedOccurrence-help"
-                                             placement="left">
-                            {i18n("term.metadata.assignments.suggestedOccurrence.help")}
-                        </UncontrolledTooltip>
+                        <InfoIcon text={i18n("term.metadata.assignments.suggestedOccurrence.help")}
+                                  id="term-metadata-assignments-suggestedOccurrence-help"/>
                     </th>
                 </tr>
                 </thead>

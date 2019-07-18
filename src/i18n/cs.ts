@@ -177,6 +177,8 @@ export default {
         "term.metadata.assignments.count.zero.tooltip": "Pojem se v tomto zdroji nevyskytuje",
 
         'glossary.title': 'Pojmy',
+        "glossary.includeImported": "Včetně importů",
+        "glossary.includeImported.help": "Zobrazit včetně pojmů z importovaných slovníků",
         'glossary.createTerm': 'Vytvořit nový pojem',
         'glossary.createTerm.tooltip': 'Vytvořit nový pojem ve slovníku',
         'glossary.createTerm.text': 'Vytvořit',
