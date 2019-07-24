@@ -53,16 +53,16 @@ describe("Terms", () => {
     });
 
     it("transitions to term detail on term select", () => {
-        const wrapper = shallow(<Terms counter={counter} selectedTerms={selectedTerms}
-                                       notifications={[]} consumeNotification={consumeNotification}
-                                       selectVocabularyTerm={selectVocabularyTerm}
-                                       fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
-                                       location={location} match={match} history={history}/>);
+        const wrapper = shallow<Terms>(<Terms counter={counter} selectedTerms={selectedTerms}
+                                              notifications={[]} consumeNotification={consumeNotification}
+                                              selectVocabularyTerm={selectVocabularyTerm}
+                                              fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
+                                              location={location} match={match} history={history}/>);
         const term: TermData = {
             iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/test-vocabulary/terms/" + termName,
             label: "test term"
         };
-        (wrapper.instance() as Terms).onChange(term);
+        (wrapper.instance() as Terms).onTermSelect(term);
         const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
         expect(call[0]).toEqual(Routes.vocabularyTermDetail);
         expect((call[1].params as Map<string, string>).get("name")).toEqual(vocabularyName);
@@ -72,31 +72,31 @@ describe("Terms", () => {
     it("specifies vocabulary namespace as query parameter for transition to term detail", () => {
         const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
         location.search = "?namespace=" + namespace;
-        const wrapper = shallow(<Terms counter={counter} selectedTerms={selectedTerms}
-                                       notifications={[]} consumeNotification={consumeNotification}
-                                       selectVocabularyTerm={selectVocabularyTerm}
-                                       fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
-                                       location={location} match={match} history={history}/>);
+        const wrapper = shallow<Terms>(<Terms counter={counter} selectedTerms={selectedTerms}
+                                              notifications={[]} consumeNotification={consumeNotification}
+                                              selectVocabularyTerm={selectVocabularyTerm}
+                                              fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
+                                              location={location} match={match} history={history}/>);
         const term: TermData = {
             iri: namespace + "test-vocabulary/terms/" + termName,
             label: "test term"
         };
-        (wrapper.instance() as Terms).onChange(term);
+        wrapper.instance().onTermSelect(term);
         const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
         expect((call[1].query as Map<string, string>).get("namespace")).toEqual(namespace);
     });
 
     it("invokes term selected on term select", () => {
-        const wrapper = shallow(<Terms counter={counter} selectedTerms={selectedTerms}
-                                       notifications={[]} consumeNotification={consumeNotification}
-                                       selectVocabularyTerm={selectVocabularyTerm}
-                                       fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
-                                       location={location} match={match} history={history}/>);
+        const wrapper = shallow<Terms>(<Terms counter={counter} selectedTerms={selectedTerms}
+                                              notifications={[]} consumeNotification={consumeNotification}
+                                              selectVocabularyTerm={selectVocabularyTerm}
+                                              fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
+                                              location={location} match={match} history={history}/>);
         const term: TermData = {
             iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/test-vocabulary/terms/" + termName,
             label: "test term"
         };
-        (wrapper.instance() as Terms).onChange(term);
+        wrapper.instance().onTermSelect(term);
         expect(selectVocabularyTerm).toHaveBeenCalled();
         expect((selectVocabularyTerm as jest.Mock).mock.calls[0][0].iri).toEqual(term.iri);
     });
@@ -104,14 +104,26 @@ describe("Terms", () => {
     it("passes vocabulary namespace as query parameter for transition to create term view", () => {
         const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
         location.search = "?namespace=" + namespace;
-        const wrapper = shallow(<Terms counter={counter} selectedTerms={selectedTerms}
-                                       notifications={[]} consumeNotification={consumeNotification}
-                                       selectVocabularyTerm={selectVocabularyTerm}
-                                       fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
-                                       location={location} match={match} history={history}/>);
-        (wrapper.instance() as Terms).onCreateClick();
+        const wrapper = shallow<Terms>(<Terms counter={counter} selectedTerms={selectedTerms}
+                                              notifications={[]} consumeNotification={consumeNotification}
+                                              selectVocabularyTerm={selectVocabularyTerm}
+                                              fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
+                                              location={location} match={match} history={history}/>);
+        wrapper.instance().onCreateClick();
         const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
         expect(call[0]).toEqual(Routes.createVocabularyTerm);
         expect((call[1].query as Map<string, string>).get("namespace")).toEqual(namespace);
+    });
+
+    it("fetches terms including imported when configured to", () => {
+        const wrapper = shallow<Terms>(<Terms counter={counter} selectedTerms={selectedTerms}
+                                              notifications={[]} consumeNotification={consumeNotification}
+                                              selectVocabularyTerm={selectVocabularyTerm}
+                                              fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
+                                              location={location} match={match} history={history}/>);
+        wrapper.setState({includeImported: true});
+        wrapper.update();
+        wrapper.instance().fetchOptions({});
+        expect((fetchTerms as jest.Mock).mock.calls[0][0].includeImported).toBeTruthy();
     });
 });

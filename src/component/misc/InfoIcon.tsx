@@ -7,7 +7,7 @@ import "./InfoIcon.scss";
 interface InfoIconProps {
     id: string;     // Id of the icon element, necessary for correct tooltip display
     text: string;   // Info message to show
-    placement?: Placement; // Where to display the tooltip (relative to the icon)
+    placement?: Placement; // Where to display the tooltip (relative to the icon). Defaults to "right"
 }
 
 const InfoIcon: React.FC<InfoIconProps> = (props) => {

@@ -36,16 +36,21 @@ interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     consumeNotification: (notification: AppNotification) => void;
 }
 
-export class Terms extends React.Component<GlossaryTermsProps> {
+interface TermsState {
+    // Whether terms from imported vocabularies should be displayed as well
+    includeImported: boolean;
+}
+
+export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
 
     private readonly treeComponent: React.RefObject<IntelligentTreeSelect>;
 
     constructor(props: GlossaryTermsProps) {
         super(props);
-        this.onCreateClick = this.onCreateClick.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.fetchOptions = this.fetchOptions.bind(this);
         this.treeComponent = React.createRef();
+        this.state = {
+            includeImported: false
+        };
     }
 
     public componentDidUpdate(prevProps: GlossaryTermsProps) {
@@ -61,27 +66,33 @@ export class Terms extends React.Component<GlossaryTermsProps> {
     }
 
     public componentWillUnmount() {
-        this.props.selectVocabularyTerm(null)
+        this.props.selectVocabularyTerm(null);
     }
 
-    private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
+    public fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, {
+        return this.props.fetchTerms({
+            searchString,
+            optionID,
+            limit,
+            offset,
+            includeImported: this.state.includeImported
+        }, {
             fragment: this.props.match.params.name,
             namespace
         });
-    }
+    };
 
-    public onCreateClick() {
+    public onCreateClick = () => {
         const normalizedName = this.props.match.params.name;
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         Routing.transitionTo(Routes.createVocabularyTerm, {
             params: new Map([["name", normalizedName]]),
             query: namespace ? new Map([["namespace", namespace]]) : undefined
         });
-    }
+    };
 
-    public onChange(term: TermData | null) {
+    public onTermSelect = (term: TermData | null) => {
         if (term === null) {
             this.props.selectVocabularyTerm(term);
         } else {
@@ -95,6 +106,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
             // @ts-ignore
             delete cloneData.depth;
             const clone = new Term(cloneData);
+            // TODO Use term vocabulary in routing. This would allow transitioning to a term from a different vocabulary
             this.props.selectVocabularyTerm(clone);
             const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
             Routing.transitionTo(Routes.vocabularyTermDetail,
@@ -103,7 +115,11 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                     query: namespace ? new Map([["namespace", namespace]]) : undefined
                 });
         }
-    }
+    };
+
+    private onIncludeImportedToggle = () => {
+        this.setState({includeImported: !this.state.includeImported}, () => this.treeComponent.current.resetOptions());
+    };
 
     public render() {
         const i18n = this.props.i18n;
@@ -123,7 +139,8 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                 <div className="mb-1 mt-1 ml-1">
                     <FormGroup check={true}>
                         <Label check={true}>
-                            <Input type="checkbox"/>{i18n("glossary.includeImported")}
+                            <Input type="checkbox" checked={this.state.includeImported}
+                                   onChange={this.onIncludeImportedToggle}/>{i18n("glossary.includeImported")}
                         </Label>
                         &nbsp;
                         <InfoIcon text={i18n("glossary.includeImported.help")} id="glossary-include-imported"/>
@@ -131,7 +148,7 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                 </div>
                 <IntelligentTreeSelect className={"p-0"}
                                        ref={this.treeComponent}
-                                       onChange={this.onChange}
+                                       onChange={this.onTermSelect}
                                        value={this.props.selectedTerms ? this.props.selectedTerms.iri : null}
                                        fetchOptions={this.fetchOptions}
                                        valueKey={"iri"}
@@ -146,7 +163,6 @@ export class Terms extends React.Component<GlossaryTermsProps> {
                 />
             </CardBody>
         </Card>;
-
     }
 }
 
