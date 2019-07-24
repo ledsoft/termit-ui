@@ -106,13 +106,13 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
             // @ts-ignore
             delete cloneData.depth;
             const clone = new Term(cloneData);
-            // TODO Use term vocabulary in routing. This would allow transitioning to a term from a different vocabulary
             this.props.selectVocabularyTerm(clone);
-            const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
+            // It is an existing Term, so it is expected it has a vocabulary
+            const vocabularyIri = VocabularyUtils.create(clone.vocabulary!.iri!);
             Routing.transitionTo(Routes.vocabularyTermDetail,
                 {
-                    params: new Map([["name", this.props.match.params.name], ["termName", VocabularyUtils.getFragment(clone.iri)]]),
-                    query: namespace ? new Map([["namespace", namespace]]) : undefined
+                    params: new Map([["name", vocabularyIri.fragment], ["termName", VocabularyUtils.getFragment(clone.iri)]]),
+                    query: new Map([["namespace", vocabularyIri.namespace!]])
                 });
         }
     };
