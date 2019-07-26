@@ -176,5 +176,17 @@ export default {
      */
     labelValueRenderer(option: AssetData) {
         return option.label;
+    },
+
+    /**
+     * Calculates a hash of the specified string.
+     * @param str String to get hash for
+     */
+    hashCode(str: string) {
+        let h = 0;
+        for (let i = 0; i < str.length; i++) {
+            h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+        }
+        return h;
     }
 }

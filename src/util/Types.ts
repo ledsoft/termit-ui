@@ -17,3 +17,8 @@ export type ThunkDispatch<A extends Action = Action> = TDispatch<TermItState, nu
  * Simple name for a function retrieving state from the store.
  */
 export type GetStoreState = () => TermItState;
+
+/**
+ * Mapper of values to JSX elements.
+ */
+export type ValueMapper<T> = (data: T) => JSX.Element | null;
