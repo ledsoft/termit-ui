@@ -9,7 +9,7 @@ interface TooltipItemProps {
     searchString: string;
     option: any;
     label: string;
-    tooltipKey: string | ValueMapper<any>;
+    tooltipKey?: string | ValueMapper<any>;
     addonBefore?: JSX.Element;  // Add-on to be rendered before the highlighted option label
     addonAfter?: JSX.Element;   // Add-on to be rendered after the highlighted option label
 
@@ -68,6 +68,9 @@ class TooltipItem extends React.Component<TooltipItemProps, TooltipItemState> {
 
     private getTooltipData() {
         const {tooltipKey, option} = this.props;
+        if (!tooltipKey) {
+            return null;
+        }
         if (typeof tooltipKey === "function") {
             return tooltipKey(option);
         } else {

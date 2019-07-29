@@ -179,6 +179,7 @@ export default {
         'glossary.title': 'Pojmy',
         "glossary.includeImported": "Včetně importů",
         "glossary.includeImported.help": "Zobrazit včetně pojmů z importovaných slovníků",
+        "glossary.importedTerm.tooltip": "Pojem pochází z importovaného slovníku",
         'glossary.createTerm': 'Vytvořit nový pojem',
         'glossary.createTerm.tooltip': 'Vytvořit nový pojem ve slovníku',
         'glossary.createTerm.text': 'Vytvořit',

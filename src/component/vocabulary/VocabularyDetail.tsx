@@ -47,7 +47,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             <h2 className="page-header">
                 <OutgoingLink
                     label={label}
-                    iri={this.props.vocabulary.iri as string}
+                    iri={this.props.vocabulary.iri}
                 />
             </h2>
             <h6>
@@ -58,7 +58,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             </h6>
             <Row className="detail-row">
                 <Col md={4}>
-                    <Terms/>
+                    <Terms vocabulary={this.props.vocabulary}/>
                 </Col>
                 <Col md={8}>
                     <Switch>

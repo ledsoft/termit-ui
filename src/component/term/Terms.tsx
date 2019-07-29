@@ -24,6 +24,7 @@ import AsyncActionStatus from "../../action/AsyncActionStatus";
 import ActionType from "../../action/ActionType";
 import NotificationType from "../../model/NotificationType";
 import InfoIcon from "../misc/InfoIcon";
+import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
 
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
@@ -122,6 +123,9 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
     };
 
     public render() {
+        if (!this.props.vocabulary) {
+            return null;
+        }
         const i18n = this.props.i18n;
 
         return <Card id="glossary">
@@ -159,6 +163,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
                                        multi={false}
                                        showSettings={false}
                                        maxHeight={Utils.calculateAssetListHeight()}
+                                       optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabulary)}
                                        valueRenderer={Utils.labelValueRenderer}
                 />
             </CardBody>

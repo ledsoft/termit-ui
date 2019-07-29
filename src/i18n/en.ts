@@ -179,6 +179,7 @@ export default {
         'glossary.title': 'Terms',
         "glossary.includeImported": "Include imported",
         "glossary.includeImported.help": "Show including terms from imported vocabularies",
+        "glossary.importedTerm.tooltip": "Term belongs to an imported vocabulary",
         'glossary.createTerm': 'Create new term',
         'glossary.createTerm.tooltip': "Create new vocabulary's term",
         'glossary.createTerm.breadcrumb': 'Create term',

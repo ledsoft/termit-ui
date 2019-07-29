@@ -11,15 +11,19 @@ interface ResultItemProps {
     childrenKey: string;
     valueKey: string;
     labelKey: string;
-    tooltipKey: string | ValueMapper<any>;
+    tooltipKey?: string | ValueMapper<any>;
     className?: string;
     renderAsTree: boolean;
     searchString: string;
     displayInfoOnHover: boolean;
+    style?: object;
 
-    onMouseEnter: (option: any) => void;
-    onClick: (option: any) => void;
-    onToggleClick: (option: any) => void;
+    addonBefore?: JSX.Element;  // Add-on to be rendered before the highlighted option label
+    addonAfter?: JSX.Element;   // Add-on to be rendered after the highlighted option label
+
+    onMouseEnter?: (option: any) => void;
+    onClick?: (option: any) => void;
+    onToggleClick?: (option: any) => void;
 }
 
 /**
@@ -30,15 +34,21 @@ interface ResultItemProps {
 class ResultItem extends React.Component<ResultItemProps> {
 
     public onClick = () => {
-        this.props.onClick(this.props.option);
+        if (!this.props.option.disabled && this.props.onClick) {
+            this.props.onClick(this.props.option);
+        }
     };
 
     public onMouseEnter = () => {
-        this.props.onMouseEnter(this.props.option);
+        if (!this.props.option.disabled && this.props.onMouseEnter) {
+            this.props.onMouseEnter(this.props.option);
+        }
     };
 
     public onToggle = () => {
-        this.props.onToggleClick(this.props.option);
+        if (!this.props.option.disabled && this.props.onToggleClick) {
+            this.props.onToggleClick(this.props.option);
+        }
     };
 
     public render() {
@@ -51,7 +61,7 @@ class ResultItem extends React.Component<ResultItemProps> {
         const label: string = option[labelKey];
         const value: string = option[valueKey];
 
-        return <div className={this.props.className} onMouseEnter={this.onMouseEnter}>
+        return <div className={this.props.className} onMouseEnter={this.onMouseEnter} style={this.props.style}>
 
             {this.props.renderAsTree &&
             <div className="tree-result-item-toggle-button">
@@ -66,6 +76,8 @@ class ResultItem extends React.Component<ResultItemProps> {
                          searchString={this.props.searchString}
                          displayOnHover={this.props.displayInfoOnHover}
                          tooltipKey={this.props.tooltipKey}
+                         addonBefore={this.props.addonBefore}
+                         addonAfter={this.props.addonAfter}
             />
 
             {option.fetchingChild &&
