@@ -207,4 +207,29 @@ describe("ResourceTermAssignments", () => {
             expect(wrapper.exists(".m-resource-term-occurrences-container")).toBeFalsy();
         });
     });
+
+    it("resets rendered assignments to empty when resource changes and new assignments are being loaded", () => {
+        const differentResource: Resource = new Resource({
+            iri: Generator.generateUri(),
+            label: "Different resource"
+        });
+        const wrapper = shallow<ResourceTermAssignments>(<ResourceTermAssignments resource={file} notifications={[]}
+                                                                                  consumeNotification={consumeNotification}
+                                                                                  loadTermAssignments={onLoadAssignments} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const existingAssignments: TermAssignmentInfo[] = [{
+            term: {
+                iri: Generator.generateUri()
+            },
+            label: "Test term",
+            resource: file,
+            vocabulary: {
+                iri: Generator.generateUri()
+            },
+            types: [VocabularyUtils.TERM_ASSIGNMENT]
+        }];
+        wrapper.setState({assignments: existingAssignments});
+        wrapper.setProps({resource: differentResource});
+        wrapper.update();
+        expect(wrapper.state().assignments.length).toEqual(0);
+    });
 });

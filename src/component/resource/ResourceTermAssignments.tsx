@@ -65,6 +65,7 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
 
     public componentDidUpdate(prevProps: Readonly<ResourceTermAssignmentsProps>): void {
         if (prevProps.resource.iri !== this.props.resource.iri && this.props.resource !== EMPTY_RESOURCE) {
+            this.setState({assignments: []});
             this.loadAssignments();
             return;
         }
