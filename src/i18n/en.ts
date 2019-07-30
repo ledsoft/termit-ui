@@ -175,6 +175,7 @@ export default {
         "term.metadata.assignments.suggestedOccurrence.help": "Suggested term occurrence represents a term occurrence suggested by the system, e.g., based on the analysis of the content.",
         "term.metadata.assignments.count.tooltip": "The term occurs {count, plural, one {# time} other {# times}} in this resource",
         "term.metadata.assignments.count.zero.tooltip": "The term does not occur in this resource",
+        "term.metadata.vocabulary.tooltip": "Vocabulary this term belongs to",
 
         'glossary.title': 'Terms',
         "glossary.includeImported": "Include imported",

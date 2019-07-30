@@ -175,6 +175,7 @@ export default {
         "term.metadata.assignments.suggestedOccurrence.help": "Navržený výskyt reprezentuje výskyt pojmu navržený systémem, např. na základě automatizované analýzy obsahu.",
         "term.metadata.assignments.count.tooltip": "Pojem se v tomto zdroji vyskytuje {count, plural, one {jednou} other {# -krát}}",
         "term.metadata.assignments.count.zero.tooltip": "Pojem se v tomto zdroji nevyskytuje",
+        "term.metadata.vocabulary.tooltip": "Slovník, do kterého tento pojem patří",
 
         'glossary.title': 'Pojmy',
         "glossary.includeImported": "Včetně importů",

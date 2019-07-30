@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Location} from "history";
-import {match as Match} from "react-router";
+import {match as Match, MemoryRouter} from "react-router";
 import createMemoryHistory from "history/createMemoryHistory";
 import {shallow} from "enzyme";
 import {TermDetail} from "../TermDetail";
@@ -79,20 +79,22 @@ describe("TermDetail", () => {
     });
 
     it("renders term metadata by default", () => {
-        const wrapper = mountWithIntl(<TermDetail term={term} loadTerm={onLoad}
-                                                  updateTerm={onUpdate} publishNotification={onPublishNotification}
-                                                  reloadVocabularyTerms={onLoadTerms} history={history}
-                                                  location={location} match={match}
-                                                  {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><TermDetail term={term} loadTerm={onLoad}
+                                                                updateTerm={onUpdate}
+                                                                publishNotification={onPublishNotification}
+                                                                reloadVocabularyTerms={onLoadTerms} history={history}
+                                                                location={location} match={match}
+                                                                {...intlFunctions()}/></MemoryRouter>);
         expect(wrapper.find(TermMetadata).exists()).toBeTruthy();
     });
 
     it("renders term editor after clicking edit button", () => {
-        const wrapper = mountWithIntl(<TermDetail term={term} loadTerm={onLoad}
-                                                  updateTerm={onUpdate} publishNotification={onPublishNotification}
-                                                  reloadVocabularyTerms={onLoadTerms} history={history}
-                                                  location={location} match={match}
-                                                  {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><TermDetail term={term} loadTerm={onLoad}
+                                                                updateTerm={onUpdate}
+                                                                publishNotification={onPublishNotification}
+                                                                reloadVocabularyTerms={onLoadTerms} history={history}
+                                                                location={location} match={match}
+                                                                {...intlFunctions()}/></MemoryRouter>);
         wrapper.find(Button).simulate("click");
         expect(wrapper.find(TermMetadataEdit).exists()).toBeTruthy();
     });
@@ -169,11 +171,12 @@ describe("TermDetail", () => {
     });
 
     it("does not render edit button when editing", () => {
-        const wrapper = mountWithIntl(<TermDetail term={term} loadTerm={onLoad}
-                                                  updateTerm={onUpdate} publishNotification={onPublishNotification}
-                                                  reloadVocabularyTerms={onLoadTerms} history={history}
-                                                  location={location} match={match}
-                                                  {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><TermDetail term={term} loadTerm={onLoad}
+                                                                updateTerm={onUpdate}
+                                                                publishNotification={onPublishNotification}
+                                                                reloadVocabularyTerms={onLoadTerms} history={history}
+                                                                location={location} match={match}
+                                                                {...intlFunctions()}/></MemoryRouter>);
         const editButton = wrapper.find(Button).findWhere(w => w.key() === "term-detail-edit");
         expect(editButton.exists()).toBeTruthy();
         editButton.simulate("click");
@@ -183,10 +186,10 @@ describe("TermDetail", () => {
 
     it("publishes term update notification when parent term changes", () => {
         const wrapper = shallow<TermDetail>(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
-                                            reloadVocabularyTerms={onLoadTerms} history={history}
-                                            location={location} match={match}
-                                            publishNotification={onPublishNotification}
-                                            {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                        reloadVocabularyTerms={onLoadTerms} history={history}
+                                                        location={location} match={match}
+                                                        publishNotification={onPublishNotification}
+                                                        {...intlFunctions()} {...intlDataForShallow()}/>);
         const update = new Term(Object.assign({}, term));
         const newParent = Generator.generateUri();
         update.parentTerms = [new Term({iri: newParent, label: "New parent"})];

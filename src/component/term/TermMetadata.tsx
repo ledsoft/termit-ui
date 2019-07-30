@@ -15,6 +15,7 @@ import TermLink from "./TermLink";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {loadTerms} from "../../action/AsyncActions";
+import VocabularyIriLink from "../vocabulary/VocabularyIriLink";
 
 interface TermMetadataProps extends HasI18n {
     term: Term;
@@ -108,6 +109,15 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                 </Col>
                 <Col xl={10} md={8}>
                     {this.renderItems(term.sources, "term-metadata-sources")}
+                </Col>
+            </Row>
+            <Row>
+                <Col xl={2} md={4}>
+                    <Label className="attribute-label"
+                           title={i18n("term.metadata.vocabulary.tooltip")}>{i18n("type.vocabulary")}</Label>
+                </Col>
+                <Col xl={10} md={8}>
+                    <VocabularyIriLink id="term-metadata-vocabulary" iri={term.vocabulary!.iri!}/>
                 </Col>
             </Row>
             <Row>
