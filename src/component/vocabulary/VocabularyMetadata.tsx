@@ -1,5 +1,5 @@
 import * as React from "react";
-import {injectIntl} from "react-intl";
+import {FormattedDate, FormattedTime, injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
 import {Col, Label, Row} from "reactstrap";
@@ -36,7 +36,10 @@ export class VocabularyMetadata extends React.Component<VocabularyMetadataProps>
                 </Col>
                 <Col xl={10} md={8}>
                     <Label
-                        id="vocabulary-metadata-created">{vocabulary.created && new Date(vocabulary.created).toLocaleString()}</Label>
+                        id="vocabulary-metadata-created">
+                        <FormattedDate value={new Date(vocabulary.created as number)}/>
+                        {", "}
+                        <FormattedTime value={new Date(vocabulary.created as number)}/></Label>
                 </Col>
             </Row>
             <Row>
