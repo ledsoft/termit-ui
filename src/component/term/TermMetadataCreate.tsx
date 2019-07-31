@@ -350,7 +350,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                                     multi={false}
                                     valueKey={"iri"}
                                     labelKey={"label"}
-                                    childrenKey="plainSubTerms"
+                                    childrenKey="subTerms"
                                     filterOptions={this.filterParentOptions}
                                     displayInfoOnHover={true}
                                     expanded={true}
