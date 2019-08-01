@@ -75,7 +75,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
 
     private onRemove = (annotationId: string) => {
         const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
-        const ann = AnnotationDomHelper.findAnnotation(dom, annotationId);
+        const ann = AnnotationDomHelper.findAnnotation(dom, annotationId, this.state.prefixMap);
         if (ann) {
             AnnotationDomHelper.removeAnnotation(ann);
             const newInternalHtml = HtmlParserUtils.dom2html(dom);
@@ -91,7 +91,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
 
     private onUpdate = (annotationSpan: AnnotationSpanProps) => {
         const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
-        const ann = AnnotationDomHelper.findAnnotation(dom, annotationSpan.about!);
+        const ann = AnnotationDomHelper.findAnnotation(dom, annotationSpan.about!, this.state.prefixMap);
         if (ann) {
             if (annotationSpan.resource) {
                 ann.attribs.resource = annotationSpan.resource!;
@@ -110,7 +110,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         this.props.onCreateTerm(term).then(
             (t: Term) => {
                 const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
-                const ann = AnnotationDomHelper.findAnnotation(dom, annAbout);
+                const ann = AnnotationDomHelper.findAnnotation(dom, annAbout, this.state.prefixMap);
                 if (ann) {
                     ann.attribs.resource = t.iri;
                 }
