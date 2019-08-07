@@ -177,7 +177,8 @@ export default {
         "term.metadata.assignments.count.zero.tooltip": "The term does not occur in this resource",
         "term.metadata.vocabulary.tooltip": "Vocabulary this term belongs to",
 
-        'glossary.title': 'Terms',
+        "glossary.title": "Terms",
+        "glossary.select.placeholder": "Select term",
         "glossary.excludeImported": "Without imported",
         "glossary.excludeImported.help": "Show only terms from this vocabulary",
         "glossary.includeImported": "Include imported",

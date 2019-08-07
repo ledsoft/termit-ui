@@ -7,7 +7,6 @@ import {TermDetail} from "../TermDetail";
 import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import TermMetadata from "../TermMetadata";
-import {Button} from "reactstrap";
 import TermMetadataEdit from "../TermMetadataEdit";
 import Term from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
@@ -16,6 +15,7 @@ import NotificationType from "../../../model/NotificationType";
 import {IRI} from "../../../util/VocabularyUtils";
 
 jest.mock("../TermAssignments");
+jest.mock("../IncludeImportedTermsToggle");
 
 describe("TermDetail", () => {
 
@@ -95,7 +95,7 @@ describe("TermDetail", () => {
                                                                 reloadVocabularyTerms={onLoadTerms} history={history}
                                                                 location={location} match={match}
                                                                 {...intlFunctions()}/></MemoryRouter>);
-        wrapper.find(Button).simulate("click");
+        wrapper.find("button#term-detail-edit").simulate("click");
         expect(wrapper.find(TermMetadataEdit).exists()).toBeTruthy();
     });
 
@@ -177,11 +177,10 @@ describe("TermDetail", () => {
                                                                 reloadVocabularyTerms={onLoadTerms} history={history}
                                                                 location={location} match={match}
                                                                 {...intlFunctions()}/></MemoryRouter>);
-        const editButton = wrapper.find(Button).findWhere(w => w.key() === "term-detail-edit");
+        const editButton = wrapper.find("button#term-detail-edit");
         expect(editButton.exists()).toBeTruthy();
         editButton.simulate("click");
-        const editButtonAgain = wrapper.find(Button).findWhere(w => w.key() === "term-detail-edit");
-        expect(editButtonAgain.exists()).toBeFalsy();
+        expect(wrapper.exists("button#term-detail-edit")).toBeFalsy();
     });
 
     it("publishes term update notification when parent term changes", () => {

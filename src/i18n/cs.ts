@@ -177,7 +177,8 @@ export default {
         "term.metadata.assignments.count.zero.tooltip": "Pojem se v tomto zdroji nevyskytuje",
         "term.metadata.vocabulary.tooltip": "Slovník, do kterého tento pojem patří",
 
-        'glossary.title': 'Pojmy',
+        "glossary.title": "Pojmy",
+        "glossary.select.placeholder": "Vyberte pojem",
         "glossary.excludeImported": "Bez importů",
         "glossary.excludeImported.help": "Zobrazit pouze pojmy z tohoto slovníku",
         "glossary.includeImported": "Včetně importů",

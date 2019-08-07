@@ -11,7 +11,8 @@ import {match as Match} from "react-router";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
 import Utils from "../../../util/Utils";
-import {IRI} from "../../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
+import Generator from "../../../__tests__/environment/Generator";
 
 jest.mock("../../../util/Routing");
 
@@ -135,5 +136,22 @@ describe("Terms", () => {
         expect(call[0]).toEqual(Routes.vocabularyTermDetail);
         expect((call[1].params as Map<string, string>).get("name")).toEqual(differentVocabularyName);
         expect((call[1].params as Map<string, string>).get("termName")).toEqual(termName);
+    });
+
+    it("uses term vocabulary when fetching its subterms", () => {
+        const wrapper = shallow<Terms>(<Terms counter={counter} selectedTerms={selectedTerms}
+                                              notifications={[]} consumeNotification={consumeNotification}
+                                              selectVocabularyTerm={selectVocabularyTerm}
+                                              fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
+                                              location={location} match={match} history={history}/>);
+        wrapper.setState({includeImported: true});
+        wrapper.update();
+        const option = new Term({
+            iri: Generator.generateUri(),
+            label: "Test term",
+            vocabulary: {iri: Generator.generateUri()}
+        });
+        wrapper.instance().fetchOptions({optionID: option.iri, option});
+        expect((fetchTerms as jest.Mock).mock.calls[0][1]).toEqual(VocabularyUtils.create(option.vocabulary!.iri!));
     });
 });

@@ -16,7 +16,7 @@ import {RouteComponentProps, withRouter} from "react-router";
 import FetchOptionsFunction from "../../model/Functions";
 import Term, {TermData} from "../../model/Term";
 import {loadTerms} from "../../action/AsyncActions";
-import {ThunkDispatch} from "../../util/Types";
+import {ThunkDispatch, TreeSelectFetchOptionsParams} from "../../util/Types";
 import {GoPlus} from "react-icons/go";
 import Utils from "../../util/Utils";
 import AppNotification from "../../model/AppNotification";
@@ -69,18 +69,19 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
         this.props.selectVocabularyTerm(null);
     }
 
-    public fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
+    public fetchOptions = ({searchString, optionID, limit, offset, option}: TreeSelectFetchOptionsParams<TermData>) => {
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
+        const vocabularyIri = option ? VocabularyUtils.create(option.vocabulary!.iri!) : {
+            fragment: this.props.match.params.name,
+            namespace
+        };
         return this.props.fetchTerms({
             searchString,
             optionID,
             limit,
             offset,
             includeImported: this.state.includeImported
-        }, {
-            fragment: this.props.match.params.name,
-            namespace
-        });
+        }, vocabularyIri);
     };
 
     public onCreateClick = () => {
@@ -156,6 +157,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
                                        multi={false}
                                        showSettings={false}
                                        maxHeight={Utils.calculateAssetListHeight()}
+                                       placeholder={i18n("glossary.select.placeholder")}
                                        optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabulary.iri)}
                                        valueRenderer={Utils.labelValueRenderer}
                 />

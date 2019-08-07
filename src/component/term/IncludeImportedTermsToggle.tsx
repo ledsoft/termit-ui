@@ -29,7 +29,7 @@ const IncludeImportedTermsToggle: React.FC<IncludeImportedTermsToggleProps> = pr
                 handleClassName="toggle-handle-custom"
                 style={toggleStyle}
                 active={props.includeImported}/>
-        <UncontrolledTooltip target="glossary-include-imported" placement="right">
+        <UncontrolledTooltip target={props.id} placement="right">
             {props.i18n(props.includeImported ? "glossary.includeImported.help" : "glossary.excludeImported.help")}
         </UncontrolledTooltip>
     </>;

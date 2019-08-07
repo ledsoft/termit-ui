@@ -6,7 +6,7 @@ import FetchOptionsFunction from "../../model/Functions";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "../../util/Types";
+import {ThunkDispatch, TreeSelectFetchOptionsParams} from "../../util/Types";
 import {loadTerms} from "../../action/AsyncActions";
 import {FormGroup, Label} from "reactstrap";
 import Utils from "../../util/Utils";
@@ -43,31 +43,41 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
         }
     };
 
-    public fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
+    public fetchOptions = ({searchString, optionID, limit, offset, option}: TreeSelectFetchOptionsParams<TermData>) => {
         return this.props.loadTerms({
             searchString,
             optionID,
             limit,
             offset,
             includeImported: this.state.includeImported
-        }, VocabularyUtils.create(this.props.vocabularyIri));
+        }, VocabularyUtils.create(option ? option.vocabulary!.iri! : this.props.vocabularyIri));
+        // Use option vocabulary when present, it may differ from the current vocabulary (when option is from imported
+        // vocabulary)
     };
 
     private onIncludeImportedToggle = () => {
-        // TODO: option reset is not working on subsequent calls
         this.setState({includeImported: !this.state.includeImported}, () => this.treeComponent.current.resetOptions());
     };
 
+    private resolveSelectedParent() {
+        const parents = Utils.sanitizeArray(this.props.parentTerms);
+        // Try first finding a parent within the same vocabulary
+        let selected = parents.find(t => t.vocabulary !== undefined && t.vocabulary.iri === this.props.vocabularyIri);
+        if (!selected) {
+            // Otherwise, find a parent with a vocabulary
+            selected = parents.find(t => t.vocabulary !== undefined);
+        }
+        return selected ? selected.iri : undefined;
+    }
+
     public render() {
-        // Assuming there should be at most one parent within the same vocabulary
-        const selected = Utils.sanitizeArray(this.props.parentTerms).find(t => t.vocabulary !== undefined && t.vocabulary!.iri === this.props.vocabularyIri);
         return <FormGroup>
             <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
             <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
                                         includeImported={this.state.includeImported} style={{float: "right"}}/>
             <IntelligentTreeSelect onChange={this.onChange}
                                    ref={this.treeComponent}
-                                   value={selected ? selected.iri : undefined}
+                                   value={this.resolveSelectedParent()}
                                    fetchOptions={this.fetchOptions}
                                    fetchLimit={100000}
                                    valueKey="iri"
@@ -78,6 +88,7 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
                                    maxHeight={200}
                                    multi={false}
                                    renderAsTree={true}
+                                   placeholder={this.props.i18n("glossary.select.placeholder")}
                                    optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabularyIri)}
                                    valueRenderer={Utils.labelValueRenderer}/>
         </FormGroup>;

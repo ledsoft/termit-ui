@@ -3,7 +3,7 @@ import {shallow} from "enzyme";
 import {ParentTermSelector} from "../ParentTermSelector";
 import Generator from "../../../__tests__/environment/Generator";
 import FetchOptionsFunction from "../../../model/Functions";
-import {IRI} from "../../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import Term from "../../../model/Term";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {intlDataForShallow} from "../../../__tests__/environment/Environment";
@@ -85,5 +85,22 @@ describe("ParentTermSelector", () => {
         wrapper.update();
         wrapper.instance().fetchOptions({});
         expect((loadTerms as jest.Mock).mock.calls[0][0].includeImported).toBeTruthy();
+    });
+
+    it("fetch term uses vocabulary of term being toggled when loading it subterms", () => {
+        const parent = new Term({
+            iri: Generator.generateUri(),
+            label: "parent",
+            vocabulary: {iri: Generator.generateUri()}
+        });
+        const wrapper = shallow<ParentTermSelector>(<ParentTermSelector termIri={Generator.generateUri()}
+                                                                        vocabularyIri={Generator.generateUri()}
+                                                                        onChange={onChange}
+                                                                        vocabularyTerms={[parent]}
+                                                                        loadTerms={loadTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
+        wrapper.setState({includeImported: true});
+        wrapper.update();
+        wrapper.instance().fetchOptions({optionID: parent.iri, option: parent});
+        expect((loadTerms as jest.Mock).mock.calls[0][1]).toEqual(VocabularyUtils.create(parent.vocabulary!.iri!));
     });
 });
