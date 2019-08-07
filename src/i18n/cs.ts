@@ -178,6 +178,8 @@ export default {
         "term.metadata.vocabulary.tooltip": "Slovník, do kterého tento pojem patří",
 
         'glossary.title': 'Pojmy',
+        "glossary.excludeImported": "Bez importů",
+        "glossary.excludeImported.help": "Zobrazit pouze pojmy z tohoto slovníku",
         "glossary.includeImported": "Včetně importů",
         "glossary.includeImported.help": "Zobrazit včetně pojmů z importovaných slovníků",
         "glossary.importedTerm.tooltip": "Pojem pochází z importovaného slovníku",

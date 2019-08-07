@@ -49,6 +49,7 @@
     "react": "^16.8.6",
     "react-angular": "^0.4.0",
     "react-apexcharts": "1.0.9",
+    "react-bootstrap-toggle": "2.3.2",
     "react-breadcrumbs": "2.1.6",
     "react-dev-utils": "^5.0.2",
     "react-dom": "^16.8.6",

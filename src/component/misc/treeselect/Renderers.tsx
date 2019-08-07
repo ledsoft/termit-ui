@@ -2,7 +2,6 @@ import * as React from "react";
 import Term from "../../../model/Term";
 import classNames from "classnames";
 import ResultItem from "./ResultItem";
-import Vocabulary from "../../../model/Vocabulary";
 import ImportedTermInfo from "../../term/ImportedTermInfo";
 
 interface TreeOption {
@@ -26,9 +25,9 @@ interface OptionRendererParams<T> {
 /**
  * Intelligent tree select option renderer which visualizes imported Terms by adding icon to them.
  *
- * @param currentVocabulary Current vocabulary used to resolve whether term is imported
+ * @param currentVocabularyIri IRI of the current vocabulary, used to resolve whether term is imported
  */
-export function createTermsWithImportsOptionRenderer(currentVocabulary?: Vocabulary) {
+export function createTermsWithImportsOptionRenderer(currentVocabularyIri?: string) {
     return (params: OptionRendererParams<Term>) => {
         const {option, focusedOption, optionStyle, selectValue, focusOption, toggleOption, valueArray} = {...params};
         const className = classNames("VirtualizedSelectOption", {
@@ -43,7 +42,7 @@ export function createTermsWithImportsOptionRenderer(currentVocabulary?: Vocabul
             onToggleClick: () => toggleOption(option),
         };
 
-        const importInfo = !currentVocabulary || currentVocabulary.iri === option.vocabulary!.iri ? undefined :
+        const importInfo = !currentVocabularyIri || currentVocabularyIri === option.vocabulary!.iri ? undefined :
             <span><ImportedTermInfo term={option}/></span>;
 
         return <ResultItem key={params.key} renderAsTree={params.renderAsTree} className={className} option={option}

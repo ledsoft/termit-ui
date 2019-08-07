@@ -178,6 +178,8 @@ export default {
         "term.metadata.vocabulary.tooltip": "Vocabulary this term belongs to",
 
         'glossary.title': 'Terms',
+        "glossary.excludeImported": "Without imported",
+        "glossary.excludeImported.help": "Show only terms from this vocabulary",
         "glossary.includeImported": "Include imported",
         "glossary.includeImported.help": "Show including terms from imported vocabularies",
         "glossary.importedTerm.tooltip": "Term belongs to an imported vocabulary",

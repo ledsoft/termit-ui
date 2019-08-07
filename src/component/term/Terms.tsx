@@ -1,6 +1,6 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
-import {Button, Card, CardBody, CardHeader, FormGroup, Input, Label} from "reactstrap";
+import {Button, Card, CardBody, CardHeader} from "reactstrap";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabulary from "../../model/Vocabulary";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
@@ -23,9 +23,8 @@ import AppNotification from "../../model/AppNotification";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import ActionType from "../../action/ActionType";
 import NotificationType from "../../model/NotificationType";
-import InfoIcon from "../misc/InfoIcon";
 import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
-
+import IncludeImportedTermsToggle from "./IncludeImportedTermsToggle";
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
@@ -141,14 +140,8 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
             </CardHeader>
             <CardBody className="p-0">
                 <div className="mb-1 mt-1 ml-1">
-                    <FormGroup check={true}>
-                        <Label check={true}>
-                            <Input type="checkbox" checked={this.state.includeImported}
-                                   onChange={this.onIncludeImportedToggle}/>{i18n("glossary.includeImported")}
-                        </Label>
-                        &nbsp;
-                        <InfoIcon text={i18n("glossary.includeImported.help")} id="glossary-include-imported"/>
-                    </FormGroup>
+                    <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
+                                                includeImported={this.state.includeImported}/>
                 </div>
                 <IntelligentTreeSelect className={"p-0"}
                                        ref={this.treeComponent}
@@ -163,7 +156,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
                                        multi={false}
                                        showSettings={false}
                                        maxHeight={Utils.calculateAssetListHeight()}
-                                       optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabulary)}
+                                       optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabulary.iri)}
                                        valueRenderer={Utils.labelValueRenderer}
                 />
             </CardBody>

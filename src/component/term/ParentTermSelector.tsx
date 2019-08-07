@@ -12,6 +12,8 @@ import {FormGroup, Label} from "reactstrap";
 import Utils from "../../util/Utils";
 // @ts-ignore
 import {IntelligentTreeSelect} from "intelligent-tree-select";
+import IncludeImportedTermsToggle from "./IncludeImportedTermsToggle";
+import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
 
 interface ParentTermSelectorProps extends HasI18n {
     termIri: string;
@@ -22,7 +24,16 @@ interface ParentTermSelectorProps extends HasI18n {
     loadTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
 }
 
-export class ParentTermSelector extends React.Component<ParentTermSelectorProps> {
+export class ParentTermSelector extends React.Component<ParentTermSelectorProps, { includeImported: boolean }> {
+
+    private readonly treeComponent: React.RefObject<IntelligentTreeSelect>;
+
+    constructor(props: ParentTermSelectorProps) {
+        super(props);
+        this.treeComponent = React.createRef();
+        this.state = {includeImported: false};
+    }
+
 
     public onChange = (val: Term[] | Term | null) => {
         if (!val) {
@@ -32,13 +43,19 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps>
         }
     };
 
-    private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
+    public fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
         return this.props.loadTerms({
             searchString,
             optionID,
             limit,
-            offset
+            offset,
+            includeImported: this.state.includeImported
         }, VocabularyUtils.create(this.props.vocabularyIri));
+    };
+
+    private onIncludeImportedToggle = () => {
+        // TODO: option reset is not working on subsequent calls
+        this.setState({includeImported: !this.state.includeImported}, () => this.treeComponent.current.resetOptions());
     };
 
     public render() {
@@ -46,7 +63,10 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps>
         const selected = Utils.sanitizeArray(this.props.parentTerms).find(t => t.vocabulary !== undefined && t.vocabulary!.iri === this.props.vocabularyIri);
         return <FormGroup>
             <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
+            <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
+                                        includeImported={this.state.includeImported} style={{float: "right"}}/>
             <IntelligentTreeSelect onChange={this.onChange}
+                                   ref={this.treeComponent}
                                    value={selected ? selected.iri : undefined}
                                    fetchOptions={this.fetchOptions}
                                    fetchLimit={100000}
@@ -55,9 +75,10 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps>
                                    childrenKey="plainSubTerms"
                                    simpleTreeData={true}
                                    showSettings={false}
-                                   maxHeight={150}
+                                   maxHeight={200}
                                    multi={false}
                                    renderAsTree={true}
+                                   optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabularyIri)}
                                    valueRenderer={Utils.labelValueRenderer}/>
         </FormGroup>;
     }

@@ -74,4 +74,16 @@ describe("ParentTermSelector", () => {
         wrapper.instance().onChange(null);
         expect(onChange).toHaveBeenCalledWith([]);
     });
+
+    it("fetches terms including imported when configured to", () => {
+        const wrapper = shallow<ParentTermSelector>(<ParentTermSelector termIri={Generator.generateUri()}
+                                                                        vocabularyIri={Generator.generateUri()}
+                                                                        onChange={onChange}
+                                                                        vocabularyTerms={[]}
+                                                                        loadTerms={loadTerms} {...intlFunctions()} {...intlDataForShallow()}/>);
+        wrapper.setState({includeImported: true});
+        wrapper.update();
+        wrapper.instance().fetchOptions({});
+        expect((loadTerms as jest.Mock).mock.calls[0][0].includeImported).toBeTruthy();
+    });
 });
