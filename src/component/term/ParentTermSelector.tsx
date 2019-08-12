@@ -5,7 +5,6 @@ import Term, {TermData} from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {connect} from "react-redux";
-import TermItState from "../../model/TermItState";
 import {ThunkDispatch, TreeSelectFetchOptionsParams} from "../../util/Types";
 import {loadTerms} from "../../action/AsyncActions";
 import {FormGroup, Label} from "reactstrap";
@@ -16,11 +15,10 @@ import IncludeImportedTermsToggle from "./IncludeImportedTermsToggle";
 import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
 
 interface ParentTermSelectorProps extends HasI18n {
-    termIri: string;
+    termIri?: string;
     parentTerms?: TermData[];
     vocabularyIri: string;
     onChange: (newParents: Term[]) => void;
-    vocabularyTerms: Term[];
     loadTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
 }
 
@@ -44,15 +42,31 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
     };
 
     public fetchOptions = ({searchString, optionID, limit, offset, option}: TreeSelectFetchOptionsParams<TermData>) => {
+        // Use option vocabulary when present, it may differ from the current vocabulary (when option is from imported
+        // vocabulary)
         return this.props.loadTerms({
             searchString,
             optionID,
             limit,
             offset,
             includeImported: this.state.includeImported
-        }, VocabularyUtils.create(option ? option.vocabulary!.iri! : this.props.vocabularyIri));
-        // Use option vocabulary when present, it may differ from the current vocabulary (when option is from imported
-        // vocabulary)
+        }, VocabularyUtils.create(option ? option.vocabulary!.iri! : this.props.vocabularyIri)).then(terms => {
+            const currentTermIri = this.props.termIri;
+            if (currentTermIri) {
+                const result = [];
+                for (const t of terms) {
+                    if (t.iri === currentTermIri) {
+                        continue;
+                    }
+                    if (t.plainSubTerms) {
+                        t.plainSubTerms = t.plainSubTerms.filter(st => st !== currentTermIri);
+                    }
+                    result.push(t);
+                }
+                return result;
+            }
+            return terms;
+        });
     };
 
     private onIncludeImportedToggle = () => {
@@ -95,11 +109,7 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
     }
 }
 
-export default connect((state: TermItState) => {
-    return {
-        vocabularyTerms: state.defaultTerms
-    };
-}, ((dispatch: ThunkDispatch) => {
+export default connect(undefined, ((dispatch: ThunkDispatch) => {
     return {
         loadTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
     }
