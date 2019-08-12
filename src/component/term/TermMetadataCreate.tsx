@@ -39,6 +39,7 @@ import IntlData from "../../model/IntlData";
 import Utils from "../../util/Utils";
 import {IRI} from "../../util/VocabularyUtils";
 import TextArea from "../misc/TextArea";
+import ParentTermSelector from "./ParentTermSelector";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -129,6 +130,7 @@ interface TermMetadataCreateDispatchProps {
 
 interface TermMetadataCreateOwnProps {
     onCreate: (term: Term, normalizedName: string) => void;
+    vocabularyIri: string;
 }
 
 declare type TermMetadataCreateProps =
@@ -145,13 +147,12 @@ interface CreateVocabularyTermState {
     comment: string;
     definition: string;
     generateUri: boolean;
+    parents: Term[];
 }
 
 interface NewOptionData {
-    // siblings : Term[],
     typeOption: Term;
     optionURI: string;
-    parentOption: Term;
     optionLabel: string;
     optionDescription: string;
     optionSource: string;
@@ -174,7 +175,6 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         this.validateLengthMin3 = this.validateLengthMin3.bind(this);
         this.validateNotSameAsParent = this.validateNotSameAsParent.bind(this);
         this.cancelCreation = this.cancelCreation.bind(this);
-        this.fetchOptions = this.fetchOptions.bind(this);
 
         this.state = {
             siblings: [],
@@ -183,6 +183,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
             comment: "",
             definition: "",
             generateUri: true,
+            parents: []
         }
     }
 
@@ -217,23 +218,13 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         })
     }
 
-    private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
-        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, {
-            fragment: this.props.match.params.name,
-            namespace
-        });
-    }
-
     private createNewOption(data: NewOptionData) {
-        const parents = data.parentOption ? [data.parentOption as Term] : undefined;
-
         this.props.onCreate(new Term({
             iri: data.optionURI as string,
             label: data.optionLabel as string,
             definition: this.state.definition,
             comment: this.state.comment,
-            parentTerms: parents,
+            parentTerms: this.state.parents,
             types: data.typeOption ? [data.typeOption.iri] : [],
             sources: [data.optionSource],
         }), this.props.match.params.name);
@@ -291,6 +282,10 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
     public validateNotSameAsParent(value: any, values: any) {
         return validateNotSameAsParent(value, values, this.props.i18n, TERM_CONTEXT.iri);
     }
+
+    public onParentSelect = (parents: Term[]) => {
+        this.setState({parents});
+    };
 
     public render() {
         const i18n = this.props.i18n;
@@ -368,18 +363,8 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
 
                         <Row>
                             <Col xl={6} md={12}>
-                                <Label className="attribute-label">{i18n("glossary.form.field.parent")}</Label>
-                                <Select field={"parentOption"} id="create-term-parent"
-                                        fetchOptions={this.fetchOptions}
-                                        multi={false}
-                                        valueKey={"iri"}
-                                        labelKey={"label"}
-                                        childrenKey="plainSubTerms"
-                                        filterOptions={this.filterParentOptions}
-                                        expanded={true}
-                                        simpleTreeData={true}
-                                        renderAsTree={true}
-                                />
+                                <ParentTermSelector onChange={this.onParentSelect} parentTerms={this.state.parents}
+                                                    vocabularyIri={this.props.vocabularyIri}/>
                             </Col>
                         </Row>
 

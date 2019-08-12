@@ -33,7 +33,7 @@ export class CreateTerm extends React.Component<CreateTermProps> {
     };
 
     public render() {
-        return <TermMetadataCreate onCreate={this.onCreate}/>;
+        return <TermMetadataCreate onCreate={this.onCreate} vocabularyIri={this.props.vocabulary.iri}/>;
     }
 }
 
