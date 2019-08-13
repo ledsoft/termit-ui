@@ -155,12 +155,18 @@ export function createTerm(term: Term, vocabularyIri: IRI) {
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
-        let url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
+        let vocabularyIriToUse;
+        let url = Constants.API_PREFIX + "/vocabularies/";
         const parents = Utils.sanitizeArray(term.parentTerms);
         if (parents.length > 0) {
-            url += "/" + VocabularyUtils.create(parents[0].iri!).fragment + "/subterms";
+            // Assuming there is at most one parent for a newly created term
+            vocabularyIriToUse = VocabularyUtils.create(parents[0].vocabulary!.iri!);
+            url += vocabularyIriToUse.fragment + "/terms/" + VocabularyUtils.create(parents[0].iri!).fragment + "/subterms";
+        } else {
+            vocabularyIriToUse = vocabularyIri;
+            url += vocabularyIriToUse.fragment + "/terms"
         }
-        return Ajax.post(url, content(term.toJsonLd()).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIri.namespace))
+        return Ajax.post(url, content(term.toJsonLd()).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIriToUse.namespace))
             .then((resp: AxiosResponse) => {
                 const asyncSuccessAction = asyncActionSuccess(action);
                 dispatch(asyncSuccessAction);

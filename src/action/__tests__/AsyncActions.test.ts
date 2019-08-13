@@ -275,14 +275,14 @@ describe("Async actions", () => {
     });
 
     describe("create term", () => {
+
+        const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary");
+
         it("create top level term in vocabulary context and send it over the network", () => {
-            const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary");
-            const term = new Term(
-                {
-                    label: "Test term 1",
-                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/test-term-1"
-                },
-            );
+            const term = new Term({
+                label: "Test term 1",
+                iri: vocabularyIri.toString() + "term/test-term-1"
+            });
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
             Ajax.post = mock;
             return Promise.resolve((store.dispatch as ThunkDispatch)(createTerm(term, vocabularyIri))).then(() => {
@@ -296,21 +296,17 @@ describe("Async actions", () => {
             });
         });
         it("create child term in vocabulary context and send it over the network", () => {
-            const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary");
             const parentFragment = "test-term-1";
-            const parentTerm = new Term(
-                {
-                    label: "Test term 1",
-                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/" + parentFragment,
-                },
-            );
-            const childTerm = new Term(
-                {
-                    label: "Test term 2",
-                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/test-term-2",
-                    parentTerms: [parentTerm]
-                },
-            );
+            const parentTerm = new Term({
+                label: "Test term 1",
+                iri: vocabularyIri.toString() + "term/" + parentFragment,
+                vocabulary: {iri: vocabularyIri.toString()}
+            });
+            const childTerm = new Term({
+                label: "Test term 2",
+                iri: vocabularyIri.toString() + "term/test-term-2",
+                parentTerms: [parentTerm]
+            });
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
             Ajax.post = mock;
             return Promise.resolve((store.dispatch as ThunkDispatch)(createTerm(childTerm, vocabularyIri))).then(() => {
@@ -325,13 +321,10 @@ describe("Async actions", () => {
         });
 
         it("publishes notification on successful creation", () => {
-            const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary");
-            const term = new Term(
-                {
-                    label: "Test term 1",
-                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/test-term-1"
-                },
-            );
+            const term = new Term({
+                label: "Test term 1",
+                iri: vocabularyIri.toString() + "term/test-term-1"
+            });
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({
                 headers: {
                     "location": "http://test"
@@ -346,19 +339,38 @@ describe("Async actions", () => {
             });
         });
 
-        it("provides vocabulary namespace in as request parameter", () => {
-            const vocabularyIri = VocabularyUtils.create("http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary");
-            const term = new Term(
-                {
-                    label: "Test term 1",
-                    iri: vocabularyIri.namespace + vocabularyIri.fragment + "term/test-term-1"
-                },
-            );
+        it("provides vocabulary namespace in a request parameter", () => {
+            const term = new Term({
+                label: "Test term 1",
+                iri: vocabularyIri.toString() + "term/test-term-1"
+            });
             const mock = jest.fn().mockImplementation(() => Promise.resolve());
             Ajax.post = mock;
             return Promise.resolve((store.dispatch as ThunkDispatch)(createTerm(term, vocabularyIri))).then(() => {
                 const config = mock.mock.calls[0][1];
                 expect(config.getParams().namespace).toEqual(vocabularyIri.namespace);
+            });
+        });
+
+        it("uses parent vocabulary IRI for request URL when new child term is in different vocabulary than parent term", () => {
+            const parentVocabularyIri = "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/parent-vocabulary";
+            const parentTerm = new Term({
+                iri: parentVocabularyIri + "/terms/parent-term",
+                label: "Parent term",
+                vocabulary: {iri: parentVocabularyIri}
+            });
+            const childTerm = new Term({
+                iri: vocabularyIri.toString() + "/terms/test-term",
+                label: "Test term",
+                parentTerms: [parentTerm]
+            });
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createTerm(childTerm, vocabularyIri))).then(() => {
+                const url = (Ajax.post as jest.Mock).mock.calls[0][0];
+                const config = (Ajax.post as jest.Mock).mock.calls[0][1];
+                const parentIri = VocabularyUtils.create(parentVocabularyIri);
+                expect(url).toContain(parentIri.fragment);
+                expect(config.getParams().namespace).toEqual(parentIri.namespace);
             });
         });
     });
