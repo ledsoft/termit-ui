@@ -295,6 +295,7 @@ describe("Async actions", () => {
                 expect(data["@context"]).toEqual(TERM_CONTEXT);
             });
         });
+
         it("create child term in vocabulary context and send it over the network", () => {
             const parentFragment = "test-term-1";
             const parentTerm = new Term({
@@ -371,6 +372,20 @@ describe("Async actions", () => {
                 const parentIri = VocabularyUtils.create(parentVocabularyIri);
                 expect(url).toContain(parentIri.fragment);
                 expect(config.getParams().namespace).toEqual(parentIri.namespace);
+            });
+        });
+
+        it("sets term vocabulary before sending it to server", () => {
+            const term = new Term({
+                label: "Test term 1",
+                iri: vocabularyIri.toString() + "term/test-term-1"
+            });
+            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(createTerm(term, vocabularyIri))).then(() => {
+                const config = (Ajax.post as jest.Mock).mock.calls[0][1];
+                const data = config.getContent();
+                expect(data.vocabulary).toBeDefined();
+                expect(data.vocabulary.iri).toEqual(vocabularyIri.toString());
             });
         });
     });

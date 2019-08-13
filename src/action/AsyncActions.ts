@@ -155,18 +155,11 @@ export function createTerm(term: Term, vocabularyIri: IRI) {
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
-        let vocabularyIriToUse;
-        let url = Constants.API_PREFIX + "/vocabularies/";
         const parents = Utils.sanitizeArray(term.parentTerms);
-        if (parents.length > 0) {
-            // Assuming there is at most one parent for a newly created term
-            vocabularyIriToUse = VocabularyUtils.create(parents[0].vocabulary!.iri!);
-            url += vocabularyIriToUse.fragment + "/terms/" + VocabularyUtils.create(parents[0].iri!).fragment + "/subterms";
-        } else {
-            vocabularyIriToUse = vocabularyIri;
-            url += vocabularyIriToUse.fragment + "/terms"
-        }
-        return Ajax.post(url, content(term.toJsonLd()).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIriToUse.namespace))
+        const vocabularyIriToUse = parents.length > 0 ? VocabularyUtils.create(parents[0].vocabulary!.iri!) : vocabularyIri;
+        const url = resolveTermCreationUrl(term, vocabularyIriToUse);
+        const data = Object.assign(term.toJsonLd(), {vocabulary: {iri: vocabularyIri.namespace + vocabularyIri.fragment}});
+        return Ajax.post(url, content(data).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIriToUse.namespace))
             .then((resp: AxiosResponse) => {
                 const asyncSuccessAction = asyncActionSuccess(action);
                 dispatch(asyncSuccessAction);
@@ -180,6 +173,18 @@ export function createTerm(term: Term, vocabularyIri: IRI) {
                 return undefined;
             });
     };
+}
+
+function resolveTermCreationUrl(term: Term, targetVocabularyIri: IRI) {
+    let url = Constants.API_PREFIX + "/vocabularies/";
+    const parents = Utils.sanitizeArray(term.parentTerms);
+    if (parents.length > 0) {
+        // Assuming there is at most one parent for a newly created term
+        url += targetVocabularyIri.fragment + "/terms/" + VocabularyUtils.create(parents[0].iri!).fragment + "/subterms";
+    } else {
+        url += targetVocabularyIri.fragment + "/terms"
+    }
+    return url;
 }
 
 export function loadVocabulary(iri: IRI) {
