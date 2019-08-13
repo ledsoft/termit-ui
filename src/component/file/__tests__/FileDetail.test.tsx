@@ -7,6 +7,7 @@ import {shallow} from "enzyme";
 import {Annotator} from "../../annotator/Annotator";
 import FetchOptionsFunction from "../../../model/Functions";
 import Term from "../../../model/Term";
+import Generator from "../../../__tests__/environment/Generator";
 
 function generateTerm(i: number): Term {
     return new Term({
@@ -101,7 +102,7 @@ describe("FileDetail", () => {
         const terms: Term[] = [0, 1, 2, 3].map(i => generateTerm(i));
         mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve(terms));
 
-        const wrapper = shallow(<FileDetail
+        const wrapper = shallow<FileDetail>(<FileDetail
             iri={fileIri}
             vocabularyIri={vocabularyIri}
             fileContent={fileContent}
@@ -111,7 +112,6 @@ describe("FileDetail", () => {
             {...intlFunctions()}
         />);
 
-        // @ts-ignore
         const returnedTerm = await wrapper.instance().onFetchTerm(terms[1].iri);
 
         expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri);
@@ -127,7 +127,7 @@ describe("FileDetail", () => {
         mockedFunctionLikeProps.fetchTerm = jest.fn()
             .mockImplementationOnce(() => Promise.resolve(term4));
 
-        const wrapper = shallow(<FileDetail
+        const wrapper = shallow<FileDetail>(<FileDetail
             iri={fileIri}
             vocabularyIri={vocabularyIri}
             fileContent={fileContent}
@@ -137,8 +137,6 @@ describe("FileDetail", () => {
             {...intlFunctions()}
         />);
 
-
-        // @ts-ignore
         const returnedTerm = await wrapper.instance().onFetchTerm(term4.iri);
 
         expect(mockedFunctionLikeProps.fetchTerms).toBeCalledWith({}, vocabularyIri);
@@ -146,5 +144,20 @@ describe("FileDetail", () => {
         expect(mockedFunctionLikeProps.fetchTerms).toHaveBeenCalledTimes(1);
         expect(mockedFunctionLikeProps.fetchTerm).toHaveBeenCalledTimes(1);
         expect(returnedTerm).toEqual(term4);
+    });
+
+    it("onCreateTerm returns rejected promise when term creation fails", () => {
+        mockedFunctionLikeProps.createVocabularyTerm = jest.fn().mockImplementation(() => Promise.resolve(undefined));
+        const wrapper = shallow<FileDetail>(<FileDetail
+            iri={fileIri}
+            vocabularyIri={vocabularyIri}
+            fileContent={fileContent}
+            {...mockDataProps}
+            {...mockedFunctionLikeProps}
+            intl={intl()}
+            {...intlFunctions()}
+        />);
+        const term: Term = Generator.generateTerm();
+        return expect(wrapper.instance().onCreateTerm(term)).rejects.toEqual("Could not create term.");
     });
 });

@@ -136,12 +136,9 @@ export class FileDetail extends React.Component<FileDetailProps, FileDetailState
     public onCreateTerm = (term: Term): Promise<Term> => {
         return this.props
             .createVocabularyTerm(term, this.props.vocabularyIri)
-            .then((location: string) => {
-                // TODO nasty workaround for createVocabularyTerm sending error in resolved promise,
-                //      i.e. location.type === "PUBLISH_MESSAGE"
-                // @ts-ignore
-                if (location.type) {
-                    return Promise.reject("Could not create term");
+            .then((location?: string) => {
+                if (!location) {
+                    return Promise.reject("Could not create term.");
                 }
                 const termName = IdentifierResolver.extractNameFromLocation(location);
                 return this.props.fetchTerm(termName, this.props.vocabularyIri); // TODO use onFetchTerm
