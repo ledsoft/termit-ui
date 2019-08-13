@@ -363,7 +363,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
 
                         <Row>
                             <Col xl={6} md={12}>
-                                <ParentTermSelector onChange={this.onParentSelect} parentTerms={this.state.parents}
+                                <ParentTermSelector id="create-term-parent" onChange={this.onParentSelect} parentTerms={this.state.parents}
                                                     vocabularyIri={this.props.vocabularyIri}/>
                             </Col>
                         </Row>

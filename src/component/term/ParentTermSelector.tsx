@@ -15,6 +15,7 @@ import IncludeImportedTermsToggle from "./IncludeImportedTermsToggle";
 import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
 
 interface ParentTermSelectorProps extends HasI18n {
+    id: string;
     termIri?: string;
     parentTerms?: TermData[];
     vocabularyIri: string;
@@ -29,9 +30,12 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
     constructor(props: ParentTermSelectorProps) {
         super(props);
         this.treeComponent = React.createRef();
-        this.state = {includeImported: false};
+        this.state = {includeImported: ParentTermSelector.hasParentInDifferentVocabulary(props.vocabularyIri, props.parentTerms)};
     }
 
+    private static hasParentInDifferentVocabulary(vocabularyIri: string, parentTerms?: TermData[]) {
+        return Utils.sanitizeArray(parentTerms).findIndex(pt => pt.vocabulary !== undefined && pt.vocabulary.iri !== vocabularyIri) !== -1;
+    }
 
     public onChange = (val: Term[] | Term | null) => {
         if (!val) {
@@ -85,9 +89,9 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
     }
 
     public render() {
-        return <FormGroup>
+        return <FormGroup id={this.props.id}>
             <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
-            <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
+            <IncludeImportedTermsToggle id={this.props.id + "-include-imported"} onToggle={this.onIncludeImportedToggle}
                                         includeImported={this.state.includeImported} style={{float: "right"}}/>
             <IntelligentTreeSelect onChange={this.onChange}
                                    ref={this.treeComponent}
