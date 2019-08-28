@@ -6,6 +6,8 @@ import VocabularyUtils from "../../../util/VocabularyUtils";
 import defaultChartOptions from "../DefaultTermCharacteristicsFrequencyChartOptions";
 import withInjectableLoading from "../../hoc/withInjectableLoading";
 
+const TYPE_NOT_FILLED = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled";
+
 interface Props extends PublicProps {
     notFilled: string,
     lang: string
@@ -38,20 +40,15 @@ class TermTypeFrequency extends React.Component<Props> {
 
         const res = queryResult.result;
         const types: object = {};
-        const fixedTypes = [
-            "https://slovník.gov.cz/základní/pojem/objekt"
-            , "https://slovník.gov.cz/základní/pojem/typ-objektu"
-            , "https://slovník.gov.cz/základní/pojem/typ-vlastnosti"
-            , "https://slovník.gov.cz/základní/pojem/typ-vztahu"
-            , "https://slovník.gov.cz/základní/pojem/typ-události"
-            , "https://slovník.gov.cz/základní/pojem/událost"
-            , "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled"];
+        const fixedTypes = ["https://slovník.gov.cz/základní/pojem/objekt",
+            "https://slovník.gov.cz/základní/pojem/typ-objektu",
+            "https://slovník.gov.cz/základní/pojem/typ-vlastnosti",
+            "https://slovník.gov.cz/základní/pojem/typ-vztahu",
+            "https://slovník.gov.cz/základní/pojem/typ-události",
+            "https://slovník.gov.cz/základní/pojem/událost",
+            TYPE_NOT_FILLED];
         fixedTypes.forEach(t => types[t] = TermTypeFrequencyI.getLabel(res, t) || t);
-        // TermTypeFrequencyI.cx(res).queryAll("@type").forEach((t: any) => {
-        //     if (!types[t[0]]) {
-        //         types[t[0]] = TermTypeFrequencyI.getLabel(res, t[0]) || t[0];
-        //     }
-        // })
+
         const vocabularies = {};
         res.filter((r: any) => {
             return r[VocabularyUtils.IS_TERM_FROM_VOCABULARY] !== undefined;
@@ -67,10 +64,26 @@ class TermTypeFrequency extends React.Component<Props> {
                 vocabularies[vocabulary] = vocO;
             }
 
-            const curType = (r["@type"] || ["http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/not-filled"]);
-            curType.forEach((tt: any) => {
-                vocO[types[tt]] = vocO[types[tt]] + 1 || 1;
+            let currType;
+            if (r["@type"]) {
+                currType = r["@type"];
+            } else if (r[VocabularyUtils.RDF_TYPE]) {
+                // GraphDB returns types as rdf:type property values
+                currType = r[VocabularyUtils.RDF_TYPE].map((t: any) => t["@id"]);
+            } else {
+                currType = TYPE_NOT_FILLED;
+            }
+
+            let found = false;
+            currType.forEach((tt: any) => {
+                if (types[tt]) {
+                    vocO[types[tt]] = vocO[types[tt]] + 1 || 1;
+                    found = true;
+                }
             });
+            if (!found) {
+                vocO[types[TYPE_NOT_FILLED]] += 1;
+            }
         });
 
         const series = Object.keys(types).map(t => {
@@ -87,10 +100,10 @@ class TermTypeFrequency extends React.Component<Props> {
         });
 
         return <Chart options={options}
-                   series={series}
-                   type="bar"
-                   width="100%"
-                   height="430px"/>;
+                      series={series}
+                      type="bar"
+                      width="100%"
+                      height="430px"/>;
     }
 }
 
