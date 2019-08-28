@@ -302,6 +302,8 @@ export default {
         "log-viewer.title": "Prohlížení chyb",
         "log-viewer.timestamp": "Čas",
         "log-viewer.error": "Chyba",
-        "log-viewer.clear": "Vyčistit"
+        "log-viewer.clear": "Vyčistit",
+
+        "error.vocabulary.update.imports.danglingTermReferences": "Nelze odstranit import slovníku, neboť stále existují vazby mezi pojmy z tohoto a importovaného slovníku."
     }
 }

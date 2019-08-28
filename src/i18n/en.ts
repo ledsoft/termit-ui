@@ -301,6 +301,8 @@ export default {
         "log-viewer.title": "Error log",
         "log-viewer.timestamp": "Timestamp",
         "log-viewer.error": "Error",
-        "log-viewer.clear": "Clear log"
+        "log-viewer.clear": "Clear log",
+
+        "error.vocabulary.update.imports.danglingTermReferences": "Cannot remove vocabulary import(s), there are still references between terms from this vocabulary and the imported one."
     }
 }
