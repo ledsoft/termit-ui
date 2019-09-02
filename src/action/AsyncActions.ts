@@ -561,7 +561,8 @@ export function hasFileContent(fileIri: IRI) {
                 return true;
             })
             .catch(() => {
-                dispatch(asyncActionRequest(action));
+                // No problem here, 404 is the most likely reason
+                dispatch(asyncActionSuccess(action));
                 return false;
             });
     }
