@@ -94,7 +94,7 @@ class ResourceList extends React.Component<ResourceListProps> {
         }
         const options = this.flattenAndSetParents(resources);
         const height = Utils.calculateAssetListHeight();
-        return <div>
+        return <div id="resources-list">
             <IntelligentTreeSelect className="p-0"
                                    ref={this.treeComponent}
                                    onChange={this.onChange}

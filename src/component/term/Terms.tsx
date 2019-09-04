@@ -144,6 +144,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
                     <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
                                                 includeImported={this.state.includeImported}/>
                 </div>
+                <div id="glossary-list">
                 <IntelligentTreeSelect className={"p-0"}
                                        ref={this.treeComponent}
                                        onChange={this.onTermSelect}
@@ -161,6 +162,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
                                        optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabulary.iri)}
                                        valueRenderer={Utils.labelValueRenderer}
                 />
+                </div>
             </CardBody>
         </Card>;
     }

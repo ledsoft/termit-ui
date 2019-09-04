@@ -91,7 +91,7 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
                         {i18n("resource.metadata.terms.assigned")}
                     </Label>
                 </Col>
-                <Col xl={10} md={8} className="resource-terms">
+                <Col xl={10} md={8} id="resource-metadata-term-assignments" className="resource-terms">
                     {assignments}
                 </Col>
             </Row>
@@ -101,7 +101,7 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
                         {i18n("resource.metadata.terms.occurrences")}
                     </Label>
                 </Col>
-                <Col xl={10} md={8} className="resource-terms">
+                <Col xl={10} md={8} id="resource-metadata-term-occurrences" className="resource-terms">
                     {this.renderTermOccurrences()}
                 </Col>
             </Row>}
