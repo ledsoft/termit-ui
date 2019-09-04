@@ -303,6 +303,6 @@ export default {
         "log-viewer.error": "Error",
         "log-viewer.clear": "Clear log",
 
-        "error.vocabulary.update.imports.danglingTermReferences": "Cannot remove vocabulary import(s), there are still references between terms from this vocabulary and the imported one."
+        "error.vocabulary.update.imports.danglingTermReferences": "Cannot remove vocabulary import(s), there are still references between terms from this vocabulary and the imported one (or one of its imports)."
     }
 }

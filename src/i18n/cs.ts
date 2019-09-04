@@ -304,6 +304,6 @@ export default {
         "log-viewer.error": "Chyba",
         "log-viewer.clear": "Vyčistit",
 
-        "error.vocabulary.update.imports.danglingTermReferences": "Nelze odstranit import slovníku, neboť stále existují vazby mezi pojmy z tohoto a importovaného slovníku."
+        "error.vocabulary.update.imports.danglingTermReferences": "Nelze odstranit import slovníku, neboť stále existují vazby mezi pojmy z tohoto a importovaného slovníku (či ze slovníků, které importuje)."
     }
 }
