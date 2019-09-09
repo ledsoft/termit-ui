@@ -10,7 +10,7 @@ import {
     getLabel,
     getProperties,
     hasFileContent,
-    loadFileContent,
+    loadFileContent, loadImportedVocabularies,
     loadLastEditedAssets,
     loadLatestTextAnalysisRecord,
     loadResources,
@@ -199,7 +199,8 @@ describe("Async actions", () => {
         it("extracts vocabulary data from incoming JSON-LD", () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(require("../../rest-mock/vocabulary")));
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadVocabulary({fragment: "metropolitan-plan"}))).then(() => {
-                const loadSuccessAction: AsyncActionSuccess<Vocabulary> = store.getActions()[1];
+                const loadSuccessAction: AsyncActionSuccess<Vocabulary> = store.getActions().find(a => a.type === ActionType.LOAD_VOCABULARY && a.status === AsyncActionStatus.SUCCESS);
+                expect(loadSuccessAction).toBeDefined();
                 expect(Vocabulary2.create(loadSuccessAction.payload.iri).fragment === "metropolitan-plan").toBeTruthy();
             });
         });
@@ -210,6 +211,14 @@ describe("Async actions", () => {
             store.getState().pendingActions[ActionType.LOAD_VOCABULARY] = AsyncActionStatus.REQUEST;
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadVocabulary({fragment: "metropolitan-plan"}))).then(() => {
                 expect(Ajax.get).not.toHaveBeenCalled();
+            });
+        });
+
+        it("dispatches vocabulary imports loading on success", () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(require("../../rest-mock/vocabulary")));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadVocabulary({fragment: "metropolitan-plan"}))).then(() => {
+                const loadImportsAction = store.getActions().find(a => a.type === ActionType.LOAD_VOCABULARY_IMPORTS);
+                expect(loadImportsAction).toBeDefined();
             });
         });
     });
@@ -1287,6 +1296,31 @@ describe("Async actions", () => {
                 expect(args[0]).toEqual(data);
                 expect(args[1]).toEqual(fileName);
                 expect(args[2]).toEqual("text/html");
+            });
+        });
+    });
+
+    describe("loadImportedVocabularies", () => {
+
+        it("loads imported vocabularies for the specified vocabulary IRI", () => {
+            const imports = [Generator.generateUri(), Generator.generateUri()];
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(imports));
+            const iri = VocabularyUtils.create(Generator.generateUri());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadImportedVocabularies(iri))).then(() => {
+                expect(Ajax.get).toHaveBeenCalled();
+                const url = (Ajax.get as jest.Mock).mock.calls[0][0];
+                expect(url).toEqual(Constants.API_PREFIX + "/vocabularies/" + iri.fragment + "/imports");
+            });
+        });
+
+        it("passes loaded imports to store", () => {
+            const imports = [Generator.generateUri(), Generator.generateUri()];
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(imports));
+            const iri = VocabularyUtils.create(Generator.generateUri());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadImportedVocabularies(iri))).then(() => {
+                const loaded = store.getActions().find(a => a.type === ActionType.LOAD_VOCABULARY_IMPORTS && a.status === AsyncActionStatus.SUCCESS);
+                expect(loaded).toBeDefined();
+                expect(loaded.payload).toEqual(imports);
             });
         });
     });

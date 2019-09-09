@@ -199,13 +199,33 @@ export function loadVocabulary(iri: IRI) {
         return Ajax
             .get(Constants.API_PREFIX + "/vocabularies/" + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, VOCABULARY_CONTEXT))
-            .then((data: VocabularyData) =>
-                dispatch(asyncActionSuccessWithPayload(action, new Vocabulary(data))))
+            .then((data: VocabularyData) => {
+                dispatch(loadImportedVocabularies(iri));
+                return dispatch(asyncActionSuccessWithPayload(action, new Vocabulary(data)));
+            })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
+}
+
+/**
+ * Loads vocabularies imported (directly or transitively) by the vocabulary with the specified IRI.
+ */
+export function loadImportedVocabularies(vocabularyIri: IRI) {
+    const action = {
+        type: ActionType.LOAD_VOCABULARY_IMPORTS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/imports", param("namespace", vocabularyIri.namespace))
+            .then((data: string[]) => dispatch(asyncActionSuccessWithPayload(action, data)))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    }
 }
 
 export function loadResource(iri: IRI) {

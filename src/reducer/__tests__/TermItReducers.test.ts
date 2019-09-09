@@ -242,6 +242,16 @@ describe("Reducers", () => {
             expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload(action, new Vocabulary(vocabularyData))))
                 .toEqual(Object.assign({}, initialState, {vocabulary: new Vocabulary(vocabularyData)}));
         });
+
+        it("sets transitive imports on vocabulary when they are loaded", () => {
+            const imports = [Generator.generateUri(), Generator.generateUri()];
+            initialState.vocabulary = new Vocabulary({
+                label: "Test vocabulary",
+                iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary"
+            });
+            const vocabulary = reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_VOCABULARY_IMPORTS}, imports)).vocabulary;
+            expect(vocabulary.allImportedVocabularies).toEqual(imports);
+        });
     });
 
     describe("select term", () => {

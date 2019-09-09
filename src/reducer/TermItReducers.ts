@@ -3,7 +3,8 @@ import ActionType, {
     AsyncAction,
     AsyncActionSuccess,
     ExecuteQueryAction,
-    FacetedSearchAction, FailureAction,
+    FacetedSearchAction,
+    FailureAction,
     MessageAction,
     NotificationAction,
     SearchAction,
@@ -89,10 +90,12 @@ function intl(state: IntlData = loadInitialLocalizationData(), action: SwitchLan
     }
 }
 
-function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary>): Vocabulary {
+function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary|string[]>): Vocabulary {
     switch (action.type) {
         case ActionType.LOAD_VOCABULARY:
-            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload as Vocabulary : state;
+        case ActionType.LOAD_VOCABULARY_IMPORTS:
+            return action.status === AsyncActionStatus.SUCCESS ? new Vocabulary(Object.assign(state, {allImportedVocabularies: action.payload as string[]})) : state;
         case ActionType.LOGOUT:
             return EMPTY_VOCABULARY;
         default:
