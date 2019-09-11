@@ -62,14 +62,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                 </Col>
             </Row>
             {this.renderParentTerms()}
-            <Row>
-                <Col xl={2} md={4}>
-                    <Label className="attribute-label">{i18n("term.metadata.subTerms")}</Label>
-                </Col>
-                <Col xl={10} md={8}>
-                    {this.renderSubTerms()}
-                </Col>
-            </Row>
+            {this.renderSubTerms()}
             <Row>
                 <Col xl={2} md={4}>
                     <Label className="attribute-label">{i18n("term.metadata.comment")}</Label>
@@ -116,6 +109,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         if (parents.length === 0) {
             return null;
         }
+        parents.sort(Utils.labelComparator);
         return <Row>
             <Col xl={2} md={4}>
                 <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
@@ -135,10 +129,18 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         if (source.length === 0) {
             return null;
         }
-        return <ul id="term-metadata-subterms" className="term-items">{source.map(item => <li key={item.iri}>
-            <TermLink term={item}/>
-        </li>)}
-        </ul>;
+        source.sort(Utils.labelComparator);
+        return <Row>
+            <Col xl={2} md={4}>
+                <Label className="attribute-label">{this.props.i18n("term.metadata.subTerms")}</Label>
+            </Col>
+            <Col xl={10} md={8}>
+                <ul id="term-metadata-subterms" className="term-items">{source.map(item => <li key={item.iri}>
+                    <TermLink term={item}/>
+                </li>)}
+                </ul>
+            </Col>
+        </Row>;
     }
 
     private renderTypes() {

@@ -164,7 +164,7 @@ export default {
      * @param a Reference asset
      * @param b Asset to compare it to
      */
-    labelComparator(a: Asset, b: Asset) {
+    labelComparator<T extends {label: string}>(a: T, b: T) {
         return a.label.localeCompare(b.label);
     },
 
