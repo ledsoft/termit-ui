@@ -1,9 +1,13 @@
 import * as React from "react";
 import {Link} from "react-router-dom";
-import Asset from "../../model/Asset";
 import OutgoingLink from "./OutgoingLink";
 
-interface AssetLinkProps<T extends Asset> {
+interface AssetType {
+    iri: string;
+    label: string;
+}
+
+interface AssetLinkProps<T extends AssetType> {
     asset: T;
     path: string;
     tooltip?: string;
@@ -14,7 +18,7 @@ interface AssetLinkState {
     showLink: boolean;
 }
 
-export default class AssetLink<T extends Asset> extends React.Component<AssetLinkProps<T>, AssetLinkState> {
+export default class AssetLink<T extends AssetType> extends React.Component<AssetLinkProps<T>, AssetLinkState> {
 
     constructor(props: AssetLinkProps<T>) {
         super(props);
@@ -38,8 +42,8 @@ export default class AssetLink<T extends Asset> extends React.Component<AssetLin
             onMouseOut={setInvisible}
             onMouseOver={setVisible}>
             <OutgoingLink label={<Link id={this.props.id}
-                title={this.props.tooltip ? this.props.tooltip : undefined}
-                to={props.path}>
+                                       title={this.props.tooltip ? this.props.tooltip : undefined}
+                                       to={props.path}>
                 {props.asset.label}</Link>}
                           iri={props.asset.iri}
                           showLink={this.state.showLink}

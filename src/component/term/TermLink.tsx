@@ -1,6 +1,6 @@
 import * as React from "react";
 import AssetLink from "../misc/AssetLink";
-import Term from "../../model/Term";
+import Term, {TermInfo} from "../../model/Term";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {injectIntl} from "react-intl";
@@ -9,7 +9,7 @@ import Routes from "../../util/Routes";
 import OutgoingLink from "../misc/OutgoingLink";
 
 interface TermLinkProps extends HasI18n {
-    term: Term;
+    term: Term | TermInfo;
     id?: string;
 }
 

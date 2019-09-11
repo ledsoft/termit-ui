@@ -26,7 +26,7 @@ import NotificationType from "../../model/NotificationType";
 import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
 import IncludeImportedTermsToggle from "./IncludeImportedTermsToggle";
 
-function filterTermsOutsideVocabularyImportChain(terms: Term[], vocabularies: string[]) {
+export function filterTermsOutsideVocabularyImportChain(terms: Term[], vocabularies: string[]) {
     const result: Term[] = [];
     for (const t of terms) {
         if (vocabularies.indexOf(t.vocabulary!.iri!) === -1) {

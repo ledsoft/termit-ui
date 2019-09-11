@@ -19,13 +19,11 @@ import VocabularyIriLink from "../vocabulary/VocabularyIriLink";
 
 interface TermMetadataProps extends HasI18n {
     term: Term;
-    loadSubTerms: (term: Term, vocabularyIri: IRI) => Promise<Term[]>;
 }
 
 interface TermMetadataState {
     activeTab: string;
     assignmentsCount: number | null;
-    subTerms: Term[];
 }
 
 export class TermMetadata extends React.Component<TermMetadataProps, TermMetadataState> {
@@ -34,28 +32,8 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         super(props);
         this.state = {
             activeTab: "properties.edit.title",
-            assignmentsCount: null,
-            subTerms: []
+            assignmentsCount: null
         };
-    }
-
-    public componentDidMount(): void {
-        this.loadSubTerms();
-    }
-
-    public componentDidUpdate(prevProps: Readonly<TermMetadataProps>): void {
-        if (prevProps.term.iri !== this.props.term.iri) {
-            this.loadSubTerms();
-        }
-    }
-
-    private loadSubTerms() {
-        const term = this.props.term;
-        if (!term.vocabulary) {
-            return;
-        }
-        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
-        this.props.loadSubTerms(term, vocabularyIri).then((data: Term[]) => this.setState({subTerms: data}));
     }
 
     private onTabSelect = (tabId: string) => {
@@ -156,7 +134,7 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     }
 
     private renderSubTerms() {
-        const source = Utils.sanitizeArray(this.state.subTerms);
+        const source = Utils.sanitizeArray(this.props.term.subTerms);
         if (source.length === 0) {
             return null;
         }
