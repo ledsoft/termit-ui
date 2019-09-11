@@ -26,6 +26,21 @@ import NotificationType from "../../model/NotificationType";
 import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
 import IncludeImportedTermsToggle from "./IncludeImportedTermsToggle";
 
+function filterTermsOutsideVocabularyImportChain(terms: Term[], vocabularies: string[]) {
+    const result: Term[] = [];
+    for (const t of terms) {
+        if (vocabularies.indexOf(t.vocabulary!.iri!) === -1) {
+            continue;
+        }
+        result.push(t);
+        if (t.subTerms) {
+            t.subTerms = t.subTerms.filter(st => vocabularies.indexOf(st.vocabulary.iri!) !== -1);
+            t.syncPlainSubTerms();
+        }
+    }
+    return result;
+}
+
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
     counter: number;
@@ -81,7 +96,10 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
             limit,
             offset,
             includeImported: this.state.includeImported
-        }, vocabularyIri);
+        }, vocabularyIri).then(options => {
+            const matchingVocabularies = Utils.sanitizeArray(this.props.vocabulary!.allImportedVocabularies).concat(this.props.vocabulary!.iri);
+            return filterTermsOutsideVocabularyImportChain(options, matchingVocabularies);
+        });
     };
 
     public onCreateClick = () => {
@@ -145,23 +163,23 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
                                                 includeImported={this.state.includeImported}/>
                 </div>
                 <div id="glossary-list">
-                <IntelligentTreeSelect className={"p-0"}
-                                       ref={this.treeComponent}
-                                       onChange={this.onTermSelect}
-                                       value={this.props.selectedTerms ? this.props.selectedTerms.iri : null}
-                                       fetchOptions={this.fetchOptions}
-                                       valueKey={"iri"}
-                                       labelKey={"label"}
-                                       childrenKey={"plainSubTerms"}
-                                       simpleTreeData={true}
-                                       isMenuOpen={true}
-                                       multi={false}
-                                       showSettings={false}
-                                       maxHeight={Utils.calculateAssetListHeight()}
-                                       placeholder={i18n("glossary.select.placeholder")}
-                                       optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabulary.iri)}
-                                       valueRenderer={Utils.labelValueRenderer}
-                />
+                    <IntelligentTreeSelect className={"p-0"}
+                                           ref={this.treeComponent}
+                                           onChange={this.onTermSelect}
+                                           value={this.props.selectedTerms ? this.props.selectedTerms.iri : null}
+                                           fetchOptions={this.fetchOptions}
+                                           valueKey={"iri"}
+                                           labelKey={"label"}
+                                           childrenKey={"plainSubTerms"}
+                                           simpleTreeData={true}
+                                           isMenuOpen={true}
+                                           multi={false}
+                                           showSettings={false}
+                                           maxHeight={Utils.calculateAssetListHeight()}
+                                           placeholder={i18n("glossary.select.placeholder")}
+                                           optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabulary.iri)}
+                                           valueRenderer={Utils.labelValueRenderer}
+                    />
                 </div>
             </CardBody>
         </Card>;

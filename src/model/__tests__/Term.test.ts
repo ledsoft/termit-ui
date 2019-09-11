@@ -79,6 +79,13 @@ describe("Term tests", () => {
             const result = new Term(termData);
             expect(result.parent).toEqual(termData.parentTerms[1].iri);
         });
+
+        it("sanitizes subTerms to an array in case it is a singular object", () => {
+            const subTerm = {iri: Generator.generateUri(), label: "test", vocabulary: {iri: Generator.generateUri()}};
+            Object.assign(termData, {subTerms: subTerm});
+            const result = new Term(termData);
+            expect(result.subTerms).toEqual([subTerm]);
+        });
     });
 
     it("adds term type in constructor when it is missing in specified data", () => {
@@ -151,17 +158,41 @@ describe("Term tests", () => {
         });
     });
 
-    describe("toJsonLd", () => {
-        it("breaks possible circular dependencies by ensuring subTerms are always only references to objects", () => {
-            const sut = new Term(termData);
-            const parent = new Term({
+    describe("syncPlainSubTerms", () => {
+        it("synchronizes plainSubTerms with current subTerms value", () => {
+            const origSubTerms = [{
                 iri: Generator.generateUri(),
-                label: "Parent",
-                subTerms: [sut]
+                label: "test one",
+                vocabulary: {iri: Generator.generateUri()}
+            }, {
+                iri: Generator.generateUri(),
+                label: "test two",
+                vocabulary: {iri: Generator.generateUri()}
+            }];
+            termData.subTerms = origSubTerms;
+            const sut = new Term(termData);
+            expect(sut.plainSubTerms).toEqual(origSubTerms.map(ti => ti.iri));
+            const newSubTerms = origSubTerms.slice();
+            newSubTerms.splice(newSubTerms.length - 1, 1);
+            newSubTerms.push({
+                iri: Generator.generateUri(),
+                label: "test three",
+                vocabulary: {iri: Generator.generateUri()}
             });
-            sut.parentTerms = [parent];
-            const result = sut.toJsonLd();
-            expect(result.parentTerms![0].subTerms).toEqual([{iri: sut.iri}]);
+            sut.subTerms = newSubTerms;
+            sut.syncPlainSubTerms();
+            expect(sut.plainSubTerms).toEqual(newSubTerms.map(ti => ti.iri));
         });
+    });
+
+    it("is invoked by constructor", () => {
+        const origSubTerms = [{
+            iri: Generator.generateUri(),
+            label: "test one",
+            vocabulary: {iri: Generator.generateUri()}
+        }];
+        termData.subTerms = origSubTerms;
+        const sut = new Term(termData);
+        expect(sut.plainSubTerms).toEqual(origSubTerms.map(ti => ti.iri));
     });
 });

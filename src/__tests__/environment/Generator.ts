@@ -46,6 +46,10 @@ export default class Generator {
         return arr;
     }
 
+    public static randomItem<T>(arr: T[]): T {
+        return arr[Generator.randomInt(0, arr.length)];
+    }
+
     public static generateTerm(vocabularyIri?: string) {
         return new Term({
             iri: Generator.generateUri(),

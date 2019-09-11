@@ -22,7 +22,7 @@ const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "definition", 
 export interface TermData extends AssetData, HasProvenanceData {
     label: string;
     definition?: string;
-    subTerms?: AssetData[];
+    subTerms?: TermInfo[];
     sources?: string[];
     // Represents proper parent Term, stripped of broader terms representing other model relationships
     parentTerms?: TermData[];
@@ -31,9 +31,15 @@ export interface TermData extends AssetData, HasProvenanceData {
     vocabulary?: AssetData;
 }
 
+export interface TermInfo {
+    iri: string;
+    label: string;
+    vocabulary: AssetData;
+}
+
 export default class Term extends Asset implements TermData {
     public definition?: string;
-    public subTerms?: AssetData[];
+    public subTerms?: TermInfo[];
     public parentTerms?: Term[];
     public readonly parent?: string;
     public sources?: string[];
@@ -48,14 +54,15 @@ export default class Term extends Asset implements TermData {
         if (this.types.indexOf(VocabularyUtils.TERM) === -1) {
             this.types.push(VocabularyUtils.TERM);
         }
-        if (this.subTerms) {
-            this.subTerms = Utils.sanitizeArray(this.subTerms);
-            this.plainSubTerms = this.subTerms.map(st => st.iri!);
-        }
         if (this.parentTerms) {
             this.parentTerms = Utils.sanitizeArray(this.parentTerms).map(pt => new Term(pt));
             this.parent = this.resolveParent(this.parentTerms);
         }
+        if (this.subTerms) {
+            // jsonld replaces single-element arrays with singular elements, which we don't want here
+            this.subTerms = Utils.sanitizeArray(this.subTerms);
+        }
+        this.syncPlainSubTerms();
     }
 
     private resolveParent(parents: Term[]) {
@@ -66,16 +73,23 @@ export default class Term extends Asset implements TermData {
         return undefined;
     }
 
+    /**
+     * Synchronizes the value of plainSubTerms with subTerms.
+     */
+    public syncPlainSubTerms() {
+        if (this.subTerms) {
+            this.plainSubTerms = Utils.sanitizeArray(this.subTerms).map(st => st.iri);
+        } else {
+            this.plainSubTerms = undefined;
+        }
+    }
+
     public toTermData(): TermData {
         const result: any = Object.assign({}, this);
         if (result.parentTerms) {
             result.parentTerms = result.parentTerms.map((pt: Term) => pt.toTermData());
         }
-        if (result.subTerms) {
-            // Prevent circular references possibly introduced by resolving references when deserializing JSON-LD on
-            // load
-            result.subTerms = Utils.sanitizeArray(result.subTerms).map((st: AssetData) => ({iri: st.iri}));
-        }
+        delete result.subTerms; // Sub-terms are inferred and inconsequential for data upload to server
         delete result.plainSubTerms;
         delete result.parent;
         return result;
