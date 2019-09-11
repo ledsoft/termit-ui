@@ -27,17 +27,13 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
 import {RouteComponentProps, withRouter} from "react-router";
-import FetchOptionsFunction from "../../model/Functions";
 import Ajax, {params} from "../../util/Ajax";
 import Constants from "../../util/Constants";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
-import {loadTerms} from "../../action/AsyncActions";
-import {ThunkDispatch} from "../../util/Types";
 import IntlData from "../../model/IntlData";
 import Utils from "../../util/Utils";
-import {IRI} from "../../util/VocabularyUtils";
 import TextArea from "../misc/TextArea";
 import ParentTermSelector from "./ParentTermSelector";
 
@@ -124,10 +120,6 @@ interface TermMetadataCreateStoreProps {
     intl: IntlData;
 }
 
-interface TermMetadataCreateDispatchProps {
-    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => void;
-}
-
 interface TermMetadataCreateOwnProps {
     onCreate: (term: Term, normalizedName: string) => void;
     vocabularyIri: string;
@@ -136,7 +128,6 @@ interface TermMetadataCreateOwnProps {
 declare type TermMetadataCreateProps =
     TermMetadataCreateOwnProps
     & TermMetadataCreateStoreProps
-    & TermMetadataCreateDispatchProps
     & HasI18n
     & RouteComponentProps<any>;
 
@@ -363,7 +354,8 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
 
                         <Row>
                             <Col xl={6} md={12}>
-                                <ParentTermSelector id="create-term-parent" onChange={this.onParentSelect} parentTerms={this.state.parents}
+                                <ParentTermSelector id="create-term-parent" onChange={this.onParentSelect}
+                                                    parentTerms={this.state.parents}
                                                     vocabularyIri={this.props.vocabularyIri}/>
                             </Col>
                         </Row>
@@ -392,14 +384,10 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
 
 }
 
-export default connect<TermMetadataCreateStoreProps, TermMetadataCreateDispatchProps, TermMetadataCreateOwnProps>((state: TermItState) => {
+export default connect<TermMetadataCreateStoreProps, undefined, TermMetadataCreateOwnProps>((state: TermItState) => {
     return {
         intl: state.intl,
         types: state.types,
         lang: state.intl.locale
-    };
-}, (dispatch: ThunkDispatch) => {
-    return {
-        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri))
     };
 })(withRouter(injectIntl(withI18n(TermMetadataCreate))));

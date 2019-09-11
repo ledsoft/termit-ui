@@ -11,13 +11,14 @@ import {
     loadTerms,
     saveFileContent
 } from "../../action/AsyncActions";
-import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
+import VocabularyUtils, {IRI, IRIImpl} from "../../util/VocabularyUtils";
 import IntlData from "../../model/IntlData";
 import {ThunkDispatch} from "../../util/Types";
 import {Annotator} from "../annotator/Annotator";
 import Term from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
 import IdentifierResolver from "../../util/IdentifierResolver";
+import {filterTermsOutsideVocabularyImportChain} from "../term/Terms";
 
 
 interface FileDetailProvidedProps {
@@ -51,7 +52,7 @@ export class FileDetail extends React.Component<FileDetailProps, FileDetailState
 
     constructor(props: FileDetailProps) {
         super(props);
-        this.state = { fileContentId: 1};
+        this.state = {fileContentId: 1};
     }
 
     private loadFileContentData = (): void => {
@@ -81,7 +82,7 @@ export class FileDetail extends React.Component<FileDetailProps, FileDetailState
             this.loadFileContentData();
         }
         if (prevProps.fileContent !== this.props.fileContent) {
-            this.setState({fileContentId: this.state.fileContentId+1});
+            this.setState({fileContentId: this.state.fileContentId + 1});
         }
         this.initializeTermFetching();
     }
@@ -101,7 +102,7 @@ export class FileDetail extends React.Component<FileDetailProps, FileDetailState
         if (!this.lastExecutedPromise) {
             this.lastExecutedPromise = this.props.fetchTerms({}, this.props.vocabularyIri)
                 .then((terms: Term[]) => {
-                    this.updateTerms(terms);
+                    this.updateTerms(filterTermsOutsideVocabularyImportChain(terms, [IRIImpl.toString(this.props.vocabularyIri)]));
                 }, (d) => d);
         }
     };

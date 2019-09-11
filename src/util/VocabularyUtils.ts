@@ -17,7 +17,7 @@ export class IRIImpl implements IRI {
     }
 
     public toString(): string {
-        return (this.namespace ? this.namespace : "") + this.fragment;
+        return IRIImpl.toString(this);
     }
 
     public equals(other?: IRI | null): boolean {
@@ -26,6 +26,10 @@ export class IRIImpl implements IRI {
 
     public static create(iri: IRI): IRIImpl {
         return new IRIImpl(iri.fragment, iri.namespace);
+    }
+
+    public static toString(iri: IRI): string {
+        return (iri.namespace ? iri.namespace : "") + iri.fragment;
     }
 }
 

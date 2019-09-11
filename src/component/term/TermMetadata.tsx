@@ -5,16 +5,13 @@ import {Col, Label, Row} from "reactstrap";
 import Term from "../../model/Term";
 import OutgoingLink from "../misc/OutgoingLink";
 import "./TermMetadata.scss";
-import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
+import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import AssetLabel from "../misc/AssetLabel";
 import TermAssignments from "./TermAssignments";
 import Tabs from "../misc/Tabs";
 import TermLink from "./TermLink";
-import {connect} from "react-redux";
-import {ThunkDispatch} from "../../util/Types";
-import {loadTerms} from "../../action/AsyncActions";
 import VocabularyIriLink from "../vocabulary/VocabularyIriLink";
 
 interface TermMetadataProps extends HasI18n {
@@ -162,8 +159,4 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     }
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch) => {
-    return {
-        loadSubTerms: (term: Term, vocabularyIri: IRI) => dispatch(loadTerms({optionID: term.iri}, vocabularyIri))
-    };
-})(injectIntl(withI18n(TermMetadata)));
+export default injectIntl(withI18n(TermMetadata));

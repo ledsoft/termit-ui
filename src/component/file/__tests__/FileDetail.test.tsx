@@ -9,11 +9,12 @@ import FetchOptionsFunction from "../../../model/Functions";
 import Term from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
 
-function generateTerm(i: number): Term {
+function generateTerm(i: number, vocabularyIri?: string): Term {
     return new Term({
         iri: "http://example.org/term" + i,
         label: "test term " + i,
         types: ["http://example.org/type" + i, OntologicalVocabulary.TERM],
+        vocabulary: vocabularyIri ? {iri: vocabularyIri} : undefined
     });
 }
 
@@ -99,7 +100,7 @@ describe("FileDetail", () => {
     });
 
     it("onFetchTerm returns cached root term", async () => {
-        const terms: Term[] = [0, 1, 2, 3].map(i => generateTerm(i));
+        const terms: Term[] = [0, 1, 2, 3].map(i => generateTerm(i, vocabularyIri.toString()));
         mockedFunctionLikeProps.fetchTerms = jest.fn(() => Promise.resolve(terms));
 
         const wrapper = shallow<FileDetail>(<FileDetail

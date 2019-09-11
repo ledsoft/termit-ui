@@ -14,12 +14,13 @@ import FetchOptionsFunction from "../../model/Functions";
 import Term, {TermData} from "../../model/Term";
 import {loadTerms} from "../../action/AsyncActions";
 import {ThunkDispatch} from "../../util/Types";
-import Vocabulary2, {IRI} from "../../util/VocabularyUtils";
+import Vocabulary2 from "../../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import {GoPlus} from "react-icons/go";
 import Routes from "../../util/Routes";
 import Routing from "../../util/Routing";
-import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
+import {filterTermsOutsideVocabularyImportChain} from "../term/Terms";
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
@@ -55,7 +56,10 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
             optionID,
             limit,
             offset
-        }, Vocabulary2.create(this.props.vocabulary!.iri));
+        }, Vocabulary2.create(this.props.vocabulary!.iri)).then(terms => {
+            const matchingVocabularies = Utils.sanitizeArray(this.props.vocabulary!.allImportedVocabularies).concat(this.props.vocabulary!.iri);
+            return filterTermsOutsideVocabularyImportChain(terms, matchingVocabularies);
+        });
     };
 
     private handleCreateClick = () => {
@@ -88,18 +92,11 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
             const clone = new Term(cloneData);
             this.props.selectVocabularyTerm(clone);
             this.props.onChange(clone);
-            // const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
-            // Routing.transitionTo(Routes.vocabularyTermDetail,
-            //     {
-            //         params: new Map([['name', this.props.match.params.name], ['termName',
-            // VocabularyUtils.getFragment(clone.iri)]]), query: namespace ? new Map([["namespace", namespace]]) :
-            // undefined });
         }
     };
 
     public render() {
         const i18n = this.props.i18n;
-        const actions = [];
         const component = <IntelligentTreeSelect
             className={"p-0"}
             onChange={this.handleChange}
@@ -115,23 +112,15 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
             valueRenderer={Utils.labelValueRenderer}
         />;
 
-        actions.push(
-            <Button key="glossary.createTerm"
-                    color="primary"
-                    title={i18n("glossary.createTerm.tooltip")}
-                    size="sm"
-                    onClick={this.handleCreateClick}><GoPlus/></Button>);
-
-        // return (<PanelWithActions
-        //     title={i18n('glossary.title')}
-        //     className={"p-0"}
-        //     component={component}
-        //     actions={actions}
-        // />);
-        return (<FormGroup>
-            <div><Label className="attribute-label">{"Term:"}</Label> {actions[0]} </div>
+        return <FormGroup>
+            <div>
+                <Label className="attribute-label">{i18n("type.term") + ":"}</Label>
+                <Button key="annotator.createTerm" color="primary"
+                        title={i18n("glossary.createTerm.tooltip")}
+                        size="sm" onClick={this.handleCreateClick}><GoPlus/></Button>
+            </div>
             {component}
-        </FormGroup>);
+        </FormGroup>;
     }
 }
 
