@@ -221,6 +221,22 @@ describe("Async actions", () => {
                 expect(loadImportsAction).toBeDefined();
             });
         });
+
+        it("passes loaded vocabulary imports to store", () => {
+            const imports = [Generator.generateUri(), Generator.generateUri()];
+            Ajax.get = jest.fn().mockImplementation((url) => {
+                if (url.endsWith("/imports")) {
+                    return Promise.resolve(imports);
+                } else {
+                    return Promise.resolve(require("../../rest-mock/vocabulary"));
+                }
+            });
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadVocabulary({fragment: "metropolitan-plan"}))).then(() => {
+                const loadImportsSuccessAction = store.getActions().find(a => a.type === ActionType.LOAD_VOCABULARY_IMPORTS && a.status === AsyncActionStatus.SUCCESS);
+                expect(loadImportsSuccessAction).toBeDefined();
+                expect(loadImportsSuccessAction.payload).toEqual(imports);
+            });
+        });
     });
 
     describe("load vocabularies", () => {
@@ -1313,14 +1329,20 @@ describe("Async actions", () => {
             });
         });
 
-        it("passes loaded imports to store", () => {
+        it("returns loaded imports", () => {
             const imports = [Generator.generateUri(), Generator.generateUri()];
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(imports));
             const iri = VocabularyUtils.create(Generator.generateUri());
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadImportedVocabularies(iri))).then(() => {
-                const loaded = store.getActions().find(a => a.type === ActionType.LOAD_VOCABULARY_IMPORTS && a.status === AsyncActionStatus.SUCCESS);
-                expect(loaded).toBeDefined();
-                expect(loaded.payload).toEqual(imports);
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadImportedVocabularies(iri))).then((result) => {
+                expect(result).toEqual(imports);
+            });
+        });
+
+        it("returns empty array on error on request error", () => {
+            Ajax.get = jest.fn().mockImplementation(() => Promise.reject({}));
+            const iri = VocabularyUtils.create(Generator.generateUri());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadImportedVocabularies(iri))).then((result) => {
+                expect(result).toEqual([]);
             });
         });
     });

@@ -200,7 +200,7 @@ export function loadVocabulary(iri: IRI) {
             .get(Constants.API_PREFIX + "/vocabularies/" + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, VOCABULARY_CONTEXT))
             .then((data: VocabularyData) => {
-                dispatch(loadImportedVocabularies(iri));
+                dispatch(loadImportedVocabulariesIntoState(iri));
                 return dispatch(asyncActionSuccessWithPayload(action, new Vocabulary(data)));
             })
             .catch((error: ErrorData) => {
@@ -208,6 +208,21 @@ export function loadVocabulary(iri: IRI) {
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
+}
+
+function loadImportedVocabulariesIntoState(vocabularyIri: IRI) {
+    const action = {
+        type: ActionType.LOAD_VOCABULARY_IMPORTS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/imports", param("namespace", vocabularyIri.namespace))
+            .then(data => dispatch(asyncActionSuccessWithPayload(action, data)))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    }
 }
 
 /**
@@ -220,10 +235,14 @@ export function loadImportedVocabularies(vocabularyIri: IRI) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/imports", param("namespace", vocabularyIri.namespace))
-            .then((data: string[]) => dispatch(asyncActionSuccessWithPayload(action, data)))
+            .then(data => {
+                dispatch(asyncActionSuccess(action));
+                return data;
+            })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return [];
             });
     }
 }

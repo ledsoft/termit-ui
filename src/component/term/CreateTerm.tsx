@@ -9,10 +9,10 @@ import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
 import IdentifierResolver from "../../util/IdentifierResolver";
 import TermItState from "../../model/TermItState";
-import Vocabulary from "../../model/Vocabulary";
+import Vocabulary, {EMPTY_VOCABULARY} from "../../model/Vocabulary";
 
 interface CreateTermProps {
-    vocabulary: Vocabulary
+    vocabulary: Vocabulary;
     createTerm: (term: Term, vocabularyIri: IRI) => Promise<string>;
 }
 
@@ -33,7 +33,8 @@ export class CreateTerm extends React.Component<CreateTermProps> {
     };
 
     public render() {
-        return <TermMetadataCreate onCreate={this.onCreate} vocabularyIri={this.props.vocabulary.iri}/>;
+        return this.props.vocabulary !== EMPTY_VOCABULARY ?
+            <TermMetadataCreate onCreate={this.onCreate} vocabularyIri={this.props.vocabulary.iri}/> : null;
     }
 }
 

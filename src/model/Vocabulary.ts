@@ -45,7 +45,9 @@ export default class Vocabulary extends Asset implements VocabularyData {
     }
 
     public toJsonLd(): VocabularyData {
-        return Object.assign({}, this, {"@context": CONTEXT});
+        const result = Object.assign({}, this, {"@context": CONTEXT});
+        delete result.allImportedVocabularies;
+        return result;
     }
 
     public get unmappedProperties(): Map<string, string[]> {

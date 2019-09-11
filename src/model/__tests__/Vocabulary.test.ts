@@ -49,10 +49,10 @@ describe("Vocabulary", () => {
         });
     });
 
-    describe('get unmappedProperties', () => {
-        it('returns map of unmapped properties with values in vocabulary', () => {
-            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
-            const value = 'value]';
+    describe("get unmappedProperties", () => {
+        it("returns map of unmapped properties with values in vocabulary", () => {
+            const extraProperty = "http://onto.fel.cvut.cz/ontologies/termit/extra-one";
+            const value = "value]";
             data[extraProperty] = value;
             const testVocabulary = new Vocabulary(data);
             const result = testVocabulary.unmappedProperties;
@@ -61,9 +61,9 @@ describe("Vocabulary", () => {
             expect(result.size).toEqual(1);
         });
 
-        it('returns map of unmapped properties with values containing multiple values per property', () => {
-            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
-            const values = ['v1', 'v2', 'v3'];
+        it("returns map of unmapped properties with values containing multiple values per property", () => {
+            const extraProperty = "http://onto.fel.cvut.cz/ontologies/termit/extra-one";
+            const values = ["v1", "v2", "v3"];
             data[extraProperty] = values;
             const testVocabulary = new Vocabulary(data);
             const result = testVocabulary.unmappedProperties;
@@ -72,25 +72,25 @@ describe("Vocabulary", () => {
         });
     });
 
-    describe('set unmappedProperties', () => {
+    describe("set unmappedProperties", () => {
 
 
-        it('merges specified properties into the object state', () => {
+        it("merges specified properties into the object state", () => {
             const testVocabulary = new Vocabulary(data);
             const unmappedProps = new Map<string, string[]>();
-            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
-            const value = ['1', '2'];
+            const extraProperty = "http://onto.fel.cvut.cz/ontologies/termit/extra-one";
+            const value = ["1", "2"];
             unmappedProps.set(extraProperty, value);
             testVocabulary.unmappedProperties = unmappedProps;
             expect(testVocabulary[extraProperty]).toBeDefined();
             expect(testVocabulary[extraProperty]).toEqual(value);
         });
 
-        it('is symmetric to getter', () => {
+        it("is symmetric to getter", () => {
             const testVocabulary = new Vocabulary(data);
             const unmappedProps = new Map<string, string[]>();
-            const extraProperty = 'http://onto.fel.cvut.cz/ontologies/termit/extra-one';
-            const value = ['1', '2'];
+            const extraProperty = "http://onto.fel.cvut.cz/ontologies/termit/extra-one";
+            const value = ["1", "2"];
             unmappedProps.set(extraProperty, value);
             testVocabulary.unmappedProperties = unmappedProps;
             expect(testVocabulary.unmappedProperties).toEqual(unmappedProps);
@@ -121,6 +121,13 @@ describe("Vocabulary", () => {
             const testVocabulary = new Vocabulary(data);
             const jsonLd = testVocabulary.toJsonLd();
             expect(jsonLd.author).toEqual(data.author);
+        });
+
+        it("removes allImportedVocabularies attribute", () => {
+            const sut = new Vocabulary(data);
+            sut.allImportedVocabularies = [Generator.generateUri()];
+            const jsonLd: any = sut.toJsonLd();
+            expect(jsonLd.allImportedVocabularies).not.toBeDefined();
         });
     });
 });
