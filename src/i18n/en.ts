@@ -181,7 +181,7 @@ export default {
         "glossary.select.placeholder": "Select term",
         "glossary.excludeImported": "Without imported",
         "glossary.excludeImported.help": "Show only terms from this vocabulary",
-        "glossary.includeImported": "Include imported",
+        "glossary.includeImported": "Include imported vocabularies",
         "glossary.includeImported.help": "Show including terms from imported vocabularies",
         "glossary.importedTerm.tooltip": "Term belongs to an imported vocabulary",
         'glossary.createTerm': 'Create new term',
