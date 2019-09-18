@@ -140,6 +140,14 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
         this.setState({includeImported: !this.state.includeImported}, () => this.treeComponent.current.resetOptions());
     };
 
+    private renderIncludeImported() {
+        return (this.props.vocabulary && this.props.vocabulary.importedVocabularies)?
+             <div className="mb-1 mt-1 ml-1">
+                <label className="option-label">{this.props.i18n("glossary.includeImported")}</label>
+                <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
+                                            includeImported={this.state.includeImported}/>
+            </div> : null;
+    }
     public render() {
         if (!this.props.vocabulary) {
             return null;
@@ -158,10 +166,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
                 </div>
             </CardHeader>
             <CardBody className="p-0">
-                <div className="mb-1 mt-1 ml-1">
-                    <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
-                                                includeImported={this.state.includeImported}/>
-                </div>
+                {this.renderIncludeImported()}
                 <div id="glossary-list">
                     <IntelligentTreeSelect className={"p-0"}
                                            ref={this.treeComponent}

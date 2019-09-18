@@ -18,7 +18,6 @@ const IncludeImportedTermsToggle: React.FC<IncludeImportedTermsToggleProps> = pr
         toggleStyle = Object.assign(toggleStyle, props.style);
     }
     return <>
-        <label className="option-label">{props.i18n("glossary.includeImported")}</label>
         <Toggle id={props.id} onClick={props.onToggle}
                 onstyle="primary"
                 offstyle="secondary"
