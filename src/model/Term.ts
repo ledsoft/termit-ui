@@ -56,6 +56,7 @@ export default class Term extends Asset implements TermData {
         }
         if (this.parentTerms) {
             this.parentTerms = Utils.sanitizeArray(this.parentTerms).map(pt => new Term(pt));
+            this.parentTerms.sort(Utils.labelComparator);
             this.parent = this.resolveParent(this.parentTerms);
         }
         if (this.subTerms) {
