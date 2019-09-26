@@ -21,6 +21,7 @@ describe("AssetLabel", () => {
         getLabel = jest.fn().mockImplementation(() => Promise.resolve(label));
         const wrapper = mount(<AssetLabel iri={iri} getLabel={getLabel}/>);
         return Promise.resolve().then(() => {
+            wrapper.update();
             expect(wrapper.text()).toEqual(label);
         });
     });
