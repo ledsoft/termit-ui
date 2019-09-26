@@ -90,9 +90,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                                 <ButtonToolbar>
                                     <Button id="login-submit" color="success" onClick={this.login}
                                             disabled={this.props.loading || !this.isValid()}>{i18n("login.submit")}</Button>
-                                    <Button id="login-register" color="link" onClick={this.register}
-                                            className="register-link"
-                                            disabled={this.props.loading}>{i18n("login.register")}</Button>
+                                    {this.renderRegistrationLink()}
                                 </ButtonToolbar>
                             </Col>
                         </Row>
@@ -114,6 +112,15 @@ export class Login extends React.Component<LoginProps, LoginState> {
         const error = this.state.error;
         const messageId = error.messageId ? error.messageId : "login.error";
         return <Alert color="danger">{this.props.i18n(messageId)}</Alert>;
+    }
+
+    private renderRegistrationLink() {
+        if (process.env.REACT_APP_ADMIN_REGISTRATION_ONLY === true.toString()) {
+            return null;
+        }
+        return <Button id="login-register" color="link" onClick={this.register}
+                       className="register-link"
+                       disabled={this.props.loading}>{this.props.i18n("login.register")}</Button>;
     }
 }
 
