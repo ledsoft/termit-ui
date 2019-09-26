@@ -93,5 +93,5 @@ there is the `_custom.scss` file in `src`. This file allows to override default 
 
 ## Documentation
 
-Build configuration and deployment is described in [setup.md](setup.md).
+Further documentation is in the [doc folder](doc/index.md).
 
