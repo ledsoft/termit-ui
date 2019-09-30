@@ -12,7 +12,21 @@
   },
   "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument": {
     "@id": "http://onto.fel.cvut.cz/ontologies/termit/document/metropolitan-plan",
-    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/dokument"
+    "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/dokument",
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-soubor": [
+      {
+        "@id": "http://onto.fel.cvut.cz/ontologies/termit/file/instance12345",
+        "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor",
+        "http://www.w3.org/2000/01/rdf-schema#label": "metropolitan-plan-p1.html",
+        "http://www.w3.org/2000/01/rdf-schema#comment": "První část metropolitního plánu"
+      },
+      {
+        "@id": "http://onto.fel.cvut.cz/ontologies/termit/file/instance54321",
+        "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor",
+        "http://www.w3.org/2000/01/rdf-schema#label": "metropolitan-plan-p2.html",
+        "http://www.w3.org/2000/01/rdf-schema#comment": "Druhá část metropolitního plánu"
+      }
+      ]
   },
   "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-autora": {
     "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",

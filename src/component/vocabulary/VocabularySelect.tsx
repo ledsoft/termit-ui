@@ -1,13 +1,12 @@
 import * as React from "react";
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
+import {DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
 import Vocabulary from "../../model/Vocabulary";
 import TermItState from "../../model/TermItState";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {loadVocabularies} from "../../action/AsyncActions";
-import {HasI18n} from "../hoc/withI18n";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 import {injectIntl} from "react-intl";
-import withI18n from "../hoc/withI18n";
 
 interface PropsExt {
     vocabulary: Vocabulary | null;
@@ -30,27 +29,14 @@ interface Props extends PropsExt, DispatchExt,
     PropsCon, HasI18n, DispatchCon {
 }
 
-interface State {
-    dropDownOpen: boolean;
-}
-
-export class VocabularySelect extends React.Component<Props, State> {
+export class VocabularySelect extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        this.state = {
-            dropDownOpen: false,
-        };
     }
 
     public componentDidMount() {
         this.props.loadVocabularies();
-    }
-
-    private toggle() {
-        this.setState(prevState => ({
-            dropDownOpen: !prevState.dropDownOpen
-        }));
     }
 
     private changeValue(vIri: string) {
@@ -67,18 +53,14 @@ export class VocabularySelect extends React.Component<Props, State> {
             }
         );
 
-        const toggle = this.toggle.bind(this);
-        return <Dropdown id={this.props.id} group={true}
-                         isOpen={this.state.dropDownOpen}
-                         size="sm"
-                         toggle={toggle}>
+        return <UncontrolledDropdown id={this.props.id} group={true} size="sm">
             <DropdownToggle caret={true}>
                 {this.props.vocabulary ? this.props.vocabulary.label : that.props.i18n("vocabulary.select-vocabulary")}
             </DropdownToggle>
             <DropdownMenu>
                 {items}
             </DropdownMenu>
-        </Dropdown>;
+        </UncontrolledDropdown>;
     }
 }
 

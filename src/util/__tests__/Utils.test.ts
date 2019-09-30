@@ -142,4 +142,26 @@ describe("Utils", () => {
             expect(Utils.getAssetTypeLabelId(resource)).not.toBeDefined();
         });
     });
+
+    describe("labelComparator", () => {
+        it("compares specified assets by label", () => {
+            const aOne = new Resource({iri: Generator.generateUri(), label: "B"});
+            const aTwo = new Resource({iri: Generator.generateUri(), label: "A"});
+            expect(Utils.labelComparator(aOne, aTwo)).toEqual(1);
+        });
+    });
+
+    describe("hashCode", () => {
+        it("calculates a hash of the specified string", () => {
+            const strOne = "test string one";
+            const strTwo = "test string two";
+            const resOne = Utils.hashCode(strOne);
+            const resTwo = Utils.hashCode(strTwo);
+            expect(resOne).not.toEqual(resTwo);
+        });
+
+        it("returns 0 for zero-length argument", () => {
+            expect(Utils.hashCode("")).toEqual(0);
+        });
+    });
 });

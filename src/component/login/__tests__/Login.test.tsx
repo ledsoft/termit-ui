@@ -4,7 +4,8 @@ import ErrorInfo from "../../../model/ErrorInfo";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import ActionType, {AsyncFailureAction, MessageAction} from "../../../action/ActionType";
 import {Alert} from "reactstrap";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {shallow} from "enzyme";
 
 jest.mock("../../../util/Routing");
 
@@ -16,9 +17,13 @@ describe("Login", () => {
         login = jest.fn().mockImplementation(() => Promise.resolve({}));
     });
 
+    afterEach(() => {
+        delete process.env.REACT_APP_ADMIN_REGISTRATION_ONLY;
+    });
+
     it("renders submit button disabled when either field is empty", () => {
         const wrapper = mountWithIntl(<Login loading={false} login={login} {...intlFunctions()}/>);
-        const button = wrapper.find("[color=\"success\"]");
+        const button = wrapper.find("button#login-submit");
         expect(button.getElement().props.disabled).toBeTruthy();
         const usernameInput = wrapper.find("input[name=\"username\"]");
         const passwordInput = wrapper.find("input[name=\"password\"]");
@@ -34,7 +39,7 @@ describe("Login", () => {
 
     it("enables submit button when both fields are non-empty", () => {
         const wrapper = mountWithIntl(<Login loading={false} login={login} {...intlFunctions()}/>);
-        const button = wrapper.find("[color=\"success\"]");
+        const button = wrapper.find("button#login-submit");
         expect(button.getElement().props.disabled).toBeTruthy();
         const usernameInput = wrapper.find("input[name=\"username\"]");
         const passwordInput = wrapper.find("input[name=\"password\"]");
@@ -42,7 +47,7 @@ describe("Login", () => {
         usernameInput.simulate("change", usernameInput);
         (passwordInput.getDOMNode() as HTMLInputElement).value = "aaaa";
         passwordInput.simulate("change", passwordInput);
-        expect(wrapper.find("[color=\"success\"]").getElement().props.disabled).toBeFalsy();
+        expect(wrapper.find("button#login-submit").getElement().props.disabled).toBeFalsy();
     });
 
     it("invokes login when enter is pressed", () => {
@@ -69,8 +74,9 @@ describe("Login", () => {
 
     it("renders alert with error when error is set", () => {
         const error = new ErrorInfo(ActionType.LOGIN, {});
-        const wrapper = mountWithIntl(<Login loading={false} login={login} {...intlFunctions()}/>);
-        (wrapper.find(Login).instance() as Login).setState({error});
+        const wrapper = shallow<Login>(<Login loading={false}
+                                              login={login} {...intlFunctions()} {...intlDataForShallow()}/>);
+        wrapper.setState({error});
         wrapper.update();
         const alert = wrapper.find(Alert);
         expect(alert.exists()).toBeTruthy();
@@ -86,5 +92,18 @@ describe("Login", () => {
         usernameInput.simulate("change", usernameInput);
         wrapper.update();
         expect((wrapper.find(Login).instance() as Login).state.error).toBeNull();
+    });
+
+    it("renders registration link by default", () => {
+        const wrapper = shallow<Login>(<Login loading={false}
+                                              login={login} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(wrapper.exists("#login-register")).toBeTruthy();
+    });
+
+    it("does not render registration link when admin registration only is turned on", () => {
+        process.env.REACT_APP_ADMIN_REGISTRATION_ONLY = "true";
+        const wrapper = shallow<Login>(<Login loading={false}
+                                              login={login} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(wrapper.exists("#login-register")).toBeFalsy();
     });
 });

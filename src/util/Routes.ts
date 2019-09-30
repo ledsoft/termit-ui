@@ -8,7 +8,6 @@ export class Route {
         this.path = path;
     }
 
-    // TODO Possibly remove, as AssetLinks can be used directly
     public link(params?: object, query?: object): string {
         const path = params
             ? this.path.replace(/:([A-Za-z0-9]+)/g, (match, placeholder) => encodeURIComponent(params[placeholder] || placeholder))

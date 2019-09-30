@@ -13,6 +13,7 @@ export default {
         'optional': 'Nepovinné',
         'actions': 'Akce',
         'description': 'Popis',
+        'submit' : 'Předložit',
 
         'connection.error': 'Nepodařilo se navázat spojení se serverem.',
         'ajax.unparseable-error': 'Akce selhala. Server odpověděl neznámou chybou. Více informací lze nalézt v konzoli prohlížeče.',
@@ -111,6 +112,9 @@ export default {
         'vocabulary.detail.files': 'Soubory',
         'vocabulary.detail.files.file': 'Název souboru',
         'vocabulary.detail.noTermSelected': 'Vyberte pojem ve stromečku vlevo.',
+        "vocabulary.detail.imports": "Importuje",
+        "vocabulary.detail.imports.edit": "Importuje slovníky",
+        "vocabulary.detail.document": "Dokument",
 
         'vocabulary.term.created.message': 'Pojem úspěšně vytvořen.',
         'vocabulary.select-vocabulary': 'Vyber slovník',
@@ -123,6 +127,7 @@ export default {
 
         "resource.create.title": "Vytvořit zdroj",
         "resource.create.type": "Typ zdroje",
+        "resource.create.file.select.label": "Přetáhněte sem soubor myší, nebo klikněte pro výběr pomocí dialogu",
         "resource.management.empty": "Žádné zdroje nenalezeny. Vytvořte nějaký...",
         "resource.management.create.text": "Vytvořit",
         "resource.management.create.tooltip": "Vytvořit či zaregistrovat zdroj",
@@ -136,12 +141,20 @@ export default {
         "resource.metadata.terms.occurrences.suggested": "{count} - návrh",
         "resource.metadata.terms.occurrences.suggested.tooltip": "Výskyt navržen systémem",
         'resource.metadata-edit.terms': 'Související pojmy ze slovníku',
+        "resource.metadata.file.content": "Obsah",
+        "resource.metadata.file.content.view": "Zobrazit",
+        "resource.metadata.file.content.view.tooltip": "Zobrazit obsah souboru a anotovat ho",
+        "resource.metadata.file.content.download": "Stáhnout",
+        "resource.metadata.document.vocabulary": "Dokumentový slovník",
+        "resource.metadata.document.files.create.tooltip": "Přidat nový soubor do tohoto dokumentu",
+        "resource.metadata.document.files.create.dialog.title": "Nový soubor",
+        "resource.metadata.document.files.empty": "Žádné soubory nenalezeny. Vytvořte nějaký...",
 
-        'term.metadata.identifier': 'Identifikátor',
-        'term.metadata.label': 'Název',
+        "term.metadata.definition": "Definice",
         'term.metadata.comment': 'Komentář',
+        "term.metadata.parent": "Nadřazený pojem",
         'term.metadata.subTerms': 'Podřazené pojmy',
-        'term.metadata.types': 'Typy pojmu',
+        'term.metadata.types': 'Typ pojmu',
         'term.metadata.source': 'Zdroj pojmu',
         'term.updated.message': 'Pojem úspěšně aktualizován.',
         'term.metadata.labelExists.message': 'Pojem s názvem \'{label}\' již v tomto slovníku existuje',
@@ -162,8 +175,15 @@ export default {
         "term.metadata.assignments.suggestedOccurrence.help": "Navržený výskyt reprezentuje výskyt pojmu navržený systémem, např. na základě automatizované analýzy obsahu.",
         "term.metadata.assignments.count.tooltip": "Pojem se v tomto zdroji vyskytuje {count, plural, one {jednou} other {# -krát}}",
         "term.metadata.assignments.count.zero.tooltip": "Pojem se v tomto zdroji nevyskytuje",
+        "term.metadata.vocabulary.tooltip": "Slovník, do kterého tento pojem patří",
 
-        'glossary.title': 'Pojmy',
+        "glossary.title": "Pojmy",
+        "glossary.select.placeholder": "Vyberte pojem",
+        "glossary.excludeImported": "Bez importů",
+        "glossary.excludeImported.help": "Zobrazit pouze pojmy z tohoto slovníku",
+        "glossary.includeImported": "Včetně importů",
+        "glossary.includeImported.help": "Zobrazit včetně pojmů z importovaných slovníků",
+        "glossary.importedTerm.tooltip": "Pojem pochází z importovaného slovníku",
         'glossary.createTerm': 'Vytvořit nový pojem',
         'glossary.createTerm.tooltip': 'Vytvořit nový pojem ve slovníku',
         'glossary.createTerm.text': 'Vytvořit',
@@ -184,9 +204,11 @@ export default {
         'glossary.form.validation.validateLengthMin3': 'Pole musí mít alespoň 3 znaky',
         'glossary.form.validation.validateNotSameAsParent': 'Potomek nemůže být stejný jako předchůdce',
 
-        'file.text-analysis.started.message': 'Soubor \'{fileName}\' zařazen do fronty pro textovou analýzu',
+        'file.text-analysis.finished.message': 'Textová analýza souboru \'{fileName}\' úspěšně dokončena.',
         'file.metadata.startTextAnalysis': 'Spustit textovou analýzu',
         'file.metadata.startTextAnalysis.text': 'Analyzovat',
+        "file.content.upload.success": "Soubor \'{fileName}\' úspěšně nahrán na server.",
+        "file.annotate.unknown-vocabulary": "Nelze určit slovník pro anotování tohoto souboru. Soubor nepatří slovníkovému dokumentu ani nebyl zpracován službou textové analýzy.",
 
         'statistics.vocabulary.count': 'Počet slovníků',
         'statistics.term.count': 'Počet pojmů',
@@ -280,6 +302,8 @@ export default {
         "log-viewer.title": "Prohlížení chyb",
         "log-viewer.timestamp": "Čas",
         "log-viewer.error": "Chyba",
-        "log-viewer.clear": "Vyčistit"
+        "log-viewer.clear": "Vyčistit",
+
+        "error.vocabulary.update.imports.danglingTermReferences": "Nelze odstranit import slovníku, neboť stále existují vazby mezi pojmy z tohoto a importovaného slovníku (či ze slovníků, které importuje)."
     }
 }

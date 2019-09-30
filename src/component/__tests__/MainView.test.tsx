@@ -1,25 +1,25 @@
-import * as React from 'react';
-import {MainView} from '../MainView';
+import * as React from "react";
+import {MainView} from "../MainView";
 import User, {EMPTY_USER} from "../../model/User";
-import {formatMessage, i18n} from "../../__tests__/environment/IntlUtil";
+import {intlFunctions} from "../../__tests__/environment/IntlUtil";
 import {shallow} from "enzyme";
 import createMemoryHistory from "history/createMemoryHistory";
-import {mountWithIntl} from "../../__tests__/environment/Environment";
+import {intlDataForShallow, mountWithIntl} from "../../__tests__/environment/Environment";
 
-describe('MainView', () => {
+describe("MainView", () => {
 
     const location = {
-        pathname: '/',
-        search: '',
-        hash: '',
+        pathname: "/",
+        search: "",
+        hash: "",
         state: {}
     };
     const history = createMemoryHistory();
     const match = {
         params: {},
-        path: '/',
+        path: "/",
         isExact: true,
-        url: 'http://localhost:3000/'
+        url: "http://localhost:3000/"
     };
 
     let loadUser: () => void;
@@ -30,27 +30,24 @@ describe('MainView', () => {
         logout = jest.fn();
     });
 
-    it('loads user on mount', () => {
-        shallow(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} i18n={i18n}
-                          formatMessage={formatMessage} history={history} location={location} match={match}/>);
+    it("loads user on mount", () => {
+        shallow(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history} location={location} match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
         expect(loadUser).toHaveBeenCalled();
     });
 
-    it('does not load user when it is already present in store', () => {
+    it("does not load user when it is already present in store", () => {
         const user = new User({
-            firstName: 'Catherine',
-            lastName: 'Halsey',
-            username: 'halsey@unsc.org',
-            iri: 'http://onto.fel.cvut.cz/ontologies/termit/catherine-halsey'
+            firstName: "Catherine",
+            lastName: "Halsey",
+            username: "halsey@unsc.org",
+            iri: "http://onto.fel.cvut.cz/ontologies/termit/catherine-halsey"
         });
-        shallow(<MainView user={user} loadUser={loadUser} logout={logout} i18n={i18n}
-                          formatMessage={formatMessage} history={history} location={location} match={match}/>);
+        shallow(<MainView user={user} loadUser={loadUser} logout={logout} history={history} location={location} match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
         expect(loadUser).not.toHaveBeenCalled();
     });
 
-    it('renders placeholder UI when user is being loaded', () => {
-        const wrapper = mountWithIntl(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} i18n={i18n}
-                          formatMessage={formatMessage} history={history} location={location} match={match}/>);
-        expect(wrapper.find('header').exists()).toBeFalsy();
+    it("renders placeholder UI when user is being loaded", () => {
+        const wrapper = mountWithIntl(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history} location={location} match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(wrapper.find("header").exists()).toBeFalsy();
     });
 });

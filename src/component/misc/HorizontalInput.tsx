@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {Col, FormFeedback, FormGroup, Input, Label} from 'reactstrap';
+import * as React from "react";
+import {Col, FormFeedback, FormGroup, Input, Label} from "reactstrap";
 import AbstractInput, {AbstractInputProps} from "./AbstractInput";
 
 export interface HorizontalInputProps extends AbstractInputProps {
@@ -10,7 +10,7 @@ export interface HorizontalInputProps extends AbstractInputProps {
 
 export default class HorizontalInput extends AbstractInput<HorizontalInputProps> {
 
-    private input: any;
+    protected input: any;
 
     public render() {
         const {labelWidth, inputWidth, invalidMessage, help, ...rest} = this.props;

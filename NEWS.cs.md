@@ -1,3 +1,18 @@
+##### Verze 1.2.0
+
+- Přidána podpora pro závislosti mezi slovníky (slovník může importovat jiné slovníky).
+- Pojmy mohou mít rodiče (skos:broader) z importovaného slovníku.
+- Nově je možné stáhnout obsah souboru, který byl předtím nahrán do systému.
+- Vylepšena přesnost fulltextového vyhledávání.
+
+##### Verze 1.1.2
+
+- Implementováno nahrávání souborů do systému.
+- Podpora pro výběr slovníku pro textovou analýzu.
+- Pojmům přidán atribut skos:definition, vyjadřující normativní definici.
+- Automatické přiřazení pojmů vyskytujících se (na základě textové analýzy) v souboru souboru samotnému.
+- Zdrojový kód publikován na [GitHub](https://github.com/kbss-cvut).
+
 ##### Verze 1.1.1
 
 - Zobrazení legendy v anotátoru obsahu souboru.

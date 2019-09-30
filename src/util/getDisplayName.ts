@@ -6,5 +6,5 @@
 import * as React from "react";
 
 export default (Component: React.ComponentType) => {
-    return Component.displayName || Component.name || 'Component'
+    return Component.displayName || Component.name || "Component"
 };

@@ -23,24 +23,12 @@ ul.term-items button {
   z-index: 0 !important;
 }
 
-.term-edit .Select-control {
-  height: calc(1.8125rem + 2px);
-}
-
 .term-edit .Select-placeholder {
   line-height: 1.5;
   font-size: 0.875rem;
   padding: 0.25rem 0.5rem;
   display: flex;
   align-items: center;
-}
-
-.term-edit .Select-input {
-  height: calc(1.8125rem + 2px);
-  line-height: 1.5;
-  font-size: 0.875rem;
-  padding: 0.25rem 0.5rem;
-  margin-left: 0;
 }
 
 .additional-metadata-container {

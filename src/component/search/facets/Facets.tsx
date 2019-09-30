@@ -12,9 +12,9 @@ import {
 import Constants from "../../../util/Constants";
 import "./semantic-faceted-search/semantic-faceted-search";
 
-// import loadingLg from './images/loading-lg.gif';
-import controllerCreator from './MainController';
-import query from './sparql.rq';
+// import loadingLg from "./images/loading-lg.gif";
+import controllerCreator from "./MainController";
+import query from "./sparql.rq";
 import {ThunkDispatch} from "../../../util/Types";
 import withRemounting from "../../hoc/withRemounting";
 
@@ -75,10 +75,10 @@ export class Facets extends React.Component<Props, State> {
             this.fireQueryFinished.bind(this),
             this.fireQueryFailed.bind(this));
         // https://docs.angularjs.org/guide/di#inline-array-annotation
-        controller.$inject = ['$scope', 'FacetHandler', 'FacetResultHandler', 'facetUrlStateHandlerService'];
-        angular.module('facetApp', ['seco.facetedSearch'])
-            .config(['$provide', ($provide: any) => {
-                $provide.decorator('$browser', ['$delegate', ($delegate: any) => {
+        controller.$inject = ["$scope", "FacetHandler", "FacetResultHandler", "facetUrlStateHandlerService"];
+        angular.module("facetApp", ["seco.facetedSearch"])
+            .config(["$provide", ($provide: any) => {
+                $provide.decorator("$browser", ["$delegate", ($delegate: any) => {
                     $delegate.onUrlChange = () => {
                         ;
                     };
@@ -88,7 +88,7 @@ export class Facets extends React.Component<Props, State> {
                     return $delegate;
                 }]);
             }])
-            .controller('MainController', controller);
+            .controller("MainController", controller);
     }
 
     private destroyAngular() {
@@ -106,11 +106,11 @@ export class Facets extends React.Component<Props, State> {
             pagesPerQuery: 1, // optional (default is 1)
             paging: true, // optional (default is true), if true, enable paging of the results
             prefixes:  // required if the queryTemplate uses prefixes
-                ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>' +
-                ' PREFIX skos: <http://www.w3.org/2004/02/skos/core#>' +
-                ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>' +
-                ' PREFIX zs: <https://onto.fel.cvut.cz/ontologies/ufo/>' +
-                ' PREFIX a-popis-dat: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>',
+                " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+                " PREFIX skos: <http://www.w3.org/2004/02/skos/core#>" +
+                " PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>" +
+                " PREFIX zs: <https://onto.fel.cvut.cz/ontologies/ufo/>" +
+                " PREFIX a-popis-dat: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>",
             queryTemplate: this.getSparqlQuery(this.props.lang), // required
             resultsPerPage: 500, // optional (default is 10)
         };
@@ -118,39 +118,39 @@ export class Facets extends React.Component<Props, State> {
 
     private getFacets() {
         // Facet definitions
-        // 'facetId' is a "friendly" identifier for the facet,
+        // "facetId" is a "friendly" identifier for the facet,
         //  and should be unique within the set of facets.
-        // 'predicate' is the property that defines the facet (can also be
+        // "predicate" is the property that defines the facet (can also be
         //  a property path, for example).
-        // 'name' is the title of the facet to show to the user.
-        // If 'enabled' is not true, the facet will be disabled by default.
+        // "name" is the title of the facet to show to the user.
+        // If "enabled" is not true, the facet will be disabled by default.
         return {
             // Text search facet for names
             slovnik: {
                 enabled: true,
-                facetId: 'glosar',
-                predicate: '(^skos:narrower)*/<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-glosář>',
-                name: this.props.i18n('search.slovnik'),
+                facetId: "glosar",
+                predicate: "(^skos:narrower)*/<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-glosář>",
+                name: this.props.i18n("search.slovnik"),
             },
 
             pojem: {
                 enabled: true,
-                facetId: 'pojem',
-                name: this.props.i18n('search.pojem'),
-                predicate: '<http://www.w3.org/2000/01/rdf-schema#label>',
+                facetId: "pojem",
+                name: this.props.i18n("search.pojem"),
+                predicate: "<http://www.w3.org/2000/01/rdf-schema#label>",
             },
             typ: {
                 enabled: true,
-                facetId: 'typ',
-                name: this.props.i18n('search.typ'),
-                predicate: 'a',
+                facetId: "typ",
+                name: this.props.i18n("search.typ"),
+                predicate: "a",
             },
         };
     }
 
     private getFacetOptions() {
         return {
-            rdfClass: '<http://www.w3.org/2004/02/skos/core#Concept>',
+            rdfClass: "<http://www.w3.org/2004/02/skos/core#Concept>",
             endpointUrl: this.props.endpointUrl,
             preferredLang: this.props.lang
         }
@@ -158,10 +158,10 @@ export class Facets extends React.Component<Props, State> {
 
     public componentDidMount() {
         this.runAngular();
-        angular.bootstrap(this.container, ['facetApp']);
-        const injector = angular.injector(['ng', 'facetApp']);
+        angular.bootstrap(this.container, ["facetApp"]);
+        const injector = angular.injector(["ng", "facetApp"]);
         this.setState({
-            rootScope: injector.get('$rootScope')
+            rootScope: injector.get("$rootScope")
         });
     }
 

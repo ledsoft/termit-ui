@@ -1,10 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 import {RouteComponentProps, withRouter} from "react-router";
-import {injectIntl} from 'react-intl';
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../../hoc/withI18n";
 import {connect} from "react-redux";
 import * as SearchActions from "../../../action/SearchActions";
-import {ThunkDispatch} from '../../../util/Types';
+import {ThunkDispatch} from "../../../util/Types";
 import TermItState from "../../../model/TermItState";
 import SearchResult from "../../../model/SearchResult";
 import SearchResults from "./SearchResults";

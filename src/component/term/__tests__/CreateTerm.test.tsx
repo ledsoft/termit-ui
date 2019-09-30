@@ -3,10 +3,11 @@ import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import Term from "../../../model/Term";
 import {shallow} from "enzyme";
 import {CreateTerm} from "../CreateTerm";
-import Vocabulary from "../../../model/Vocabulary";
+import Vocabulary, {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
 import Generator from "../../../__tests__/environment/Generator";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
+import TermMetadataCreate from "../TermMetadataCreate";
 
 jest.mock("../../../util/Routing");
 
@@ -38,7 +39,7 @@ describe("CreateTerm", () => {
     });
 
     it("invokes transition to term detail on successful creation", () => {
-        const wrapper = shallow(<CreateTerm createTerm={onCreate} vocabulary={vocabulary}/>);
+        const wrapper = shallow<CreateTerm>(<CreateTerm createTerm={onCreate} vocabulary={vocabulary}/>);
         (wrapper.instance() as CreateTerm).onCreate(term);
         return Promise.resolve().then(() => {
             expect(Routing.transitionTo).toHaveBeenCalled();
@@ -48,5 +49,12 @@ describe("CreateTerm", () => {
             expect((call[1].params as Map<string, string>).get("termName")).toEqual("test-term");
             expect((call[1].query as Map<string, string>).get("namespace")).toEqual("http://onto.fel.cvut.cz/ontologies/termit/vocabularies/");
         });
+    });
+
+    it("does not render component while vocabulary is empty", () => {
+        const wrapper = shallow<CreateTerm>(<CreateTerm createTerm={onCreate} vocabulary={EMPTY_VOCABULARY}/>);
+        expect(wrapper.exists(TermMetadataCreate)).toBeFalsy();
+        wrapper.setProps({vocabulary});
+        expect(wrapper.exists(TermMetadataCreate)).toBeTruthy();
     });
 });

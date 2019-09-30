@@ -8,6 +8,8 @@ const constants = {
     APP_NAME: "TermIt",
     // Will be replaced with actual version during build
     VERSION: "__VERSION__",
+    // Will be replaced with actual deployment name during build
+    DEPLOYMENT_NAME: "__DEPLOYMENT_NAME__",
     HOME_ROUTE: Routes.dashboard,
     LANG: {
         CS: {
@@ -63,7 +65,8 @@ const constants = {
     LAYOUT_WALLPAPER_NAVBAR_BACKGROUND: "rgba(0,0,0,0.2)",
 };
 
-constants.STORAGE_JWT_KEY = constants.APP_NAME + "-" + constants.AUTHORIZATION_HEADER;
-constants.STORAGE_LANG_KEY = constants.APP_NAME + "-LANG";
+const deployment = constants.DEPLOYMENT_NAME.length > 0 ? constants.DEPLOYMENT_NAME + "-" : "";
+constants.STORAGE_JWT_KEY = constants.APP_NAME + "-" + deployment + constants.AUTHORIZATION_HEADER;
+constants.STORAGE_LANG_KEY = constants.APP_NAME + "-" + deployment + "LANG";
 
 export default constants;

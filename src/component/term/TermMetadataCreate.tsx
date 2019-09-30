@@ -1,7 +1,7 @@
 // @ts-ignore
 import {IntelligentTreeSelect} from "intelligent-tree-select";
 // @ts-ignore
-import {asField, BasicText, Form, Scope} from "informed";
+import {asField, Form} from "informed";
 
 import * as React from "react";
 import {ChangeEvent} from "react";
@@ -17,7 +17,8 @@ import {
     FormFeedback,
     FormGroup,
     FormText,
-    Input, Label,
+    Input,
+    Label,
     Row,
 } from "reactstrap";
 import {validateLengthMin3, validateLengthMin5, validateNotSameAsParent} from "./forms/newOptionValidate";
@@ -26,19 +27,15 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
 import {RouteComponentProps, withRouter} from "react-router";
-import FetchOptionsFunction from "../../model/Functions";
 import Ajax, {params} from "../../util/Ajax";
 import Constants from "../../util/Constants";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
-import {loadTerms} from "../../action/AsyncActions";
-import {ThunkDispatch} from "../../util/Types";
-import {AssetData} from "../../model/Asset";
 import IntlData from "../../model/IntlData";
 import Utils from "../../util/Utils";
-import {IRI} from "../../util/VocabularyUtils";
 import TextArea from "../misc/TextArea";
+import ParentTermSelector from "./ParentTermSelector";
 
 const ErrorText = asField(({fieldState, ...props}: any) => {
         const attributes = {};
@@ -99,10 +96,6 @@ const Select = asField(({fieldState, ...props}: any) => {
         return props.fieldApi.setValue(value);
     }
 
-    const valueRenderer = (option: Term) => {
-        return option.label;
-    };
-
     return (
         <FormGroup>
             <IntelligentTreeSelect name={props.name}
@@ -111,7 +104,7 @@ const Select = asField(({fieldState, ...props}: any) => {
                                    showSettings={false}
                                    maxHeight={150}
                                    fetchOptions={props.fetchOptions}
-                                   valueRenderer={valueRenderer}
+                                   valueRenderer={Utils.labelValueRenderer}
                                    {...props}
                                    style={fieldState.error ? {border: "solid 1px red"} : null}
             />
@@ -127,38 +120,33 @@ interface TermMetadataCreateStoreProps {
     intl: IntlData;
 }
 
-interface TermMetadataCreateDispatchProps {
-    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => void;
-}
-
 interface TermMetadataCreateOwnProps {
     onCreate: (term: Term, normalizedName: string) => void;
+    vocabularyIri: string;
 }
 
 declare type TermMetadataCreateProps =
     TermMetadataCreateOwnProps
     & TermMetadataCreateStoreProps
-    & TermMetadataCreateDispatchProps
     & HasI18n
     & RouteComponentProps<any>;
 
 interface CreateVocabularyTermState {
-    siblings: Term[],
-    modalAdvancedSectionVisible: boolean,
-    optionUriValue: string,
-    comment: string,
-    generateUri: boolean
+    siblings: Term[];
+    modalAdvancedSectionVisible: boolean;
+    optionUriValue: string;
+    comment: string;
+    definition: string;
+    generateUri: boolean;
+    parents: Term[];
 }
 
 interface NewOptionData {
-    // siblings : Term[],
-    typeOption: Term,
-    optionURI: string,
-    parentOption: Term,
-    childOptions: Term[],
-    optionLabel: string,
-    optionDescription: string,
-    optionSource: string
+    typeOption: Term;
+    optionURI: string;
+    optionLabel: string;
+    optionDescription: string;
+    optionSource: string;
 }
 
 export class TermMetadataCreate extends React.Component<TermMetadataCreateProps, CreateVocabularyTermState> {
@@ -178,16 +166,21 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         this.validateLengthMin3 = this.validateLengthMin3.bind(this);
         this.validateNotSameAsParent = this.validateNotSameAsParent.bind(this);
         this.cancelCreation = this.cancelCreation.bind(this);
-        this.fetchOptions = this.fetchOptions.bind(this);
 
         this.state = {
             siblings: [],
             modalAdvancedSectionVisible: false,
             optionUriValue: "",
             comment: "",
+            definition: "",
             generateUri: true,
+            parents: []
         }
     }
+
+    private onDefinitionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({definition: e.currentTarget.value});
+    };
 
     private onCommentChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({comment: e.currentTarget.value});
@@ -216,35 +209,13 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         })
     }
 
-    private fetchOptions({searchString, optionID, limit, offset}: FetchOptionsFunction) {
-        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
-        return this.props.fetchTerms({searchString, optionID, limit, offset}, {
-            fragment: this.props.match.params.name,
-            namespace
-        });
-    }
-
-    private _getIDs(children: Term[]): AssetData[] {
-        if (!children) {
-            return [];
-        }
-        const ids: Term[] = JSON.parse(JSON.stringify(children));
-        return ids.map(obj => Object.assign({}, obj.iri));
-    }
-
     private createNewOption(data: NewOptionData) {
-        const children = this._getIDs(data.childOptions);
-        let parent = "";
-        if (data.parentOption as Term) {
-            parent = data.parentOption.iri;
-        }
-
         this.props.onCreate(new Term({
             iri: data.optionURI as string,
             label: data.optionLabel as string,
+            definition: this.state.definition,
             comment: this.state.comment,
-            subTerms: children,
-            parent: parent as string,
+            parentTerms: this.state.parents,
             types: data.typeOption ? [data.typeOption.iri] : [],
             sources: [data.optionSource],
         }), this.props.match.params.name);
@@ -303,6 +274,10 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         return validateNotSameAsParent(value, values, this.props.i18n, TERM_CONTEXT.iri);
     }
 
+    public onParentSelect = (parents: Term[]) => {
+        this.setState({parents});
+    };
+
     public render() {
         const i18n = this.props.i18n;
         const types = this.props.types ? Object.keys(this.props.types).map(k => this.props.types[k]) : [];
@@ -339,7 +314,14 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                     </Row>
                     <Row>
                         <Col xl={6} md={12}>
-                            <TextArea name="create-term-comment" label={i18n("vocabulary.comment")}
+                            <TextArea name="create-term-definition" label={i18n("term.metadata.definition")}
+                                      type="textarea" rows={3} value={this.state.definition} help={i18n("optional")}
+                                      onChange={this.onDefinitionChange}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xl={6} md={12}>
+                            <TextArea name="create-term-comment" label={i18n("term.metadata.comment")}
                                       type="textarea" rows={3} value={this.state.comment} help={i18n("optional")}
                                       onChange={this.onCommentChange}/>
                         </Col>
@@ -354,7 +336,7 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
                                     multi={false}
                                     valueKey={"iri"}
                                     labelKey={"label"}
-                                    childrenKey="plainSubTerms"
+                                    childrenKey="subTerms"
                                     filterOptions={this.filterParentOptions}
                                     displayInfoOnHover={true}
                                     expanded={true}
@@ -372,18 +354,9 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
 
                         <Row>
                             <Col xl={6} md={12}>
-                                <Label className="attribute-label">{i18n("glossary.form.field.parent")}</Label>
-                                <Select field={"parentOption"} id="create-term-parent"
-                                        fetchOptions={this.fetchOptions}
-                                        multi={false}
-                                        valueKey={"iri"}
-                                        labelKey={"label"}
-                                        childrenKey="plainSubTerms"
-                                        filterOptions={this.filterParentOptions}
-                                        expanded={true}
-                                        simpleTreeData={true}
-                                        renderAsTree={true}
-                                />
+                                <ParentTermSelector id="create-term-parent" onChange={this.onParentSelect}
+                                                    parentTerms={this.state.parents}
+                                                    vocabularyIri={this.props.vocabularyIri}/>
                             </Col>
                         </Row>
 
@@ -411,14 +384,10 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
 
 }
 
-export default connect<TermMetadataCreateStoreProps, TermMetadataCreateDispatchProps, TermMetadataCreateOwnProps>((state: TermItState) => {
+export default connect<TermMetadataCreateStoreProps, undefined, TermMetadataCreateOwnProps>((state: TermItState) => {
     return {
         intl: state.intl,
         types: state.types,
         lang: state.intl.locale
-    };
-}, (dispatch: ThunkDispatch) => {
-    return {
-        fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri))
     };
 })(withRouter(injectIntl(withI18n(TermMetadataCreate))));

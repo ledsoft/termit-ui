@@ -1,5 +1,6 @@
 import User from "../../model/User";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import Term from "../../model/Term";
 
 export default class Generator {
 
@@ -43,5 +44,17 @@ export default class Generator {
             arr[randomIndex] = tmp;
         }
         return arr;
+    }
+
+    public static randomItem<T>(arr: T[]): T {
+        return arr[Generator.randomInt(0, arr.length)];
+    }
+
+    public static generateTerm(vocabularyIri?: string) {
+        return new Term({
+            iri: Generator.generateUri(),
+            label: "Term - " + Generator.randomInt(0, 10000),
+            vocabulary: vocabularyIri ? {iri: vocabularyIri} : undefined
+        });
     }
 }

@@ -1,20 +1,18 @@
 import * as React from "react";
 import {FileList} from "../FileList";
 import File from "../../../model/File";
-import {mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {MemoryRouter} from "react-router";
 import {Button} from "reactstrap";
-import Vocabulary from "../../../model/Vocabulary";
-import Generator from "../../../__tests__/environment/Generator";
-import VocabularyFileLink from "../../vocabulary/VocabularyFileLink";
+import ResourceLink from "../../resource/ResourceLink";
+import FileContentLink from "../../resource/file/FileContentLink";
+import {shallow} from "enzyme";
 
 
 describe("FileList", () => {
     let files: File[];
     let file: File;
-    let startFileTextAnalysis: (file: File) => void;
-    let vocabulary: Vocabulary;
     beforeEach(() => {
         files = [
             new File({
@@ -27,69 +25,50 @@ describe("FileList", () => {
                 label: "fileName2",
             })
         ];
-        vocabulary = new Vocabulary({
-            iri: Generator.generateUri(),
-            label: "Test vocabulary"
-        });
         file = files[0];
-        startFileTextAnalysis = jest.fn();
     });
 
     it("renders vocabulary file links", () => {
-
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList
-                    files={files}
-                    vocabulary={vocabulary}
-                    startFileTextAnalysis={startFileTextAnalysis}
-                    {...intlFunctions()}/>
+                <FileList files={files} {...intlFunctions()}/>
             </MemoryRouter>
         );
-        expect(wrapper.find(VocabularyFileLink).exists()).toBeTruthy();
+        expect(wrapper.find(FileContentLink).exists()).toBeTruthy();
     });
 
 
     it("renders file metadata", () => {
-
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList
-                    files={files}
-                    vocabulary={vocabulary}
-                    startFileTextAnalysis={startFileTextAnalysis}
-                    {...intlFunctions()}/>
+                <FileList files={files} {...intlFunctions()}/>
             </MemoryRouter>
         );
-        expect(wrapper.text()).toContain("comment1");
         expect(wrapper.text()).toContain("fileName1");
         expect(wrapper.text()).toContain("fileName2");
     });
 
     it("renders text analysis button", () => {
-
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList
-                    files={[file]}
-                    vocabulary={vocabulary}
-                    startFileTextAnalysis={startFileTextAnalysis}
-                    {...intlFunctions()}/>
+                <FileList files={[file]} {...intlFunctions()}/>
             </MemoryRouter>
         );
         expect(wrapper.find(Button).exists()).toBeTruthy();
     });
 
-    it("on text analysis button click starts the analysis", () => {
-
+    it("renders Files ordered by label", () => {
+        files[0].label = "b";
+        files[1].label = "a";
         const wrapper = mountWithIntl(<MemoryRouter>
-                <FileList
-                    files={[file]}
-                    vocabulary={vocabulary}
-                    startFileTextAnalysis={startFileTextAnalysis}
-                    {...intlFunctions()}/>
+                <FileList files={files} {...intlFunctions()}/>
             </MemoryRouter>
         );
+        const links = wrapper.find(ResourceLink);
+        expect(links.length).toEqual(2);
+        expect(links.at(0).text()).toContain(files[1].label);
+        expect(links.at(1).text()).toContain(files[0].label);
+    });
 
-        expect(startFileTextAnalysis).not.toBeCalled();
-        wrapper.find(Button).simulate("click");
-        expect(startFileTextAnalysis).toBeCalledWith(file);
+    it("renders notice when no Files exist", () => {
+        const wrapper = shallow(<FileList files={[]} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(wrapper.exists("#file-list-empty")).toBeTruthy();
     });
 });

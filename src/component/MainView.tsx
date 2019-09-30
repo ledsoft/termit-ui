@@ -44,11 +44,9 @@ import Dashboard from "./dashboard/Dashboard";
 import SearchVocabularies from "./search/SearchVocabularies";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
-    user: User,
-    loadUser: () => void,
-    logout: () => void,
-    backgroundColor: string,
-    backgroundIsLight: boolean,
+    user: User;
+    loadUser: () => void;
+    logout: () => void;
 }
 
 interface MainViewState {
@@ -81,6 +79,10 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
     private onUserProfileClick = () => {
         alert("Not implemented, yet!");
     };
+
+    private isDashboardRoute() {
+        return this.props.location.pathname === Routes.dashboard.path;
+    }
 
     public render() {
         const {i18n, user} = this.props;
@@ -142,7 +144,7 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                         </Nav>
                     </Collapse>
                 </Navbar>
-                <Breadcrumbs className="breadcrumb-bar"/>
+                {!this.isDashboardRoute() && <Breadcrumbs className="breadcrumb-bar"/>}
             </header>
             <SearchTypeTabs/>
             <Messages/>

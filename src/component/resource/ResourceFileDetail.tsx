@@ -1,62 +1,68 @@
 import * as React from "react";
 import {RouteComponentProps} from "react-router";
+import {injectIntl} from "react-intl";
 import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import FileDetail from "../file/FileDetail";
 import {connect} from "react-redux";
-import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
-import {loadVocabularies} from "../../action/AsyncActions";
-import {injectIntl} from "react-intl";
-import withI18n from "../hoc/withI18n";
-import Vocabulary from "../../model/Vocabulary";
+import {loadLatestTextAnalysisRecord, loadResource} from "../../action/AsyncActions";
+import Resource, {EMPTY_RESOURCE} from "../../model/Resource";
+import File from "../../model/File";
+import TermItState from "../../model/TermItState";
+import {TextAnalysisRecord} from "../../model/TextAnalysisRecord";
+import {Label} from "reactstrap";
+import withI18n, {HasI18n} from "../hoc/withI18n";
 
-function isEmpty(obj: object): boolean {
-    return Object.getOwnPropertyNames(obj).length === 0;
+interface StoreStateProps {
+    resource: Resource;
 }
 
-interface ResourceFileDetailProps extends RouteComponentProps<any> {
-    vocabularies: { [key: string]: Vocabulary }
-    loadVocabularies: () => void
+interface DispatchProps {
+    loadResource: (resourceIri: IRI) => void;
+    loadLatestTextAnalysisRecord: (resourceIri: IRI) => Promise<TextAnalysisRecord | null>;
 }
+
+type ResourceFileDetailProps = StoreStateProps & DispatchProps & RouteComponentProps<any> & HasI18n;
 
 interface ResourceFileDetailState {
-    vocabularyIri: IRI | null
+    vocabularyIri?: IRI | null;
 }
 
 export class ResourceFileDetail extends React.Component<ResourceFileDetailProps, ResourceFileDetailState> {
-    constructor(props: any) {
+    constructor(props: ResourceFileDetailProps) {
         super(props);
         this.state = {
-            vocabularyIri: null
-        }
+            vocabularyIri: this.getVocabularyIri()
+        };
     }
 
     public componentDidMount() {
-        if (isEmpty(this.props.vocabularies)) {
-            this.props.loadVocabularies();
-        }
+        this.props.loadResource(this.getFileIri());
     }
 
-    public componentDidUpdate() {
-        if (!isEmpty(this.props.vocabularies)) {
-            const iri = this.getVocabularyIri();
-            if (ResourceFileDetail.isDifferent(iri,this.state.vocabularyIri)) {
-                this.setState({
-                    vocabularyIri: iri
+    public componentDidUpdate(prevProps: Readonly<ResourceFileDetailProps>): void {
+        if (this.shouldLoadVocabularyIri(prevProps)) {
+            const vocabularyIri = this.getVocabularyIri();
+            if (vocabularyIri) {
+                this.setState({vocabularyIri});
+            } else {
+                this.props.loadLatestTextAnalysisRecord(this.getFileIri()).then((res: TextAnalysisRecord | null) => {
+                    if (res) {
+                        this.setState({vocabularyIri: VocabularyUtils.create(res.vocabularies[0].iri!)});
+                    } else {
+                        this.setState({vocabularyIri: null});
+                    }
                 });
             }
         }
     }
 
-    public render() {
-        if (this.state.vocabularyIri) {
-            const fileIri = this.getFileIri();
-            return <FileDetail iri={fileIri} vocabularyIri={this.state.vocabularyIri}/>
-        }
-        return null;
+    private shouldLoadVocabularyIri(prevProps: Readonly<ResourceFileDetailProps>) {
+        return this.props.resource !== EMPTY_RESOURCE && prevProps.resource === EMPTY_RESOURCE
+            || !prevProps.resource
+            || this.props.resource !== EMPTY_RESOURCE && prevProps.resource.iri !== this.props.resource.iri;
     }
-
 
     private getFileIri = (): IRI => {
         const normalizedFileName = this.props.match.params.name;
@@ -64,46 +70,38 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
         return VocabularyUtils.create(fileNamespace + normalizedFileName);
     };
 
-    // TODO this is nasty hack => replace it through retrieval of /resources/$fileId
-    private getVocabularyIri = (): IRI | null => {
-        const HAS_FILE = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-soubor";
-        const iri = this.getFileIri().namespace + this.getFileIri().fragment;
-
-
-        const entries = Object.keys(this.props.vocabularies)
-            .map(k => [k, this.props.vocabularies[k]])
-            .filter((e: any) => e[1].document)
-            .map((e: any) => [e[0], e[1].document])
-            .filter((e: any) => {
-                const hasFile = e[1][HAS_FILE];
-                if (!hasFile) {
-                    return false;
-                }
-                const files = Array.isArray(hasFile) ? hasFile : [hasFile];
-                return files.filter(f => f.iri === iri).length !== 0
-            });
-        if (entries.length === 0) {
+    private getVocabularyIri(): IRI | null {
+        if (Utils.getPrimaryAssetType(this.props.resource) !== VocabularyUtils.FILE) {
             return null;
         }
-        return VocabularyUtils.create(entries[0][0]);
+        const file = this.props.resource as File;
+        return file.owner && file.owner.vocabulary ? VocabularyUtils.create(file.owner.vocabulary.iri!) : null;
     }
 
-    private static isDifferent(iri1: IRI | null, iri2: IRI|null) {
-        return ((!iri1) && iri2)
-            || (iri1 && (!iri2))
-            || (iri1!.fragment !== iri2!.fragment)
-            || (iri1!.namespace !== iri2!.namespace);
+    public render() {
+        if (this.props.resource) {
+            if (this.state.vocabularyIri === undefined) {
+                return null;
+            }
+            if (this.state.vocabularyIri === null) {
+                // This is temporary, annotator should support vocabulary selection
+                return <Label id="file-detail-no-vocabulary"
+                              className="italics">{this.props.i18n("file.annotate.unknown-vocabulary")}</Label>
+            }
+            return <FileDetail iri={VocabularyUtils.create(this.props.resource.iri)}
+                               vocabularyIri={this.state.vocabularyIri}/>
+        }
+        return null;
     }
-
-
 }
 
 export default connect((state: TermItState) => {
     return {
-        vocabularies: state.vocabularies,
-    };
+        resource: state.resource
+    }
 }, (dispatch: ThunkDispatch) => {
     return {
-        loadVocabularies: () => dispatch(loadVocabularies()),
+        loadResource: (resourceIri: IRI) => dispatch(loadResource(resourceIri)),
+        loadLatestTextAnalysisRecord: (resourceIri: IRI) => dispatch(loadLatestTextAnalysisRecord(resourceIri))
     };
 })(injectIntl(withI18n(ResourceFileDetail)));

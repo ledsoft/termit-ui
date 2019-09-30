@@ -40,8 +40,21 @@ class ResourceListItem extends Resource {
 
 class ResourceList extends React.Component<ResourceListProps> {
 
+    private readonly treeComponent: React.RefObject<IntelligentTreeSelect>;
+
+    public constructor(props: ResourceListProps) {
+        super(props);
+        this.treeComponent = React.createRef();
+    }
+
     public componentDidMount() {
         this.props.loadResources();
+    }
+
+    public componentDidUpdate(prevProps: Readonly<ResourceListProps>): void {
+        if (Object.keys(prevProps.resources).length > 0 && this.props.resources !== prevProps.resources) {
+            this.treeComponent.current.resetOptions();
+        }
     }
 
     private static valueRenderer(option: Resource) {
@@ -81,8 +94,9 @@ class ResourceList extends React.Component<ResourceListProps> {
         }
         const options = this.flattenAndSetParents(resources);
         const height = Utils.calculateAssetListHeight();
-        return <div>
+        return <div id="resources-list">
             <IntelligentTreeSelect className="p-0"
+                                   ref={this.treeComponent}
                                    onChange={this.onChange}
                                    value={this.props.selectedResource ? this.props.selectedResource.iri : null}
                                    options={options}

@@ -21,3 +21,31 @@
 .resource-term-link .badge {
   margin-right: 0.5rem;
 }
+
+.create-resource-dropzone {
+  min-height: calc(4em + 0.75rem + 2px);
+  border: 1px solid #ced4da;
+  border-radius: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+}
+
+.create-resource-dropzone.active {
+  @extend .create-resource-dropzone;
+  border: 1px solid #007bff;
+}
+
+.create-resource-dropzone .placeholder-text {
+  color: #6c757d;
+}
+
+.create-resource-dropzone.active .placeholder-text {
+  color: #007bff;
+}
+
+.create-resource-dropzone .icon-container {
+  margin-top: -0.5rem;
+}

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {Badge, Nav, NavItem, NavLink, TabContent, TabPane} from 'reactstrap';
+import * as React from "react";
+import {Badge, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {injectIntl} from "react-intl";
 
@@ -48,7 +48,7 @@ export class Tabs extends React.Component<TabsProps> {
             navLinks.push(
                 <NavItem key={id}>
                     <NavLink
-                        className={(id === this.props.activeTabLabelKey) ? 'active' : ''}
+                        className={(id === this.props.activeTabLabelKey) ? "active" : ""}
                         onClick={changeTab}>
                         {this.props.formatMessage(id, {})}
                         {badge}

@@ -31,6 +31,16 @@ const publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
 
+// This allows to pass the backend server URL also as a console parameter for the build. If it is not specified, we
+// fall back to the configured one.
+const serverUrl = process.env.serverUrl ? process.env.serverUrl : server['url'];
+console.log("Building with server URL: " + serverUrl);
+
+// This allows to parameterize deployment name, so that multiple deployments of TermIt accessed from one client do not
+// mess their data, e.g. auth token, language setting
+const deploymentName = process.env.deployment ? process.env.deployment : '';
+console.log("Building with deployment name: " + deploymentName);
+
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
 if (env.stringified['process.env'].NODE_ENV !== '"production"') {
@@ -168,11 +178,15 @@ module.exports = {
                         options: {
                             multiple: [{
                                 search: '__SERVER_URL__',
-                                replace: server['url'],
+                                replace: serverUrl,
                                 strict: true
                             }, {
                                 search: '__VERSION__',
                                 replace: require('../package.json').version,
+                                strict: true
+                            }, {
+                                search: '__DEPLOYMENT_NAME__',
+                                replace: deploymentName,
                                 strict: true
                             }]
                         }
@@ -419,7 +433,8 @@ module.exports = {
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         // Perform type checking and linting in a separate process to speed up compilation
         new ForkTsCheckerWebpackPlugin({
-            async: false,
+            async: true,
+            silent: false,
             tsconfig: paths.appTsProdConfig,
             tslint: paths.appTsLint,
         }),

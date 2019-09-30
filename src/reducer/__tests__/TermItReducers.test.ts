@@ -5,7 +5,8 @@ import {
     asyncActionFailure,
     asyncActionRequest,
     asyncActionSuccess,
-    asyncActionSuccessWithPayload, clearErrors,
+    asyncActionSuccessWithPayload,
+    clearErrors,
     clearProperties,
     clearResource,
     consumeNotification,
@@ -20,13 +21,15 @@ import ErrorInfo, {ErrorData} from "../../model/ErrorInfo";
 import User, {EMPTY_USER} from "../../model/User";
 import Message from "../../model/Message";
 import Constants from "../../util/Constants";
-import Vocabulary, {VocabularyData} from "../../model/Vocabulary";
+import Vocabulary, {EMPTY_VOCABULARY, VocabularyData} from "../../model/Vocabulary";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import Term, {TermData} from "../../model/Term";
 import RdfsResource from "../../model/RdfsResource";
 import AppNotification from "../../model/AppNotification";
 import Resource, {EMPTY_RESOURCE} from "../../model/Resource";
 import Generator from "../../__tests__/environment/Generator";
+import SearchQuery from "../../model/SearchQuery";
+import QueryResult from "../../model/QueryResult";
 
 function stateToPlainObject(state: TermItState): TermItState {
     return {
@@ -177,6 +180,55 @@ describe("Reducers", () => {
             });
             expect(reducers(stateToPlainObject(initialState), userLogout())).toEqual(Object.assign({}, initialState, {user: EMPTY_USER}));
         });
+
+        it("resets vocabularies and current vocabulary", () => {
+            initialState.vocabularies = require("../../rest-mock/vocabularies.json");
+            initialState.vocabulary = initialState.vocabularies[0];
+            expect(reducers(stateToPlainObject(initialState), userLogout())).toEqual(Object.assign({}, initialState, {
+                vocabulary: EMPTY_VOCABULARY,
+                vocabularies: {}
+            }));
+        });
+
+        it("resets resources, current resource and file content", () => {
+            initialState.resources = require("../../rest-mock/resources.json");
+            initialState.resource = require("../../rest-mock/resource.json");
+            initialState.fileContent = "test";
+            expect(reducers(stateToPlainObject(initialState), userLogout())).toEqual(Object.assign({}, initialState, {
+                resource: EMPTY_RESOURCE,
+                resources: {},
+                fileContent: null
+            }));
+        });
+
+        it("resets selected term, terms and terms counter", () => {
+            initialState.defaultTerms = require("../../rest-mock/terms.json");
+            initialState.selectedTerm = initialState.defaultTerms[0];
+            initialState.createdTermsCounter = 2;
+            expect(reducers(stateToPlainObject(initialState), userLogout())).toEqual(Object.assign({}, initialState, {
+                defaultTerms: [],
+                selectedTerm: null,
+                createdTermsCounter: 0
+            }));
+        });
+
+        it("resets search-related state", () => {
+            initialState.searchResults = require("../../rest-mock/searchResults.json");
+            initialState.searchQuery = new SearchQuery();
+            initialState.searchQuery.searchQuery = "hello";
+            initialState.searchInProgress = true;
+            initialState.facetedSearchResult = {search: "test", anotherAtt: "yas"};
+            initialState.queryResults = {"test": new QueryResult("test", {})};
+            initialState.searchListenerCount = 2;
+            expect(reducers(stateToPlainObject(initialState), userLogout())).toEqual(Object.assign({}, initialState, {
+                searchResults: null,
+                searchQuery: new SearchQuery(),
+                searchInProgress: false,
+                facetedSearchResult: {},
+                searchListenerCount: 0,
+                queryResults: {}
+            }));
+        });
     });
 
     describe("loading vocabulary", () => {
@@ -189,6 +241,16 @@ describe("Reducers", () => {
             };
             expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload(action, new Vocabulary(vocabularyData))))
                 .toEqual(Object.assign({}, initialState, {vocabulary: new Vocabulary(vocabularyData)}));
+        });
+
+        it("sets transitive imports on vocabulary when they are loaded", () => {
+            const imports = [Generator.generateUri(), Generator.generateUri()];
+            initialState.vocabulary = new Vocabulary({
+                label: "Test vocabulary",
+                iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary"
+            });
+            const vocabulary = reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_VOCABULARY_IMPORTS}, imports)).vocabulary;
+            expect(vocabulary.allImportedVocabularies).toEqual(imports);
         });
     });
 

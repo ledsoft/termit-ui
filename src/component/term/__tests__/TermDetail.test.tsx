@@ -1,22 +1,21 @@
 import * as React from "react";
 import {Location} from "history";
-import {match as Match} from "react-router";
+import {match as Match, MemoryRouter} from "react-router";
 import createMemoryHistory from "history/createMemoryHistory";
 import {shallow} from "enzyme";
 import {TermDetail} from "../TermDetail";
 import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import TermMetadata from "../TermMetadata";
-import {Button} from "reactstrap";
 import TermMetadataEdit from "../TermMetadataEdit";
 import Term from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
-import Vocabulary from "../../../model/Vocabulary";
 import AppNotification from "../../../model/AppNotification";
 import NotificationType from "../../../model/NotificationType";
 import {IRI} from "../../../util/VocabularyUtils";
 
 jest.mock("../TermAssignments");
+jest.mock("../IncludeImportedTermsToggle");
 
 describe("TermDetail", () => {
 
@@ -33,7 +32,6 @@ describe("TermDetail", () => {
     let onPublishNotification: (notification: AppNotification) => void;
 
     let term: Term;
-    let vocabulary: Vocabulary;
 
     beforeEach(() => {
         location = {
@@ -55,19 +53,15 @@ describe("TermDetail", () => {
         onUpdate = jest.fn().mockImplementation(() => Promise.resolve());
         onLoadTerms = jest.fn();
         onPublishNotification = jest.fn();
-        vocabulary = new Vocabulary({
-            iri: Generator.generateUri(),
-            label: "Test vocabulary"
-        });
         term = new Term({
             iri: Generator.generateUri(),
             label: "Test term",
-            vocabulary: {iri: vocabulary.iri}
+            vocabulary: {iri: Generator.generateUri()}
         });
     });
 
     it("loads term on mount", () => {
-        shallow(<TermDetail term={null} vocabulary={null} loadTerm={onLoad} updateTerm={onUpdate}
+        shallow(<TermDetail term={null} loadTerm={onLoad} updateTerm={onUpdate}
                             reloadVocabularyTerms={onLoadTerms} publishNotification={onPublishNotification}
                             history={history} location={location} match={match}
                             {...intlFunctions()} {...intlDataForShallow()}/>);
@@ -77,7 +71,7 @@ describe("TermDetail", () => {
     it("provides namespace to term loading when specified in url", () => {
         const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
         location.search = "?namespace=" + namespace;
-        shallow(<TermDetail term={null} vocabulary={null} loadTerm={onLoad} updateTerm={onUpdate}
+        shallow(<TermDetail term={null} loadTerm={onLoad} updateTerm={onUpdate}
                             reloadVocabularyTerms={onLoadTerms} history={history}
                             location={location} match={match} publishNotification={onPublishNotification}
                             {...intlFunctions()} {...intlDataForShallow()}/>);
@@ -85,26 +79,28 @@ describe("TermDetail", () => {
     });
 
     it("renders term metadata by default", () => {
-        const wrapper = mountWithIntl(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad}
-                                                  updateTerm={onUpdate} publishNotification={onPublishNotification}
-                                                  reloadVocabularyTerms={onLoadTerms} history={history}
-                                                  location={location} match={match}
-                                                  {...intlFunctions()}/>);
+        const wrapper = mountWithIntl(<MemoryRouter><TermDetail term={term} loadTerm={onLoad}
+                                                                updateTerm={onUpdate}
+                                                                publishNotification={onPublishNotification}
+                                                                reloadVocabularyTerms={onLoadTerms} history={history}
+                                                                location={location} match={match}
+                                                                {...intlFunctions()}/></MemoryRouter>);
         expect(wrapper.find(TermMetadata).exists()).toBeTruthy();
     });
 
     it("renders term editor after clicking edit button", () => {
-        const wrapper = mountWithIntl(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad}
-                                                  updateTerm={onUpdate} publishNotification={onPublishNotification}
-                                                  reloadVocabularyTerms={onLoadTerms} history={history}
-                                                  location={location} match={match}
-                                                  {...intlFunctions()}/>);
-        wrapper.find(Button).simulate("click");
+        const wrapper = mountWithIntl(<MemoryRouter><TermDetail term={term} loadTerm={onLoad}
+                                                                updateTerm={onUpdate}
+                                                                publishNotification={onPublishNotification}
+                                                                reloadVocabularyTerms={onLoadTerms} history={history}
+                                                                location={location} match={match}
+                                                                {...intlFunctions()}/></MemoryRouter>);
+        wrapper.find("button#term-detail-edit").simulate("click");
         expect(wrapper.find(TermMetadataEdit).exists()).toBeTruthy();
     });
 
     it("invokes termUpdate action on save", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
@@ -114,7 +110,7 @@ describe("TermDetail", () => {
     });
 
     it("closes term metadata edit on save success", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad}
                                             updateTerm={onUpdate} publishNotification={onPublishNotification}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
@@ -128,7 +124,7 @@ describe("TermDetail", () => {
     });
 
     it("reloads term on successful save", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
@@ -140,7 +136,7 @@ describe("TermDetail", () => {
     });
 
     it("closes edit when different term is selected", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
@@ -163,7 +159,7 @@ describe("TermDetail", () => {
     });
 
     it("reloads vocabulary terms on successful save", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             reloadVocabularyTerms={onLoadTerms} history={history}
                                             location={location} match={match}
                                             publishNotification={onPublishNotification}
@@ -175,31 +171,30 @@ describe("TermDetail", () => {
     });
 
     it("does not render edit button when editing", () => {
-        const wrapper = mountWithIntl(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad}
-                                                  updateTerm={onUpdate} publishNotification={onPublishNotification}
-                                                  reloadVocabularyTerms={onLoadTerms} history={history}
-                                                  location={location} match={match}
-                                                  {...intlFunctions()}/>);
-        const editButton = wrapper.find(Button).findWhere(w => w.key() === "term-detail-edit");
+        const wrapper = mountWithIntl(<MemoryRouter><TermDetail term={term} loadTerm={onLoad}
+                                                                updateTerm={onUpdate}
+                                                                publishNotification={onPublishNotification}
+                                                                reloadVocabularyTerms={onLoadTerms} history={history}
+                                                                location={location} match={match}
+                                                                {...intlFunctions()}/></MemoryRouter>);
+        const editButton = wrapper.find("button#term-detail-edit");
         expect(editButton.exists()).toBeTruthy();
         editButton.simulate("click");
-        const editButtonAgain = wrapper.find(Button).findWhere(w => w.key() === "term-detail-edit");
-        expect(editButtonAgain.exists()).toBeFalsy();
+        expect(wrapper.exists("button#term-detail-edit")).toBeFalsy();
     });
 
-    it("publishes term update notification when sub terms change", () => {
-        const wrapper = shallow(<TermDetail term={term} vocabulary={vocabulary} loadTerm={onLoad} updateTerm={onUpdate}
-                                            reloadVocabularyTerms={onLoadTerms} history={history}
-                                            location={location} match={match}
-                                            publishNotification={onPublishNotification}
-                                            {...intlFunctions()} {...intlDataForShallow()}/>);
+    it("publishes term update notification when parent term changes", () => {
+        const wrapper = shallow<TermDetail>(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
+                                                        reloadVocabularyTerms={onLoadTerms} history={history}
+                                                        location={location} match={match}
+                                                        publishNotification={onPublishNotification}
+                                                        {...intlFunctions()} {...intlDataForShallow()}/>);
         const update = new Term(Object.assign({}, term));
-        const newChild = Generator.generateUri();
-        update.subTerms = [{iri: newChild}];
-        update.plainSubTerms = [newChild];
-        (wrapper.instance() as TermDetail).onSave(update);
+        const newParent = Generator.generateUri();
+        update.parentTerms = [new Term({iri: newParent, label: "New parent"})];
+        wrapper.instance().onSave(update);
         return Promise.resolve().then(() => {
-            expect(onPublishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TERM_CHILDREN_UPDATED}});
+            expect(onPublishNotification).toHaveBeenCalledWith({source: {type: NotificationType.TERM_HIERARCHY_UPDATED}});
         });
     });
 });

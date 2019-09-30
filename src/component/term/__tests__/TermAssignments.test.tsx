@@ -5,13 +5,12 @@ import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/
 import {TermAssignments} from "../TermAssignments";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {ReactWrapper, shallow} from "enzyme";
-import TermAssignment from "../../../model/TermAssignment";
 import VocabularyUtils from "../../../util/VocabularyUtils";
 import {Badge} from "reactstrap";
 import {MemoryRouter} from "react-router";
 import {ResourceLink} from "../../resource/ResourceLink";
-import TermOccurrence from "../../../model/TermOccurrence";
 import {GoCheck} from "react-icons/go";
+import {TermAssignments as AssignmentInfo, TermOccurrences} from "../../../model/TermAssignments";
 
 describe("TermAssignments", () => {
 
@@ -38,7 +37,6 @@ describe("TermAssignments", () => {
     });
 
     afterEach(() => {
-        mounted.unmount();
         jest.clearAllTimers();
         document.body.removeChild(element);
     });
@@ -57,17 +55,12 @@ describe("TermAssignments", () => {
     });
 
     it("renders assignments when they are loaded", () => {
-        const assignments = [new TermAssignment({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: {
-                    iri: Generator.generateUri(),
-                    label: "Test resource"
-                }
-            },
+        const assignments: AssignmentInfo[] = [{
+            term: {iri: term.iri},
+            resource: {iri: Generator.generateUri()},
+            label: "Test resource",
             types: [VocabularyUtils.TERM_ASSIGNMENT]
-        })];
+        }];
         loadTermAssignments = jest.fn().mockImplementation(() => Promise.resolve(assignments));
         mounted = mountWithIntl(<MemoryRouter><TermAssignments term={term} onAssignmentsLoad={onAssignmentsLoad}
                                                                loadTermAssignments={loadTermAssignments} {...intlFunctions()}/>
@@ -105,17 +98,12 @@ describe("TermAssignments", () => {
     });
 
     it("renders assignment target resource name as link", () => {
-        const assignments = [new TermAssignment({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: {
-                    iri: Generator.generateUri(),
-                    label: "Test resource"
-                }
-            },
+        const assignments: AssignmentInfo[] = [{
+            term: {iri: term.iri},
+            resource: {iri: Generator.generateUri()},
+            label: "Test resource",
             types: [VocabularyUtils.TERM_ASSIGNMENT]
-        })];
+        }];
         loadTermAssignments = jest.fn().mockImplementation(() => Promise.resolve(assignments));
         mounted = mountWithIntl(<MemoryRouter><TermAssignments term={term} onAssignmentsLoad={onAssignmentsLoad}
                                                                loadTermAssignments={loadTermAssignments} {...intlFunctions()}/>
@@ -124,68 +112,20 @@ describe("TermAssignments", () => {
             mounted.update();
             const link = mounted.find(ResourceLink);
             expect(link.exists()).toBeTruthy();
-            expect(link.text()).toContain(assignments[0].target.source.label);
-        });
-    });
-
-    it("renders target resource only once if multiple occurrences point to the same resource", () => {
-        const fileIri = Generator.generateUri();
-        const fileName = "Test file";
-        const occurrences = [new TermOccurrence({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: {
-                    iri: fileIri,
-                    label: fileName
-                }
-            },
-            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
-        }), new TermOccurrence({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: {
-                    iri: fileIri,
-                    label: fileName
-                }
-            },
-            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
-        })];
-        loadTermAssignments = jest.fn().mockImplementation(() => Promise.resolve(occurrences));
-        mounted = mountWithIntl(<MemoryRouter><TermAssignments term={term} onAssignmentsLoad={onAssignmentsLoad}
-                                                               loadTermAssignments={loadTermAssignments} {...intlFunctions()}/></MemoryRouter>, {attachTo: element});
-        return Promise.resolve().then(() => {
-            mounted.update();
-            const link = mounted.find(ResourceLink);
-            expect(link.length).toEqual(1);
+            expect(link.text()).toContain(assignments[0].label);
         });
     });
 
     it("renders resource with badge showing number of occurrences of term in file", () => {
         const fileIri = Generator.generateUri();
         const fileName = "Test file";
-        const occurrences = [new TermOccurrence({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: {
-                    iri: fileIri,
-                    label: fileName
-                }
-            },
-            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
-        }), new TermOccurrence({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: {
-                    iri: fileIri,
-                    label: fileName
-                }
-            },
-            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
-        })];
+        const occurrences: TermOccurrences[] = [{
+            term: {iri: term.iri},
+            resource: {iri: fileIri},
+            label: fileName,
+            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE],
+            count: 2
+        }];
         loadTermAssignments = jest.fn().mockImplementation(() => Promise.resolve(occurrences));
         mounted = mountWithIntl(<MemoryRouter><TermAssignments term={term} onAssignmentsLoad={onAssignmentsLoad}
                                                                loadTermAssignments={loadTermAssignments} {...intlFunctions()}/></MemoryRouter>, {attachTo: element});
@@ -200,37 +140,24 @@ describe("TermAssignments", () => {
     it("renders term assignments, term occurrences and suggested term occurrences for the same resource correctly", () => {
         const fileIri = Generator.generateUri();
         const fileName = "Test file";
-        const occurrences = [new TermOccurrence({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: {
-                    iri: fileIri,
-                    label: fileName
-                }
-            },
+        const occurrences = [{
+            term: {iri: term.iri},
+            resource: {iri: fileIri},
+            label: fileName,
+            count: 2,
             types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
-        }), new TermAssignment({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: {
-                    iri: fileIri,
-                    label: fileName
-                }
-            },
+        }, {
+            term: {iri: term.iri},
+            resource: {iri: fileIri},
+            label: fileName,
             types: [VocabularyUtils.TERM_ASSIGNMENT]
-        }), new TermOccurrence({
-            iri: Generator.generateUri(),
-            term,
-            target: {
-                source: {
-                    iri: fileIri,
-                    label: fileName
-                }
-            },
+        }, {
+            term: {iri: term.iri},
+            resource: {iri: fileIri},
+            label: fileName,
+            count: 3,
             types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE, VocabularyUtils.SUGGESTED_TERM_OCCURRENCE]
-        })];
+        }];
         loadTermAssignments = jest.fn().mockImplementation(() => Promise.resolve(occurrences));
         mounted = mountWithIntl(<MemoryRouter><TermAssignments term={term} onAssignmentsLoad={onAssignmentsLoad}
                                                                loadTermAssignments={loadTermAssignments} {...intlFunctions()}/></MemoryRouter>, {attachTo: element});
@@ -240,6 +167,34 @@ describe("TermAssignments", () => {
             expect(checks.length).toEqual(3);
             const badges = mounted.find(Badge);
             expect(badges.length).toEqual(2);
+        });
+    });
+
+    it("passes correct number of unique resources to which term is assigned on load", () => {
+        const fileIri = Generator.generateUri();
+        const occurrences = [{
+            term: {iri: term.iri},
+            resource: {iri: Generator.generateUri()},
+            label: "a",
+            count: 2,
+            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE]
+        }, {
+            term: {iri: term.iri},
+            resource: {iri: fileIri},
+            label: "b",
+            types: [VocabularyUtils.TERM_ASSIGNMENT]
+        }, {
+            term: {iri: term.iri},
+            resource: {iri: fileIri},
+            label: "b",
+            count: 3,
+            types: [VocabularyUtils.TERM_ASSIGNMENT, VocabularyUtils.TERM_OCCURRENCE, VocabularyUtils.SUGGESTED_TERM_OCCURRENCE]
+        }];
+        loadTermAssignments = jest.fn().mockImplementation(() => Promise.resolve(occurrences));
+        shallow(<TermAssignments term={term} loadTermAssignments={loadTermAssignments}
+                                 onAssignmentsLoad={onAssignmentsLoad} {...intlFunctions()} {...intlDataForShallow()}/>);
+        return Promise.resolve().then(() => {
+            expect(onAssignmentsLoad).toHaveBeenCalledWith(2);
         });
     });
 });

@@ -80,4 +80,13 @@ describe("VocabularyEdit", () => {
         expect(ignored!.indexOf(VocabularyUtils.RDF_TYPE)).not.toEqual(-1);
         Object.getOwnPropertyNames((n:string) => expect(ignored![CONTEXT[n]]).not.toEqual(-1));
     });
+
+    it("onChange updates component state", () => {
+        const wrapper = shallow<VocabularyEdit>(<VocabularyEdit vocabulary={vocabulary} save={onSave}
+                                                cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const importedVocabularies = [{iri: Generator.generateUri()}];
+        wrapper.instance().onChange({importedVocabularies});
+        wrapper.update();
+        expect(wrapper.instance().state.importedVocabularies).toEqual(importedVocabularies);
+    });
 });

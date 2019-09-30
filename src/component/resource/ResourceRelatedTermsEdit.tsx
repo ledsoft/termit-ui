@@ -15,6 +15,8 @@ import Vocabulary from "../../model/Vocabulary";
 import TermItState from "../../model/TermItState";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import VocabularySelect from "../vocabulary/VocabularySelect";
+import Utils from "../../util/Utils";
+import {filterTermsOutsideVocabularyImportChain} from "../term/Terms";
 
 interface PropsExternal {
     terms: Term[];
@@ -47,17 +49,16 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
         this.props.onChange(val.map(v => Object.assign({}, {iri: v.iri})));
     };
 
-    private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction, vocabulary: Vocabulary) => {
+    private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
         return this.props.fetchTerms({
             searchString,
             optionID,
             limit,
             offset
-        }, vocabulary);
-    };
-
-    private valueRenderer = (option: Term) => {
-        return option.label;
+        }, this.state.vocabulary!).then(terms => {
+            const matchingVocabularies = Utils.sanitizeArray(this.state.vocabulary!.allImportedVocabularies).concat(this.state.vocabulary!.iri);
+            return filterTermsOutsideVocabularyImportChain(terms, matchingVocabularies);
+        });
     };
 
     private resolveSelectedSubTerms(): string[] {
@@ -71,16 +72,12 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
     public render() {
         const selected = this.resolveSelectedSubTerms();
         const onVocabularySet = this.onVocabularySet.bind(this);
-        const fetchOptions = ((fo: FetchOptionsFunction) =>
-            this.fetchOptions.bind(this)(
-                fo, this.state.vocabulary
-            ));
         const key = this.state.vocabulary ? this.state.vocabulary.iri : "http://null";
         const a = <IntelligentTreeSelect key={key}
                                          className="resource-tags-edit"
                                          onChange={this.onChange}
                                          value={selected}
-                                         fetchOptions={fetchOptions}
+                                         fetchOptions={this.fetchOptions}
                                          valueKey="iri"
                                          labelKey="label"
                                          childrenKey="plainSubTerms"
@@ -91,10 +88,11 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
                                          multi={true}
                                          displayInfoOnHover={true}
                                          renderAsTree={true}
-                                         valueRenderer={this.valueRenderer}/>;
+                                         valueRenderer={Utils.labelValueRenderer}/>;
         return <FormGroup>
             <Label className="attribute-label">{this.props.i18n("resource.metadata-edit.terms")}</Label>{" "}
-            <VocabularySelect id="edit-resource-terms-vocabulary" vocabulary={this.state.vocabulary} onVocabularySet={onVocabularySet}/>
+            <VocabularySelect id="edit-resource-terms-vocabulary" vocabulary={this.state.vocabulary}
+                              onVocabularySet={onVocabularySet}/>
             {this.state.vocabulary ? a : ""}
         </FormGroup>;
     }

@@ -1,53 +1,36 @@
 import * as React from "react";
-import {mount} from "enzyme";
-import {EMPTY_VOCABULARY, default as Vocabulary} from "../../../model/Vocabulary";
+import {default as Vocabulary, EMPTY_VOCABULARY} from "../../../model/Vocabulary";
 import {VocabularySelect} from "../VocabularySelect";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
+import {DropdownItem, DropdownToggle} from "reactstrap";
 
 describe("VocabularySelect", () => {
 
-    let voc : Vocabulary;
-    let onVocabularySet : (voc:Vocabulary) => void;
-    let loadVocabularies : () => void;
-    let vocabularies : { [key : string] : Vocabulary };
+    let voc: Vocabulary;
+    let onVocabularySet: (voc: Vocabulary) => void;
+    let loadVocabularies: () => void;
+    let vocabularies: { [key: string]: Vocabulary };
 
 
     beforeEach(() => {
         onVocabularySet = jest.fn();
-        loadVocabularies = jest.fn().mockImplementation(() => {;} );
+        loadVocabularies = jest.fn();
         voc = EMPTY_VOCABULARY;
         vocabularies = {};
         vocabularies[EMPTY_VOCABULARY.iri] = EMPTY_VOCABULARY;
     });
 
-    it("VocabularySelect Dropdown is closed by default", () => {
-        const wrapper = mount(<VocabularySelect
-            vocabulary={voc}
-            onVocabularySet={onVocabularySet}
-            vocabularies={vocabularies}
-            loadVocabularies={loadVocabularies}
-        />);
-        expect(wrapper.state("dropDownOpen")).toEqual(false);
-    });
-    it("VocabularySelect Dropdown Opens and Closes On Button Click", () => {
-        const wrapper = mount(<VocabularySelect
-            vocabulary={voc}
-            onVocabularySet={onVocabularySet}
-            vocabularies={vocabularies}
-            loadVocabularies={loadVocabularies}
-        />);
-        wrapper.find("DropdownToggle").simulate("click");
-        expect(wrapper.state("dropDownOpen")).toEqual(true);
-        wrapper.find("DropdownToggle").simulate("click");
-        expect(wrapper.state("dropDownOpen")).toEqual(false);
-    });
     it("VocabularySelect Selection calls the callback", () => {
-        const wrapper = mount(<VocabularySelect
+        const wrapper = mountWithIntl(<VocabularySelect
             vocabulary={voc}
             onVocabularySet={onVocabularySet}
             vocabularies={vocabularies}
             loadVocabularies={loadVocabularies}
+            {...intlFunctions()}
         />);
-        wrapper.find("DropdownItem").simulate("click");
+        wrapper.find(DropdownToggle).simulate("click");
+        wrapper.find(DropdownItem).simulate("click");
         expect(onVocabularySet).toHaveBeenCalled();
     });
 });

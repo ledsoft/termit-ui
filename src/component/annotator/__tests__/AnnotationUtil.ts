@@ -1,4 +1,4 @@
-import {AnnotationSpanProps} from "../Annotation";
+import {AnnotationSpanProps} from "../Annotator";
 import {ReactElement} from "react";
 import {MountRendererProps} from "enzyme";
 import {mountWithIntl} from "../../../__tests__/environment/Environment";

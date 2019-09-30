@@ -1,4 +1,4 @@
-import {saveLanguagePreference} from "../../util/IntlUtil";
+import {saveLanguagePreference, setHtmlLanguage} from "../../util/IntlUtil";
 import {switchLanguage} from "../SyncActions";
 import Constants from "../../util/Constants";
 
@@ -11,6 +11,11 @@ describe("Synchronous actions", () => {
         it("saves language preference into storage", () => {
             switchLanguage(Constants.LANG.CS.locale);
             expect(saveLanguagePreference).toHaveBeenCalledWith(Constants.LANG.CS.locale);
+        });
+
+        it("sets language attribute on root HTML tag", () => {
+            switchLanguage(Constants.LANG.CS.locale);
+            expect(setHtmlLanguage).toHaveBeenCalledWith(Constants.LANG.CS.locale);
         });
     });
 });

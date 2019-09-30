@@ -18,6 +18,7 @@ import TermDetail from "../term/TermDetail";
 import NoTermSelected from "../term/NoTermSelected";
 import BreadcrumbRoute from "../breadcrumb/BreadcrumbRoute";
 import DynamicBreadcrumbRoute from "../breadcrumb/DynamicBreadcrumbRoute";
+import Utils from "../../util/Utils";
 
 interface VocabularyDetailProps extends HasI18n, RouteComponentProps<any> {
     vocabulary: Vocabulary,
@@ -30,8 +31,9 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 
     public componentDidMount(): void {
         const normalizedName: string = this.props.match.params.name;
+        const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         if (!this.props.vocabulary || VocabularyUtils.getFragment(this.props.vocabulary.iri) !== normalizedName) {
-            this.props.loadVocabulary({fragment: normalizedName});
+            this.props.loadVocabulary(VocabularyUtils.create(namespace + normalizedName));
         }
         this.props.loadTypes(this.props.lang);
     }
@@ -45,7 +47,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             <h2 className="page-header">
                 <OutgoingLink
                     label={label}
-                    iri={this.props.vocabulary.iri as string}
+                    iri={this.props.vocabulary.iri}
                 />
             </h2>
             <h6>
@@ -56,7 +58,7 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
             </h6>
             <Row className="detail-row">
                 <Col md={4}>
-                    <Terms/>
+                    <Terms vocabulary={this.props.vocabulary}/>
                 </Col>
                 <Col md={8}>
                     <Switch>

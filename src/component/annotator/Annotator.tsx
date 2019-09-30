@@ -7,9 +7,10 @@ import AnnotationDomHelper from "./AnnotationDomHelper";
 import Term from "../../model/Term";
 import HtmlDomUtils from "./HtmlDomUtils";
 import LegendToggle from "./LegendToggle";
+import {DomUtils} from "htmlparser2";
 
 interface AnnotatorProps {
-    html: string
+    initialHtml: string
     intl: IntlData
     onUpdate(newHtml: string): void
     onFetchTerm(termIri: string): Promise<Term>
@@ -17,6 +18,7 @@ interface AnnotatorProps {
 }
 
 interface AnnotatorState {
+    prefixMap: Map<string, string>
     internalHtml: string // TODO use htmlparser2 dom instead
     stickyAnnotationId: string
 }
@@ -31,8 +33,6 @@ export interface AnnotationSpanProps {
     score?: string
 }
 
-export const DEFAULT_RDF_PROPERTY_VALUE = "ddo:je-vyskytem-termu";
-export const DEFAULT_RDF_TYPEOF_VALUE = "ddo:vyskyt-termu";
 const ANNOTATION_MINIMUM_SCORE_THRESHOLD = 0.65;
 
 interface HtmlSplit {
@@ -48,10 +48,25 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
 
     constructor(props: AnnotatorProps) {
         super(props);
+        const htmlSplit = Annotator.matchHtml(props.initialHtml);
+        const prefixMap = Annotator.getPrefixesOfHtmlTag(htmlSplit.prefix + htmlSplit.suffix);
         this.state = {
-            internalHtml: Annotator.matchHtml(props.html).body,
+            prefixMap,
+            internalHtml: htmlSplit.body,
             stickyAnnotationId: ""
         };
+    }
+
+    private static getPrefixesOfHtmlTag(html: string): Map<string, string> {
+        const dom = HtmlParserUtils.html2dom(html);
+        const htmlNode = DomUtils.findOneChild(
+            (n: Node2) => n.name === "html" && n.attribs && n.attribs.prefix,
+            dom);
+        if (htmlNode) {
+            const prefixMap = HtmlParserUtils.getPrefixMap(htmlNode)
+            return prefixMap;
+        }
+        return new Map();
     }
 
     private static getRDFNodeId(): string {
@@ -60,7 +75,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
 
     private onRemove = (annotationId: string) => {
         const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
-        const ann = AnnotationDomHelper.findAnnotation(dom, annotationId);
+        const ann = AnnotationDomHelper.findAnnotation(dom, annotationId, this.state.prefixMap);
         if (ann) {
             AnnotationDomHelper.removeAnnotation(ann);
             const newInternalHtml = HtmlParserUtils.dom2html(dom);
@@ -76,7 +91,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
 
     private onUpdate = (annotationSpan: AnnotationSpanProps) => {
         const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
-        const ann = AnnotationDomHelper.findAnnotation(dom, annotationSpan.about!);
+        const ann = AnnotationDomHelper.findAnnotation(dom, annotationSpan.about!, this.state.prefixMap);
         if (ann) {
             if (annotationSpan.resource) {
                 ann.attribs.resource = annotationSpan.resource!;
@@ -95,7 +110,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
         this.props.onCreateTerm(term).then(
             (t: Term) => {
                 const dom = HtmlParserUtils.html2dom(this.state.internalHtml);
-                const ann = AnnotationDomHelper.findAnnotation(dom, annAbout);
+                const ann = AnnotationDomHelper.findAnnotation(dom, annAbout, this.state.prefixMap);
                 if (ann) {
                     ann.attribs.resource = t.iri;
                 }
@@ -118,26 +133,29 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     private getProcessingInstructions = (): Instruction[] => {
         // Order matters. Instructions are processed in the order they're defined
         const processNodeDefinitions = new ProcessNodeDefinitions(React);
+        const prefixMap = this.state.prefixMap;
         return [
             {
                 // Custom annotated <span> processing
                 shouldProcessNode: (node: any): boolean => {
-                    // return node.parent && node.parent.name && node.parent.name === 'span';
-                    return AnnotationDomHelper.isAnnotation(node);
+                    return AnnotationDomHelper.isAnnotation(node, prefixMap);
                 },
                 processNode: (node: any, children: any) => {
-                    // node.attribs = Object.assign(node.attribs, { style:'background-color: rgb(132, 210, 255);
-                    // padding: 0px 4px;'})
 
                     // filter annotations by score
-                    if (!AnnotationDomHelper.isAnnotationWithMinimumScore(node, ANNOTATION_MINIMUM_SCORE_THRESHOLD)) {
-                        // return AnnotationDomHelper.createTextualNode(node);
+                    if (!AnnotationDomHelper.isAnnotationWithMinimumScore(
+                        node,
+                        ANNOTATION_MINIMUM_SCORE_THRESHOLD,
+                        prefixMap)) {
                         return <React.Fragment key={node.attribs.about}>{node.children[0].data}</React.Fragment>;
                     }
                     const sticky = this.state.stickyAnnotationId === node.attribs.about;
+
+                    const attribs = HtmlParserUtils.resolveRDFAttributes(node.attribs, prefixMap);
+
                     return <Annotation key={node.attribs.about} onRemove={this.onRemove} onUpdate={this.onUpdate}
                                        onFetchTerm={this.props.onFetchTerm} sticky={sticky}
-                                       text={node.children[0].data} {...node.attribs} />
+                                       text={node.children[0].data} {...attribs} />
                 }
             }, {
                 // Anything else
@@ -190,7 +208,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
     }
 
     private reconstructHtml(htmlBodyContent: string) {
-        const htmlSplit = Annotator.matchHtml(this.props.html);
+        const htmlSplit = Annotator.matchHtml(this.props.initialHtml);
         return htmlSplit.prefix + htmlBodyContent + htmlSplit.suffix;
     }
 

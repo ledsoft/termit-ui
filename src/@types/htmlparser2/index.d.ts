@@ -19,5 +19,6 @@ declare module "htmlparser2" {
         public static getOuterHTML(dom: [Node]): string
         public static replaceElement(element: Node, replacement: Node): void
         public static find(test: (n: Node) => boolean, elems: [Node], recurse: boolean, limit?: any): [Node]
+        public static findOneChild(test: (n: Node) => boolean, elems: [Node]): Node|null
     }
 }

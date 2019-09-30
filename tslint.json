@@ -17,7 +17,8 @@
     "quotemark": {"options": [true, "double"], "severity" : "warning"},
     "no-empty-interface": false,
 //    "no-console": false,
-    "max-classes-per-file": false
+    "max-classes-per-file": false,
+    "no-bitwise": false
   }
 
 }

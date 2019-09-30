@@ -2,7 +2,7 @@ import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Card, CardBody, CardHeader} from "reactstrap";
-import * as ReactMarkdown from "react-markdown";
+import ReactMarkdown from "react-markdown";
 import Constants from "../../util/Constants";
 import Ajax from "../../util/Ajax";
 import ContainerMask from "../misc/ContainerMask";
