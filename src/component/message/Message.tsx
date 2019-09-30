@@ -1,12 +1,12 @@
-import * as React from 'react';
+import * as React from "react";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import MessageModel from '../../model/Message';
-import {injectIntl} from 'react-intl';
+import MessageModel from "../../model/Message";
+import {injectIntl} from "react-intl";
 import {Alert} from "reactstrap";
-import {connect} from 'react-redux';
+import {connect} from "react-redux";
 import {Dispatch} from "redux";
 import {dismissMessage} from "../../action/SyncActions";
-import Constants from '../../util/Constants';
+import Constants from "../../util/Constants";
 import Timer = NodeJS.Timer;
 
 interface MessageProps extends HasI18n {

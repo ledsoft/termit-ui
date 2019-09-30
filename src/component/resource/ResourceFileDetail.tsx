@@ -33,7 +33,7 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
     constructor(props: ResourceFileDetailProps) {
         super(props);
         this.state = {
-            vocabularyIri: undefined
+            vocabularyIri: this.getVocabularyIri()
         };
     }
 
@@ -42,7 +42,7 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
     }
 
     public componentDidUpdate(prevProps: Readonly<ResourceFileDetailProps>): void {
-        if (this.props.resource !== EMPTY_RESOURCE && prevProps.resource === EMPTY_RESOURCE || !prevProps.resource) {
+        if (this.shouldLoadVocabularyIri(prevProps)) {
             const vocabularyIri = this.getVocabularyIri();
             if (vocabularyIri) {
                 this.setState({vocabularyIri});
@@ -56,6 +56,12 @@ export class ResourceFileDetail extends React.Component<ResourceFileDetailProps,
                 });
             }
         }
+    }
+
+    private shouldLoadVocabularyIri(prevProps: Readonly<ResourceFileDetailProps>) {
+        return this.props.resource !== EMPTY_RESOURCE && prevProps.resource === EMPTY_RESOURCE
+            || !prevProps.resource
+            || this.props.resource !== EMPTY_RESOURCE && prevProps.resource.iri !== this.props.resource.iri;
     }
 
     private getFileIri = (): IRI => {

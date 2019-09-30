@@ -3,6 +3,8 @@
  */
 import Asset, {AssetData} from "../model/Asset";
 import VocabularyUtils from "./VocabularyUtils";
+import {match} from "react-router";
+import {Location} from "history";
 
 export default {
 
@@ -33,8 +35,19 @@ export default {
     extractQueryParam(queryString: string, paramName: string): string | undefined {
         queryString = decodeURI(queryString); // TODO This is a nasty hack, the problem with encoding seems to be
                                               // somewhere in thunk
-        const match = queryString.match(new RegExp(paramName + "=([^&]*)"));
-        return match ? match[1] : undefined;
+        const reqexpMatch = queryString.match(new RegExp(paramName + "=([^&]*)"));
+        return reqexpMatch ? reqexpMatch[1] : undefined;
+    },
+
+    /**
+     * Extracts asset IRI from the specified route props.
+     *
+     * Uses match param {@code name} as fragment value. Namespace is extracted from location search string.
+     */
+    extractAssetIri(routeMatch: match<any>, location: Location) {
+        const namespace = this.extractQueryParam(location.search, "namespace");
+        const normalizedName = routeMatch.params.name;
+        return {fragment: normalizedName, namespace};
     },
 
     /**
@@ -142,5 +155,38 @@ export default {
     calculateAssetListHeight() {
         const container = document.getElementById("content-container");
         return container ? container.clientHeight * 0.75 : window.innerHeight / 2;
+    },
+
+    /**
+     * Compares the specified asset data by their label.
+     *
+     * Internally uses String.localeCompare
+     * @param a Reference asset
+     * @param b Asset to compare it to
+     */
+    labelComparator<T extends {label: string}>(a: T, b: T) {
+        return a.label.localeCompare(b.label);
+    },
+
+    /**
+     * Value renderer for the intelligent tree select component.
+     *
+     * This renderer takes the specified option and renders its label.
+     * @param option Options to render
+     */
+    labelValueRenderer(option: AssetData) {
+        return option.label;
+    },
+
+    /**
+     * Calculates a hash of the specified string.
+     * @param str String to get hash for
+     */
+    hashCode(str: string) {
+        let h = 0;
+        for (let i = 0; i < str.length; i++) {
+            h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+        }
+        return h;
     }
 }

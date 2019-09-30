@@ -11,7 +11,7 @@ import ActionType, {
 import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
 import Message from "../model/Message";
 import AsyncActionStatus from "./AsyncActionStatus";
-import {saveLanguagePreference} from "../util/IntlUtil";
+import {saveLanguagePreference, setHtmlLanguage} from "../util/IntlUtil";
 import Term, {TermData} from "../model/Term";
 import {Action} from "redux";
 import AppNotification from "../model/AppNotification";
@@ -48,6 +48,7 @@ export function dismissMessage(message: Message): MessageAction {
 
 export function switchLanguage(language: string): SwitchLanguageAction {
     saveLanguagePreference(language);
+    setHtmlLanguage(language);
     return {
         type: ActionType.SWITCH_LANGUAGE,
         language

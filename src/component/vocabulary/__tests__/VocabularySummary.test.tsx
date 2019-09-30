@@ -52,7 +52,8 @@ describe("VocabularySummary", () => {
         };
         vocabulary = new Vocabulary({
             iri: namespace + normalizedName,
-            label: "Test vocabulary"
+            label: "Test vocabulary",
+            created: Date.now()
         });
     });
 
@@ -170,5 +171,15 @@ describe("VocabularySummary", () => {
         wrapper.find(DropdownToggle).simulate("click");
         wrapper.find("button[name=\"vocabulary-export-ttl\"]").simulate("click");
         expect(exportToTurtle).toHaveBeenCalledWith(VocabularyUtils.create(vocabulary.iri));
+    });
+
+    it("reloads Vocabulary when File was added into the Vocabulary's Document", () => {
+        const wrapper = shallow<VocabularySummary>(<VocabularySummary vocabulary={vocabulary}
+                                                                      updateVocabulary={onUpdate}
+                                                                      loadVocabulary={onLoad} {...exportFunctions}
+                                                                      history={history} location={location}
+                                                                      match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+        wrapper.instance().onFileAdded();
+        expect(onLoad).toHaveBeenCalledWith(VocabularyUtils.create(vocabulary.iri));
     });
 });

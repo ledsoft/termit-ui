@@ -7,7 +7,7 @@ import Routes from "../../../util/Routes";
 import Resource from "../../../model/Resource";
 import {CreateResource} from "../CreateResource";
 import VocabularyUtils from "../../../util/VocabularyUtils";
-import {CreateFileMetadata} from "../CreateFileMetadata";
+import {CreateFileMetadata} from "../file/CreateFileMetadata";
 import {CreateResourceMetadata} from "../CreateResourceMetadata";
 import {shallow} from "enzyme";
 

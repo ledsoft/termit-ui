@@ -113,4 +113,32 @@ describe("ResourceFileDetail", () => {
             expect(wrapper.exists("#file-detail-no-vocabulary")).toBeTruthy();
         });
     });
+
+    it("rechecks for Vocabulary IRI when new File is provided", () => {
+        const vocabularyIri = Generator.generateUri();
+        resource.owner = {
+            iri: Generator.generateUri(),
+            label: "Test document",
+            vocabulary: {iri: vocabularyIri},
+            files: [resource]
+        };
+        const wrapper = shallow<ResourceFileDetail>(<ResourceFileDetail resource={resource}
+                                                                        loadResource={loadResource}
+                                                                        loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const anotherFile = new File({
+            iri: Generator.generateUri(),
+            label: resourceName,
+            owner: {
+                iri: Generator.generateUri(),
+                label: "Test document two",
+                vocabulary: {iri: Generator.generateUri()},
+                files: []
+            },
+            types: [VocabularyUtils.FILE, VocabularyUtils.RESOURCE]
+        });
+        wrapper.setProps({resource: anotherFile});
+        wrapper.update();
+        const fileDetail = wrapper.find(FileDetail);
+        expect(fileDetail.prop("vocabularyIri")).toEqual(VocabularyUtils.create(anotherFile.owner!.vocabulary!.iri!));
+    });
 });

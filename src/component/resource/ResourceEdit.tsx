@@ -56,7 +56,7 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
 
     public render() {
         const i18n = this.props.i18n;
-        return <div className="metadata-panel">
+        return <>
             <Form>
                 <Row>
                     <Col xl={6} md={12}>
@@ -94,7 +94,7 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
                     </Col>
                 </Row>
             </Form>
-        </div>;
+        </>;
     }
 }
 

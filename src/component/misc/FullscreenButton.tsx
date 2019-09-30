@@ -24,15 +24,15 @@ export class FullscreenButton extends React.Component<Props> {
     public render() {
         return (<Button
             key="btnFullscreen"
-            color='lightgrey'
-            size='md'
+            color="lightgrey"
+            size="md"
             onClick={this.props.toggleFullscreen}
-            title={this.props.i18n(this.props.isFullscreen ? 'fullscreen.exit' : 'fullscreen.enter')}>
+            title={this.props.i18n(this.props.isFullscreen ? "fullscreen.exit" : "fullscreen.enter")}>
             <IconContext.Provider value={{color: "black", className: "global-class-name"}}>
                 {this.props.isFullscreen ? <GoScreenNormal/> : <GoScreenFull/>}
             </IconContext.Provider>
         </Button>);
     }
-};
+}
 
 export default injectIntl(withI18n(FullscreenButton));

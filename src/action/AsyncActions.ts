@@ -155,11 +155,11 @@ export function createTerm(term: Term, vocabularyIri: IRI) {
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action));
-        let url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
-        if (term.parent) {
-            url += "/" + VocabularyUtils.create(term.parent).fragment + "/subterms";
-        }
-        return Ajax.post(url, content(term.toJsonLd()).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIri.namespace))
+        const parents = Utils.sanitizeArray(term.parentTerms);
+        const vocabularyIriToUse = parents.length > 0 ? VocabularyUtils.create(parents[0].vocabulary!.iri!) : vocabularyIri;
+        const url = resolveTermCreationUrl(term, vocabularyIriToUse);
+        const data = Object.assign(term.toJsonLd(), {vocabulary: {iri: vocabularyIri.namespace + vocabularyIri.fragment}});
+        return Ajax.post(url, content(data).contentType(Constants.JSON_LD_MIME_TYPE).param("namespace", vocabularyIriToUse.namespace))
             .then((resp: AxiosResponse) => {
                 const asyncSuccessAction = asyncActionSuccess(action);
                 dispatch(asyncSuccessAction);
@@ -175,6 +175,18 @@ export function createTerm(term: Term, vocabularyIri: IRI) {
     };
 }
 
+function resolveTermCreationUrl(term: Term, targetVocabularyIri: IRI) {
+    let url = Constants.API_PREFIX + "/vocabularies/";
+    const parents = Utils.sanitizeArray(term.parentTerms);
+    if (parents.length > 0) {
+        // Assuming there is at most one parent for a newly created term
+        url += targetVocabularyIri.fragment + "/terms/" + VocabularyUtils.create(parents[0].iri!).fragment + "/subterms";
+    } else {
+        url += targetVocabularyIri.fragment + "/terms"
+    }
+    return url;
+}
+
 export function loadVocabulary(iri: IRI) {
     const action = {
         type: ActionType.LOAD_VOCABULARY
@@ -187,13 +199,52 @@ export function loadVocabulary(iri: IRI) {
         return Ajax
             .get(Constants.API_PREFIX + "/vocabularies/" + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, VOCABULARY_CONTEXT))
-            .then((data: VocabularyData) =>
-                dispatch(asyncActionSuccessWithPayload(action, new Vocabulary(data))))
+            .then((data: VocabularyData) => {
+                dispatch(loadImportedVocabulariesIntoState(iri));
+                return dispatch(asyncActionSuccessWithPayload(action, new Vocabulary(data)));
+            })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
             });
     };
+}
+
+function loadImportedVocabulariesIntoState(vocabularyIri: IRI) {
+    const action = {
+        type: ActionType.LOAD_VOCABULARY_IMPORTS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/imports", param("namespace", vocabularyIri.namespace))
+            .then(data => dispatch(asyncActionSuccessWithPayload(action, data)))
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    }
+}
+
+/**
+ * Loads vocabularies imported (directly or transitively) by the vocabulary with the specified IRI.
+ */
+export function loadImportedVocabularies(vocabularyIri: IRI) {
+    const action = {
+        type: ActionType.LOAD_VOCABULARY_IMPORTS
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/imports", param("namespace", vocabularyIri.namespace))
+            .then(data => {
+                dispatch(asyncActionSuccess(action));
+                return data;
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return [];
+            });
+    }
 }
 
 export function loadResource(iri: IRI) {
@@ -405,6 +456,7 @@ export function loadTerms(fetchOptions: FetchOptionsFunction, vocabularyIri: IRI
         return Ajax.get(url,
             params(Object.assign({
                 searchString: fetchOptions.searchString,
+                includeImported: fetchOptions.includeImported,
                 namespace: vocabularyIri.namespace
             }, Utils.createPagingParams(fetchOptions.offset, fetchOptions.limit))))
             .then((data: object[]) => data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
@@ -543,8 +595,15 @@ export function hasFileContent(fileIri: IRI) {
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax.head(Constants.API_PREFIX + "/resources/" + fileIri.fragment + "/content", param("namespace", fileIri.namespace))
-            .then(() => true)
-            .catch(() => false);
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                return true;
+            })
+            .catch(() => {
+                // No problem here, 404 is the most likely reason
+                dispatch(asyncActionSuccess(action));
+                return false;
+            });
     }
 }
 
@@ -777,5 +836,23 @@ export function loadLatestTextAnalysisRecord(resourceIri: IRI) {
                 dispatch(asyncActionFailure(action, error));
                 return null;
             });
+    }
+}
+
+export function exportFileContent(fileIri: IRI) {
+    const action = {
+        type: ActionType.EXPORT_FILE_CONTENT
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        const url = Constants.API_PREFIX + "/resources/" + fileIri.fragment + "/content";
+        return Ajax.getRaw(url, param("namespace", fileIri.namespace).param("attachment", "true").responseType("arraybuffer"))
+            .then((resp: AxiosResponse) => {
+                const fileName = fileIri.fragment;
+                const mimeType = resp.headers["content-type"];
+                Utils.fileDownload(resp.data, fileName, mimeType);
+                return dispatch(asyncActionSuccess(action));
+            })
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
     }
 }

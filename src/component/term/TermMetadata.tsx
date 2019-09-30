@@ -5,26 +5,22 @@ import {Col, Label, Row} from "reactstrap";
 import Term from "../../model/Term";
 import OutgoingLink from "../misc/OutgoingLink";
 import "./TermMetadata.scss";
-import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
+import VocabularyUtils from "../../util/VocabularyUtils";
 import Utils from "../../util/Utils";
 import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import AssetLabel from "../misc/AssetLabel";
 import TermAssignments from "./TermAssignments";
 import Tabs from "../misc/Tabs";
 import TermLink from "./TermLink";
-import {connect} from "react-redux";
-import {ThunkDispatch} from "../../util/Types";
-import {loadTerms} from "../../action/AsyncActions";
+import VocabularyIriLink from "../vocabulary/VocabularyIriLink";
 
 interface TermMetadataProps extends HasI18n {
     term: Term;
-    loadSubTerms: (term: Term, vocabularyIri: IRI) => Promise<Term[]>;
 }
 
 interface TermMetadataState {
     activeTab: string;
     assignmentsCount: number | null;
-    subTerms: Term[];
 }
 
 export class TermMetadata extends React.Component<TermMetadataProps, TermMetadataState> {
@@ -33,28 +29,8 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         super(props);
         this.state = {
             activeTab: "properties.edit.title",
-            assignmentsCount: null,
-            subTerms: []
+            assignmentsCount: null
         };
-    }
-
-    public componentDidMount(): void {
-        this.loadSubTerms();
-    }
-
-    public componentDidUpdate(prevProps: Readonly<TermMetadataProps>): void {
-        if (prevProps.term.iri !== this.props.term.iri) {
-            this.loadSubTerms();
-        }
-    }
-
-    private loadSubTerms() {
-        const term = this.props.term;
-        if (!term.vocabulary) {
-            return;
-        }
-        const vocabularyIri = VocabularyUtils.create(term.vocabulary!.iri!);
-        this.props.loadSubTerms(term, vocabularyIri).then((data: Term[]) => this.setState({subTerms: data}));
     }
 
     private onTabSelect = (tabId: string) => {
@@ -85,14 +61,8 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                     {this.renderTypes()}
                 </Col>
             </Row>
-            <Row>
-                <Col xl={2} md={4}>
-                    <Label className="attribute-label">{i18n("term.metadata.subTerms")}</Label>
-                </Col>
-                <Col xl={10} md={8}>
-                    {this.renderSubTerms()}
-                </Col>
-            </Row>
+            {this.renderParentTerms()}
+            {this.renderSubTerms()}
             <Row>
                 <Col xl={2} md={4}>
                     <Label className="attribute-label">{i18n("term.metadata.comment")}</Label>
@@ -107,6 +77,15 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                 </Col>
                 <Col xl={10} md={8}>
                     {this.renderItems(term.sources, "term-metadata-sources")}
+                </Col>
+            </Row>
+            <Row>
+                <Col xl={2} md={4}>
+                    <Label className="attribute-label"
+                           title={i18n("term.metadata.vocabulary.tooltip")}>{i18n("type.vocabulary")}</Label>
+                </Col>
+                <Col xl={10} md={8}>
+                    <VocabularyIriLink id="term-metadata-vocabulary" iri={term.vocabulary!.iri!}/>
                 </Col>
             </Row>
             <Row>
@@ -125,15 +104,43 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
         </div>;
     }
 
+    private renderParentTerms() {
+        const parents = Utils.sanitizeArray(this.props.term.parentTerms);
+        if (parents.length === 0) {
+            return null;
+        }
+        parents.sort(Utils.labelComparator);
+        return <Row>
+            <Col xl={2} md={4}>
+                <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
+            </Col>
+            <Col xl={10} md={8}>
+                <ul id="term-metadata-parentterms" className="term-items">
+                    {parents.map(item => <li key={item.iri}>
+                        <TermLink term={item}/>
+                    </li>)}
+                </ul>
+            </Col>
+        </Row>
+    }
+
     private renderSubTerms() {
-        const source = Utils.sanitizeArray(this.state.subTerms);
+        const source = Utils.sanitizeArray(this.props.term.subTerms);
         if (source.length === 0) {
             return null;
         }
-        return <ul id="term-metadata-subterms" className="term-items">{source.map(item => <li key={item.iri}>
-            <TermLink term={item}/>
-        </li>)}
-        </ul>;
+        source.sort(Utils.labelComparator);
+        return <Row>
+            <Col xl={2} md={4}>
+                <Label className="attribute-label">{this.props.i18n("term.metadata.subTerms")}</Label>
+            </Col>
+            <Col xl={10} md={8}>
+                <ul id="term-metadata-subterms" className="term-items">{source.map(item => <li key={item.iri}>
+                    <TermLink term={item}/>
+                </li>)}
+                </ul>
+            </Col>
+        </Row>;
     }
 
     private renderTypes() {
@@ -154,8 +161,4 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
     }
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch) => {
-    return {
-        loadSubTerms: (term: Term, vocabularyIri: IRI) => dispatch(loadTerms({optionID: term.iri}, vocabularyIri))
-    };
-})(injectIntl(withI18n(TermMetadata)));
+export default injectIntl(withI18n(TermMetadata));

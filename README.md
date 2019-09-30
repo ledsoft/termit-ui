@@ -42,10 +42,10 @@ If shallow rendering is used, use the regular Enzyme `shallow` method to mount t
 
 For example:
 ```jsx harmony
-const wrapper = shallow(<CreateVocabulary onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+const wrapper = shallow<CreateVocabulary>(<CreateVocabulary onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
 ```
 
-Do not forget to import the core component into tests not the wrapped component!
+Do not forget to import the core component into tests, not the wrapped component!
 
 ## Developer Notes
 
@@ -90,4 +90,8 @@ fairly intuitive. Data should be kept in JSON files in `src/rest-mock` (has to b
 It is possible to adjust the styling of the application. We are using Bootstrap which provides SCSS definitions which can be overridden. Based on the
 documentation [here](https://getbootstrap.com/docs/4.0/getting-started/webpack/#importing-precompiled-sass) and [here](https://getbootstrap.com/docs/4.0/getting-started/theming/),
 there is the `_custom.scss` file in `src`. This file allows to override default Bootstrap styles and its content is automatically imported in the application.
+
+## Documentation
+
+Further documentation is in the [doc folder](doc/index.md).
 

@@ -6,6 +6,7 @@ import {shallow} from "enzyme";
 import Annotation from "..//Annotation";
 import {createAnnotationSpan, mountWithIntlAttached, surroundWithHtml} from "./AnnotationUtil";
 import Term from "../../../model/Term";
+import VocabularyUtils from "../../../util/VocabularyUtils";
 
 describe("Annotator", () => {
 
@@ -13,15 +14,15 @@ describe("Annotator", () => {
     const generalHtmlContent = surroundWithHtml(sampleContent);
     const suggestedOccProps = {
         about: "_:-421713841",
-        property: "ddo:je-výskytem-termu",
-        typeof: "ddo:výskyt-termu"
+        property: VocabularyUtils.IS_OCCURRENCE_OF_TERM,
+        typeof: VocabularyUtils.TERM_OCCURRENCE
     };
     const assignedOccProps = {
         about: "_:-421713841",
-        property: "ddo:je-výskytem-termu",
+        property: VocabularyUtils.IS_OCCURRENCE_OF_TERM,
         resource: "http://data.iprpraha.cz/zdroj/slovnik/mpp-3/pojem/mesto",
         score: "1.0",
-        typeof: "ddo:výskyt-termu"
+        typeof: VocabularyUtils.TERM_OCCURRENCE
     };
     let mockedCallbackProps: {
         onUpdate(newHtml: string): void
@@ -40,7 +41,7 @@ describe("Annotator", () => {
 
         const wrapper = mountWithIntl(<Annotator
             {...mockedCallbackProps}
-            html={generalHtmlContent}
+            initialHtml={generalHtmlContent}
             intl={intl()}
         />);
 
@@ -56,7 +57,7 @@ describe("Annotator", () => {
         );
         const wrapper = mountWithIntlAttached(<Annotator
             {...mockedCallbackProps}
-            html={htmlWithOccurrence}
+            initialHtml={htmlWithOccurrence}
             intl={intl()}
         />);
 
@@ -76,7 +77,7 @@ describe("Annotator", () => {
         );
         const wrapper = shallow(<Annotator
             {...mockedCallbackProps}
-            html={htmlWithOccurrence}
+            initialHtml={htmlWithOccurrence}
             intl={intl()}
         />);
 
@@ -93,7 +94,7 @@ describe("Annotator", () => {
         document.body.appendChild(div);
         const wrapper = mountWithIntl(<Annotator
             {...mockedCallbackProps}
-            html={generalHtmlContent}
+            initialHtml={generalHtmlContent}
             intl={intl()}
         />, {attachTo: div});
         const newSpan = div.querySelector("span");

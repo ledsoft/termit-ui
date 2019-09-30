@@ -1,3 +1,10 @@
+##### Version 1.2.0
+
+- Added support for Vocabulary dependencies (Vocabulary importing other Vocabularies).
+- Terms can now have parent (skos:broader) from Vocabularies imported by the Term's owner Vocabulary.
+- Allow downloading content of a File previously uploaded to TermIt.
+- Improved full-text search accuracy.
+
 ##### Version 1.1.2
 
 - File content upload implementation.

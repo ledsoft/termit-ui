@@ -1,15 +1,14 @@
 import * as React from "react";
 import Term, {CONTEXT} from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {TermMetadataEdit} from "../TermMetadataEdit";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Ajax from "../../../util/Ajax";
 import {shallow} from "enzyme";
-import {UnmappedPropertiesEdit} from "../../genericmetadata/UnmappedPropertiesEdit";
+import UnmappedPropertiesEdit from "../../genericmetadata/UnmappedPropertiesEdit";
 import VocabularyUtils from "../../../util/VocabularyUtils";
-
-jest.mock("../TermSubTermsEdit");
+import CustomInput from "../../misc/CustomInput";
 
 describe("Term edit", () => {
 
@@ -28,34 +27,36 @@ describe("Term edit", () => {
         onCancel = jest.fn();
     });
 
-    it("disables save button when identifier field is empty", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
-                                                        cancel={onCancel} {...intlFunctions()}/>);
-        const idInput = wrapper.find("input[name=\"edit-term-iri\"]");
-        (idInput.getDOMNode() as HTMLInputElement).value = "";
-        idInput.simulate("change", idInput);
-        const saveButton = wrapper.find("button#edit-term-submit");
-        expect(saveButton.getElement().props.disabled).toBeTruthy();
+    it("renders identifier input disabled", () => {
+        const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
+                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+        expect(wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-iri").prop("disabled")).toBeTruthy();
     });
 
     it("disables save button when label field is empty", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
-                                                        cancel={onCancel} {...intlFunctions()}/>);
-        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
-        (labelInput.getDOMNode() as HTMLInputElement).value = "";
-        labelInput.simulate("change", labelInput);
-        const saveButton = wrapper.find("button#edit-term-submit");
-        expect(saveButton.getElement().props.disabled).toBeTruthy();
+        const wrapper = shallow<TermMetadataEdit>(<TermMetadataEdit save={onSave} term={term}
+                                                                    cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+        wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
+            currentTarget: {
+                name: "edit-term-label",
+                value: ""
+            }
+        });
+        const saveButton = wrapper.find("#edit-term-submit");
+        expect(saveButton.prop("disabled")).toBeTruthy();
     });
 
     it("invokes save with state data when save is clicked", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
-                                                        cancel={onCancel} {...intlFunctions()}/>);
+        const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
+                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
         const newLabel = "New label";
-        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
-        (labelInput.getDOMNode() as HTMLInputElement).value = newLabel;
-        labelInput.simulate("change", labelInput);
-        wrapper.find("button#edit-term-submit").simulate("click");
+        wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
+            currentTarget: {
+                name: "edit-term-label",
+                value: newLabel
+            }
+        });
+        wrapper.find("#edit-term-submit").simulate("click");
         expect(onSave).toHaveBeenCalled();
         const arg = (onSave as jest.Mock).mock.calls[0][0];
         expect(arg.iri).toEqual(term.iri);
@@ -64,14 +65,17 @@ describe("Term edit", () => {
     });
 
     it("checks for label uniqueness in vocabulary on label change", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
-                                                        cancel={onCancel} {...intlFunctions()}/>);
+        const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
+                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
         const mock = jest.fn().mockImplementation(() => Promise.resolve(true));
         Ajax.get = mock;
         const newLabel = "New label";
-        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
-        (labelInput.getDOMNode() as HTMLInputElement).value = newLabel;
-        labelInput.simulate("change", labelInput);
+        wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
+            currentTarget: {
+                name: "edit-term-label",
+                value: newLabel
+            }
+        });
         return Promise.resolve().then(() => {
             expect(Ajax.get).toHaveBeenCalled();
             expect(mock.mock.calls[0][1].getParams().value).toEqual(newLabel);
@@ -79,26 +83,31 @@ describe("Term edit", () => {
     });
 
     it("does not check for label uniqueness when new label is the same as original", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
-                                                        cancel={onCancel} {...intlFunctions()}/>);
+        const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
+                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(true));
-        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
-        (labelInput.getDOMNode() as HTMLInputElement).value = term.label;
-        labelInput.simulate("change", labelInput);
+        wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
+            currentTarget: {
+                name: "edit-term-label",
+                value: term.label
+            }
+        });
         expect(Ajax.get).not.toHaveBeenCalled();
     });
 
     it("disables save button when duplicate label is set", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
-                                                        cancel={onCancel} {...intlFunctions()}/>);
+        const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
+                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(true));
-        const newLabel = "New label";
-        const labelInput = wrapper.find("input[name=\"edit-term-label\"]");
-        (labelInput.getDOMNode() as HTMLInputElement).value = newLabel;
-        labelInput.simulate("change", labelInput);
+        wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
+            currentTarget: {
+                name: "edit-term-label",
+                value: "New label"
+            }
+        });
         return Promise.resolve().then(() => {
             wrapper.update();
-            const saveButton = wrapper.find("button#edit-term-submit");
+            const saveButton = wrapper.find("#edit-term-submit");
             expect(saveButton.getElement().props.disabled).toBeTruthy();
         });
     });
@@ -118,8 +127,8 @@ describe("Term edit", () => {
     });
 
     it("passes mapped Term properties for ignoring to UnmappedPropertiesEdit", () => {
-        const wrapper = mountWithIntl(<TermMetadataEdit save={onSave} term={term}
-                                                        cancel={onCancel} {...intlFunctions()}/>);
+        const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
+                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
         const ignored = wrapper.find(UnmappedPropertiesEdit).prop("ignoredProperties");
         expect(ignored).toBeDefined();
         expect(ignored!.indexOf(VocabularyUtils.RDF_TYPE)).not.toEqual(-1);

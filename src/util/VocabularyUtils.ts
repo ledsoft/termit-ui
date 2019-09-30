@@ -17,7 +17,7 @@ export class IRIImpl implements IRI {
     }
 
     public toString(): string {
-        return (this.namespace ? this.namespace : "") + this.fragment;
+        return IRIImpl.toString(this);
     }
 
     public equals(other?: IRI | null): boolean {
@@ -26,6 +26,10 @@ export class IRIImpl implements IRI {
 
     public static create(iri: IRI): IRIImpl {
         return new IRIImpl(iri.fragment, iri.namespace);
+    }
+
+    public static toString(iri: IRI): string {
+        return (iri.namespace ? iri.namespace : "") + iri.fragment;
     }
 }
 
@@ -42,9 +46,11 @@ export default {
     FILE: _NS_POPIS_DAT + "soubor",
     DOCUMENT: _NS_POPIS_DAT + "dokument",
     DEFINITION: _NS_SKOS + "definition",
+    BROADER: _NS_SKOS + "broader",
     NARROWER: _NS_SKOS + "narrower",
     DATASET: "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
-    JE_POJMEM_ZE_SLOVNIKU: _NS_POPIS_DAT + "je-pojmem-ze-slovníku",
+    IS_TERM_FROM_VOCABULARY: _NS_POPIS_DAT + "je-pojmem-ze-slovníku",
+    IS_OCCURRENCE_OF_TERM: _NS_POPIS_DAT + "je-výskytem-termu",
     RESOURCE: _NS_POPIS_DAT + "zdroj",
     TERM_ASSIGNMENT: _NS_TERMIT + "přiřazení-termu",
     TERM_OCCURRENCE: _NS_TERMIT + "výskyt-termu",
@@ -54,6 +60,7 @@ export default {
     CREATED: _NS_POPIS_DAT + "má-datum-a-čas-vytvoření",
     HAS_LAST_EDITOR: _NS_POPIS_DAT + "má-posledního-editora",
     LAST_MODIFIED: _NS_POPIS_DAT + "má-datum-a-čas-poslední-modifikace",
+    IMPORTS_VOCABULARY: _NS_POPIS_DAT + "importuje-slovník",
     NS_TERMIT: _NS_TERMIT,
     USER: _NS_TERMIT + "uživatel-termitu",
     HAS_COUNT: _NS_TERMIT + "has-count",
@@ -62,6 +69,8 @@ export default {
     RDFS_LABEL: _NS_RDFS + "label",
     RDFS_COMMENT: _NS_RDFS + "comment",
     RDFS_RESOURCE: _NS_RDFS + "Resource",
+    RDFS_SUB_CLASS_OF: _NS_RDFS + "subClassOf",
+    RDFS_SUB_PROPERTY_OF: _NS_RDFS + "subPropertyOf",
     RDF_PROPERTY: _NS_RDF + "Property",
     DC_DESCRIPTION: "http://purl.org/dc/terms/description",
 

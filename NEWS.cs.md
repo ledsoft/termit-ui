@@ -1,3 +1,10 @@
+##### Verze 1.2.0
+
+- Přidána podpora pro závislosti mezi slovníky (slovník může importovat jiné slovníky).
+- Pojmy mohou mít rodiče (skos:broader) z importovaného slovníku.
+- Nově je možné stáhnout obsah souboru, který byl předtím nahrán do systému.
+- Vylepšena přesnost fulltextového vyhledávání.
+
 ##### Verze 1.1.2
 
 - Implementováno nahrávání souborů do systému.

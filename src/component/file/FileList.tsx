@@ -1,109 +1,51 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import {Button, Table} from "reactstrap";
+import {ButtonToolbar, Table} from "reactstrap";
 import File from "../../model/File";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {ThunkDispatch} from "../../util/Types";
-import {executeFileTextAnalysis} from "../../action/AsyncActions";
-import VocabularyFileLink from "../vocabulary/VocabularyFileLink";
-import Vocabulary, {EMPTY_VOCABULARY} from "../../model/Vocabulary";
-import {GoClippy} from "react-icons/go";
-import withInjectableLoading, {InjectsLoading} from "../hoc/withInjectableLoading";
+import ResourceLink from "../resource/ResourceLink";
+import Utils from "../../util/Utils";
+import TextAnalysisInvocationButton from "../resource/file/TextAnalysisInvocationButton";
+import FileContentLink from "../resource/file/FileContentLink";
 
 
 interface FileListProps extends HasI18n {
-    vocabulary: Vocabulary,
-    files: File[],
-    executeFileTextAnalysis: (file: File) => Promise<any>
+    files: File[];
 }
 
-interface ButtonProps extends HasI18n {
-    onClick: () => Promise<any>
-}
-
-class ButtonWithInjectableLoading extends React.Component<InjectsLoading & ButtonProps> {
-
-    constructor(props: InjectsLoading & ButtonProps) {
-        super(props);
+export const FileList: React.FC<FileListProps> = (props: FileListProps) => {
+    if (Utils.sanitizeArray(props.files).length > 0) {
+        const rows = props.files.slice().sort(Utils.labelComparator).map((v: File) =>
+            <tr key={v.iri}>
+                <td className="align-middle">
+                    <ResourceLink resource={v}/>
+                </td>
+                <td className="pull-right">
+                    <ButtonToolbar>
+                        <FileContentLink file={v}/>
+                        <TextAnalysisInvocationButton file={v}/>
+                    </ButtonToolbar>
+                </td>
+            </tr>
+        );
+        return <div>
+            <Table borderless={true}>
+                <tbody>
+                {rows}
+                </tbody>
+            </Table>
+        </div>
+    } else {
+        return <div id="file-list-empty"
+                    className="italics">{props.i18n("resource.metadata.document.files.empty")}</div>;
     }
-
-    private onClickWithLoading = () => {
-        this.props.loadingOn();
-        const loadingOffFunc = () => {
-            this.props.loadingOff();
-        }
-        const p = this.props.onClick();
-        if (p) {
-            p.then(
-                () => loadingOffFunc(),
-                () => loadingOffFunc()
-            );
-        }
-    };
-
-    public render() {
-        const i18n = this.props.i18n;
-        // const icon = this.props.loading ? this.props.renderMask() : <GoClippy/> ;
-        const icon = <GoClippy/>;
-        return <Button className="link-to-resource" size="sm" color="primary"
-                       title={i18n("file.metadata.startTextAnalysis")}
-                       onClick={this.onClickWithLoading}> {icon} {i18n("file.metadata.startTextAnalysis.text")}
-        </Button>;
-    }
-}
-
-export class FileList extends React.Component<FileListProps> {
-
-    private fileTextAnalysisCallback = (file: File) => {
-        return () => this.props.executeFileTextAnalysis(file);
-    };
-
-    public render() {
-        const i18n = this.props.i18n;
-        const ButtonWithLoading = withInjectableLoading(injectIntl(withI18n(ButtonWithInjectableLoading)));
-
-        if (this.props.files.length > 0 && (this.props.vocabulary !== EMPTY_VOCABULARY)) {
-            const rows = this.props.files.map((v: File) =>
-                <tr key={v.iri}>
-                    <td className="align-middle">
-                        <VocabularyFileLink resource={v} vocabulary={this.props.vocabulary}/>
-                    </td>
-                    <td className="align-middle">
-                        {v.comment}
-                    </td>
-                    <td className="pull-right">
-                        <ButtonWithLoading onClick={this.fileTextAnalysisCallback(v)}/>
-                    </td>
-                </tr>
-            );
-            return <div>
-                <Table borderless={true}>
-                    <thead>
-                    <tr>
-                        <th>{i18n("vocabulary.detail.files.file")}</th>
-                        <th>{i18n("description")}</th>
-                        <th className="pull-right">{i18n("actions")}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {rows}
-                    </tbody>
-                </Table>
-            </div>
-        } else {
-            return (null);
-        }
-    }
-}
+};
 
 export default connect((state: TermItState) => {
     return {
+        intl: state.intl,
         vocabulary: state.vocabulary
-    };
-}, (dispatch: ThunkDispatch) => {
-    return {
-        executeFileTextAnalysis: (file: File) => dispatch(executeFileTextAnalysis(file))
     };
 })(injectIntl(withI18n(FileList)));

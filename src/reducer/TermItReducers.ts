@@ -3,7 +3,8 @@ import ActionType, {
     AsyncAction,
     AsyncActionSuccess,
     ExecuteQueryAction,
-    FacetedSearchAction, FailureAction,
+    FacetedSearchAction,
+    FailureAction,
     MessageAction,
     NotificationAction,
     SearchAction,
@@ -89,10 +90,14 @@ function intl(state: IntlData = loadInitialLocalizationData(), action: SwitchLan
     }
 }
 
-function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary>): Vocabulary {
+function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary|string[]>): Vocabulary {
     switch (action.type) {
         case ActionType.LOAD_VOCABULARY:
-            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+            return action.status === AsyncActionStatus.SUCCESS ? action.payload as Vocabulary : state;
+        case ActionType.LOAD_VOCABULARY_IMPORTS:
+            return action.status === AsyncActionStatus.SUCCESS ? new Vocabulary(Object.assign(state, {allImportedVocabularies: action.payload as string[]})) : state;
+        case ActionType.LOGOUT:
+            return EMPTY_VOCABULARY;
         default:
             return state;
     }
@@ -112,6 +117,8 @@ function resource(state: Resource = EMPTY_RESOURCE, action: AsyncActionSuccess<a
             } else {
                 return state;
             }
+        case ActionType.LOGOUT:
+            return EMPTY_RESOURCE;
         default:
             return state;
     }
@@ -129,6 +136,8 @@ function resources(state: { [key: string]: Resource } | any = {}, action: AsyncA
             } else {
                 return state;
             }
+        case ActionType.LOGOUT:
+            return {};
         default:
             return state;
     }
@@ -146,6 +155,8 @@ function vocabularies(state: { [key: string]: Vocabulary } | any = {}, action: A
             } else {
                 return state;
             }
+        case ActionType.LOGOUT:
+            return {};
         default:
             return state;
     }
@@ -158,6 +169,8 @@ function selectedTerm(state: Term | null = null, action: SelectingTermsAction | 
         case ActionType.LOAD_TERM:
             const aa = action as AsyncActionSuccess<Term>;
             return aa.status === AsyncActionStatus.SUCCESS ? aa.payload : state;
+        case ActionType.LOGOUT:
+            return null;
         default:
             return state;
     }
@@ -167,6 +180,8 @@ function createdTermsCounter(state: number = 0, action: AsyncAction) {
     switch (action.type) {
         case ActionType.CREATE_VOCABULARY_TERM:
             return action.status === AsyncActionStatus.SUCCESS ? state + 1 : state;
+        case ActionType.LOGOUT:
+            return 0;
         default:
             return state;
     }
@@ -176,6 +191,8 @@ function defaultTerms(state: Term[] = [], action: AsyncActionSuccess<Term[]>): T
     switch (action.type) {
         case ActionType.LOAD_DEFAULT_TERMS:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
+        case ActionType.LOGOUT:
+            return [];
         default:
             return state;
     }
@@ -192,6 +209,8 @@ function queryResults(state: { [key: string]: QueryResultIF } = {}, action: Exec
             } else {
                 return state;
             }
+        case ActionType.LOGOUT:
+            return {};
         default:
             return state;
     }
@@ -201,6 +220,8 @@ function facetedSearchResult(state: object = {}, action: FacetedSearchAction) {
     switch (action.type) {
         case ActionType.FACETED_SEARCH:
             return (action.status === AsyncActionStatus.SUCCESS) ? action.payload : state;
+        case ActionType.LOGOUT:
+            return {};
         default:
             return state;
     }
@@ -211,7 +232,9 @@ function fileContent(state: string | null = null, action: AsyncActionSuccess<str
         case ActionType.LOAD_FILE_CONTENT:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         case ActionType.SAVE_FILE_CONTENT:
-            return state; // TODD not updating file content for now
+            return state; // TODO MB not updating file content for now
+        case ActionType.LOGOUT:
+            return null;
         default:
             return state;
     }
@@ -223,6 +246,8 @@ function searchQuery(state: SearchQuery | undefined, action: SearchAction): Sear
             const newState = new SearchQuery(state);
             newState.searchQuery = action.searchString;
             return newState;
+        case ActionType.LOGOUT:
+            return new SearchQuery();
         default:
             return state || new SearchQuery();
     }
@@ -232,8 +257,11 @@ function searchResults(state: SearchResult[] | null = null, action: SearchResult
     switch (action.type) {
         case ActionType.SEARCH_RESULT:
             return action.searchResults;
+        case ActionType.LOGOUT:
+            return null;
+        default:
+            return state;
     }
-    return state;
 }
 
 function searchListenerCount(state: number = 0, action: Action): number {
@@ -242,6 +270,8 @@ function searchListenerCount(state: number = 0, action: Action): number {
             return state + 1;
         case ActionType.REMOVE_SEARCH_LISTENER:
             return state - 1;
+        case ActionType.LOGOUT:
+            return 0;
         default:
             return state;
     }
@@ -252,6 +282,8 @@ function searchInProgress(state: boolean = false, action: Action): boolean {
         case ActionType.SEARCH_START:
             return true;
         case ActionType.SEARCH_FINISH:
+            return false;
+        case ActionType.LOGOUT:
             return false;
         default:
             return state;

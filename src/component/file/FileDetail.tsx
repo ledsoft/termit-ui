@@ -11,13 +11,14 @@ import {
     loadTerms,
     saveFileContent
 } from "../../action/AsyncActions";
-import VocabularyUtils, {IRI} from "../../util/VocabularyUtils";
+import VocabularyUtils, {IRI, IRIImpl} from "../../util/VocabularyUtils";
 import IntlData from "../../model/IntlData";
 import {ThunkDispatch} from "../../util/Types";
 import {Annotator} from "../annotator/Annotator";
 import Term from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
 import IdentifierResolver from "../../util/IdentifierResolver";
+import {filterTermsOutsideVocabularyImportChain} from "../term/Terms";
 
 
 interface FileDetailProvidedProps {
@@ -39,14 +40,19 @@ interface FileDetailOwnProps extends HasI18n {
 
 type FileDetailProps = FileDetailOwnProps & FileDetailProvidedProps;
 
+interface FileDetailState {
+    fileContentId: number
+}
+
 // TODO "file detail" --> "file content detail"
-export class FileDetail extends React.Component<FileDetailProps> {
+export class FileDetail extends React.Component<FileDetailProps, FileDetailState> {
 
     private terms: object = {};
     private lastExecutedPromise: Promise<Term> | null = null;
 
     constructor(props: FileDetailProps) {
         super(props);
+        this.state = {fileContentId: 1};
     }
 
     private loadFileContentData = (): void => {
@@ -58,7 +64,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     // TODO should not be responsibility of file detail
     private initializeTermFetching = (): void => {
-        this.createInitialFetchTermPromise(); // TODO ?! should be enough to call it on componentDidMount
+        this.ensureInitialFetchTermPromise(); // TODO ?! should be enough to call it on componentDidMount
         if (this.props.defaultTerms.length === 0) {
             this.props.loadDefaultTerms(this.props.vocabularyIri);
         } else {
@@ -69,12 +75,14 @@ export class FileDetail extends React.Component<FileDetailProps> {
     public componentDidMount(): void {
         this.loadFileContentData();
         this.initializeTermFetching();
-
     }
 
     public componentDidUpdate(prevProps: FileDetailProps): void {
-        if (isDifferent(this.props.iri, prevProps.iri)) {
+        if (isDifferent(this.props.iri, prevProps.iri) || isDifferent(this.props.vocabularyIri, prevProps.vocabularyIri)) {
             this.loadFileContentData();
+        }
+        if (prevProps.fileContent !== this.props.fileContent) {
+            this.setState({fileContentId: this.state.fileContentId + 1});
         }
         this.initializeTermFetching();
     }
@@ -90,11 +98,11 @@ export class FileDetail extends React.Component<FileDetailProps> {
         retrievedTerms.forEach((t: Term) => this.terms[t.iri] = t);
     }
 
-    private createInitialFetchTermPromise = (): void => {
+    private ensureInitialFetchTermPromise = (): void => {
         if (!this.lastExecutedPromise) {
             this.lastExecutedPromise = this.props.fetchTerms({}, this.props.vocabularyIri)
                 .then((terms: Term[]) => {
-                    this.updateTerms(terms);
+                    this.updateTerms(filterTermsOutsideVocabularyImportChain(terms, [IRIImpl.toString(this.props.vocabularyIri)]));
                 }, (d) => d);
         }
     };
@@ -129,12 +137,9 @@ export class FileDetail extends React.Component<FileDetailProps> {
     public onCreateTerm = (term: Term): Promise<Term> => {
         return this.props
             .createVocabularyTerm(term, this.props.vocabularyIri)
-            .then((location: string) => {
-                // TODO nasty workaround for createVocabularyTerm sending error in resolved promise,
-                //      i.e. location.type === "PUBLISH_MESSAGE"
-                // @ts-ignore
-                if (location.type) {
-                    return Promise.reject("Could not create term");
+            .then((location?: string) => {
+                if (!location) {
+                    return Promise.reject("Could not create term.");
                 }
                 const termName = IdentifierResolver.extractNameFromLocation(location);
                 return this.props.fetchTerm(termName, this.props.vocabularyIri); // TODO use onFetchTerm
@@ -146,7 +151,7 @@ export class FileDetail extends React.Component<FileDetailProps> {
         const term = this.terms[termIri];
         if (!term) {
             if (!this.lastExecutedPromise) { // TODO should be initialized here already
-                this.createInitialFetchTermPromise();
+                this.ensureInitialFetchTermPromise();
             }
             this.lastExecutedPromise = this.lastExecutedPromise!
                 .then((d) => d, (d) => d)
@@ -160,7 +165,8 @@ export class FileDetail extends React.Component<FileDetailProps> {
 
     public render() {
         return (this.props.fileContent) ?
-            <Annotator html={this.props.fileContent}
+            <Annotator key={this.state.fileContentId}
+                       initialHtml={this.props.fileContent}
                        onCreateTerm={this.onCreateTerm} onFetchTerm={this.onFetchTerm}
                        onUpdate={this.onUpdate}
                        intl={this.props.intl}/> : null;

@@ -5,11 +5,11 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import Resources from "./Resources";
 import {Switch} from "react-router";
 import Routes from "../../util/Routes";
-import ResourceSummary from "./ResourceSummary";
 import DynamicBreadcrumbRoute from "../breadcrumb/DynamicBreadcrumbRoute";
 import BreadcrumbRoute from "../breadcrumb/BreadcrumbRoute";
 import CreateResource from "./CreateResource";
 import ResourceFileDetail from "./ResourceFileDetail";
+import ResourceSummaryRoute from "./ResourceSummaryRoute";
 
 class ResourceManagement extends React.Component<HasI18n> {
     constructor(props: HasI18n) {
@@ -32,7 +32,7 @@ class ResourceManagement extends React.Component<HasI18n> {
                             <BreadcrumbRoute title={i18n("resource.create.title")} path={Routes.createResource.path}
                                              component={CreateResource}/>
                             <DynamicBreadcrumbRoute asset="resource" path={Routes.resourceSummary.path}
-                                                    component={ResourceSummary} exact={true} includeSearch={true}/>
+                                                    component={ResourceSummaryRoute} exact={true} includeSearch={true}/>
                         </Switch>
                     </Col>
                 </div>

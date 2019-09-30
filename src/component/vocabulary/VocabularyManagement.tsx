@@ -1,10 +1,10 @@
-import * as React from 'react';
-import {injectIntl} from 'react-intl';
-import {Col} from 'reactstrap';
+import * as React from "react";
+import {injectIntl} from "react-intl";
+import {Col} from "reactstrap";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Vocabularies from "./Vocabularies";
 import {Switch} from "react-router";
-import Routes from '../../util/Routes';
+import Routes from "../../util/Routes";
 import CreateVocabulary from "./CreateVocabulary";
 import VocabularySummary from "./VocabularySummary";
 import BreadcrumbRoute from "../breadcrumb/BreadcrumbRoute";
@@ -27,8 +27,8 @@ class VocabularyManagement extends React.Component<HasI18n> {
             <DynamicBreadcrumbRoute asset="vocabulary" path={removeLastLocation(Routes.annotateVocabularyFile.path)}
                                     component={VocabularyFileDetailRoute}/>
             <div>
-                <h2 className='page-header'>{i18n('vocabulary.management')}</h2>
-                <div className='row'>
+                <h2 className="page-header">{i18n("vocabulary.management")}</h2>
+                <div className="row">
                     <Col md={4}>
                         <Vocabularies/>
                     </Col>

@@ -4,17 +4,20 @@ import {
     CreateResourceMetadata,
     CreateResourceMetadataProps,
     CreateResourceMetadataState
-} from "./CreateResourceMetadata";
-import VocabularyUtils from "../../util/VocabularyUtils";
-import withI18n from "../hoc/withI18n";
+} from "../CreateResourceMetadata";
+import VocabularyUtils from "../../../util/VocabularyUtils";
+import withI18n from "../../hoc/withI18n";
 import {Col, Form, Label, Row} from "reactstrap";
 import Dropzone from "react-dropzone";
 import {GoCloudUpload} from "react-icons/go";
 import classNames from "classnames";
 import {connect} from "react-redux";
-import {ThunkDispatch} from "../../util/Types";
-import {uploadFileContent} from "../../action/AsyncActions";
-import Resource from "../../model/Resource";
+import {ThunkDispatch} from "../../../util/Types";
+import {uploadFileContent} from "../../../action/AsyncActions";
+import Resource from "../../../model/Resource";
+import AppNotification from "../../../model/AppNotification";
+import {publishNotification} from "../../../action/SyncActions";
+import NotificationType from "../../../model/NotificationType";
 
 function formatBytes(bytes: number, decimals = 2) {
     if (bytes === 0) {
@@ -31,7 +34,8 @@ function formatBytes(bytes: number, decimals = 2) {
 }
 
 interface CreateFileMetadataProps extends CreateResourceMetadataProps {
-    uploadFileContent: (fileIri: string, file: File) => void;
+    uploadFileContent: (fileIri: string, file: File) => Promise<any>;
+    publishNotification: (notification: AppNotification) => void;
 }
 
 interface CreateFileMetadataState extends CreateResourceMetadataState {
@@ -73,7 +77,7 @@ export class CreateFileMetadata extends CreateResourceMetadata<CreateFileMetadat
         const {generateIri, file, dragActive, ...data} = this.state;
         this.props.onCreate(new Resource(data)).then((iri: string) => {
             if (this.state.file) {
-                this.props.uploadFileContent(this.state.iri, this.state.file);
+                this.props.uploadFileContent(this.state.iri, this.state.file).then(() => this.props.publishNotification({source: {type: NotificationType.FILE_CONTENT_UPLOADED}}));
             }
         });
     };
@@ -109,6 +113,7 @@ export class CreateFileMetadata extends CreateResourceMetadata<CreateFileMetadat
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
-        uploadFileContent: (fileIri: string, file: File) => dispatch(uploadFileContent(VocabularyUtils.create(fileIri), file))
+        uploadFileContent: (fileIri: string, file: File) => dispatch(uploadFileContent(VocabularyUtils.create(fileIri), file)),
+        publishNotification: (notification: AppNotification) => dispatch(publishNotification(notification))
     };
 })(injectIntl(withI18n(CreateFileMetadata)));

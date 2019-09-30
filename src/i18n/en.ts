@@ -112,9 +112,10 @@ export default {
         'vocabulary.detail.tabs.termdetail': 'Term Detail',
         'vocabulary.detail.files': 'Files',
         'vocabulary.detail.files.file': 'Filename',
-        "vocabulary.detail.files.create.tooltip": "Add new file to this vocabulary\'s document",
-        "vocabulary.detail.files.create.dialog.title": "New file",
         'vocabulary.detail.noTermSelected': 'Start by selecting a term in the tree on the left.',
+        "vocabulary.detail.imports": "Imports",
+        "vocabulary.detail.imports.edit": "Imports vocabularies",
+        "vocabulary.detail.document": "Document",
 
         'vocabulary.term.created.message': 'Term successfully created.',
         'vocabulary.select-vocabulary': 'Select a Vocabulary',
@@ -140,11 +141,18 @@ export default {
         "resource.metadata.terms.occurrences.suggested": "{count} - suggested",
         "resource.metadata.terms.occurrences.suggested.tooltip": "Occurrence suggested by the system",
         'resource.metadata-edit.terms': 'Related terms from the vocabulary',
-        "resource.metadata.file.view-content": "Content",
-        "resource.metadata.file.view-content.tooltip": "View file content and annotate it",
+        "resource.metadata.file.content": "Content",
+        "resource.metadata.file.content.view": "View",
+        "resource.metadata.file.content.view.tooltip": "View file content and annotate it",
+        "resource.metadata.file.content.download": "Download",
+        "resource.metadata.document.vocabulary": "Document vocabulary",
+        "resource.metadata.document.files.create.tooltip": "Add new file to this document",
+        "resource.metadata.document.files.create.dialog.title": "New file",
+        "resource.metadata.document.files.empty": "No files found. Start by adding some.",
 
         "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',
+        "term.metadata.parent": "Parent term",
         'term.metadata.subTerms': 'Sub terms',
         'term.metadata.types': 'Type',
         'term.metadata.source': 'Source',
@@ -167,8 +175,15 @@ export default {
         "term.metadata.assignments.suggestedOccurrence.help": "Suggested term occurrence represents a term occurrence suggested by the system, e.g., based on the analysis of the content.",
         "term.metadata.assignments.count.tooltip": "The term occurs {count, plural, one {# time} other {# times}} in this resource",
         "term.metadata.assignments.count.zero.tooltip": "The term does not occur in this resource",
+        "term.metadata.vocabulary.tooltip": "Vocabulary this term belongs to",
 
-        'glossary.title': 'Terms',
+        "glossary.title": "Terms",
+        "glossary.select.placeholder": "Select term",
+        "glossary.excludeImported": "Without imported",
+        "glossary.excludeImported.help": "Show only terms from this vocabulary",
+        "glossary.includeImported": "Include imported vocabularies",
+        "glossary.includeImported.help": "Show including terms from imported vocabularies",
+        "glossary.importedTerm.tooltip": "Term belongs to an imported vocabulary",
         'glossary.createTerm': 'Create new term',
         'glossary.createTerm.tooltip': "Create new vocabulary's term",
         'glossary.createTerm.breadcrumb': 'Create term',
@@ -286,6 +301,8 @@ export default {
         "log-viewer.title": "Error log",
         "log-viewer.timestamp": "Timestamp",
         "log-viewer.error": "Error",
-        "log-viewer.clear": "Clear log"
+        "log-viewer.clear": "Clear log",
+
+        "error.vocabulary.update.imports.danglingTermReferences": "Cannot remove vocabulary import(s), there are still references between terms from this vocabulary and the imported one (or one of its imports)."
     }
 }

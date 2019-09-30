@@ -19,6 +19,7 @@ import {publishNotification} from "../../action/SyncActions";
 import NotificationType from "../../model/NotificationType";
 import OutgoingLink from "../misc/OutgoingLink";
 import {IRI} from "../../util/VocabularyUtils";
+import * as _ from "lodash";
 
 interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
@@ -68,13 +69,13 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
     }
 
     public onSave = (term: Term) => {
-        const oldChildren = this.props.term!.plainSubTerms;
+        const oldParent = this.props.term!.parentTerms;
         this.props.updateTerm(term).then(() => {
             this.loadTerm();
             this.reloadVocabularyTerms();
             this.onCloseEdit();
-            if (term.plainSubTerms !== oldChildren) {
-                this.props.publishNotification({source: {type: NotificationType.TERM_CHILDREN_UPDATED}});
+            if (_.xorBy(oldParent, Utils.sanitizeArray(term.parentTerms), t => t.iri).length > 0) {
+                this.props.publishNotification({source: {type: NotificationType.TERM_HIERARCHY_UPDATED}});
             }
         });
     };
@@ -89,7 +90,8 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
         const component = this.state.edit ?
             <TermMetadataEdit save={this.onSave} term={this.props.term!} cancel={this.onCloseEdit}/> :
             <TermMetadata term={this.props.term!}/>;
-        return <PanelWithActions id="term-detail" title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
+        return <PanelWithActions id="term-detail"
+                                 title={<OutgoingLink label={this.props.term.label} iri={this.props.term.iri}/>}
                                  actions={actions}>{component}</PanelWithActions>;
     }
 }

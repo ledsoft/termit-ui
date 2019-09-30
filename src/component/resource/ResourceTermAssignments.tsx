@@ -7,7 +7,6 @@ import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
 import {loadResourceTermAssignmentsInfo} from "../../action/AsyncActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
-import IntlData from "../../model/IntlData";
 import Term from "../../model/Term";
 import {Badge, Col, Label, Row} from "reactstrap";
 import TermLink from "../term/TermLink";
@@ -16,23 +15,40 @@ import {
     ResourceTermOccurrences
 } from "../../model/ResourceTermAssignments";
 import Utils from "../../util/Utils";
+import AppNotification from "../../model/AppNotification";
+import TermItState from "../../model/TermItState";
+import NotificationType from "../../model/NotificationType";
+import {consumeNotification} from "../../action/SyncActions";
 
 interface ResourceTermAssignmentsOwnProps {
     resource: Resource;
 }
 
+interface ResourceTermAssignmentsStateProps {
+    notifications: AppNotification[];
+}
+
 interface ResourceTermAssignmentsDispatchProps {
     loadTermAssignments: (resource: Resource) => Promise<TermAssignmentInfo[]>;
+    consumeNotification: (notification: AppNotification) => void;
 }
 
 interface ResourceTermAssignmentsState {
     assignments: TermAssignmentInfo[];
 }
 
-type ResourceTermAssignmentsProps = ResourceTermAssignmentsOwnProps & ResourceTermAssignmentsDispatchProps & HasI18n;
+type ResourceTermAssignmentsProps =
+    ResourceTermAssignmentsOwnProps
+    & ResourceTermAssignmentsStateProps
+    & ResourceTermAssignmentsDispatchProps
+    & HasI18n;
 
 function isOccurrence(item: TermAssignmentInfo) {
     return Utils.sanitizeArray(item.types).indexOf(VocabularyUtils.TERM_OCCURRENCE) !== -1;
+}
+
+function isFile(resource: Resource) {
+    return Utils.getPrimaryAssetType(resource) === VocabularyUtils.FILE;
 }
 
 export class ResourceTermAssignments extends React.Component<ResourceTermAssignmentsProps, ResourceTermAssignmentsState> {
@@ -49,7 +65,14 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
 
     public componentDidUpdate(prevProps: Readonly<ResourceTermAssignmentsProps>): void {
         if (prevProps.resource.iri !== this.props.resource.iri && this.props.resource !== EMPTY_RESOURCE) {
+            this.setState({assignments: []});
             this.loadAssignments();
+            return;
+        }
+        const analysisFinishedNotification = this.props.notifications.find(n => n.source.type === NotificationType.TEXT_ANALYSIS_FINISHED);
+        if (analysisFinishedNotification) {
+            this.loadAssignments();
+            this.props.consumeNotification(analysisFinishedNotification);
         }
     }
 
@@ -60,28 +83,28 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
     public render() {
         const i18n = this.props.i18n;
         const assignments = this.renderAssignedTerms();
-        const occurrencesClass = classNames({"resource-term-occurrences-container": assignments.length > 0});
+        const occurrencesClass = classNames("mt-3", {"m-resource-term-occurrences-container": assignments.length > 0});
         return <>
             <Row>
-                <Col md={2}>
+                <Col xl={2} md={4}>
                     <Label className="attribute-label" title={i18n("resource.metadata.terms.assigned.tooltip")}>
                         {i18n("resource.metadata.terms.assigned")}
                     </Label>
                 </Col>
-                <Col md={10} className="resource-terms">
+                <Col xl={10} md={8} id="resource-metadata-term-assignments" className="resource-terms">
                     {assignments}
                 </Col>
             </Row>
-            <Row className={occurrencesClass}>
-                <Col md={2}>
+            {isFile(this.props.resource) && <Row className={occurrencesClass}>
+                <Col xl={2} md={4}>
                     <Label className="attribute-label" title={i18n("resource.metadata.terms.occurrences.tooltip")}>
                         {i18n("resource.metadata.terms.occurrences")}
                     </Label>
                 </Col>
-                <Col md={10} className="resource-terms">
+                <Col xl={10} md={8} id="resource-metadata-term-occurrences" className="resource-terms">
                     {this.renderTermOccurrences()}
                 </Col>
-            </Row>
+            </Row>}
         </>;
     }
 
@@ -130,8 +153,14 @@ export class ResourceTermAssignments extends React.Component<ResourceTermAssignm
     }
 }
 
-export default connect<{ intl: IntlData }, ResourceTermAssignmentsDispatchProps, ResourceTermAssignmentsOwnProps>(undefined, (dispatch: ThunkDispatch) => {
+export default connect<ResourceTermAssignmentsStateProps, ResourceTermAssignmentsDispatchProps, ResourceTermAssignmentsOwnProps>((state: TermItState) => {
     return {
-        loadTermAssignments: (resource: Resource) => dispatch(loadResourceTermAssignmentsInfo(VocabularyUtils.create(resource.iri)))
+        notifications: state.notifications,
+        intl: state.intl    // Pass intl in props to force UI re-render on language switch
+    };
+}, (dispatch: ThunkDispatch) => {
+    return {
+        loadTermAssignments: (resource: Resource) => dispatch(loadResourceTermAssignmentsInfo(VocabularyUtils.create(resource.iri))),
+        consumeNotification: (notification: AppNotification) => dispatch(consumeNotification(notification))
     };
 })(injectIntl(withI18n(ResourceTermAssignments)));
