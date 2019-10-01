@@ -661,13 +661,35 @@ export function updateResourceTerms(res: Resource) {
         type: ActionType.UPDATE_RESOURCE_TERMS
     };
     return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
+        dispatch(asyncActionRequest(action, false));
         const resourceIri = VocabularyUtils.create(res.iri);
         return Ajax.put(Constants.API_PREFIX + "/resources/" + resourceIri.fragment + "/terms",
             content(res.terms!.map(t => t.iri))
                 .params({namespace: resourceIri.namespace}).contentType("application/json"))
             .then(() => {
+                return dispatch(asyncActionSuccess(action));
+            })
+            .catch((error: ErrorData) => {
+                return dispatch(asyncActionFailure(action, error));
+            });
+    };
+}
+
+export function updateResource(res: Resource) {
+    const action = {
+        type: ActionType.UPDATE_RESOURCE
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        const resourceIri = VocabularyUtils.create(res.iri);
+        return Ajax.put(Constants.API_PREFIX + "/resources/" + resourceIri.fragment,
+            content(res.toJsonLd()).params({namespace: resourceIri.namespace}))
+            .then(() => {
                 dispatch(asyncActionSuccess(action));
+                return dispatch(updateResourceTerms(res));
+            })
+            .then(() => {
+                dispatch(loadResource(resourceIri));
                 return dispatch(publishMessage(new Message({messageId: "resource.updated.message"}, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {

@@ -8,7 +8,7 @@ import {
     hasFileContent,
     loadResource,
     removeResource,
-    updateResourceTerms
+    updateResource
 } from "../../../action/AsyncActions";
 import {ButtonToolbar, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown} from "reactstrap";
 import PanelWithActions from "../../misc/PanelWithActions";
@@ -130,7 +130,7 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         loadResource: (iri: IRI) => dispatch(loadResource(iri)),
-        saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
+        saveResource: (resource: Resource) => dispatch(updateResource(resource)),
         removeResource: (resource: Resource) => dispatch(removeResource(resource)),
         consumeNotification: (notification: AppNotification) => dispatch(consumeNotification(notification)),
         hasContent: (iri: IRI) => dispatch(hasFileContent(iri)),
