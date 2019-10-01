@@ -140,7 +140,7 @@
       "jest-localstorage-mock"
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/?(*.)(spec|test).(j|t)s?(x)"
+      "<rootDir>/src/**/__tests__/**/*(*.)(spec|test).(j|t)s?(x)"
     ],
     "testEnvironment": "jsdom",
     "testURL": "http://localhost",
