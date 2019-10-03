@@ -4,7 +4,7 @@ import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
-import User from "../../model/User";
+import User, {UserData} from "../../model/User";
 import {updateProfile} from "../../action/AsyncActions";
 import {AsyncAction} from "../../action/ActionType";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
@@ -53,7 +53,7 @@ export class Profile extends React.Component<ProfileProps, ProfileState> {
             return;
         }
 
-        const userData = {
+        const userData: UserData = {
             ...this.props.user,
             firstName: this.state.firstName,
             lastName: this.state.lastName,

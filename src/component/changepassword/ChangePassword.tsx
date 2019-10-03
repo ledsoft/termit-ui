@@ -9,7 +9,7 @@ import CustomInput from "../misc/CustomInput";
 import {updateProfile} from "../../action/AsyncActions";
 import {AsyncAction} from "../../action/ActionType";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
-import User from "../../model/User";
+import User, {UserDataWithPassword} from "../../model/User";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
 
@@ -51,13 +51,13 @@ export class ChangePassword extends React.Component<ChangePasswordProps, ChangeP
             return;
         }
 
-        const userData = {
+        const userDataWithPassword : UserDataWithPassword = {
             ...this.props.user,
             originalPassword: this.state.currentPassword,
             password: this.state.newPassword,
         };
 
-        this.props.changePassword(new User(userData)).then((asyncResult: AsyncAction) => {
+        this.props.changePassword(new User(userDataWithPassword)).then((asyncResult: AsyncAction) => {
             if (asyncResult.status === AsyncActionStatus.SUCCESS) {
                 this.navigateToProfileRoute();
             }

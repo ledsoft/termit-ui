@@ -248,13 +248,13 @@ export default {
         'profile.first.name': 'Křestní jméno',
         'profile.last.name': 'Příjmení',
         'profile.legend.invalid.name': 'Pole musí mít alespoň 1 znak',
-        'profile.alert.success': 'Profil byl úspěšně aktualizován',
+        'profile.updated.message': 'Profil byl úspěšně aktualizován',
         'profile.change-password': 'Změnit heslo',
 
         'change-password.current.password': 'Současné heslo',
         'change-password.new.password': 'Nové heslo',
         'change-password.confirm.password': 'Potvrzení hesla',
-        'change-password.alert.success': 'Heslo bylo úspěšně změněno',
+        'change-password.updated.message': 'Heslo bylo úspěšně změněno',
         'change-password.passwords.differ.tooltip': 'Staré a nové heslo se musí lišit.',
 
         'annotator.annotate-content': 'Anotovat obsah',

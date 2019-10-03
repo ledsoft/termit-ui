@@ -77,10 +77,6 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         });
     };
 
-    private onUserProfileClick = () => {
-        alert("Not implemented, yet!");
-    };
-
     private isDashboardRoute() {
         return this.props.location.pathname === Routes.dashboard.path;
     }
@@ -135,9 +131,8 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                     {user.abbreviatedName}
                                 </DropdownToggle>
                                 <DropdownMenu right={true}>
-                                    <DropdownItem disabled={true}
-                                                  title={i18n("not-implemented")}
-                                                  onClick={this.onUserProfileClick}>{i18n("main.user-profile")}</DropdownItem>
+                                    <DropdownItem
+                                        href={MainView.hashPath(Routes.profile.path)}>{i18n("main.user-profile")}</DropdownItem>
                                     <DropdownItem divider={true}/>
                                     <DropdownItem onClick={this.props.logout}>{i18n("main.logout")}</DropdownItem>
                                 </DropdownMenu>

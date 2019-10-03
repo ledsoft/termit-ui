@@ -247,13 +247,13 @@ export default {
         'profile.first.name': 'First name',
         'profile.last.name': 'Last name',
         'profile.legend.invalid.name': 'Field must be at least 1 character',
-        'profile.alert.success': 'Profile successfully updated',
+        'profile.updated.message': 'Profile successfully updated',
         'profile.change-password': 'Change Password',
 
         'change-password.current.password': 'Current password',
         'change-password.new.password': 'New password',
         'change-password.confirm.password': 'Confirm password',
-        'change-password.alert.success': 'Password successfully updated',
+        'change-password.updated.message': 'Password successfully updated',
         'change-password.passwords.differ.tooltip': 'Old password and new password should not be same.',
 
         'annotator.annotate-content': 'Annotate Content',

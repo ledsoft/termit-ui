@@ -26,6 +26,11 @@ export interface UserData {
     types?: string[];
 }
 
+export interface UserDataWithPassword extends UserData {
+    password: string;
+    originalPassword: string;
+}
+
 /**
  * System user account.
  */
@@ -36,7 +41,7 @@ export default class User implements UserData {
     public readonly username: string;
     public readonly types: string[];
 
-    constructor(data: UserData) {
+    constructor(data: UserData | UserDataWithPassword) {
         Object.assign(this, data);
         this.types = Utils.sanitizeArray(data.types);
     }

@@ -27,9 +27,9 @@ const ProfileActionButtons: React.FC<ProfileActionButtonsProps> = ({edit, showPr
                 key="profile.change.password"
                 size="sm"
                 color="primary"
-                title={i18n("change-password.change.password")}
+                title={i18n("profile.change-password")}
                 onClick={navigateToChangePasswordRoute}>
-                <GoKey/>&nbsp;{i18n("change-password.change.password")}
+                <GoKey/>&nbsp;{i18n("profile.change-password")}
             </Button></>}
     </ButtonToolbar>
 );

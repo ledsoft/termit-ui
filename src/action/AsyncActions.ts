@@ -890,12 +890,11 @@ export function updateProfile(user: User) {
 
         return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()).params({namespace: userIri.namespace})
         )
-            .then((response) => JsonLdUtils.compactAndResolveReferences(response.data, USER_CONTEXT))
-            .then((data: UserData) => {
-                dispatch(SyncActions.publishMessage(new Message({messageId: "profile.alert.success"}, MessageType.SUCCESS)));
-                return dispatch(asyncActionSuccessWithPayload(action, new User(data)));
-            })
-            .catch((error: ErrorData) => {
+            .then(() => dispatch(loadUser()))
+            .then(() => {
+                dispatch(publishMessage(new Message({messageId: "profile.updated.message"}, MessageType.SUCCESS)));
+                return dispatch(asyncActionSuccess(action));
+            }).catch((error: ErrorData) => {
                 dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
                 return dispatch(asyncActionFailure(action, error));
             });
@@ -913,7 +912,7 @@ export function changePassword(user: User) {
 
         return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()).params({namespace: userIri.namespace}))
             .then(() => {
-                dispatch(SyncActions.publishMessage(new Message({messageId: "change-password.alert.success"}, MessageType.SUCCESS)));
+                dispatch(SyncActions.publishMessage(new Message({messageId: "change-password.updated.message"}, MessageType.SUCCESS)));
                 return dispatch(asyncActionSuccess(action));
             })
             .catch((error: ErrorData) => {
