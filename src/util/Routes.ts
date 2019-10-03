@@ -3,7 +3,7 @@ export class Route {
     public readonly name: string;
     public readonly path: string;
 
-    constructor(name:string, path:string) {
+    constructor(name: string, path: string) {
         this.name = name;
         this.path = path;
     }
@@ -26,6 +26,7 @@ export default {
     dashboard: new Route("dashboard", "/"),
     login: new Route("login", "/login"),
     profile: new Route("profile", "/profile"),
+    changePassword: new Route("changePassword", "/profile/change-password"),
     register: new Route("register", "/register"),
     search: new Route("search", "/search"),
     searchTerms: new Route("searchTerms", "/search/terms"),
@@ -43,4 +44,4 @@ export default {
     resourceSummary: new Route("resourceSummary", "/resources/:name"),
     createVocabularyTerm: new Route("createVocabularyTerm", "/vocabularies/:name/terms/create"),
     vocabularyTermDetail: new Route("vocabularyTermDetail", "/vocabularies/:name/terms/:termName"),
-}
+};

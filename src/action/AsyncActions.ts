@@ -878,3 +878,47 @@ export function exportFileContent(fileIri: IRI) {
             .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
     }
 }
+
+export function updateProfile(user: User) {
+    const action = {
+        type: ActionType.UPDATE_PROFILE
+    };
+
+    return (dispatch: ThunkDispatch) => {
+        const userIri = VocabularyUtils.create(user.iri);
+        dispatch(asyncActionRequest(action));
+
+        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()).params({namespace: userIri.namespace})
+        )
+            .then((response) => JsonLdUtils.compactAndResolveReferences(response.data, USER_CONTEXT))
+            .then((data: UserData) => {
+                dispatch(SyncActions.publishMessage(new Message({messageId: "profile.alert.success"}, MessageType.SUCCESS)));
+                return dispatch(asyncActionSuccessWithPayload(action, new User(data)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return dispatch(asyncActionFailure(action, error));
+            });
+    };
+}
+
+export function changePassword(user: User) {
+    const action = {
+        type: ActionType.CHANGE_PASSWORD
+    };
+
+    return (dispatch: ThunkDispatch) => {
+        const userIri = VocabularyUtils.create(user.iri);
+        dispatch(asyncActionRequest(action));
+
+        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()).params({namespace: userIri.namespace}))
+            .then(() => {
+                dispatch(SyncActions.publishMessage(new Message({messageId: "change-password.alert.success"}, MessageType.SUCCESS)));
+                return dispatch(asyncActionSuccess(action));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return dispatch(asyncActionFailure(action, error));
+            });
+    };
+}

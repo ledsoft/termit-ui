@@ -245,6 +245,18 @@ export default {
         'search.pojem': 'Pojem',
         'search.typ': 'Typ',
 
+        'profile.first.name': 'Křestní jméno',
+        'profile.last.name': 'Příjmení',
+        'profile.legend.invalid.name': 'Pole musí mít alespoň 1 znak',
+        'profile.alert.success': 'Profil byl úspěšně aktualizován',
+        'profile.change-password': 'Změnit heslo',
+
+        'change-password.current.password': 'Současné heslo',
+        'change-password.new.password': 'Nové heslo',
+        'change-password.confirm.password': 'Potvrzení hesla',
+        'change-password.alert.success': 'Heslo bylo úspěšně změněno',
+        'change-password.passwords.differ.tooltip': 'Staré a nové heslo se musí lišit.',
+
         'annotator.annotate-content': 'Anotovat obsah',
         'annotation.form.suggested-occurrence.message': 'Fráze není přiřazena žádnemu pojmu.',
         'annotation.form.invalid-occurrence.message': 'Pojem "%" nebyl nalezen v slovníku. ',

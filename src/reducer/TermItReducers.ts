@@ -36,6 +36,7 @@ import {ErrorLogItem} from "../model/ErrorInfo";
 function user(state: User = EMPTY_USER, action: AsyncActionSuccess<User>): User {
     switch (action.type) {
         case ActionType.FETCH_USER:
+        case ActionType.UPDATE_PROFILE:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         case ActionType.LOGOUT:
             return EMPTY_USER;
@@ -90,7 +91,7 @@ function intl(state: IntlData = loadInitialLocalizationData(), action: SwitchLan
     }
 }
 
-function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary|string[]>): Vocabulary {
+function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary | string[]>): Vocabulary {
     switch (action.type) {
         case ActionType.LOAD_VOCABULARY:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload as Vocabulary : state;
