@@ -12,7 +12,7 @@ import {
     hasFileContent,
     loadFileContent, loadImportedVocabularies,
     loadLastEditedAssets,
-    loadLatestTextAnalysisRecord,
+    loadLatestTextAnalysisRecord, loadResource,
     loadResources,
     loadResourceTermAssignmentsInfo,
     loadTerm,
@@ -814,6 +814,24 @@ describe("Async actions", () => {
             store.getState().pendingActions[ActionType.LOAD_RESOURCES] = AsyncActionStatus.REQUEST;
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadResources())).then(() => {
                 expect(Ajax.get).not.toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe("loadResource", () => {
+
+        it("returns resource as correct type based on type specified in JSON-LD data", () => {
+            const iri = Generator.generateUri();
+            const data = {
+                "@id": iri,
+                "@type": [VocabularyUtils.RESOURCE, VocabularyUtils.FILE]
+            };
+            data[VocabularyUtils.RDFS_LABEL] = "Test label";
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadResource(VocabularyUtils.create(iri)))).then(() => {
+                const loadSuccessAction: AsyncActionSuccess<Resource> = store.getActions()[1];
+                const result = loadSuccessAction.payload;
+                expect(result instanceof TermItFile).toBeTruthy();
             });
         });
     });

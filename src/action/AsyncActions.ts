@@ -30,7 +30,7 @@ import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
 import {CONTEXT as DOCUMENT_CONTEXT} from "../model/Document";
-import TermitFile, {CONTEXT as FILE_CONTEXT} from "../model/File";
+import TermitFile from "../model/File";
 import {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
@@ -67,7 +67,7 @@ function isActionRequestPending(state: TermItState, action: Action) {
     return state.pendingActions[action.type] !== undefined;
 }
 
-const JOINED_RESOURCE_CONTEXT = Object.assign({}, DOCUMENT_CONTEXT, FILE_CONTEXT);
+const JOINED_RESOURCE_CONTEXT = Object.assign({}, DOCUMENT_CONTEXT);
 
 export function loadUser() {
     const action = {
@@ -260,7 +260,7 @@ export function loadResource(iri: IRI) {
             .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, JOINED_RESOURCE_CONTEXT))
             .then((data: ResourceData) =>
-                dispatch(asyncActionSuccessWithPayload(action, new Resource(data))))
+                dispatch(asyncActionSuccessWithPayload(action, AssetFactory.createResource((data)))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)))

@@ -51,10 +51,13 @@ export default class Generator {
     }
 
     public static generateTerm(vocabularyIri?: string) {
-        return new Term({
+        return new Term(Object.assign(this.generateAssetData("Term " + this.randomInt(0, 10000)), {vocabulary: vocabularyIri ? {iri: vocabularyIri} : undefined}));
+    }
+
+    public static generateAssetData(label?: string): { iri: string, label: string } {
+        return {
             iri: Generator.generateUri(),
-            label: "Term - " + Generator.randomInt(0, 10000),
-            vocabulary: vocabularyIri ? {iri: vocabularyIri} : undefined
-        });
+            label: label ? label : "Asset " + Generator.randomInt(0, 100)
+        };
     }
 }

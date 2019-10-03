@@ -30,6 +30,8 @@ import Resource, {EMPTY_RESOURCE} from "../../model/Resource";
 import Generator from "../../__tests__/environment/Generator";
 import SearchQuery from "../../model/SearchQuery";
 import QueryResult from "../../model/QueryResult";
+import File from "../../model/File";
+import VocabularyUtils from "../../util/VocabularyUtils";
 
 function stateToPlainObject(state: TermItState): TermItState {
     return {
@@ -456,6 +458,15 @@ describe("Reducers", () => {
                 error: new ErrorInfo(ActionType.FETCH_USER, {message: "Connection error"})
             }];
             expect(reducers(stateToPlainObject(initialState), clearErrors()).errors).toEqual([]);
+        });
+    });
+
+    describe("loadResourceTerms", () => {
+        it("does not change the type of resource stored in state", () => {
+            initialState.resource = new File(Object.assign(Generator.generateAssetData(), {types: [VocabularyUtils.RESOURCE, VocabularyUtils.FILE]}));
+            const result = reducers(stateToPlainObject(initialState),
+                asyncActionSuccessWithPayload({type: ActionType.LOAD_RESOURCE_TERMS}, [Generator.generateTerm()])).resource;
+            expect(result instanceof File).toBeTruthy();
         });
     });
 });

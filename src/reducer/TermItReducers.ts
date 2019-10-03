@@ -111,7 +111,7 @@ function resource(state: Resource = EMPTY_RESOURCE, action: AsyncActionSuccess<a
             return EMPTY_RESOURCE;
         case ActionType.LOAD_RESOURCE_TERMS:
             if (action.status === AsyncActionStatus.SUCCESS) {
-                const r = new Resource(state);
+                const r = state.clone();
                 r.terms = action.payload;
                 return r;
             } else {
