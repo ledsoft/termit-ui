@@ -36,6 +36,7 @@ import {ErrorLogItem} from "../model/ErrorInfo";
 function user(state: User = EMPTY_USER, action: AsyncActionSuccess<User>): User {
     switch (action.type) {
         case ActionType.FETCH_USER:
+        case ActionType.UPDATE_PROFILE:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
         case ActionType.LOGOUT:
             return EMPTY_USER;
