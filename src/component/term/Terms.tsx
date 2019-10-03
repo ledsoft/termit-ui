@@ -178,6 +178,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
                                            childrenKey={"plainSubTerms"}
                                            simpleTreeData={true}
                                            isMenuOpen={true}
+                                           scrollMenuIntoView={false}
                                            multi={false}
                                            showSettings={false}
                                            maxHeight={Utils.calculateAssetListHeight()}

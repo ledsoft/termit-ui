@@ -107,6 +107,7 @@ class ResourceList extends React.Component<ResourceListProps> {
                                    multi={false}
                                    showSettings={false}
                                    displayInfoOnHover={true}
+                                   scrollMenuIntoView={false}
                                    renderAsTree={true}
                                    maxHeight={height}
                                    valueRenderer={ResourceList.valueRenderer}
