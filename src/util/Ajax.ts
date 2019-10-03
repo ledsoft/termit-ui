@@ -128,6 +128,7 @@ export class Ajax {
         }, (error) => {
             if (!error.response) {
                 return Promise.reject({
+                    message: error.message ? error.message : undefined,
                     messageId: "connection.error"
                 });
             }
