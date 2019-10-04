@@ -82,7 +82,7 @@ export class Profile extends React.Component<ProfileProps, ProfileState> {
         const {i18n, user} = this.props;
 
         return <PanelWithActions
-            id="profile"
+            id="panel-profile"
             title={`${i18n("main.user-profile")}: ${user.username}`}
             actions={<ProfileActionButtons
                 edit={this.state.edit}
