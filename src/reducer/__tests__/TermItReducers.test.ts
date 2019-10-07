@@ -43,7 +43,6 @@ function stateToPlainObject(state: TermItState): TermItState {
         messages: state.messages,
         intl: state.intl,
         selectedTerm: state.selectedTerm,
-        defaultTerms: state.defaultTerms,
         createdTermsCounter: state.createdTermsCounter,
         fileContent: state.fileContent,
         facetedSearchResult: state.facetedSearchResult,
@@ -203,12 +202,10 @@ describe("Reducers", () => {
             }));
         });
 
-        it("resets selected term, terms and terms counter", () => {
-            initialState.defaultTerms = require("../../rest-mock/terms.json");
-            initialState.selectedTerm = initialState.defaultTerms[0];
+        it("resets selected term and terms counter", () => {
+            initialState.selectedTerm = Generator.generateTerm();
             initialState.createdTermsCounter = 2;
             expect(reducers(stateToPlainObject(initialState), userLogout())).toEqual(Object.assign({}, initialState, {
-                defaultTerms: [],
                 selectedTerm: null,
                 createdTermsCounter: 0
             }));
@@ -275,23 +272,6 @@ describe("Reducers", () => {
                 .toEqual(Object.assign({}, initialState, {selectedTerm: new Term(term)}));
             expect(reducers(stateToPlainObject(initialState), selectVocabularyTerm(null)))
                 .toEqual(Object.assign({}, initialState, {selectedTerm: null}));
-        });
-    });
-
-    describe("load default terms", () => {
-        it("sets default terms when it was successfully loaded", () => {
-            const terms: TermData[] = [
-                {
-                    label: "Test term 1",
-                    iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-1"
-                },
-                {
-                    label: "Test term 2",
-                    iri: "http://onto.fel.cvut.cz/ontologies/termit/vocabulary/test-vocabulary/term/test-term-2"
-                }
-            ];
-            expect(reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.LOAD_DEFAULT_TERMS}, terms.map(vt => new Term(vt)))))
-                .toEqual(Object.assign({}, initialState, {defaultTerms: terms.map(t => new Term(t))}));
         });
     });
 

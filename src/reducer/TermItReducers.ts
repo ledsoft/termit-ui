@@ -90,7 +90,7 @@ function intl(state: IntlData = loadInitialLocalizationData(), action: SwitchLan
     }
 }
 
-function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary|string[]>): Vocabulary {
+function vocabulary(state: Vocabulary = EMPTY_VOCABULARY, action: AsyncActionSuccess<Vocabulary | string[]>): Vocabulary {
     switch (action.type) {
         case ActionType.LOAD_VOCABULARY:
             return action.status === AsyncActionStatus.SUCCESS ? action.payload as Vocabulary : state;
@@ -182,17 +182,6 @@ function createdTermsCounter(state: number = 0, action: AsyncAction) {
             return action.status === AsyncActionStatus.SUCCESS ? state + 1 : state;
         case ActionType.LOGOUT:
             return 0;
-        default:
-            return state;
-    }
-}
-
-function defaultTerms(state: Term[] = [], action: AsyncActionSuccess<Term[]>): Term[] {
-    switch (action.type) {
-        case ActionType.LOAD_DEFAULT_TERMS:
-            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
-        case ActionType.LOGOUT:
-            return [];
         default:
             return state;
     }
@@ -378,7 +367,6 @@ const rootReducer = combineReducers<TermItState>({
     messages,
     intl,
     selectedTerm,
-    defaultTerms,
     queryResults,
     createdTermsCounter,
     fileContent,

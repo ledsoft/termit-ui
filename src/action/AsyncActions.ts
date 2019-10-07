@@ -430,16 +430,6 @@ export function loadVocabularies() {
     };
 }
 
-export function loadDefaultTerms(vocabularyIri: IRI) {
-    const action = {
-        type: ActionType.LOAD_DEFAULT_TERMS
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(loadTerms({}, vocabularyIri))
-            .then((result: Term[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
-    }
-}
-
 export function loadTerms(fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS

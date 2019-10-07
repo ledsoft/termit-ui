@@ -22,7 +22,6 @@ export default class TermItState {
     public vocabulary: Vocabulary;
     public resources: { [key: string]: Resource };
     public resource: Resource;
-    public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
     public fileContent: string | null;
     public messages: Message[];
@@ -49,7 +48,6 @@ export default class TermItState {
         this.vocabulary = EMPTY_VOCABULARY;
         this.resource = EMPTY_RESOURCE;
         this.resources = {};
-        this.defaultTerms = [];
         this.vocabularies = {};
         this.fileContent = null;
         this.messages = [];
