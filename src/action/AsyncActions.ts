@@ -460,7 +460,10 @@ export function loadTerms(fetchOptions: FetchOptionsFunction, vocabularyIri: IRI
                 namespace: vocabularyIri.namespace
             }, Utils.createPagingParams(fetchOptions.offset, fetchOptions.limit))))
             .then((data: object[]) => data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
-            .then((data: TermData[]) => data.map(d => new Term(d)))
+            .then((data: TermData[]) => {
+                dispatch(asyncActionSuccess(action));
+                return data.map(d => new Term(d));
+            })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return [];
@@ -476,7 +479,10 @@ export function fetchVocabularyTerm(termNormalizedName: string, vocabularyIri: I
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/" + termNormalizedName, param("namespace", vocabularyIri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, TERM_CONTEXT))
-            .then((data: TermData) => new Term(data))
+            .then((data: TermData) => {
+                dispatch(asyncActionSuccess(action));
+                return new Term(data);
+            });
     };
 }
 
