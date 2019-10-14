@@ -138,7 +138,7 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
                                           ref={this.treeComponent}
                                           value={this.resolveSelectedParent()}
                                           fetchOptions={this.fetchOptions}
-                                          fetchLimit={100000}
+                                          fetchLimit={300}
                                           valueKey="iri"
                                           labelKey="label"
                                           childrenKey="plainSubTerms"
