@@ -83,7 +83,7 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
                                          childrenKey="plainSubTerms"
                                          simpleTreeData={true}
                                          showSettings={false}
-                                         fetchLimit={100000}
+                                         fetchLimit={300}
                                          maxHeight={150}
                                          multi={true}
                                          displayInfoOnHover={true}
