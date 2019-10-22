@@ -4,7 +4,7 @@ import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {shallow} from "enzyme";
 import Vocabulary, {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory} from "history";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Location} from "history";
 import {match as Match, MemoryRouter} from "react-router";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory} from "history";
 import {shallow} from "enzyme";
 import {TermDetail} from "../TermDetail";
 import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";

@@ -6,7 +6,7 @@ import {Terms} from "../Terms";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {Location} from "history";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory} from "history";
 import {match as Match} from "react-router";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
