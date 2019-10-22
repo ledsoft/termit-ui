@@ -9,13 +9,13 @@ export interface TextAreaProps extends AbstractInputProps {
 
 export default class TextArea extends AbstractInput<TextAreaProps> {
 
-    protected input: Input;
+    protected input: Input<{}>;
 
     public render() {
         return <FormGroup>
             {this.renderLabel()}
             <Input type="textarea" style={{height: "auto"}}
-                   ref={(c: Input) => this.input = c} {...this.inputProps()}/>
+                   ref={(c: Input<{}>) => this.input = c} {...this.inputProps()}/>
             <FormFeedback>{this.props.invalidMessage}</FormFeedback>
             {this.renderHelp()}
         </FormGroup>;

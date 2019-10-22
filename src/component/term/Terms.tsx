@@ -192,7 +192,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
     }
 }
 
-export default withRouter(connect((state: TermItState) => {
+export default connect((state: TermItState) => {
     return {
         selectedTerms: state.selectedTerm,
         counter: state.createdTermsCounter,
@@ -204,4 +204,4 @@ export default withRouter(connect((state: TermItState) => {
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
         consumeNotification: (notification: AppNotification) => dispatch(consumeNotification(notification))
     };
-})(injectIntl(withI18n(Terms))));
+})(injectIntl(withI18n(withRouter(Terms))));

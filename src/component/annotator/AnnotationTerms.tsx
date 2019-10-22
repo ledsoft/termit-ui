@@ -124,7 +124,7 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
     }
 }
 
-export default withRouter(connect((state: TermItState) => {
+export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary,
         // selectedTerm: state.selectedTerm,
@@ -135,4 +135,4 @@ export default withRouter(connect((state: TermItState) => {
         selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
     };
-})(injectIntl(withI18n(AnnotationTerms))));
+})(injectIntl(withI18n(withRouter(AnnotationTerms))));
