@@ -3,7 +3,7 @@ import {MainView} from "../MainView";
 import User, {EMPTY_USER} from "../../model/User";
 import {intlFunctions} from "../../__tests__/environment/IntlUtil";
 import {shallow} from "enzyme";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory} from "history";
 import {intlDataForShallow, mountWithIntl} from "../../__tests__/environment/Environment";
 
 describe("MainView", () => {

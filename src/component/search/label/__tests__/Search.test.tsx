@@ -2,7 +2,7 @@ import * as React from "react";
 import SearchQuery from "../../../../model/SearchQuery";
 import SearchResult from "../../../../model/SearchResult";
 import {Location} from "history";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory} from "history";
 import {match as Match} from "react-router";
 import Routes from "../../../../util/Routes";
 import {mountWithIntl} from "../../../../__tests__/environment/Environment";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Location} from "history";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory} from "history";
 import {match as Match} from "react-router";
 import {shallow} from "enzyme";
 import Resource, {EMPTY_RESOURCE} from "../../../model/Resource";

@@ -2,7 +2,7 @@ import * as React from "react";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import Vocabulary, {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
 import {Location} from "history";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory} from "history";
 import {match as Match} from "react-router";
 import {shallow} from "enzyme";
 import {VocabularySummary} from "../VocabularySummary";

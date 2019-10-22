@@ -56,5 +56,6 @@ export default function SparqlWidget<P extends PublicProps>(Component: React.Com
         return {
             executeQuery: (queryString: string) => dispatch(executeQuery(queryString))
         };
+        // @ts-ignore
     })(Wrapper);
 }

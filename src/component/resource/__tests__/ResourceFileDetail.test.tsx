@@ -2,7 +2,7 @@ import * as React from "react";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {TextAnalysisRecord} from "../../../model/TextAnalysisRecord";
 import {Location} from "history";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory} from "history";
 import {match as Match, RouteComponentProps} from "react-router";
 import {shallow} from "enzyme";
 import {ResourceFileDetail} from "../ResourceFileDetail";
