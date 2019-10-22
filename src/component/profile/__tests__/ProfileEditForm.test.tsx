@@ -58,11 +58,13 @@ describe("ProfileEditForm", () => {
             isValid={isValid}
         />);
 
-        wrapper.find("button#profile-edit-submit").simulate("click");
+        const button = wrapper.find("button#profile-edit-submit");
+        button.simulate("click");
+        expect(button.getElement().props.disabled).toBeFalsy();
         expect(onSubmit).toHaveBeenCalled();
     });
 
-    it("does not call onSubmit function on save button click if !isValid", () => {
+    it("renders disabled submit button if !isValid", () => {
         const wrapper = mountWithIntl(<ProfileEditForm
             firstName={firstName}
             lastName={lastName}
@@ -73,7 +75,9 @@ describe("ProfileEditForm", () => {
             isValid={false}
         />);
 
-        wrapper.find("button#profile-edit-submit").simulate("click");
+        const button = wrapper.find("button#profile-edit-submit");
+        button.simulate("click");
+        expect(button.getElement().props.disabled).toBeTruthy();
         expect(onSubmit).not.toHaveBeenCalled();
     });
 
@@ -90,5 +94,21 @@ describe("ProfileEditForm", () => {
 
         wrapper.find("button#profile-edit-cancel").simulate("click");
         expect(showProfileView).toHaveBeenCalled();
+    });
+
+    it("invokes onKeyPress function when enter is pressed", () => {
+        const wrapper = mountWithIntl(<ProfileEditForm
+            firstName={firstName}
+            lastName={lastName}
+            onChange={onChange}
+            onSubmit={onSubmit}
+            onKeyPress={onKeyPress}
+            showProfileView={showProfileView}
+            isValid={isValid}
+        />);
+
+        const lastNameInput = wrapper.find("input[name=\"lastName\"]");
+        lastNameInput.simulate("keyPress", {key: "Enter"});
+        expect(onKeyPress).toHaveBeenCalled();
     });
 });
