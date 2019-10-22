@@ -23,25 +23,25 @@ class NewsMd extends React.Component<NewsMdProps, NewsMdState> {
         };
     }
 
+    public componentDidMount() {
+        return this.loadNews(this.props.locale);
+    }
+
+    public componentDidUpdate(prevProps: Readonly<NewsMdProps>): void {
+        if (this.props.locale !== prevProps.locale) {
+            this.setState({newsMd: null});
+            this.loadNews(this.props.locale);
+        }
+    }
+
     private loadNews(locale: string) {
-        return Ajax.get(Constants.NEWS_MD_URL[locale])
+        Ajax.get(Constants.NEWS_MD_URL[locale])
             .then((data: string) => {
                 this.setState({newsMd: data})
             })
             .catch((reason: any) => {
                 this.setState({newsMd: "*" + this.props.i18n("ajax.failed") + " (" + reason.status + ")*"})
-            })
-    }
-
-    public componentWillReceiveProps(nextProps: NewsMdProps) {
-        if (nextProps.locale !== this.props.locale) {
-            this.setState({newsMd: null});
-            this.loadNews(nextProps.locale);
-        }
-    }
-
-    public componentDidMount() {
-        return this.loadNews(this.props.locale);
+            });
     }
 
     public render() {
