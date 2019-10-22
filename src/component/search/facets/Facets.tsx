@@ -97,7 +97,7 @@ export class Facets extends React.Component<Props, State> {
         }
     }
 
-    public componentWillUpdate() {
+    public componentDidUpdate() {
         this.runAngular();
     }
 
