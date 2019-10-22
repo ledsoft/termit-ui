@@ -4,7 +4,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {RouteComponentProps, withRouter} from "react-router";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {loadDefaultTerms, loadTerm, updateTerm} from "../../action/AsyncActions";
+import {loadTerm, updateTerm} from "../../action/AsyncActions";
 import TermMetadata from "./TermMetadata";
 import Term from "../../model/Term";
 import TermItState from "../../model/TermItState";
@@ -25,7 +25,6 @@ interface TermDetailProps extends HasI18n, RouteComponentProps<any> {
     term: Term | null;
     loadTerm: (termName: string, vocabularyIri: IRI) => void;
     updateTerm: (term: Term) => Promise<any>;
-    reloadVocabularyTerms: (vocabularyIri: IRI) => void;
     publishNotification: (notification: AppNotification) => void;
 }
 
@@ -49,16 +48,6 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
         this.props.loadTerm(termName, {fragment: vocabularyName, namespace});
     }
 
-    private reloadVocabularyTerms(): void {
-        const vocabularyName: string = this.props.match.params.name;
-        const match = this.props.location.search.match(/namespace=(.+)/);
-        let namespace: string | undefined;
-        if (match) {
-            namespace = match[1];
-        }
-        this.props.reloadVocabularyTerms({fragment: vocabularyName, namespace});
-    }
-
     public componentDidUpdate(prevProps: TermDetailProps) {
         const currTermName = this.props.match.params.termName;
         const prevTermName = prevProps.match.params.termName;
@@ -72,7 +61,6 @@ export class TermDetail extends EditableComponent<TermDetailProps> {
         const oldParent = this.props.term!.parentTerms;
         this.props.updateTerm(term).then(() => {
             this.loadTerm();
-            this.reloadVocabularyTerms();
             this.onCloseEdit();
             if (_.xorBy(oldParent, Utils.sanitizeArray(term.parentTerms), t => t.iri).length > 0) {
                 this.props.publishNotification({source: {type: NotificationType.TERM_HIERARCHY_UPDATED}});
@@ -104,7 +92,6 @@ export default connect((state: TermItState) => {
     return {
         loadTerm: (termName: string, vocabularyIri: IRI) => dispatch(loadTerm(termName, vocabularyIri)),
         updateTerm: (term: Term) => dispatch(updateTerm(term)),
-        reloadVocabularyTerms: (vocabularyIri: IRI) => dispatch(loadDefaultTerms(vocabularyIri)),
         publishNotification: (notification: AppNotification) => dispatch(publishNotification(notification))
     };
 })(injectIntl(withI18n(withRouter(TermDetail))));

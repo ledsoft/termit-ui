@@ -1,13 +1,18 @@
 import OntologicalVocabulary from "../util/VocabularyUtils";
-import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "./Resource"
-import {OWN_CONTEXT as DOCUMENT_CONTEXT, DocumentData} from "./Document";
+import Resource, {ResourceData} from "./Resource"
+import Document, {DocumentData} from "./Document";
 
 const ctx = {
     "content": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor/content",
     "owner": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-částí-dokumentu"
 };
 
-export const CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx, DOCUMENT_CONTEXT);
+/**
+ * This defines only context part specific to File. Complete context can be obtained from Document context.
+ *
+ * This is for circular dependency prevention.
+ */
+export const OWN_CONTEXT = ctx;
 
 export interface FileData extends ResourceData {
     origin?: string,
@@ -32,7 +37,18 @@ export default class File extends Resource implements FileData {
     }
 
     public toJsonLd(): {} {
-        return Object.assign({}, this, {"@context": RESOURCE_CONTEXT, "@type": [OntologicalVocabulary.FILE]});
+        const jsonLd: any = Object.assign({}, this, {
+            // Import lazily to evade circular dependency in context definition between File and Document
+            "@context": require("./Document").CONTEXT,
+            types: [OntologicalVocabulary.RESOURCE, OntologicalVocabulary.FILE]
+        });
+        if (jsonLd.owner) {
+            const ind = jsonLd.owner.files.findIndex((item: any) => item.iri === this.iri);
+            // Replace reference to myself with an IRI reference only to prevent serialization cycle errors
+            jsonLd.owner.files.splice(ind, 1, {iri: this.iri});
+            jsonLd.owner.files = Document.replaceCircularReferencesToOwnerWithOwnerId(jsonLd.owner.files);
+        }
+        return jsonLd;
     }
 }
 

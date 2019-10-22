@@ -111,7 +111,7 @@ function resource(state: Resource = EMPTY_RESOURCE, action: AsyncActionSuccess<a
             return EMPTY_RESOURCE;
         case ActionType.LOAD_RESOURCE_TERMS:
             if (action.status === AsyncActionStatus.SUCCESS) {
-                const r = new Resource(state);
+                const r = state.clone();
                 r.terms = action.payload;
                 return r;
             } else {
@@ -182,17 +182,6 @@ function createdTermsCounter(state: number = 0, action: AsyncAction) {
             return action.status === AsyncActionStatus.SUCCESS ? state + 1 : state;
         case ActionType.LOGOUT:
             return 0;
-        default:
-            return state;
-    }
-}
-
-function defaultTerms(state: Term[] = [], action: AsyncActionSuccess<Term[]>): Term[] {
-    switch (action.type) {
-        case ActionType.LOAD_DEFAULT_TERMS:
-            return action.status === AsyncActionStatus.SUCCESS ? action.payload : state;
-        case ActionType.LOGOUT:
-            return [];
         default:
             return state;
     }
@@ -378,7 +367,6 @@ const rootReducer = combineReducers<TermItState>({
     messages,
     intl,
     selectedTerm,
-    defaultTerms,
     queryResults,
     createdTermsCounter,
     fileContent,

@@ -229,8 +229,9 @@ export class TermMetadataCreate extends React.Component<TermMetadataCreateProps,
         fieldApi.setValue(name);
         if (this.state.generateUri && name.length > 4) {
             const normalizedName = this.props.match.params.name;
+            const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
             Ajax.get(Constants.API_PREFIX + "/vocabularies/" + normalizedName + "/terms/identifier",
-                params({name})).then(uri => this.setOptionUri(uri));
+                params({name, namespace})).then(uri => this.setOptionUri(uri));
         }
     }
 

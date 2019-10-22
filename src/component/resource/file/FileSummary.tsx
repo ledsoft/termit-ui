@@ -15,7 +15,6 @@ import PanelWithActions from "../../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../../util/VocabularyUtils";
 import {GoFile} from "react-icons/go";
 import {ThunkDispatch} from "../../../util/Types";
-import Resource from "../../../model/Resource";
 import "../Resources.scss";
 import {consumeNotification} from "../../../action/SyncActions";
 import RemoveAssetDialog from "../../asset/RemoveAssetDialog";
@@ -130,8 +129,8 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         loadResource: (iri: IRI) => dispatch(loadResource(iri)),
-        saveResource: (resource: Resource) => dispatch(updateResource(resource)),
-        removeResource: (resource: Resource) => dispatch(removeResource(resource)),
+        saveResource: (resource: File) => dispatch(updateResource(resource)),
+        removeResource: (resource: File) => dispatch(removeResource(resource)),
         consumeNotification: (notification: AppNotification) => dispatch(consumeNotification(notification)),
         hasContent: (iri: IRI) => dispatch(hasFileContent(iri)),
         downloadContent: (iri: IRI) => dispatch(exportFileContent(iri))

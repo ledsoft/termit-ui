@@ -30,7 +30,7 @@ import TermItState from "../model/TermItState";
 import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
 import {CONTEXT as DOCUMENT_CONTEXT} from "../model/Document";
-import TermitFile, {CONTEXT as FILE_CONTEXT} from "../model/File";
+import TermitFile from "../model/File";
 import {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
@@ -67,7 +67,7 @@ function isActionRequestPending(state: TermItState, action: Action) {
     return state.pendingActions[action.type] !== undefined;
 }
 
-const JOINED_RESOURCE_CONTEXT = Object.assign({}, DOCUMENT_CONTEXT, FILE_CONTEXT);
+const JOINED_RESOURCE_CONTEXT = Object.assign({}, DOCUMENT_CONTEXT);
 
 export function loadUser() {
     const action = {
@@ -260,7 +260,7 @@ export function loadResource(iri: IRI) {
             .get(Constants.API_PREFIX + "/resources/" + iri.fragment, param("namespace", iri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, JOINED_RESOURCE_CONTEXT))
             .then((data: ResourceData) =>
-                dispatch(asyncActionSuccessWithPayload(action, new Resource(data))))
+                dispatch(asyncActionSuccessWithPayload(action, AssetFactory.createResource((data)))))
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)))
@@ -430,16 +430,6 @@ export function loadVocabularies() {
     };
 }
 
-export function loadDefaultTerms(vocabularyIri: IRI) {
-    const action = {
-        type: ActionType.LOAD_DEFAULT_TERMS
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(loadTerms({}, vocabularyIri))
-            .then((result: Term[]) => dispatch(dispatch(asyncActionSuccessWithPayload(action, result))))
-    }
-}
-
 export function loadTerms(fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) {
     const action = {
         type: ActionType.FETCH_VOCABULARY_TERMS
@@ -460,7 +450,10 @@ export function loadTerms(fetchOptions: FetchOptionsFunction, vocabularyIri: IRI
                 namespace: vocabularyIri.namespace
             }, Utils.createPagingParams(fetchOptions.offset, fetchOptions.limit))))
             .then((data: object[]) => data.length !== 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, TERM_CONTEXT) : [])
-            .then((data: TermData[]) => data.map(d => new Term(d)))
+            .then((data: TermData[]) => {
+                dispatch(asyncActionSuccess(action));
+                return data.map(d => new Term(d));
+            })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
                 return [];
@@ -476,7 +469,10 @@ export function fetchVocabularyTerm(termNormalizedName: string, vocabularyIri: I
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/" + termNormalizedName, param("namespace", vocabularyIri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, TERM_CONTEXT))
-            .then((data: TermData) => new Term(data))
+            .then((data: TermData) => {
+                dispatch(asyncActionSuccess(action));
+                return new Term(data);
+            });
     };
 }
 
