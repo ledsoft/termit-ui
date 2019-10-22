@@ -115,11 +115,11 @@ describe("Term edit", () => {
     it("correctly sets unmapped properties on save", () => {
         const property = Generator.generateUri();
         term.unmappedProperties = new Map([[property, ["test"]]]);
-        const wrapper = shallow(<TermMetadataEdit term={term} save={onSave}
-                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const wrapper = shallow<TermMetadataEdit>(<TermMetadataEdit term={term} save={onSave}
+                                                                    cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
         const updatedProperties = new Map([[property, ["test1", "test2"]]]);
         wrapper.instance().setState({unmappedProperties: updatedProperties});
-        (wrapper.instance() as TermMetadataEdit).onSave();
+        (wrapper.instance()).onSave();
         const result: Term = (onSave as jest.Mock).mock.calls[0][0];
         expect(result.unmappedProperties).toEqual(updatedProperties);
         expect(result[property]).toBeDefined();
@@ -127,9 +127,9 @@ describe("Term edit", () => {
     });
 
     it("passes mapped Term properties for ignoring to UnmappedPropertiesEdit", () => {
-        const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
-                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
-        const ignored = wrapper.find(UnmappedPropertiesEdit).prop("ignoredProperties");
+        const wrapper = shallow<TermMetadataEdit>(<TermMetadataEdit save={onSave} term={term}
+                                                                    cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const ignored: string[] | undefined = wrapper.find(UnmappedPropertiesEdit).prop("ignoredProperties");
         expect(ignored).toBeDefined();
         expect(ignored!.indexOf(VocabularyUtils.RDF_TYPE)).not.toEqual(-1);
         Object.getOwnPropertyNames((n: string) => expect(ignored![CONTEXT[n]]).not.toEqual(-1));
