@@ -1,6 +1,6 @@
 import * as React from "react";
 import Generator from "../../../__tests__/environment/Generator";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {UnmappedPropertiesEdit} from "../UnmappedPropertiesEdit";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {Badge} from "reactstrap";
@@ -8,7 +8,6 @@ import {GoPlus} from "react-icons/go";
 import {shallow} from "enzyme";
 import RdfsResource from "../../../model/RdfsResource";
 // @ts-ignore
-import {IntelligentTreeSelect} from "intelligent-tree-select";
 
 describe("UnmappedPropertiesEdit", () => {
 
@@ -168,8 +167,7 @@ describe("UnmappedPropertiesEdit", () => {
     it("loads known properties on mount", () => {
         shallow(<UnmappedPropertiesEdit properties={new Map()} onChange={onChange} knownProperties={[]}
                                         loadKnownProperties={loadKnownProperties} {...intlFunctions()}
-                                        createProperty={createProperty}
-                                        clearProperties={clearProperties} {...intlDataForShallow()}/>);
+                                        createProperty={createProperty} clearProperties={clearProperties}/>);
         expect(loadKnownProperties).toHaveBeenCalled();
     });
 
@@ -177,7 +175,7 @@ describe("UnmappedPropertiesEdit", () => {
         const wrapper = shallow(<UnmappedPropertiesEdit properties={new Map()} onChange={onChange} knownProperties={[]}
                                                         loadKnownProperties={loadKnownProperties}
                                                         createProperty={createProperty}
-                                                        clearProperties={clearProperties} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                        clearProperties={clearProperties} {...intlFunctions()}/>);
         const propertyData = {
             iri: Generator.generateUri(),
             label: "Test"
@@ -190,7 +188,7 @@ describe("UnmappedPropertiesEdit", () => {
         const wrapper = shallow(<UnmappedPropertiesEdit properties={new Map()} onChange={onChange} knownProperties={[]}
                                                         loadKnownProperties={loadKnownProperties}
                                                         createProperty={createProperty}
-                                                        clearProperties={clearProperties} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                        clearProperties={clearProperties} {...intlFunctions()}/>);
         const propertyData = {
             iri: Generator.generateUri(),
             label: "Test"

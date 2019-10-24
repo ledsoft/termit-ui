@@ -1,7 +1,7 @@
 import * as React from "react";
 import Term from "../../../model/Term";
 import VocabularyUtils from "../../../util/VocabularyUtils";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {TermTypesEdit} from "../TermTypesEdit";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 // @ts-ignore
@@ -41,7 +41,7 @@ describe("TermTypesEdit", () => {
     it("invokes onChange handler with selected type and the implicit Term type", () => {
         const selected = new Term({iri: Generator.generateUri(), label: "Selected term"});
         const wrapper = shallow(<TermTypesEdit termTypes={[VocabularyUtils.TERM]} availableTypes={{}}
-                                               onChange={onChange} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                               onChange={onChange} {...intlFunctions()}/>);
         (wrapper.instance() as TermTypesEdit).onChange(selected);
         expect(onChange).toHaveBeenCalled();
         const newTypes = (onChange as jest.Mock).mock.calls[0][0];
@@ -57,7 +57,7 @@ describe("TermTypesEdit", () => {
         availableTypes[iri] = new Term({iri, label: "Other type"});
         const types = [VocabularyUtils.TERM, iri];
         const wrapper = shallow(<TermTypesEdit termTypes={types} availableTypes={availableTypes}
-                                               onChange={onChange} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                               onChange={onChange} {...intlFunctions()}/>);
         // Simulate tree reset (using the real component did not work)
         (wrapper.instance() as TermTypesEdit).onChange(null);
         expect(onChange).toHaveBeenCalledWith([VocabularyUtils.TERM]);

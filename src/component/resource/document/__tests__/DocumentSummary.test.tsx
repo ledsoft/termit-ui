@@ -1,7 +1,7 @@
 import * as React from "react";
 import Document from "../../../../model/Document";
 import Generator from "../../../../__tests__/environment/Generator";
-import {intlDataForShallow, mountWithIntl} from "../../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
 import File from "../../../../model/File";
 import VocabularyUtils, {IRI} from "../../../../util/VocabularyUtils";
@@ -64,7 +64,7 @@ describe("DocumentSummary", () => {
 
     it("reloads document when file was added into it", () => {
         const wrapper = shallow<DocumentSummary>(<DocumentSummary
-            resource={doc} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}/>);
+            resource={doc} {...resourceHandlers} {...intlFunctions()}/>);
         wrapper.instance().onFileAdded();
         expect(loadResource).toHaveBeenCalledWith(VocabularyUtils.create(doc.iri));
     });

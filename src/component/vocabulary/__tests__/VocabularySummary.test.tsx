@@ -1,13 +1,12 @@
 import * as React from "react";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import Vocabulary, {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
-import {Location} from "history";
-import {createMemoryHistory} from "history";
+import {createMemoryHistory, Location} from "history";
 import {match as Match} from "react-router";
 import {shallow} from "enzyme";
 import {VocabularySummary} from "../VocabularySummary";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {VocabularyEdit} from "../VocabularyEdit";
 import {Button, DropdownToggle} from "reactstrap";
 
@@ -60,7 +59,7 @@ describe("VocabularySummary", () => {
     it("loads vocabulary on mount", () => {
         shallow(<VocabularySummary vocabulary={EMPTY_VOCABULARY} updateVocabulary={onUpdate} loadVocabulary={onLoad}
                                    history={history} location={location} {...exportFunctions}
-                                   match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                   match={match} {...intlFunctions()}/>);
         expect(onLoad).toHaveBeenCalledWith({fragment: normalizedName});
     });
 
@@ -68,7 +67,7 @@ describe("VocabularySummary", () => {
         location.search = "?namespace=" + namespace;
         shallow(<VocabularySummary vocabulary={EMPTY_VOCABULARY} updateVocabulary={onUpdate} loadVocabulary={onLoad}
                                    history={history} location={location} {...exportFunctions}
-                                   match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                   match={match} {...intlFunctions()}/>);
         expect(onLoad).toHaveBeenCalledWith({fragment: normalizedName, namespace});
     });
 
@@ -76,7 +75,7 @@ describe("VocabularySummary", () => {
         const wrapper = shallow(<VocabularySummary vocabulary={EMPTY_VOCABULARY} updateVocabulary={onUpdate}
                                                    loadVocabulary={onLoad}
                                                    history={history} location={location} {...exportFunctions}
-                                                   match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                   match={match} {...intlFunctions()}/>);
         wrapper.setProps({vocabulary});
         wrapper.update();
         expect(onLoad).toHaveBeenCalledTimes(1);
@@ -108,7 +107,7 @@ describe("VocabularySummary", () => {
         const wrapper = shallow(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
                                                    loadVocabulary={onLoad} {...exportFunctions}
                                                    history={history} location={location}
-                                                   match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                   match={match} {...intlFunctions()}/>);
         (wrapper.instance() as VocabularySummary).onEdit();
         const update = new Vocabulary({
             iri: vocabulary.iri,
@@ -122,7 +121,7 @@ describe("VocabularySummary", () => {
         const wrapper = shallow(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
                                                    loadVocabulary={onLoad} {...exportFunctions}
                                                    history={history} location={location}
-                                                   match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                   match={match} {...intlFunctions()}/>);
         (wrapper.instance() as VocabularySummary).onEdit();
         (wrapper.instance() as VocabularySummary).onSave(vocabulary);
         return Promise.resolve().then(() => {
@@ -135,7 +134,7 @@ describe("VocabularySummary", () => {
         const wrapper = shallow(<VocabularySummary vocabulary={vocabulary} updateVocabulary={onUpdate}
                                                    loadVocabulary={onLoad} {...exportFunctions}
                                                    history={history} location={location}
-                                                   match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                   match={match} {...intlFunctions()}/>);
         (wrapper.instance() as VocabularySummary).onEdit();
         (wrapper.instance() as VocabularySummary).onSave(vocabulary);
         return Promise.resolve().then(() => {
@@ -178,7 +177,7 @@ describe("VocabularySummary", () => {
                                                                       updateVocabulary={onUpdate}
                                                                       loadVocabulary={onLoad} {...exportFunctions}
                                                                       history={history} location={location}
-                                                                      match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                      match={match} {...intlFunctions()}/>);
         wrapper.instance().onFileAdded();
         expect(onLoad).toHaveBeenCalledWith(VocabularyUtils.create(vocabulary.iri));
     });
