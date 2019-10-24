@@ -1,7 +1,7 @@
 import * as React from "react";
 import Term from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {TermAssignments} from "../TermAssignments";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {ReactWrapper, shallow} from "enzyme";
@@ -50,7 +50,7 @@ describe("TermAssignments", () => {
     it("loads assignments on mount", () => {
         shallow(<TermAssignments term={term} loadTermAssignments={loadTermAssignments}
                                  onAssignmentsLoad={onAssignmentsLoad}
-                                 {...intlFunctions()} {...intlDataForShallow()}/>);
+                                 {...intlFunctions()}/>);
         expect(loadTermAssignments).toHaveBeenCalledWith(term);
     });
 
@@ -74,7 +74,7 @@ describe("TermAssignments", () => {
     it("reloads assignments on update", () => {
         const wrapper = shallow(<TermAssignments term={term} loadTermAssignments={loadTermAssignments}
                                                  onAssignmentsLoad={onAssignmentsLoad}
-                                                 {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                 {...intlFunctions()}/>);
         expect(loadTermAssignments).toHaveBeenCalledWith(term);
         const differentTerm = new Term({
             iri: Generator.generateUri(),
@@ -92,7 +92,7 @@ describe("TermAssignments", () => {
     it("does not reload assignments if the term is still the same", () => {
         const wrapper = shallow(<TermAssignments term={term} loadTermAssignments={loadTermAssignments}
                                                  onAssignmentsLoad={onAssignmentsLoad}
-                                                 {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                 {...intlFunctions()}/>);
         wrapper.update();
         expect(loadTermAssignments).toHaveBeenCalledTimes(1);
     });
@@ -192,7 +192,7 @@ describe("TermAssignments", () => {
         }];
         loadTermAssignments = jest.fn().mockImplementation(() => Promise.resolve(occurrences));
         shallow(<TermAssignments term={term} loadTermAssignments={loadTermAssignments}
-                                 onAssignmentsLoad={onAssignmentsLoad} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                 onAssignmentsLoad={onAssignmentsLoad} {...intlFunctions()}/>);
         return Promise.resolve().then(() => {
             expect(onAssignmentsLoad).toHaveBeenCalledWith(2);
         });
