@@ -38,11 +38,11 @@ const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} {...intlFunc
 Note that this means that `wrapper` is not the actual tested component but an instance of `IntlProvider` wrapping the component. `mountWithIntl` also provides a default Redux store
 mock which is required by some components.
 
-If shallow rendering is used, use the regular Enzyme `shallow` method to mount the component, but set up the intl context using the `intlDataForShallow` function.
+If shallow rendering is used, use the regular Enzyme `shallow` method to mount the component and set up the intl context using the `intlFunctions` function.
 
 For example:
 ```jsx harmony
-const wrapper = shallow<CreateVocabulary>(<CreateVocabulary onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+const wrapper = shallow<CreateVocabulary>(<CreateVocabulary onCreate={onCreate} {...intlFunctions()}/>);
 ```
 
 Do not forget to import the core component into tests, not the wrapped component!

@@ -6,7 +6,6 @@ import FetchOptionsFunction from "../../../model/Functions";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import Term from "../../../model/Term";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 // @ts-ignore
 import {IntelligentTreeSelect} from "intelligent-tree-select";
 import Vocabulary from "../../../model/Vocabulary";
@@ -35,7 +34,7 @@ describe("ParentTermSelector", () => {
         const wrapper = shallow(<ParentTermSelector id="test" termIri={Generator.generateUri()} parentTerms={parent}
                                                     vocabularyIri={vocabularyIri} onChange={onChange}
                                                     currentVocabulary={vocabulary} loadTerms={loadTerms}
-                                                    loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                    loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
         expect(wrapper.find(IntelligentTreeSelect).prop("value")).toEqual(parent[0].iri);
     });
 
@@ -45,7 +44,7 @@ describe("ParentTermSelector", () => {
                                                                         vocabularyIri={vocabularyIri}
                                                                         onChange={onChange}
                                                                         loadTerms={loadTerms}
-                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
         wrapper.instance().onChange([terms[0]]);
         expect(onChange).toHaveBeenCalledWith([terms[0]]);
     });
@@ -56,7 +55,7 @@ describe("ParentTermSelector", () => {
                                                                         vocabularyIri={vocabularyIri}
                                                                         onChange={onChange}
                                                                         loadTerms={loadTerms}
-                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
         wrapper.instance().onChange([term]);
         expect(onChange).toHaveBeenCalledWith([]);
     });
@@ -67,7 +66,7 @@ describe("ParentTermSelector", () => {
                                                                         vocabularyIri={Generator.generateUri()}
                                                                         onChange={onChange}
                                                                         loadTerms={loadTerms}
-                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
         wrapper.instance().onChange(null);
         expect(onChange).toHaveBeenCalledWith([]);
     });
@@ -78,7 +77,7 @@ describe("ParentTermSelector", () => {
                                                                             vocabularyIri={vocabularyIri}
                                                                             onChange={onChange}
                                                                             loadTerms={loadTerms}
-                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
             wrapper.setState({includeImported: true});
             wrapper.update();
             wrapper.instance().fetchOptions({});
@@ -95,7 +94,7 @@ describe("ParentTermSelector", () => {
                                                                             vocabularyIri={Generator.generateUri()}
                                                                             onChange={onChange}
                                                                             loadTerms={loadTerms}
-                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
             wrapper.setState({includeImported: true});
             wrapper.update();
             wrapper.instance().fetchOptions({optionID: parent.iri, option: parent});
@@ -114,7 +113,7 @@ describe("ParentTermSelector", () => {
                                                                             vocabularyIri={vocabularyIri}
                                                                             onChange={onChange}
                                                                             loadTerms={loadTerms}
-                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
             return wrapper.instance().fetchOptions({}).then((terms) => {
                 expect(terms.indexOf(currentTerm)).toEqual(-1);
             });
@@ -133,7 +132,7 @@ describe("ParentTermSelector", () => {
                                                                             vocabularyIri={vocabularyIri}
                                                                             onChange={onChange}
                                                                             loadTerms={loadTerms}
-                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
             return wrapper.instance().fetchOptions({}).then((terms) => {
                 terms.forEach(t => {
                     expect(t.vocabulary!.iri).toEqual(vocabularyImports[0]);
@@ -150,7 +149,7 @@ describe("ParentTermSelector", () => {
                                                                             vocabularyIri={vocabularyIri}
                                                                             onChange={onChange}
                                                                             loadTerms={loadTerms}
-                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                            loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
             return wrapper.instance().fetchOptions({}).then((terms) => {
                 expect(terms.indexOf(currentTerm)).toEqual(-1);
                 expect(terms[0].plainSubTerms!.indexOf(currentTerm.iri)).toEqual(-1);
@@ -165,7 +164,7 @@ describe("ParentTermSelector", () => {
                                                                         vocabularyIri={vocabularyIri}
                                                                         onChange={onChange} parentTerms={parentTerms}
                                                                         loadTerms={loadTerms}
-                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
         expect(wrapper.state().includeImported).toBeTruthy();
     });
 
@@ -175,7 +174,7 @@ describe("ParentTermSelector", () => {
                                                         vocabularyIri={vocabularyIri}
                                                         onChange={onChange} parentTerms={[]}
                                                         loadTerms={loadTerms}
-                                                        loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                        loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
         expect(loadImports).toHaveBeenCalledWith(VocabularyUtils.create(vocabularyIri));
     });
 
@@ -190,7 +189,7 @@ describe("ParentTermSelector", () => {
                                                         vocabularyIri={vocabularyIri} currentVocabulary={vocabulary}
                                                         onChange={onChange} parentTerms={[]}
                                                         loadTerms={loadTerms}
-                                                        loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                        loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
         expect(loadImports).not.toHaveBeenCalled();
     });
 
@@ -200,7 +199,7 @@ describe("ParentTermSelector", () => {
                                                                         vocabularyIri={vocabularyIri}
                                                                         onChange={onChange} parentTerms={[]}
                                                                         loadTerms={loadTerms}
-                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
         expect(wrapper.exists(IntelligentTreeSelect)).toBeFalsy();
         wrapper.setState({importedVocabularies: []});
         wrapper.update();

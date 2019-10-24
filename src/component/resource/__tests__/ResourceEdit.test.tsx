@@ -1,6 +1,6 @@
 import * as React from "react";
 import Resource from "../../../model/Resource";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Generator from "../../../__tests__/environment/Generator";
 import {ResourceEdit} from "../ResourceEdit";
@@ -85,7 +85,7 @@ describe("ResourceEdit", () => {
         it("invokes save handler with updated instance of the correct type", () => {
             const file = new File(Object.assign(Generator.generateAssetData(), {types: [VocabularyUtils.RESOURCE, VocabularyUtils.FILE]}));
             const wrapper = shallow<ResourceEdit>(<ResourceEdit resource={file} save={save}
-                                                                cancel={cancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                cancel={cancel} {...intlFunctions()}/>);
             wrapper.instance().onSave();
             const update = (save as jest.Mock).mock.calls[0][0];
             expect(update instanceof File);

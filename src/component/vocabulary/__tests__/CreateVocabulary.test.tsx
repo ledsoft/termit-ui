@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Button} from "reactstrap";
 import Routing from "../../../util/Routing";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {CreateVocabulary} from "../CreateVocabulary";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Routes from "../../../util/Routes";
@@ -60,12 +60,12 @@ describe("Create vocabulary view", () => {
     });
 
     it("passes state representing new vocabulary to vocabulary creation handler on submit", () => {
-        const wrapper = shallow(<CreateVocabulary onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const wrapper = shallow<CreateVocabulary>(<CreateVocabulary onCreate={onCreate} {...intlFunctions()}/>);
         const label = "Test vocabulary";
         const comment = "Test vocabulary comment";
         wrapper.setState({iri, label, comment});
         wrapper.update();
-        (wrapper.instance() as CreateVocabulary).onCreate();
+        (wrapper.instance()).onCreate();
         expect(onCreate).toHaveBeenCalledWith(new Vocabulary({iri, label, comment}));
     });
 

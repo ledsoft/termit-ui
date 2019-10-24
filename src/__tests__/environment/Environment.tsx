@@ -2,7 +2,7 @@ import * as React from "react";
 import {ReactElement} from "react";
 import {mount, MountRendererProps} from "enzyme";
 import intlData from "../../i18n/en";
-import {createIntl, IntlProvider} from "react-intl";
+import {IntlProvider} from "react-intl";
 import {Provider} from "react-redux";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -24,8 +24,4 @@ export function mountWithIntl(node: ReactElement<any>, options?: MountRendererPr
     return mount(<Provider store={mockStore(new TermItState())}>
         <IntlProvider {...intlData}>{node}</IntlProvider>
     </Provider>, options);
-}
-
-export function intlDataForShallow(): {} {
-    return createIntl(intlData);
 }

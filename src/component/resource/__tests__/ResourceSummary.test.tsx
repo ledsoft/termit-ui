@@ -3,7 +3,6 @@ import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {shallow} from "enzyme";
 import {ResourceSummary} from "../ResourceSummary";
 import Resource from "../../../model/Resource";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 
 describe("ResourceSummary", () => {
@@ -34,8 +33,7 @@ describe("ResourceSummary", () => {
             label: resourceName
         });
         const wrapper = shallow<ResourceSummary>(<ResourceSummary
-            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-        />);
+            resource={resource} {...resourceHandlers} {...intlFunctions()}/>);
         wrapper.instance().onRemove();
         expect(removeResource).toHaveBeenCalledWith(resource);
         expect(wrapper.state("showRemoveDialog")).toBeFalsy();
@@ -47,8 +45,7 @@ describe("ResourceSummary", () => {
             label: resourceName
         });
         const wrapper = shallow<ResourceSummary>(<ResourceSummary
-            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
-        />);
+            resource={resource} {...resourceHandlers} {...intlFunctions()}/>);
         wrapper.instance().onSave(resource);
         return Promise.resolve().then(() => {
             expect(loadResource).toHaveBeenCalledWith(VocabularyUtils.create(resource.iri));

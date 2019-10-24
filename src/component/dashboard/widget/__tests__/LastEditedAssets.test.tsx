@@ -3,7 +3,7 @@ import Asset from "../../../../model/Asset";
 import {shallow} from "enzyme";
 import {LastEditedAssets} from "../LastEditedAssets";
 import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow, mountWithIntl} from "../../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../../__tests__/environment/Environment";
 import en from "../../../../i18n/en";
 import Term from "../../../../model/Term";
 import Generator from "../../../../__tests__/environment/Generator";
@@ -34,7 +34,7 @@ describe("LastEditedAssets", () => {
 
     it("loads last edited assets on mount", () => {
         shallow(<LastEditedAssets
-            loadAssets={onLoad} {...loadingInjectMock} {...intlFunctions()} {...intlDataForShallow()}/>);
+            loadAssets={onLoad} {...loadingInjectMock} {...intlFunctions()}/>);
         expect(onLoad).toHaveBeenCalled();
     });
 

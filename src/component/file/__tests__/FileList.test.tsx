@@ -1,7 +1,7 @@
 import * as React from "react";
 import {FileList} from "../FileList";
 import File from "../../../model/File";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {MemoryRouter} from "react-router";
 import {Button} from "reactstrap";
@@ -68,7 +68,7 @@ describe("FileList", () => {
     });
 
     it("renders notice when no Files exist", () => {
-        const wrapper = shallow(<FileList files={[]} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const wrapper = shallow(<FileList files={[]} {...intlFunctions()}/>);
         expect(wrapper.exists("#file-list-empty")).toBeTruthy();
     });
 });

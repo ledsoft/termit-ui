@@ -1,11 +1,9 @@
 import * as React from "react";
-import {Location} from "history";
-import {createMemoryHistory} from "history";
+import {createMemoryHistory, Location} from "history";
 import {match as Match} from "react-router";
 import {shallow} from "enzyme";
 import Resource, {EMPTY_RESOURCE} from "../../../model/Resource";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {ResourceSummaryRoute} from "../ResourceSummaryRoute";
 import File from "../../../model/File";
@@ -50,7 +48,7 @@ describe("ResourceSummaryRoute", () => {
 
     it("loads resource on mount", () => {
         shallow(<ResourceSummaryRoute
-            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()}
             history={history}
             location={location}
             match={match}/>);
@@ -59,7 +57,7 @@ describe("ResourceSummaryRoute", () => {
 
     it("does not attempt to reload resource on update when it is empty resource", () => {
         const wrapper = shallow(<ResourceSummaryRoute
-            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()}
             history={history} location={location} match={match}/>);
         wrapper.setProps({resource: EMPTY_RESOURCE});
         wrapper.update();
@@ -69,7 +67,7 @@ describe("ResourceSummaryRoute", () => {
     it("reloads resource when new resource identifier is passed in location props", () => {
         const oldResource = new Resource({iri: namespace + resourceName, label: resourceName, terms: []});
         const wrapper = shallow(<ResourceSummaryRoute
-            resource={oldResource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={oldResource} {...resourceHandlers} {...intlFunctions()}
             history={history} location={location} match={match}/>);
         const newFragment = "another-resource";
         const newMatch = Object.assign({}, match);
@@ -85,7 +83,7 @@ describe("ResourceSummaryRoute", () => {
             label: resourceName
         });
         const wrapper = shallow(<ResourceSummaryRoute
-            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={EMPTY_RESOURCE} {...resourceHandlers} {...intlFunctions()}
             history={history} location={location} match={match}/>);
         wrapper.setProps({resource});
         wrapper.update();
@@ -98,7 +96,7 @@ describe("ResourceSummaryRoute", () => {
             label: resourceName
         });
         const wrapper = shallow(<ResourceSummaryRoute
-            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={resource} {...resourceHandlers} {...intlFunctions()}
             history={history} location={location} match={match}/>);
         return Promise.resolve().then(() => {
             wrapper.unmount();
@@ -113,7 +111,7 @@ describe("ResourceSummaryRoute", () => {
             types: [VocabularyUtils.FILE, VocabularyUtils.RESOURCE]
         });
         const wrapper = shallow(<ResourceSummaryRoute
-            resource={file} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={file} {...resourceHandlers} {...intlFunctions()}
             history={history} location={location} match={match}/>);
         expect(wrapper.exists(FileSummary)).toBeTruthy();
         expect(wrapper.exists(ResourceSummary)).toBeFalsy();
@@ -126,7 +124,7 @@ describe("ResourceSummaryRoute", () => {
             types: [VocabularyUtils.RESOURCE]
         });
         const wrapper = shallow(<ResourceSummaryRoute
-            resource={resource} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={resource} {...resourceHandlers} {...intlFunctions()}
             history={history} location={location} match={match}/>);
         expect(wrapper.exists(ResourceSummary)).toBeTruthy();
         expect(wrapper.exists(FileSummary)).toBeFalsy();
@@ -140,7 +138,7 @@ describe("ResourceSummaryRoute", () => {
             types: [VocabularyUtils.DOCUMENT, VocabularyUtils.RESOURCE]
         });
         const wrapper = shallow(<ResourceSummaryRoute
-            resource={doc} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}
+            resource={doc} {...resourceHandlers} {...intlFunctions()}
             history={history} location={location} match={match}/>);
         expect(wrapper.exists(DocumentSummary)).toBeTruthy();
         expect(wrapper.exists(ResourceSummary)).toBeFalsy();

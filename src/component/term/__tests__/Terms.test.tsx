@@ -4,9 +4,7 @@ import FetchOptionsFunction from "../../../model/Functions";
 import {shallow} from "enzyme";
 import {Terms} from "../Terms";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
-import {Location} from "history";
-import {createMemoryHistory} from "history";
+import {createMemoryHistory, Location} from "history";
 import {match as Match} from "react-router";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
@@ -81,7 +79,7 @@ describe("Terms", () => {
         return shallow<Terms>(<Terms counter={counter} selectedTerms={selectedTerms}
                                      notifications={[]} consumeNotification={consumeNotification}
                                      selectVocabularyTerm={selectVocabularyTerm} vocabulary={vocabulary}
-                                     fetchTerms={fetchTerms} {...intlFunctions()} {...intlDataForShallow()}
+                                     fetchTerms={fetchTerms} {...intlFunctions()}
                                      location={location} match={match} history={history}/>);
     }
 
@@ -146,8 +144,8 @@ describe("Terms", () => {
         it("filters out terms which are not in the vocabulary import chain", () => {
             const vocabularies = [Generator.generateUri(), Generator.generateUri(), Generator.generateUri()];
             vocabulary.allImportedVocabularies = vocabularies;
-            const terms:Term[] = [];
-            const matching:Term[] = [];
+            const terms: Term[] = [];
+            const matching: Term[] = [];
             for (let i = 0; i < 5; i++) {
                 const termMatches = Generator.randomBoolean();
                 const t = Generator.generateTerm(termMatches ? Generator.randomItem(vocabularies) : Generator.generateUri());
@@ -164,8 +162,8 @@ describe("Terms", () => {
         });
 
         it("filters out terms from different vocabularies when vocabulary has no imports", () => {
-            const terms:Term[] = [];
-            const matching:Term[] = [];
+            const terms: Term[] = [];
+            const matching: Term[] = [];
             for (let i = 0; i < 5; i++) {
                 const termMatches = Generator.randomBoolean();
                 const t = Generator.generateTerm(termMatches ? vocabulary.iri : Generator.generateUri());

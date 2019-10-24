@@ -4,7 +4,7 @@ import User, {EMPTY_USER} from "../../model/User";
 import {intlFunctions} from "../../__tests__/environment/IntlUtil";
 import {shallow} from "enzyme";
 import {createMemoryHistory} from "history";
-import {intlDataForShallow, mountWithIntl} from "../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../__tests__/environment/Environment";
 
 describe("MainView", () => {
 
@@ -31,7 +31,8 @@ describe("MainView", () => {
     });
 
     it("loads user on mount", () => {
-        shallow(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history} location={location} match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+        shallow(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history} location={location}
+                          match={match} {...intlFunctions()}/>);
         expect(loadUser).toHaveBeenCalled();
     });
 
@@ -42,12 +43,14 @@ describe("MainView", () => {
             username: "halsey@unsc.org",
             iri: "http://onto.fel.cvut.cz/ontologies/termit/catherine-halsey"
         });
-        shallow(<MainView user={user} loadUser={loadUser} logout={logout} history={history} location={location} match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+        shallow(<MainView user={user} loadUser={loadUser} logout={logout} history={history} location={location}
+                          match={match} {...intlFunctions()}/>);
         expect(loadUser).not.toHaveBeenCalled();
     });
 
     it("renders placeholder UI when user is being loaded", () => {
-        const wrapper = mountWithIntl(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history} location={location} match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const wrapper = mountWithIntl(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history}
+                                                location={location} match={match} {...intlFunctions()}/>);
         expect(wrapper.find("header").exists()).toBeFalsy();
     });
 });
