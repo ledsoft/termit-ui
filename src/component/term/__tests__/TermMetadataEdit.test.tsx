@@ -1,7 +1,6 @@
 import * as React from "react";
 import Term, {CONTEXT} from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {TermMetadataEdit} from "../TermMetadataEdit";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Ajax from "../../../util/Ajax";
@@ -29,13 +28,13 @@ describe("Term edit", () => {
 
     it("renders identifier input disabled", () => {
         const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
-                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                  cancel={onCancel} {...intlFunctions()}/>);
         expect(wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-iri").prop("disabled")).toBeTruthy();
     });
 
     it("disables save button when label field is empty", () => {
         const wrapper = shallow<TermMetadataEdit>(<TermMetadataEdit save={onSave} term={term}
-                                                                    cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                    cancel={onCancel} {...intlFunctions()}/>);
         wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
             currentTarget: {
                 name: "edit-term-label",
@@ -48,7 +47,7 @@ describe("Term edit", () => {
 
     it("invokes save with state data when save is clicked", () => {
         const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
-                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                  cancel={onCancel} {...intlFunctions()}/>);
         const newLabel = "New label";
         wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
             currentTarget: {
@@ -66,7 +65,7 @@ describe("Term edit", () => {
 
     it("checks for label uniqueness in vocabulary on label change", () => {
         const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
-                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                  cancel={onCancel} {...intlFunctions()}/>);
         const mock = jest.fn().mockImplementation(() => Promise.resolve(true));
         Ajax.get = mock;
         const newLabel = "New label";
@@ -84,7 +83,7 @@ describe("Term edit", () => {
 
     it("does not check for label uniqueness when new label is the same as original", () => {
         const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
-                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                  cancel={onCancel} {...intlFunctions()}/>);
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(true));
         wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
             currentTarget: {
@@ -97,7 +96,7 @@ describe("Term edit", () => {
 
     it("disables save button when duplicate label is set", () => {
         const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
-                                                  cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                  cancel={onCancel} {...intlFunctions()}/>);
         Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(true));
         wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
             currentTarget: {
@@ -116,7 +115,7 @@ describe("Term edit", () => {
         const property = Generator.generateUri();
         term.unmappedProperties = new Map([[property, ["test"]]]);
         const wrapper = shallow<TermMetadataEdit>(<TermMetadataEdit term={term} save={onSave}
-                                                                    cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                    cancel={onCancel} {...intlFunctions()}/>);
         const updatedProperties = new Map([[property, ["test1", "test2"]]]);
         wrapper.instance().setState({unmappedProperties: updatedProperties});
         (wrapper.instance()).onSave();
@@ -128,7 +127,7 @@ describe("Term edit", () => {
 
     it("passes mapped Term properties for ignoring to UnmappedPropertiesEdit", () => {
         const wrapper = shallow<TermMetadataEdit>(<TermMetadataEdit save={onSave} term={term}
-                                                                    cancel={onCancel} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                    cancel={onCancel} {...intlFunctions()}/>);
         const ignored: string[] | undefined = wrapper.find(UnmappedPropertiesEdit).prop("ignoredProperties");
         expect(ignored).toBeDefined();
         expect(ignored!.indexOf(VocabularyUtils.RDF_TYPE)).not.toEqual(-1);

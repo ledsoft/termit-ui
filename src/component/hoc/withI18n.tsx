@@ -1,5 +1,5 @@
 import * as React from "react";
-import {InjectedIntlProps} from "react-intl";
+import {IntlShape} from "react-intl";
 
 export interface HasI18n {
 
@@ -12,10 +12,10 @@ export interface HasI18n {
 
 // type HOC<PWrapped> = React.ComponentClass<PWrapped> | React.SFC<PWrapped>;
 
-export default function withI18n<P extends HasI18n>(Component: React.ComponentType<P>): React.ComponentClass<Pick<P, Exclude<keyof P, keyof HasI18n>> & InjectedIntlProps> {
-    class Wrapper extends React.Component<P & HasI18n & InjectedIntlProps> {
+export default function withI18n<P extends HasI18n>(Component: React.ComponentType<P>): React.ComponentClass<Pick<P, Exclude<keyof P, keyof HasI18n>> & {intl: IntlShape}> {
+    class Wrapper extends React.Component<P & HasI18n & {intl: IntlShape}> {
         protected i18n = (id: string): string => {
-            return this.props.intl.messages[id] || ("{" + id + "}");
+            return this.props.intl.messages[id] as string || ("{" + id + "}");
         };
 
         protected formatMessage = (msgId: string, values: {} | undefined = {}): string => {

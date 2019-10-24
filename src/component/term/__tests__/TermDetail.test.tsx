@@ -1,10 +1,9 @@
 import * as React from "react";
-import {Location} from "history";
+import {createMemoryHistory, Location} from "history";
 import {match as Match, MemoryRouter} from "react-router";
-import {createMemoryHistory} from "history";
 import {shallow} from "enzyme";
 import {TermDetail} from "../TermDetail";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import TermMetadata from "../TermMetadata";
 import TermMetadataEdit from "../TermMetadataEdit";
@@ -15,7 +14,7 @@ import NotificationType from "../../../model/NotificationType";
 import {IRI} from "../../../util/VocabularyUtils";
 
 jest.mock("../TermAssignments");
-jest.mock("../IncludeImportedTermsToggle");
+jest.mock("../ParentTermSelector");
 
 describe("TermDetail", () => {
 
@@ -62,7 +61,7 @@ describe("TermDetail", () => {
         shallow(<TermDetail term={null} loadTerm={onLoad} updateTerm={onUpdate}
                             publishNotification={onPublishNotification}
                             history={history} location={location} match={match}
-                            {...intlFunctions()} {...intlDataForShallow()}/>);
+                            {...intlFunctions()}/>);
         expect(onLoad).toHaveBeenCalledWith(normalizedTermName, {fragment: normalizedVocabName});
     });
 
@@ -72,7 +71,7 @@ describe("TermDetail", () => {
         shallow(<TermDetail term={null} loadTerm={onLoad} updateTerm={onUpdate}
                             history={history} location={location} match={match}
                             publishNotification={onPublishNotification}
-                            {...intlFunctions()} {...intlDataForShallow()}/>);
+                            {...intlFunctions()}/>);
         expect(onLoad).toHaveBeenCalledWith(normalizedTermName, {fragment: normalizedVocabName, namespace});
     });
 
@@ -99,7 +98,7 @@ describe("TermDetail", () => {
         const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             history={history} location={location} match={match}
                                             publishNotification={onPublishNotification}
-                                            {...intlFunctions()} {...intlDataForShallow()}/>);
+                                            {...intlFunctions()}/>);
         (wrapper.instance() as TermDetail).onSave(term);
         expect(onUpdate).toHaveBeenCalledWith(term);
     });
@@ -108,7 +107,7 @@ describe("TermDetail", () => {
         const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad}
                                             updateTerm={onUpdate} publishNotification={onPublishNotification}
                                             history={history} location={location} match={match}
-                                            {...intlFunctions()} {...intlDataForShallow()}/>);
+                                            {...intlFunctions()}/>);
         (wrapper.instance() as TermDetail).onEdit();
         (wrapper.instance() as TermDetail).onSave(term);
         return Promise.resolve().then(() => {
@@ -121,7 +120,7 @@ describe("TermDetail", () => {
         const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             history={history} location={location} match={match}
                                             publishNotification={onPublishNotification}
-                                            {...intlFunctions()} {...intlDataForShallow()}/>);
+                                            {...intlFunctions()}/>);
         (wrapper.instance() as TermDetail).onSave(term);
         return Promise.resolve().then(() => {
             expect(onLoad).toHaveBeenCalledWith(normalizedTermName, {fragment: normalizedVocabName});
@@ -132,7 +131,7 @@ describe("TermDetail", () => {
         const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                             history={history} location={location} match={match}
                                             publishNotification={onPublishNotification}
-                                            {...intlFunctions()} {...intlDataForShallow()}/>);
+                                            {...intlFunctions()}/>);
         (wrapper.instance() as TermDetail).onEdit();
         wrapper.update();
         expect((wrapper.instance() as TermDetail).state.edit).toBeTruthy();
@@ -166,7 +165,7 @@ describe("TermDetail", () => {
         const wrapper = shallow<TermDetail>(<TermDetail term={term} loadTerm={onLoad} updateTerm={onUpdate}
                                                         history={history} location={location} match={match}
                                                         publishNotification={onPublishNotification}
-                                                        {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                        {...intlFunctions()}/>);
         const update = new Term(Object.assign({}, term));
         const newParent = Generator.generateUri();
         update.parentTerms = [new Term({iri: newParent, label: "New parent"})];
