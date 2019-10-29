@@ -3,7 +3,7 @@ import {Card, CardBody, CardHeader} from "reactstrap";
 
 interface PanelWithActionsProps {
     title: JSX.Element | string;
-    actions?: JSX.Element[];
+    actions?: JSX.Element[] | JSX.Element;
     className?: string;
     id?: string;
 }

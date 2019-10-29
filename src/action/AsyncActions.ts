@@ -874,3 +874,43 @@ export function exportFileContent(fileIri: IRI) {
             .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
     }
 }
+
+export function updateProfile(user: User) {
+    const action = {
+        type: ActionType.UPDATE_PROFILE
+    };
+
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+
+        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()))
+            .then(() => dispatch(loadUser()))
+            .then(() => {
+                dispatch(publishMessage(new Message({messageId: "profile.updated.message"}, MessageType.SUCCESS)));
+                return dispatch(asyncActionSuccess(action));
+            }).catch((error: ErrorData) => {
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return dispatch(asyncActionFailure(action, error));
+            });
+    };
+}
+
+export function changePassword(user: User) {
+    const action = {
+        type: ActionType.CHANGE_PASSWORD
+    };
+
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+
+        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()))
+            .then(() => {
+                dispatch(SyncActions.publishMessage(new Message({messageId: "change-password.updated.message"}, MessageType.SUCCESS)));
+                return dispatch(asyncActionSuccess(action));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
+                return dispatch(asyncActionFailure(action, error));
+            });
+    };
+}

@@ -42,6 +42,7 @@ import BreadcrumbRoute from "./breadcrumb/BreadcrumbRoute";
 import VocabularyManagementRoute from "./vocabulary/VocabularyManagementRoute";
 import Dashboard from "./dashboard/Dashboard";
 import SearchVocabularies from "./search/SearchVocabularies";
+import ProfileRoute from "./profile/ProfileRoute";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User;
@@ -74,10 +75,6 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         this.setState({
             isMainMenuOpen: !this.state.isMainMenuOpen
         });
-    };
-
-    private onUserProfileClick = () => {
-        alert("Not implemented, yet!");
     };
 
     private isDashboardRoute() {
@@ -134,9 +131,8 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                     {user.abbreviatedName}
                                 </DropdownToggle>
                                 <DropdownMenu right={true}>
-                                    <DropdownItem disabled={true}
-                                                  title={i18n("not-implemented")}
-                                                  onClick={this.onUserProfileClick}>{i18n("main.user-profile")}</DropdownItem>
+                                    <DropdownItem
+                                        href={MainView.hashPath(Routes.profile.path)}>{i18n("main.user-profile")}</DropdownItem>
                                     <DropdownItem divider={true}/>
                                     <DropdownItem onClick={this.props.logout}>{i18n("main.logout")}</DropdownItem>
                                 </DropdownMenu>
@@ -163,6 +159,8 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                     <BreadcrumbRoute title={i18n("main.nav.search")} path={Routes.search.path} component={Search}/>
                     <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path}
                                      component={FacetedSearch}/>
+                    <BreadcrumbRoute title={i18n("main.user-profile")} path={Routes.profile.path}
+                                     component={ProfileRoute}/>
                     <Route component={Dashboard}/>
                 </Switch>
             </Container>

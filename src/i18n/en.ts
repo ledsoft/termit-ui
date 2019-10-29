@@ -14,7 +14,7 @@ export default {
         'optional': 'Optional',
         'actions': 'Actions',
         'description': 'Description',
-        'submit' : 'Submit',
+        'submit': 'Submit',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
@@ -244,6 +244,18 @@ export default {
         'search.pojem': 'Term',
         'search.typ': 'Type',
 
+        'profile.first.name': 'First name',
+        'profile.last.name': 'Last name',
+        'profile.legend.invalid.name': 'Field must be at least 1 character',
+        'profile.updated.message': 'Profile successfully updated',
+        'profile.change-password': 'Change Password',
+
+        'change-password.current.password': 'Current password',
+        'change-password.new.password': 'New password',
+        'change-password.confirm.password': 'Confirm password',
+        'change-password.updated.message': 'Password successfully updated',
+        'change-password.passwords.differ.tooltip': 'Old password and new password should not be same.',
+
         'annotator.annotate-content': 'Annotate Content',
         'annotation.form.suggested-occurrence.message': 'Phrase is not assigned to a vocabulary term.',
         'annotation.form.invalid-occurrence.message': 'Term \'%\' not found in vocabulary.',
@@ -305,4 +317,4 @@ export default {
 
         "error.vocabulary.update.imports.danglingTermReferences": "Cannot remove vocabulary import(s), there are still references between terms from this vocabulary and the imported one (or one of its imports)."
     }
-}
+};

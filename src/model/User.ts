@@ -6,6 +6,8 @@ export const CONTEXT = {
     "firstName": VocabularyUtils.PREFIX + "má-křestní-jméno",
     "lastName": VocabularyUtils.PREFIX + "má-příjmení",
     "username": VocabularyUtils.PREFIX + "má-uživatelské-jméno",
+    "password": VocabularyUtils.PREFIX + "má-heslo",
+    "originalPassword": "http://onto.fel.cvut.cz/ontologies/application/termit/slovník/original-password",
     "types": "@type"
 };
 
@@ -24,6 +26,11 @@ export interface UserData {
     types?: string[];
 }
 
+export interface UserDataWithPassword extends UserData {
+    password: string;
+    originalPassword: string;
+}
+
 /**
  * System user account.
  */
@@ -34,7 +41,7 @@ export default class User implements UserData {
     public readonly username: string;
     public readonly types: string[];
 
-    constructor(data: UserData) {
+    constructor(data: UserData | UserDataWithPassword) {
         Object.assign(this, data);
         this.types = Utils.sanitizeArray(data.types);
     }
@@ -45,6 +52,10 @@ export default class User implements UserData {
 
     get abbreviatedName(): string {
         return this.firstName.charAt(0).toUpperCase() + ". " + this.lastName;
+    }
+
+    public toJsonLd(): UserData {
+        return Object.assign({}, this, {"@context": CONTEXT});
     }
 }
 
