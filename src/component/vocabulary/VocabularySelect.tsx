@@ -7,6 +7,7 @@ import {ThunkDispatch} from "../../util/Types";
 import {loadVocabularies} from "../../action/AsyncActions";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {injectIntl} from "react-intl";
+import Utils from "../../util/Utils";
 
 interface PropsExt {
     vocabulary: Vocabulary | null;
@@ -57,7 +58,22 @@ export class VocabularySelect extends React.Component<Props> {
             <DropdownToggle caret={true}>
                 {this.props.vocabulary ? this.props.vocabulary.label : that.props.i18n("vocabulary.select-vocabulary")}
             </DropdownToggle>
-            <DropdownMenu>
+            <DropdownMenu modifiers={{
+                setMaxHeight: {
+                    enabled: true,
+                    order: 890,
+                    fn: (data) => {
+                        return {
+                            ...data,
+                            styles: {
+                                ...data.styles,
+                                overflow: "auto",
+                                maxHeight: Utils.calculateAssetListHeight() + "px",
+                            },
+                        };
+                    },
+                },
+            }}>
                 {items}
             </DropdownMenu>
         </UncontrolledDropdown>;
