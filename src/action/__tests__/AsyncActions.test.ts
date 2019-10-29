@@ -1386,9 +1386,6 @@ describe("Async actions", () => {
                 expect(Ajax.put).toHaveBeenCalled();
                 const requestUri = mock.mock.calls[0][0];
                 expect(requestUri).toEqual(Constants.API_PREFIX + "/users/current");
-                const params = mock.mock.calls[0][1].getParams();
-                expect(params.namespace).toBeDefined();
-                expect(params.namespace).toEqual(namespace);
             });
         });
 
@@ -1467,9 +1464,6 @@ describe("Async actions", () => {
                 expect(Ajax.put).toHaveBeenCalled();
                 const requestUri = mock.mock.calls[0][0];
                 expect(requestUri).toEqual(Constants.API_PREFIX + "/users/current");
-                const params = mock.mock.calls[0][1].getParams();
-                expect(params.namespace).toBeDefined();
-                expect(params.namespace).toEqual(namespace);
             });
         });
 
