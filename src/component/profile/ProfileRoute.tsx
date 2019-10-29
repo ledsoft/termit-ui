@@ -1,7 +1,7 @@
 import {Route, Switch} from "react-router";
 import Routes from "../../util/Routes";
 import * as React from "react";
-import ChangePassword from "../changepassword/ChangePassword";
+import ChangePassword from "./ChangePassword";
 import Profile from "./Profile";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
