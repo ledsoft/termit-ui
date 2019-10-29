@@ -127,9 +127,9 @@ export class ChangePassword extends React.Component<ChangePasswordProps, ChangeP
                         <Col xl={12}>
                             <ButtonToolbar className="justify-content-center">
                                 <Button id="change-password-submit" onClick={this.onChangePassword} color="success"
-                                        disabled={!this.isValid()}>{i18n("save")}</Button>
+                                        size="sm" disabled={!this.isValid()}>{i18n("save")}</Button>
                                 <Button id="change-password-cancel" onClick={this.navigateToProfileRoute}
-                                        color="secondary">{i18n("cancel")}</Button>
+                                        size="sm" color="secondary">{i18n("cancel")}</Button>
                             </ButtonToolbar>
                         </Col>
                     </Row>

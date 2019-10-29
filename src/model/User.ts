@@ -55,8 +55,7 @@ export default class User implements UserData {
     }
 
     public toJsonLd(): UserData {
-        const result = Object.assign({}, this, {"@context": CONTEXT});
-        return result;
+        return Object.assign({}, this, {"@context": CONTEXT});
     }
 }
 

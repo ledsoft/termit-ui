@@ -881,11 +881,9 @@ export function updateProfile(user: User) {
     };
 
     return (dispatch: ThunkDispatch) => {
-        const userIri = VocabularyUtils.create(user.iri);
         dispatch(asyncActionRequest(action));
 
-        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()).params({namespace: userIri.namespace})
-        )
+        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()))
             .then(() => dispatch(loadUser()))
             .then(() => {
                 dispatch(publishMessage(new Message({messageId: "profile.updated.message"}, MessageType.SUCCESS)));
@@ -903,10 +901,9 @@ export function changePassword(user: User) {
     };
 
     return (dispatch: ThunkDispatch) => {
-        const userIri = VocabularyUtils.create(user.iri);
         dispatch(asyncActionRequest(action));
 
-        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()).params({namespace: userIri.namespace}))
+        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()))
             .then(() => {
                 dispatch(SyncActions.publishMessage(new Message({messageId: "change-password.updated.message"}, MessageType.SUCCESS)));
                 return dispatch(asyncActionSuccess(action));

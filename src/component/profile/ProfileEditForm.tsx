@@ -45,9 +45,9 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
         <Row>
             <Col xl={12}>
                 <ButtonToolbar className="justify-content-center">
-                    <Button id="profile-edit-submit" onClick={onSubmit} color="success"
+                    <Button id="profile-edit-submit" onClick={onSubmit} color="success" size="sm"
                             disabled={!isValid}>{i18n("save")}</Button>
-                    <Button id="profile-edit-cancel" onClick={showProfileView}
+                    <Button id="profile-edit-cancel" onClick={showProfileView} size="sm"
                             color="secondary">{i18n("cancel")}</Button>
                 </ButtonToolbar>
             </Col>
