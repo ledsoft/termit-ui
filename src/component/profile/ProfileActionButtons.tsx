@@ -10,7 +10,7 @@ interface ProfileActionButtonsProps extends HasI18n {
     navigateToChangePasswordRoute: () => void;
 }
 
-const ProfileActionButtons: React.FC<ProfileActionButtonsProps> = ({edit, showProfileEdit, navigateToChangePasswordRoute, i18n}) => (
+export const ProfileActionButtons: React.FC<ProfileActionButtonsProps> = ({edit, showProfileEdit, navigateToChangePasswordRoute, i18n}) => (
     <ButtonToolbar key="profile.summary.actions">
         {!edit && <>
             <Button

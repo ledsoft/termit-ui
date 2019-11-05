@@ -14,10 +14,10 @@ interface ProfileEditFormProps extends HasI18n {
     showProfileView: () => void;
 }
 
-const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
-                                                             firstName, lastName, onChange, onSubmit, onKeyPress,
-                                                             showProfileView, isValid, i18n
-                                                         }) => (
+export const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
+                                                                    firstName, lastName, onChange, onSubmit, onKeyPress,
+                                                                    showProfileView, isValid, i18n
+                                                                }) => (
     <Form>
         <Row>
             <Col xl={6} md={12}>

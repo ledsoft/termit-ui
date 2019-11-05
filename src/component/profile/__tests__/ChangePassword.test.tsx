@@ -6,10 +6,10 @@ import {AsyncAction} from "../../../action/ActionType";
 import Generator from "../../../__tests__/environment/Generator";
 import {i18n, intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {ChangePassword} from "../ChangePassword";
-import {CardHeader, CardBody, Form, Row, ButtonToolbar} from "reactstrap";
+import {CardHeader, CardBody, Form, Row, ButtonToolbar, Button} from "reactstrap";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
-import {ReactWrapper} from "enzyme";
+import {ReactWrapper, shallow} from "enzyme";
 
 jest.mock("../../../util/Routing");
 
@@ -46,9 +46,9 @@ describe("ChangePassword", () => {
     });
 
     it("navigates to profile route on cancel", () => {
-        const wrapper = mountWithIntl(<ChangePassword changePassword={changePassword}
-                                                      user={user} {...intlFunctions()}/>);
-        const cancelButton = wrapper.find("button#change-password-cancel");
+        const wrapper = shallow(<ChangePassword changePassword={changePassword}
+                                                user={user} {...intlFunctions()}/>);
+        const cancelButton = wrapper.find(Button).findWhere(b => b.prop("id") === "change-password-cancel");
         cancelButton.simulate("click");
         expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.profile);
     });

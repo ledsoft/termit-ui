@@ -2,7 +2,9 @@ import * as React from "react";
 
 import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {Button, ButtonToolbar, Form} from "reactstrap";
-import ProfileEditForm from "../ProfileEditForm";
+import {ProfileEditForm} from "../ProfileEditForm";
+import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
+import {shallow} from "enzyme";
 
 describe("ProfileEditForm", () => {
 
@@ -33,6 +35,7 @@ describe("ProfileEditForm", () => {
             onKeyPress={onKeyPress}
             showProfileView={showProfileView}
             isValid={isValid}
+            {...intlFunctions()}
         />);
 
         const form = wrapper.find(Form);
@@ -56,6 +59,7 @@ describe("ProfileEditForm", () => {
             onKeyPress={onKeyPress}
             showProfileView={showProfileView}
             isValid={isValid}
+            {...intlFunctions()}
         />);
 
         const button = wrapper.find("button#profile-edit-submit");
@@ -73,6 +77,7 @@ describe("ProfileEditForm", () => {
             onKeyPress={onKeyPress}
             showProfileView={showProfileView}
             isValid={false}
+            {...intlFunctions()}
         />);
 
         const button = wrapper.find("button#profile-edit-submit");
@@ -82,7 +87,7 @@ describe("ProfileEditForm", () => {
     });
 
     it("calls showProfileView on cancel button click", () => {
-        const wrapper = mountWithIntl(<ProfileEditForm
+        const wrapper = shallow(<ProfileEditForm
             firstName={firstName}
             lastName={lastName}
             onChange={onChange}
@@ -90,9 +95,10 @@ describe("ProfileEditForm", () => {
             onKeyPress={onKeyPress}
             showProfileView={showProfileView}
             isValid={isValid}
+            {...intlFunctions()}
         />);
 
-        wrapper.find("button#profile-edit-cancel").simulate("click");
+        wrapper.find(Button).findWhere(b => b.prop("id") === "profile-edit-cancel").simulate("click");
         expect(showProfileView).toHaveBeenCalled();
     });
 
@@ -105,6 +111,7 @@ describe("ProfileEditForm", () => {
             onKeyPress={onKeyPress}
             showProfileView={showProfileView}
             isValid={isValid}
+            {...intlFunctions()}
         />);
 
         const lastNameInput = wrapper.find("input[name=\"lastName\"]");
