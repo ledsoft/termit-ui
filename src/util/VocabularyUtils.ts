@@ -42,6 +42,7 @@ const _NS_SKOS = "http://www.w3.org/2004/02/skos/core#";
 export default {
     PREFIX: _NS_POPIS_DAT,
     VOCABULARY: _NS_POPIS_DAT + "slovník",
+    DOCUMENT_VOCABULARY: _NS_POPIS_DAT + "dokumentový-slovník",
     TERM: _NS_POPIS_DAT + "term",
     FILE: _NS_POPIS_DAT + "soubor",
     DOCUMENT: _NS_POPIS_DAT + "dokument",

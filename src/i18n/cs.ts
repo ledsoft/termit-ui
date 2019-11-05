@@ -149,6 +149,7 @@ export default {
         "resource.metadata.document.files.create.tooltip": "Přidat nový soubor do tohoto dokumentu",
         "resource.metadata.document.files.create.dialog.title": "Nový soubor",
         "resource.metadata.document.files.empty": "Žádné soubory nenalezeny. Vytvořte nějaký...",
+        "resource.document.vocabulary.create": "Vytvořit dokument",
 
         "term.metadata.definition": "Definice",
         'term.metadata.comment': 'Komentář',
@@ -310,6 +311,7 @@ export default {
         "type.document": "Dokument",
         "type.file": "Soubor",
         "type.dataset": "Datová sada",
+        "type.document.vocabulary": "Dokumentový slovník",
 
         "log-viewer.title": "Prohlížení chyb",
         "log-viewer.timestamp": "Čas",

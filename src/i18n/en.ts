@@ -149,6 +149,7 @@ export default {
         "resource.metadata.document.files.create.tooltip": "Add new file to this document",
         "resource.metadata.document.files.create.dialog.title": "New file",
         "resource.metadata.document.files.empty": "No files found. Start by adding some.",
+        "resource.document.vocabulary.create": "Create document",
 
         "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',
@@ -309,6 +310,7 @@ export default {
         "type.document": "Document",
         "type.file": "File",
         "type.dataset": "Dataset",
+        "type.document.vocabulary": "Document vocabulary",
 
         "log-viewer.title": "Error log",
         "log-viewer.timestamp": "Timestamp",
