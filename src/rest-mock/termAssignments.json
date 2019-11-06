@@ -15,7 +15,7 @@
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku": {
         "@id": "http://data.iprpraha.cz/zdroj/slovnik/cz-institut-praha-svs"
       },
-      "http://purl.org/dc/elements/1.1/source": [
+      "http://purl.org/dc/terms/source": [
         "\n        – Zákon č. 491/2001 Sb.,\no volbách do zastupitelstev obcí"
       ]
     },
@@ -60,7 +60,7 @@
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku": {
         "@id": "http://data.iprpraha.cz/zdroj/slovnik/cz-institut-praha-svs"
       },
-      "http://purl.org/dc/elements/1.1/source": [
+      "http://purl.org/dc/terms/source": [
         "\n        – Zákon č. 491/2001 Sb.,\no volbách do zastupitelstev obcí"
       ]
     },
