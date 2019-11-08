@@ -94,7 +94,9 @@
     "start-mock-rest": "cross-env REACT_APP_MOCK_REST_API=true node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "build-prod": "jest && npm run build"
+    "build-prod": "jest && npm run build",
+    "analyze": "cross-env ANALYZE_BUNDLE_MODE=development node scripts/analyze-bundle.js ",
+    "analyze-prod": "cross-env ANALYZE_BUNDLE_MODE=production node scripts/analyze-bundle.js "
   },
   "devDependencies": {
     "@types/angular": "^1.6.50",
@@ -129,7 +131,8 @@
     "sass-loader": "^7.0.3",
     "string-replace-loader": "^2.1.1",
     "tslint-react-hooks": "^2.2.1",
-    "typescript": "^3.4.3"
+    "typescript": "^3.4.3",
+    "webpack-bundle-analyzer": "^3.6.0"
   },
   "jest": {
     "collectCoverageFrom": [
