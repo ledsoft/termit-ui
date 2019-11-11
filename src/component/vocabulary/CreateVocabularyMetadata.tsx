@@ -7,6 +7,7 @@ import {Button, ButtonToolbar, Col, Row} from "reactstrap";
 import CustomInput from "../misc/CustomInput";
 import TextArea from "../misc/TextArea";
 import {injectIntl} from "react-intl";
+import Resource from "../../model/Resource";
 
 export interface CreateVocabularyMetadataProps extends HasI18n {
     onCreate: (vocabulary: Vocabulary) => void;
@@ -49,7 +50,7 @@ extends AbstractCreateAsset<P, S> {
     public render() {
         return <>
                     {this.renderVocabularyMetadata()}
-                    {this.renderSubmitButtons()}
+                    {this.renderSubmitButtons(undefined)}
                     </>
     }
 
@@ -80,7 +81,7 @@ extends AbstractCreateAsset<P, S> {
         </>
     }
 
-    protected renderSubmitButtons() {
+    protected renderSubmitButtons(resource : Resource | null | undefined) {
         const i18n =this.props.i18n
         return <>
             <Row>
@@ -88,7 +89,7 @@ extends AbstractCreateAsset<P, S> {
                     <ButtonToolbar className="pull-right">
                         <Button id="create-vocabulary-submit" onClick={this.onCreate} color="success"
                                 size="sm"
-                                disabled={this.state.label.trim().length === 0}>{i18n("vocabulary.create.submit")}</Button>
+                                disabled={this.state.label.trim().length === 0 || resource === null}>{i18n("vocabulary.create.submit")}</Button>
                         <Button id="create-vocabulary-cancel" onClick={this.props.onCancel}
                                 color="secondary"
                                 size="sm">{i18n("cancel")}</Button>

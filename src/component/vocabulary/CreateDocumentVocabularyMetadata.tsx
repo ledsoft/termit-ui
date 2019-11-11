@@ -83,7 +83,7 @@ export class CreateDocumentVocabularyMetadata extends CreateVocabularyMetadata<C
                     </InputGroup>
                     </Col>
                 </Row>
-                {this.renderSubmitButtons()}
+                {this.renderSubmitButtons(this.state.resource)}
             </>
     }
 }
