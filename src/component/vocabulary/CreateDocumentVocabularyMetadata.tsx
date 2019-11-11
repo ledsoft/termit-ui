@@ -74,7 +74,7 @@ export class CreateDocumentVocabularyMetadata extends CreateVocabularyMetadata<C
                     <Col xl={6} md={12}>
                     <Label className="attribute-label">{i18n("vocabulary.detail.document")}</Label>
                     <InputGroup className="form-group">
-                        <Input name="create-document-iri" disabled={true} value={this.state.resource ? this.state.resource.iri : undefined}/>
+                        <Input name="create-document-label" disabled={true} value={this.state.resource ? this.state.resource.label : undefined}/>
                         <InputGroupAddon addonType="append">
                             <Button id="create-document-for-vocabulary" color="primary" size="sm"
                                     className="term-edit-source-add-button" disabled={disabled}
