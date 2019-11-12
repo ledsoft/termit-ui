@@ -631,7 +631,6 @@ describe("Async actions", () => {
             Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
             return Promise.resolve((store.dispatch as ThunkDispatch)(updateVocabulary(vocabulary))).then(() => {
                 // 0 - async request, 1 - async success, 2 - load vocabulary
-                console.log(store.getActions());
                 const action: AsyncAction = store.getActions()[2];
                 expect(action).toBeDefined();
                 expect(action.type).toEqual(ActionType.LOAD_VOCABULARY);
@@ -1218,7 +1217,7 @@ describe("Async actions", () => {
             Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
             const blob = new Blob([""], {type: "text/html"});
             // @ts-ignore
-            blob["name"] = fileName;
+            blob.name = fileName;
             return Promise.resolve((store.dispatch as ThunkDispatch)(uploadFileContent(VocabularyUtils.create(fileIri), blob as File))).then(() => {
                 const actions = store.getActions();
                 expect(actions[0].type).toEqual(ActionType.SAVE_FILE_CONTENT);

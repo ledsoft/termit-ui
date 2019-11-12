@@ -253,6 +253,8 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     }, header);
     // Mock registration request
     mock.onPost(Constants.API_PREFIX + "/users").reply(201);
+    // Mock users retrieval
+    mock.onGet(Constants.API_PREFIX + "/users").reply(200, require("../rest-mock/users"), header);
     // Mock username existence check
     mock.onGet(Constants.API_PREFIX + "/users/username").reply((config: AxiosRequestConfig) => {
         if (config.params.username.charAt(0) === "a") {

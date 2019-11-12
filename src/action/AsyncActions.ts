@@ -63,7 +63,7 @@ import {CONTEXT as RESOURCE_TERM_ASSIGNMENTS_CONTEXT, ResourceTermAssignments} f
  * TODO Consider splitting this file into multiple, it is becoming too long
  */
 
-function isActionRequestPending(state: TermItState, action: Action) {
+export function isActionRequestPending(state: TermItState, action: Action) {
     return state.pendingActions[action.type] !== undefined;
 }
 

@@ -31,6 +31,7 @@
     "react": "^16.10.2",
     "react-angular": "^0.4.0",
     "react-apexcharts": "1.0.9",
+    "react-authorization": "^0.2.2",
     "react-bootstrap-toggle": "2.3.2",
     "react-breadcrumbs": "2.1.7",
     "react-dom": "^16.10.2",
