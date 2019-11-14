@@ -72,6 +72,7 @@ separately and then specified in generic arguments to `connect`. An example of t
 Also, this means that intl props need to be explicitly passed to the component in `connect`. Otherwise, internationalization would not work properly 
 (language switching would have no effect). See `TermAssignments` again for a showcase how to do this.
 * Marker CSS classes should be used to denote important elements. These classes help in testing. Marker classes should be prefixed with `m-` and no styling should be applied based on them.
+* Although there are some problems with testing, it is possible to use [React Hooks](https://reactjs.org/docs/hooks-intro.html) in the code. See `Users` and its tests for an example.
 
 
 ## Debugging
