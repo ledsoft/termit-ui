@@ -24,6 +24,7 @@ export class Route {
 
 export default {
     dashboard: new Route("dashboard", "/"),
+    administration: new Route("administration", "/administration"),
     login: new Route("login", "/login"),
     profile: new Route("profile", "/profile"),
     changePassword: new Route("changePassword", "/profile/change-password"),

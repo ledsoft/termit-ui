@@ -76,6 +76,18 @@ export default {
         "dashboard.widget.typeFrequency.title": "Term count in vocabularies",
         "dashboard.widget.news": "News",
 
+        "administration.users": "Users",
+        "administration.accessDenied": "You have insufficient rights to access this view.",
+        "administration.users.name": "Name",
+        "administration.users.username": "Username",
+        "administration.users.status": "Status",
+        "administration.users.status.locked": "Locked",
+        "administration.users.status.disabled": "Disabled",
+        "administration.users.status.active": "Active",
+        "administration.users.status.action.enable": "Enable",
+        "administration.users.status.action.disable": "Disable",
+        "administration.users.status.action.unlock": "Unlock",
+
         "asset.link.tooltip": "View detail of this asset",
         "asset.iri": "Identifier",
         "asset.label": "Label",

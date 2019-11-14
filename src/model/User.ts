@@ -54,6 +54,14 @@ export default class User implements UserData {
         return this.firstName.charAt(0).toUpperCase() + ". " + this.lastName;
     }
 
+    public isDisabled(): boolean {
+        return this.types.indexOf(VocabularyUtils.USER_DISABLED) !== -1;
+    }
+
+    public isLocked(): boolean {
+        return this.types.indexOf(VocabularyUtils.USER_LOCKED) !== -1;
+    }
+
     public toJsonLd(): UserData {
         return Object.assign({}, this, {"@context": CONTEXT});
     }

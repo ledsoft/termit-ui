@@ -43,6 +43,9 @@ import VocabularyManagementRoute from "./vocabulary/VocabularyManagementRoute";
 import Dashboard from "./dashboard/Dashboard";
 import SearchVocabularies from "./search/SearchVocabularies";
 import ProfileRoute from "./profile/ProfileRoute";
+import {IfGranted} from "react-authorization";
+import VocabularyUtils from "../util/VocabularyUtils";
+import AdministrationRoute from "./administration/AdministrationRoute";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User;
@@ -124,6 +127,12 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                 <NavLink id="main-nav-search"
                                          href={MainView.hashPath(Routes.search.path)}>{i18n("main.nav.search")}</NavLink>
                             </NavItem>
+                            <IfGranted expected={VocabularyUtils.USER_ADMIN} actual={user.types}>
+                                <NavItem active={path.startsWith(Routes.administration.path)}>
+                                    <NavLink id="main-nav-administration"
+                                             href={MainView.hashPath(Routes.administration.path)}>{i18n("main.nav.admin")}</NavLink>
+                                </NavItem>
+                            </IfGranted>
                         </Nav>
                         <Nav navbar={true} className="nav-menu-user">
                             <UncontrolledDropdown id="main-menu-user" nav={true} inNavbar={true}>
@@ -146,6 +155,8 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
             <Messages/>
             <Container id="content-container" fluid={true} className="mt-5 mb-5 flex-grow-1">
                 <Switch>
+                    <BreadcrumbRoute title={i18n("main.nav.admin")} path={Routes.administration.path}
+                                     component={AdministrationRoute}/>
                     <BreadcrumbRoute title={i18n("main.nav.resources")} path={Routes.resources.path}
                                      component={ResourceManagement}/>
                     <BreadcrumbRoute title={i18n("main.nav.vocabularies")} path={Routes.vocabularies.path}

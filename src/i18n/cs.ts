@@ -74,6 +74,18 @@ export default {
         "dashboard.widget.typeFrequency.title": "Počet pojmů ve slovníku",
         "dashboard.widget.news": "Novinky",
 
+        "administration.users": "Uživatelé",
+        "administration.accessDenied": "K této obrazovce nemáte dostatečná oprávnění.",
+        "administration.users.name": "Jméno",
+        "administration.users.username": "Uživatelské jméno",
+        "administration.users.status": "Status",
+        "administration.users.status.locked": "Zablokovaný",
+        "administration.users.status.disabled": "Neaktivní",
+        "administration.users.status.active": "Aktivní",
+        "administration.users.status.action.enable": "Aktivovat",
+        "administration.users.status.action.disable": "Deaktivovat",
+        "administration.users.status.action.unlock": "Odblokovat",
+
         "asset.link.tooltip": "Zobrazit detail záznamu",
         "asset.iri": "Identifikátor",
         "asset.label": "Název",
