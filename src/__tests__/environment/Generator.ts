@@ -18,9 +18,9 @@ export default class Generator {
         return Generator.URI_BASE + "/instance-" + Generator.randomInt();
     }
 
-    public static generateUser() {
+    public static generateUser(iri?: string) {
         return new User({
-            iri: Generator.generateUri(),
+            iri: iri ? iri : Generator.generateUri(),
             firstName: "FirstName" + Generator.randomInt(0, 10000),
             lastName: "LastName" + Generator.randomInt(0, 10000),
             username: "username" + Generator.randomInt() + "@kbss.felk.cvut.cz",

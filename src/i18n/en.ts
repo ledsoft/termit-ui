@@ -85,8 +85,11 @@ export default {
         "administration.users.status.disabled": "Disabled",
         "administration.users.status.active": "Active",
         "administration.users.status.action.enable": "Enable",
+        "administration.users.status.action.enable.success": "User {name} successfully enabled.",
         "administration.users.status.action.disable": "Disable",
+        "administration.users.status.action.disable.success": "User {name} successfully disabled.",
         "administration.users.status.action.unlock": "Unlock",
+        "administration.users.status.action.unlock.success": "User {name} successfully unlocked.",
 
         "asset.link.tooltip": "View detail of this asset",
         "asset.iri": "Identifier",
