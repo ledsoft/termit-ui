@@ -143,7 +143,6 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
     private renderIncludeImported() {
         return (this.props.vocabulary && this.props.vocabulary.importedVocabularies)?
              <div className="mb-1 mt-1 ml-1">
-                <label className="option-label">{this.props.i18n("glossary.includeImported")}</label>
                 <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
                                             includeImported={this.state.includeImported}/>
             </div> : null;

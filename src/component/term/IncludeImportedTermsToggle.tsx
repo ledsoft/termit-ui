@@ -19,6 +19,8 @@ const IncludeImportedTermsToggle: React.FC<IncludeImportedTermsToggleProps> = pr
     }
     return <>
         <Toggle id={props.id} onClick={props.onToggle}
+                on={props.i18n("glossary.includeImported")}
+                off={props.i18n("glossary.excludeImported")}
                 onstyle="primary"
                 offstyle="secondary"
                 size="sm"

@@ -195,10 +195,10 @@ export default {
 
         "glossary.title": "Pojmy",
         "glossary.select.placeholder": "Vyberte pojem",
-        "glossary.excludeImported": "Bez importů",
-        "glossary.excludeImported.help": "Zobrazit pouze pojmy z tohoto slovníku",
+        "glossary.excludeImported": "Včetně importů",
+        "glossary.excludeImported.help": "Pojmy z importovaných slovníků jsou v tomto zobrazení skryté, kliknutím je zobrazíte",
         "glossary.includeImported": "Včetně importů",
-        "glossary.includeImported.help": "Zobrazit včetně pojmů z importovaných slovníků",
+        "glossary.includeImported.help": "Pojmy z importovaných slovníků jsou v tomto zobrazení viditelné, kliknutím je skryjete",
         "glossary.importedTerm.tooltip": "Pojem pochází z importovaného slovníku",
         'glossary.createTerm': 'Vytvořit nový pojem',
         'glossary.createTerm.tooltip': 'Vytvořit nový pojem ve slovníku',
