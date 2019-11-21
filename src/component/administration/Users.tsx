@@ -31,7 +31,7 @@ export const Users: React.FC<UsersProps> = props => {
                     <th>{props.i18n("administration.users.name")}</th>
                     <th>{props.i18n("administration.users.username")}</th>
                     <th>{props.i18n("administration.users.status")}</th>
-                    <th>{props.i18n("actions")}</th>
+                    <th className="text-center">{props.i18n("actions")}</th>
                 </tr>
                 </thead>
                 <tbody>

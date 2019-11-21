@@ -83,10 +83,13 @@ export default {
         "administration.users.status.disabled": "Neaktivní",
         "administration.users.status.active": "Aktivní",
         "administration.users.status.action.enable": "Aktivovat",
+        "administration.users.status.action.enable.tooltip": "Aktivovat tohoto uživatele",
         "administration.users.status.action.enable.success": "Uživatel {name} aktivován.",
         "administration.users.status.action.disable": "Deaktivovat",
+        "administration.users.status.action.disable.tooltip": "Deaktivovat tohoto uživatele",
         "administration.users.status.action.disable.success": "Uživatel {name} deaktivován.",
         "administration.users.status.action.unlock": "Odblokovat",
+        "administration.users.status.action.unlock.tooltip": "Odblokovat tohoto uživatele",
         "administration.users.status.action.unlock.success": "Uživatel {name} odblokován.",
 
         "asset.link.tooltip": "Zobrazit detail záznamu",
