@@ -1,47 +1,82 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
+import classNames from "classnames";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import User from "../../model/User";
 import {Button} from "reactstrap";
 import Utils from "../../util/Utils";
+import {GoCheck, GoCircleSlash} from "react-icons/go";
+
+const STATUS_MAP = {
+    ACTIVE: {
+        buttonTitle: "administration.users.status.action.disable.tooltip",
+        buttonLabel: "administration.users.status.action.disable",
+        statusLabel: "administration.users.status.active",
+        icon: GoCheck
+    },
+    DISABLED: {
+        buttonTitle: "administration.users.status.action.enable.tooltip",
+        buttonLabel: "administration.users.status.action.enable",
+        statusLabel: "administration.users.status.disabled",
+        icon: GoCircleSlash
+    }
+};
+
+function resolveStatusIcon(user: User) {
+    if (user.isLocked()) {
+        return null;
+    } else if (user.isDisabled()) {
+        return React.createElement(STATUS_MAP.DISABLED.icon);
+    } else {
+        return React.createElement(STATUS_MAP.ACTIVE.icon);
+    }
+}
 
 function resolveStatusName(user: User) {
     if (user.isLocked()) {
         return "administration.users.status.locked";
     } else if (user.isDisabled()) {
-        return "administration.users.status.disabled";
+        return STATUS_MAP.DISABLED.statusLabel;
     } else {
-        return "administration.users.status.active";
+        return STATUS_MAP.ACTIVE.statusLabel;
     }
 }
 
-function renderActionButtons(user: User, i18n: (id: string) => string) {
+function renderActionButtons(user: User, actions: UserActions, i18n: (id: string) => string) {
     const buttons = [];
-    if (!user.isDisabled()) {
+    if (user.isEnabled()) {
         const btnId = `user-${Utils.hashCode(user.iri)}-disable`;
-        buttons.push(<Button id={btnId} key={btnId} size="sm"
-                             title={i18n("administration.users.status.action.disable.tooltip")}
-                             color="primary">{i18n("administration.users.status.action.disable")}</Button>);
+        buttons.push(<Button id={btnId} key={btnId} size="sm" onClick={() => actions.disable(user)}
+                             title={i18n(STATUS_MAP.ACTIVE.buttonTitle)} className="users-action-button"
+                             color="warning">{i18n(STATUS_MAP.ACTIVE.buttonLabel)}</Button>);
     }
     if (user.isDisabled()) {
         const btnId = `user-${Utils.hashCode(user.iri)}-enable`;
-        buttons.push(<Button id={btnId} key={btnId} size="sm"
-                             title={i18n("administration.users.status.action.enable.tooltip")}
-                             color="primary">{i18n("administration.users.status.action.enable")}</Button>);
+        buttons.push(<Button id={btnId} key={btnId} size="sm" onClick={() => actions.enable(user)}
+                             title={i18n(STATUS_MAP.DISABLED.buttonTitle)} className="users-action-button"
+                             color="primary">{i18n(STATUS_MAP.DISABLED.buttonLabel)}</Button>);
     }
     return buttons;
 }
 
+export interface UserActions {
+    disable: (user: User) => void;
+    enable: (user: User) => void;
+}
+
 interface UserRowProps extends HasI18n {
     user: User;
+    actions: UserActions;
 }
 
 export const UserRow: React.FC<UserRowProps> = (props: UserRowProps) => {
-    return <tr>
-        <td className="align-middle">{props.user.fullName}</td>
-        <td className="align-middle">{props.user.username}</td>
-        <td className="align-middle">{props.i18n(resolveStatusName(props.user))}</td>
-        <td className="align-middle">{renderActionButtons(props.user, props.i18n)}</td>
+    const user = props.user;
+    return <tr className={classNames({"italics": !user.isEnabled()})}>
+        <td className="align-middle" title={props.i18n(resolveStatusName(user))}>{resolveStatusIcon(user)}</td>
+        <td className="align-middle">{user.fullName}</td>
+        <td className="align-middle">{user.username}</td>
+        <td className="align-middle">{props.i18n(resolveStatusName(user))}</td>
+        <td className="align-middle">{renderActionButtons(user, props.actions, props.i18n)}</td>
     </tr>;
 };
 

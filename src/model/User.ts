@@ -62,6 +62,10 @@ export default class User implements UserData {
         return this.types.indexOf(VocabularyUtils.USER_LOCKED) !== -1;
     }
 
+    public isEnabled(): boolean {
+        return !this.isDisabled() && !this.isLocked();
+    }
+
     public toJsonLd(): UserData {
         return Object.assign({}, this, {"@context": CONTEXT});
     }

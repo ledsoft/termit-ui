@@ -28,4 +28,20 @@ describe("User", () => {
             expect(sut.isDisabled()).toBeFalsy();
         });
     });
+
+    describe("isEnabled", () => {
+        it("returns true when user is neither disabled nor locked", () => {
+            const sut = Generator.generateUser();
+            expect(sut.isEnabled()).toBeTruthy();
+        });
+
+        it("returns false when user is disabled or locked", () => {
+            let sut = Generator.generateUser();
+            sut.types.push(VocabularyUtils.USER_DISABLED);
+            expect(sut.isEnabled()).toBeFalsy();
+            sut = Generator.generateUser();
+            sut.types.push(VocabularyUtils.USER_LOCKED);
+            expect(sut.isEnabled()).toBeFalsy();
+        });
+    });
 });

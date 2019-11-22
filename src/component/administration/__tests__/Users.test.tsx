@@ -2,46 +2,63 @@ import * as React from "react";
 import User from "../../../model/User";
 import {Users} from "../Users";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {flushPromises, mountWithIntl} from "../../../__tests__/environment/Environment";
 import Generator from "../../../__tests__/environment/Generator";
 import UserRow from "../UserRow";
-import {act} from "react-dom/test-utils";
+import {shallow} from "enzyme";
 
-/**
- * Note that the tests here are a bit convoluted since Enzyme still has trouble supporting React Hooks.
- *
- * First, shallow rendering does not work with the useEffect hook basically at all
- *
- * With regular mount, React issues a warning about having to wrap actions on hooks in an act() call. But even with it,
- * the warning remains. Therefore, there is the act-flushPromises part which works around it.
- */
 describe("Users", () => {
 
     let loadUsers: () => Promise<User[]>;
+    let disableUser: (user: User) => Promise<any>;
+    let enableUser: (user: User) => Promise<any>;
 
     beforeEach(() => {
         loadUsers = jest.fn().mockImplementation(() => Promise.resolve([]));
+        disableUser = jest.fn().mockImplementation(() => Promise.resolve());
+        enableUser = jest.fn().mockImplementation(() => Promise.resolve());
     });
 
     it("loads users on mount", async () => {
-        mountWithIntl(<Users loadUsers={loadUsers} {...intlFunctions()}/>);
-        await act(async () => {
-            await flushPromises();
-        });
+        shallow(<Users loadUsers={loadUsers} disableUser={disableUser} enableUser={enableUser} {...intlFunctions()}/>);
         expect(loadUsers).toHaveBeenCalled();
     });
 
     it("renders loaded users as table rows", async () => {
         const users = [Generator.generateUser(), Generator.generateUser()];
         loadUsers = jest.fn().mockImplementation(() => Promise.resolve(users));
-        const wrapper = mountWithIntl(<Users loadUsers={loadUsers} {...intlFunctions()}/>);
+        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser}
+                                              enableUser={enableUser}  {...intlFunctions()}/>);
 
-        await act(async () => {
-            await flushPromises();
+        return Promise.resolve().then(() => {
+            wrapper.update();
+            const rows = wrapper.find(UserRow);
+            expect(rows.length).toEqual(users.length);
         });
+    });
 
-        wrapper.update();
-        const rows = wrapper.find(UserRow);
-        expect(rows.length).toEqual(users.length);
+    it("disables user and reloads all users on finish", () => {
+        const users = [Generator.generateUser(), Generator.generateUser()];
+        loadUsers = jest.fn().mockImplementation(() => Promise.resolve(users));
+        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser}
+                                              enableUser={enableUser} {...intlFunctions()}/>);
+
+        wrapper.instance().disableUser(users[0]);
+        return Promise.resolve().then(() => {
+            expect(disableUser).toHaveBeenCalledWith(users[0]);
+            expect(loadUsers).toHaveBeenCalledTimes(2);
+        });
+    });
+
+    it("enables user and reloads all users on finish", () => {
+        const users = [Generator.generateUser(), Generator.generateUser()];
+        loadUsers = jest.fn().mockImplementation(() => Promise.resolve(users));
+        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser}
+                                              enableUser={enableUser} {...intlFunctions()}/>);
+
+        wrapper.instance().enableUser(users[0]);
+        return Promise.resolve().then(() => {
+            expect(enableUser).toHaveBeenCalledWith(users[0]);
+            expect(loadUsers).toHaveBeenCalledTimes(2);
+        });
     });
 });

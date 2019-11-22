@@ -1,49 +1,74 @@
 import * as React from "react";
-import {useEffect, useState} from "react";
 import {injectIntl} from "react-intl";
 import User from "../../model/User";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../util/Types";
-import {loadUsers} from "../../action/AsyncUserActions";
+import {disableUser, enableUser, loadUsers} from "../../action/AsyncUserActions";
 import {Card, CardBody, CardHeader, Table} from "reactstrap";
 import UserRow from "./UserRow";
+import "./Users.scss";
 
 interface UsersProps extends HasI18n {
     loadUsers: () => Promise<User[]>;
+    disableUser: (user: User) => Promise<any>;
+    enableUser: (user: User) => Promise<any>;
 }
 
-/**
- * First attempt at using React Hooks with a component.
- */
-export const Users: React.FC<UsersProps> = props => {
-    const [users, setUsers] = useState<User[]>([]);
-    useEffect(() => {
-        props.loadUsers().then(data => setUsers(data));
-    }, []);
+export class Users extends React.Component<UsersProps, { users: User[] }> {
+    constructor(props: UsersProps) {
+        super(props);
+        this.state = {users: []};
+    }
 
-    return <Card id="users">
-        <CardHeader tag="h4">{props.i18n("administration.users")}</CardHeader>
-        <CardBody>
-            <Table striped={true} responsive={true}>
-                <thead>
-                <tr>
-                    <th>{props.i18n("administration.users.name")}</th>
-                    <th>{props.i18n("administration.users.username")}</th>
-                    <th>{props.i18n("administration.users.status")}</th>
-                    <th className="text-center">{props.i18n("actions")}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {users.map(u => <UserRow key={u.iri} user={u}/>)}
-                </tbody>
-            </Table>
-        </CardBody>
-    </Card>;
-};
+    public componentDidMount(): void {
+        this.loadUsers();
+    }
+
+    private loadUsers() {
+        this.props.loadUsers().then(data => this.setState({users: data}));
+    }
+
+    public disableUser = (user: User) => {
+        this.props.disableUser(user).then(() => this.loadUsers());
+    };
+
+    public enableUser = (user: User) => {
+        this.props.enableUser(user).then(() => this.loadUsers());
+    };
+
+    public render() {
+        const i18n = this.props.i18n;
+        const actions = {
+            disable: this.disableUser,
+            enable: this.enableUser
+        };
+        return <Card id="users">
+            <CardHeader tag="h4">{i18n("administration.users")}</CardHeader>
+            <CardBody>
+                <Table striped={true} responsive={true}>
+                    <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>{i18n("administration.users.name")}</th>
+                        <th>{i18n("administration.users.username")}</th>
+                        <th>{i18n("administration.users.status")}</th>
+                        <th className="text-center">{i18n("actions")}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {this.state.users.map(u => <UserRow key={u.iri} user={u} actions={actions}/>)}
+                    </tbody>
+                </Table>
+            </CardBody>
+        </Card>;
+    }
+}
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
-        loadUsers: () => dispatch(loadUsers())
+        loadUsers: () => dispatch(loadUsers()),
+        disableUser: (user: User) => dispatch(disableUser(user)),
+        enableUser: (user: User) => dispatch(enableUser(user))
     };
 })(injectIntl(withI18n(Users)));

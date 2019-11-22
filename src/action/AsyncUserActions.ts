@@ -54,7 +54,10 @@ export function disableUser(user: User) {
         return Ajax.delete(`${Constants.API_PREFIX}${USERS_ENDPOINT}/${iri.fragment}/status`, param("namespace", iri.namespace))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
-                return dispatch(publishMessage(new Message({messageId: "administration.users.status.action.disable.success"}, MessageType.SUCCESS)));
+                return dispatch(publishMessage(new Message({
+                    messageId: "administration.users.status.action.disable.success",
+                    values: {name: user.fullName}
+                }, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
@@ -73,7 +76,10 @@ export function enableUser(user: User) {
         return Ajax.post(`${Constants.API_PREFIX}${USERS_ENDPOINT}/${iri.fragment}/status`, param("namespace", iri.namespace))
             .then(() => {
                 dispatch(asyncActionSuccess(action));
-                return dispatch(publishMessage(new Message({messageId: "administration.users.status.action.enable.success"}, MessageType.SUCCESS)));
+                return dispatch(publishMessage(new Message({
+                    messageId: "administration.users.status.action.enable.success",
+                    values: {name: user.fullName}
+                }, MessageType.SUCCESS)));
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
