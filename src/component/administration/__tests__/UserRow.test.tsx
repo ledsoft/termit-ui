@@ -48,4 +48,9 @@ describe("UserRow", () => {
         button.simulate("click");
         expect(actions.enable).toHaveBeenCalledWith(user);
     });
+
+    it("does not render action buttons for currently logged-in user", () => {
+        const wrapper = shallow(<UserRow user={user} currentUser={true} actions={actions} {...intlFunctions()}/>);
+        expect(wrapper.exists("Button")).toBeFalsy();
+    });
 });

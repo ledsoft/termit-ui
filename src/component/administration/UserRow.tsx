@@ -66,6 +66,7 @@ export interface UserActions {
 
 interface UserRowProps extends HasI18n {
     user: User;
+    currentUser?: boolean;   // Whether this row represents the currently logged in user
     actions: UserActions;
 }
 
@@ -76,8 +77,12 @@ export const UserRow: React.FC<UserRowProps> = (props: UserRowProps) => {
         <td className="align-middle">{user.fullName}</td>
         <td className="align-middle">{user.username}</td>
         <td className="align-middle">{props.i18n(resolveStatusName(user))}</td>
-        <td className="align-middle">{renderActionButtons(user, props.actions, props.i18n)}</td>
+        <td className="align-middle">{props.currentUser ? null : renderActionButtons(user, props.actions, props.i18n)}</td>
     </tr>;
+};
+
+UserRow.defaultProps = {
+    currentUser: false
 };
 
 export default injectIntl(withI18n(UserRow));

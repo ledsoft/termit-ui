@@ -8,8 +8,10 @@ import {disableUser, enableUser, loadUsers} from "../../action/AsyncUserActions"
 import {Card, CardBody, CardHeader, Table} from "reactstrap";
 import UserRow from "./UserRow";
 import "./Users.scss";
+import TermItState from "../../model/TermItState";
 
 interface UsersProps extends HasI18n {
+    currentUser: User;
     loadUsers: () => Promise<User[]>;
     disableUser: (user: User) => Promise<any>;
     enableUser: (user: User) => Promise<any>;
@@ -57,7 +59,9 @@ export class Users extends React.Component<UsersProps, { users: User[] }> {
                     </tr>
                     </thead>
                     <tbody>
-                    {this.state.users.map(u => <UserRow key={u.iri} user={u} actions={actions}/>)}
+                    {this.state.users.map(u => <UserRow key={u.iri} user={u}
+                                                        currentUser={u.iri === this.props.currentUser.iri}
+                                                        actions={actions}/>)}
                     </tbody>
                 </Table>
             </CardBody>
@@ -65,7 +69,9 @@ export class Users extends React.Component<UsersProps, { users: User[] }> {
     }
 }
 
-export default connect(undefined, (dispatch: ThunkDispatch) => {
+export default connect((state: TermItState) => {
+    return {currentUser: state.user};
+}, (dispatch: ThunkDispatch) => {
     return {
         loadUsers: () => dispatch(loadUsers()),
         disableUser: (user: User) => dispatch(disableUser(user)),

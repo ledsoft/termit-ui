@@ -8,6 +8,8 @@ import {shallow} from "enzyme";
 
 describe("Users", () => {
 
+    const currentUser = Generator.generateUser();
+
     let loadUsers: () => Promise<User[]>;
     let disableUser: (user: User) => Promise<any>;
     let enableUser: (user: User) => Promise<any>;
@@ -19,14 +21,14 @@ describe("Users", () => {
     });
 
     it("loads users on mount", async () => {
-        shallow(<Users loadUsers={loadUsers} disableUser={disableUser} enableUser={enableUser} {...intlFunctions()}/>);
+        shallow(<Users loadUsers={loadUsers} disableUser={disableUser} enableUser={enableUser} currentUser={currentUser} {...intlFunctions()}/>);
         expect(loadUsers).toHaveBeenCalled();
     });
 
     it("renders loaded users as table rows", async () => {
         const users = [Generator.generateUser(), Generator.generateUser()];
         loadUsers = jest.fn().mockImplementation(() => Promise.resolve(users));
-        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser}
+        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser} currentUser={currentUser}
                                               enableUser={enableUser}  {...intlFunctions()}/>);
 
         return Promise.resolve().then(() => {
@@ -39,7 +41,7 @@ describe("Users", () => {
     it("disables user and reloads all users on finish", () => {
         const users = [Generator.generateUser(), Generator.generateUser()];
         loadUsers = jest.fn().mockImplementation(() => Promise.resolve(users));
-        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser}
+        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser} currentUser={currentUser}
                                               enableUser={enableUser} {...intlFunctions()}/>);
 
         wrapper.instance().disableUser(users[0]);
@@ -52,13 +54,25 @@ describe("Users", () => {
     it("enables user and reloads all users on finish", () => {
         const users = [Generator.generateUser(), Generator.generateUser()];
         loadUsers = jest.fn().mockImplementation(() => Promise.resolve(users));
-        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser}
+        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser} currentUser={currentUser}
                                               enableUser={enableUser} {...intlFunctions()}/>);
 
         wrapper.instance().enableUser(users[0]);
         return Promise.resolve().then(() => {
             expect(enableUser).toHaveBeenCalledWith(users[0]);
             expect(loadUsers).toHaveBeenCalledTimes(2);
+        });
+    });
+
+    it("passes info to row about whether rendered user is the currently logged in user", () => {
+        const users = [Generator.generateUser(), Generator.generateUser(), currentUser];
+        loadUsers = jest.fn().mockImplementation(() => Promise.resolve(users));
+        const wrapper = shallow<Users>(<Users loadUsers={loadUsers} disableUser={disableUser} currentUser={currentUser}
+                                              enableUser={enableUser} {...intlFunctions()}/>);
+        return Promise.resolve().then(() => {
+            const rows = wrapper.find(UserRow);
+            expect(rows.at(0).prop("currentUser")).toBeFalsy();
+            expect(rows.at(2).prop("currentUser")).toBeTruthy();
         });
     });
 });
