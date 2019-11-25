@@ -6,24 +6,28 @@ import User from "../../model/User";
 import {Button} from "reactstrap";
 import Utils from "../../util/Utils";
 import {GoCheck, GoCircleSlash, GoIssueOpened} from "react-icons/go";
+import InfoIcon from "../misc/InfoIcon";
 
 const STATUS_MAP = {
     ACTIVE: {
         buttonTitle: "administration.users.status.action.disable.tooltip",
         buttonLabel: "administration.users.status.action.disable",
         statusLabel: "administration.users.status.active",
+        help: "administration.users.status.active.help",
         icon: GoCheck
     },
     DISABLED: {
         buttonTitle: "administration.users.status.action.enable.tooltip",
         buttonLabel: "administration.users.status.action.enable",
         statusLabel: "administration.users.status.disabled",
+        help: "administration.users.status.disabled.help",
         icon: GoCircleSlash
     },
     LOCKED: {
         buttonTitle: "administration.users.status.action.unlock.tooltip",
         buttonLabel: "administration.users.status.action.unlock",
         statusLabel: "administration.users.status.locked",
+        help: "administration.users.status.locked.help",
         icon: GoIssueOpened
     }
 };
@@ -54,7 +58,7 @@ function renderActionButtons(user: User, actions: UserActions, i18n: (id: string
     if (user.isLocked()) {
         const btnId = `user-${Utils.hashCode(user.iri)}-unlock`;
         buttons.push(<Button id={btnId} key={btnId} size="sm" onClick={() => actions.unlock(user)}
-                             title={i18n(STATUS_MAP.DISABLED.buttonTitle)} className="users-action-button"
+                             title={i18n(STATUS_MAP.LOCKED.buttonTitle)} className="users-action-button"
                              color="primary">{i18n(STATUS_MAP.LOCKED.buttonLabel)}</Button>);
     }
     return buttons;
@@ -74,13 +78,17 @@ interface UserRowProps extends HasI18n {
 
 export const UserRow: React.FC<UserRowProps> = (props: UserRowProps) => {
     const user = props.user;
+    const status = resolveStatus(user);
     return <tr className={classNames({"italics": !user.isActive()})}>
         <td className="align-middle"
-            title={props.i18n(resolveStatus(user).statusLabel)}>{React.createElement(resolveStatus(user).icon)}
+            title={props.i18n(status.statusLabel)}>{React.createElement(status.icon)}
         </td>
         <td className="align-middle">{user.fullName}</td>
         <td className="align-middle">{user.username}</td>
-        <td className="align-middle">{props.i18n(resolveStatus(user).statusLabel)}</td>
+        <td className="align-middle m-user-status">
+            {props.i18n(status.statusLabel)}
+            <InfoIcon id={`user-${Utils.hashCode(user.iri)}-status-info`} text={props.i18n(status.help)}/>
+        </td>
         <td className="align-middle users-row-actions">{props.currentUser ? null : renderActionButtons(user, props.actions, props.i18n)}</td>
     </tr>;
 };
