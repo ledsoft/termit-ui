@@ -5,7 +5,7 @@ import Constants from "../../util/Constants";
 import Ajax from "../../util/Ajax";
 import {ThunkDispatch} from "../../util/Types";
 import User from "../../model/User";
-import {disableUser, enableUser, loadUsers} from "../AsyncUserActions";
+import {disableUser, enableUser, loadUsers, unlockUser} from "../AsyncUserActions";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Generator from "../../__tests__/environment/Generator";
 import ActionType from "../ActionType";
@@ -49,7 +49,7 @@ describe("AsyncUserActions", () => {
         it("returns loaded users on success", () => {
             const users = require("../../rest-mock/users.json");
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(users));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadUsers())).then((result:User[]) => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadUsers())).then((result: User[]) => {
                 expect(result.length).toEqual(users.length);
                 result.forEach(u => expect(users.find((uu: object) => uu["@id"] === u.iri)).toBeDefined());
             });
@@ -57,7 +57,7 @@ describe("AsyncUserActions", () => {
 
         it("returns empty array on error", () => {
             Ajax.get = jest.fn().mockImplementation(() => Promise.reject({message: "Error"}));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadUsers())).then((result:User[]) => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadUsers())).then((result: User[]) => {
                 expect(result).toBeDefined();
                 expect(result.length).toEqual(0);
             });
@@ -90,7 +90,7 @@ describe("AsyncUserActions", () => {
     });
 
     describe("enableUser", () => {
-        it("sends POSt request with provided user identifier to server REST API", () => {
+        it("sends POST request with provided user identifier to server REST API", () => {
             const user = Generator.generateUser(namespace + name);
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve());
             return Promise.resolve((store.dispatch as ThunkDispatch)(enableUser(user))).then(() => {
@@ -106,6 +106,35 @@ describe("AsyncUserActions", () => {
             const user = Generator.generateUser(namespace + name);
             Ajax.delete = jest.fn().mockImplementation(() => Promise.resolve());
             return Promise.resolve((store.dispatch as ThunkDispatch)(enableUser(user))).then(() => {
+                const actions = store.getActions();
+                const lastAction = actions[actions.length - 1];
+                expect(lastAction.type).toEqual(ActionType.PUBLISH_MESSAGE);
+                expect(lastAction.message.type).toEqual(MessageType.SUCCESS);
+            });
+        });
+    });
+
+    describe("unlockUser", () => {
+        it("sends request with new user password to corresponding REST endpoint", () => {
+            const user = Generator.generateUser(namespace + name);
+            const newPassword = "new_password";
+            Ajax.delete = jest.fn().mockImplementation(() => Promise.resolve());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(unlockUser(user, newPassword))).then(() => {
+                expect(Ajax.delete).toHaveBeenCalled();
+                const url = (Ajax.delete as jest.Mock).mock.calls[0][0];
+                expect(url).toEqual(`${Constants.API_PREFIX}/users/${name}/lock`);
+                const config = (Ajax.delete as jest.Mock).mock.calls[0][1];
+                expect(config.getContent()).toEqual(newPassword);
+                expect(config.getParams().namespace).toEqual(namespace);
+                expect(config.getContentType()).toEqual(Constants.TEXT_MIME_TYPE);
+            });
+        });
+
+        it("publishes message on success", () => {
+            const user = Generator.generateUser(namespace + name);
+            const newPassword = "new_password";
+            Ajax.delete = jest.fn().mockImplementation(() => Promise.resolve());
+            return Promise.resolve((store.dispatch as ThunkDispatch)(unlockUser(user, newPassword))).then(() => {
                 const actions = store.getActions();
                 const lastAction = actions[actions.length - 1];
                 expect(lastAction.type).toEqual(ActionType.PUBLISH_MESSAGE);

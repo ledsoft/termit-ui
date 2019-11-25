@@ -16,7 +16,8 @@ describe("UserRow", () => {
         user = Generator.generateUser();
         actions = {
             disable: jest.fn(),
-            enable: jest.fn()
+            enable: jest.fn(),
+            unlock: jest.fn()
         };
     });
 
@@ -52,5 +53,20 @@ describe("UserRow", () => {
     it("does not render action buttons for currently logged-in user", () => {
         const wrapper = shallow(<UserRow user={user} currentUser={true} actions={actions} {...intlFunctions()}/>);
         expect(wrapper.exists("Button")).toBeFalsy();
+    });
+
+    it("renders unlock button for locked user", () => {
+        user.types.push(VocabularyUtils.USER_LOCKED);
+        const wrapper = shallow(<UserRow user={user} actions={actions} {...intlFunctions()}/>);
+        expect(wrapper.exists(`#user-${Utils.hashCode(user.iri)}-unlock`)).toBeTruthy();
+    });
+
+    it("invokes unlock action when unlock button is clicked", () => {
+        user.types.push(VocabularyUtils.USER_LOCKED);
+        const wrapper = shallow(<UserRow user={user} actions={actions} {...intlFunctions()}/>);
+        const button = wrapper.find(`#user-${Utils.hashCode(user.iri)}-unlock`);
+        expect(button.exists()).toBeTruthy();
+        button.simulate("click");
+        expect(actions.unlock).toHaveBeenCalledWith(user);
     });
 });

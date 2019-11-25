@@ -93,6 +93,9 @@ export default {
         "administration.users.status.action.unlock": "Unlock",
         "administration.users.status.action.unlock.tooltip": "Unlock this user",
         "administration.users.status.action.unlock.success": "User {name} successfully unlocked.",
+        "administration.users.unlock.title": "Unlock user {name}",
+        "administration.users.unlock.password": "New password",
+        "administration.users.unlock.passwordConfirm": "Confirm new password",
 
         "asset.link.tooltip": "View detail of this asset",
         "asset.iri": "Identifier",

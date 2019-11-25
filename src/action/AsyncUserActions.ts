@@ -7,7 +7,7 @@
 
 import ActionType from "./ActionType";
 import {ThunkDispatch} from "../util/Types";
-import Ajax, {param} from "../util/Ajax";
+import Ajax, {content, param} from "../util/Ajax";
 import Constants from "../util/Constants";
 import JsonLdUtils from "../util/JsonLdUtils";
 import User, {CONTEXT as USER_CONTEXT, UserData} from "../model/User";
@@ -78,6 +78,29 @@ export function enableUser(user: User) {
                 dispatch(asyncActionSuccess(action));
                 return dispatch(publishMessage(new Message({
                     messageId: "administration.users.status.action.enable.success",
+                    values: {name: user.fullName}
+                }, MessageType.SUCCESS)));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return dispatch(publishMessage(new Message(error, MessageType.ERROR)));
+            });
+    }
+}
+
+export function unlockUser(user: User, newPassword: string) {
+    const action = {
+        type: ActionType.UNLOCK_USER
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        const iri = VocabularyUtils.create(user.iri);
+        return Ajax.delete(`${Constants.API_PREFIX}${USERS_ENDPOINT}/${iri.fragment}/lock`,
+            content(newPassword).contentType(Constants.TEXT_MIME_TYPE).param("namespace", iri.namespace))
+            .then(() => {
+                dispatch(asyncActionSuccess(action));
+                return dispatch(publishMessage(new Message({
+                    messageId: "administration.users.status.action.unlock.success",
                     values: {name: user.fullName}
                 }, MessageType.SUCCESS)));
             })

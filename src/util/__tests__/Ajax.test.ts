@@ -256,6 +256,17 @@ describe("Ajax", () => {
                 return expect(reqConfig!.params).toEqual(expected);
             });
         });
+
+        it("adds content as request body in DELETE", () => {
+            const data = "new-password";
+            mock.onDelete().reply(204, undefined, headers);
+            const spy = jest.spyOn(sut.axios, "delete");
+            spy.mockClear();
+            return sut.delete("/users", content(data)).then(() => {
+                const reqConfig = spy.mock.calls[0][1];
+                return expect(reqConfig!.data).toEqual(data);
+            });
+        });
     });
 
     describe("getRaw", () => {

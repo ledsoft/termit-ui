@@ -230,11 +230,15 @@ export class Ajax {
     }
 
     public delete(path: string, config?: RequestConfigBuilder) {
-        let conf;
+        let conf: any;
         if (config) {
             conf = {
                 params: config.getParams()
             };
+            if (config.getContent()) {
+                conf.data = config.getContent();
+                conf.headers = {"Content-Type": config.getContentType()}
+            }
         }
         return this.axiosInstance.delete(path, conf);
     }

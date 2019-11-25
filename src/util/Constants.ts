@@ -24,6 +24,7 @@ const constants = {
     // Error origin caused by the inability to connect to the backend server
     CONNECTION_ERROR: "CONNECTION_ERROR",
     JSON_LD_MIME_TYPE: "application/ld+json",
+    TEXT_MIME_TYPE: "text/plain",
     HTML_MIME_TYPE: "text/html",
     CSV_MIME_TYPE: "text/csv",
     TTL_MIME_TYPE: "text/turtle",

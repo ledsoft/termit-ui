@@ -91,6 +91,9 @@ export default {
         "administration.users.status.action.unlock": "Odblokovat",
         "administration.users.status.action.unlock.tooltip": "Odblokovat tohoto uživatele",
         "administration.users.status.action.unlock.success": "Uživatel {name} odblokován.",
+        "administration.users.unlock.title": "Odblokovat uživatele {name}",
+        "administration.users.unlock.password": "Nové heslo",
+        "administration.users.unlock.passwordConfirm": "Potvrzení nového hesla",
 
         "asset.link.tooltip": "Zobrazit detail záznamu",
         "asset.iri": "Identifikátor",

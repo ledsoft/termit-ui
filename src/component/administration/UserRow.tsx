@@ -5,7 +5,7 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import User from "../../model/User";
 import {Button} from "reactstrap";
 import Utils from "../../util/Utils";
-import {GoCheck, GoCircleSlash} from "react-icons/go";
+import {GoCheck, GoCircleSlash, GoIssueOpened} from "react-icons/go";
 
 const STATUS_MAP = {
     ACTIVE: {
@@ -19,12 +19,18 @@ const STATUS_MAP = {
         buttonLabel: "administration.users.status.action.enable",
         statusLabel: "administration.users.status.disabled",
         icon: GoCircleSlash
+    },
+    LOCKED: {
+        buttonTitle: "administration.users.status.action.unlock.tooltip",
+        buttonLabel: "administration.users.status.action.unlock",
+        statusLabel: "administration.users.status.locked",
+        icon: GoIssueOpened
     }
 };
 
 function resolveStatusIcon(user: User) {
     if (user.isLocked()) {
-        return null;
+        return React.createElement(STATUS_MAP.LOCKED.icon);
     } else if (user.isDisabled()) {
         return React.createElement(STATUS_MAP.DISABLED.icon);
     } else {
@@ -56,12 +62,19 @@ function renderActionButtons(user: User, actions: UserActions, i18n: (id: string
                              title={i18n(STATUS_MAP.DISABLED.buttonTitle)} className="users-action-button"
                              color="primary">{i18n(STATUS_MAP.DISABLED.buttonLabel)}</Button>);
     }
+    if (user.isLocked()) {
+        const btnId = `user-${Utils.hashCode(user.iri)}-unlock`;
+        buttons.push(<Button id={btnId} key={btnId} size="sm" onClick={() => actions.unlock(user)}
+                             title={i18n(STATUS_MAP.DISABLED.buttonTitle)} className="users-action-button"
+                             color="primary">{i18n(STATUS_MAP.LOCKED.buttonLabel)}</Button>);
+    }
     return buttons;
 }
 
 export interface UserActions {
     disable: (user: User) => void;
     enable: (user: User) => void;
+    unlock: (user: User) => void;
 }
 
 interface UserRowProps extends HasI18n {
