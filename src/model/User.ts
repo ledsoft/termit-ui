@@ -62,7 +62,10 @@ export default class User implements UserData {
         return this.types.indexOf(VocabularyUtils.USER_LOCKED) !== -1;
     }
 
-    public isEnabled(): boolean {
+    /**
+     * Indicates that the user is neither locked nor disabled and thus can log into the system.
+     */
+    public isActive(): boolean {
         return !this.isDisabled() && !this.isLocked();
     }
 

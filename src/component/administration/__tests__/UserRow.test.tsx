@@ -21,7 +21,7 @@ describe("UserRow", () => {
         };
     });
 
-    it("renders disable button for enabled user", () => {
+    it("renders disable button for non-disabled user", () => {
         const wrapper = shallow(<UserRow user={user} actions={actions} {...intlFunctions()}/>);
         expect(wrapper.exists(`#user-${Utils.hashCode(user.iri)}-disable`)).toBeTruthy();
     });

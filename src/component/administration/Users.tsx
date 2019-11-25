@@ -78,14 +78,14 @@ export class Users extends React.Component<UsersProps, UsersState> {
             <CardBody>
                 <PasswordReset open={this.state.displayUnlock} user={this.state.userToUnlock} onSubmit={this.unlockUser}
                                onCancel={this.onCloseUnlock}/>
-                <Table striped={true} responsive={true}>
+                <Table striped={true}>
                     <thead>
                     <tr>
                         <th>&nbsp;</th>
                         <th>{i18n("administration.users.name")}</th>
                         <th>{i18n("administration.users.username")}</th>
                         <th>{i18n("administration.users.status")}</th>
-                        <th className="text-center">{i18n("actions")}</th>
+                        <th className="text-center users-row-actions">{i18n("actions")}</th>
                     </tr>
                     </thead>
                     <tbody>

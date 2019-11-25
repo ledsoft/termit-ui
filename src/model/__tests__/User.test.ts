@@ -29,19 +29,19 @@ describe("User", () => {
         });
     });
 
-    describe("isEnabled", () => {
+    describe("isActive", () => {
         it("returns true when user is neither disabled nor locked", () => {
             const sut = Generator.generateUser();
-            expect(sut.isEnabled()).toBeTruthy();
+            expect(sut.isActive()).toBeTruthy();
         });
 
         it("returns false when user is disabled or locked", () => {
             let sut = Generator.generateUser();
             sut.types.push(VocabularyUtils.USER_DISABLED);
-            expect(sut.isEnabled()).toBeFalsy();
+            expect(sut.isActive()).toBeFalsy();
             sut = Generator.generateUser();
             sut.types.push(VocabularyUtils.USER_LOCKED);
-            expect(sut.isEnabled()).toBeFalsy();
+            expect(sut.isActive()).toBeFalsy();
         });
     });
 });

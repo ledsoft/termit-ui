@@ -28,39 +28,28 @@ const STATUS_MAP = {
     }
 };
 
-function resolveStatusIcon(user: User) {
+function resolveStatus(user: User) {
     if (user.isLocked()) {
-        return React.createElement(STATUS_MAP.LOCKED.icon);
+        return STATUS_MAP.LOCKED;
     } else if (user.isDisabled()) {
-        return React.createElement(STATUS_MAP.DISABLED.icon);
+        return STATUS_MAP.DISABLED;
     } else {
-        return React.createElement(STATUS_MAP.ACTIVE.icon);
-    }
-}
-
-function resolveStatusName(user: User) {
-    if (user.isLocked()) {
-        return "administration.users.status.locked";
-    } else if (user.isDisabled()) {
-        return STATUS_MAP.DISABLED.statusLabel;
-    } else {
-        return STATUS_MAP.ACTIVE.statusLabel;
+        return STATUS_MAP.ACTIVE;
     }
 }
 
 function renderActionButtons(user: User, actions: UserActions, i18n: (id: string) => string) {
     const buttons = [];
-    if (user.isEnabled()) {
-        const btnId = `user-${Utils.hashCode(user.iri)}-disable`;
-        buttons.push(<Button id={btnId} key={btnId} size="sm" onClick={() => actions.disable(user)}
-                             title={i18n(STATUS_MAP.ACTIVE.buttonTitle)} className="users-action-button"
-                             color="warning">{i18n(STATUS_MAP.ACTIVE.buttonLabel)}</Button>);
-    }
     if (user.isDisabled()) {
         const btnId = `user-${Utils.hashCode(user.iri)}-enable`;
         buttons.push(<Button id={btnId} key={btnId} size="sm" onClick={() => actions.enable(user)}
                              title={i18n(STATUS_MAP.DISABLED.buttonTitle)} className="users-action-button"
                              color="primary">{i18n(STATUS_MAP.DISABLED.buttonLabel)}</Button>);
+    } else {
+        const btnId = `user-${Utils.hashCode(user.iri)}-disable`;
+        buttons.push(<Button id={btnId} key={btnId} size="sm" onClick={() => actions.disable(user)}
+                             title={i18n(STATUS_MAP.ACTIVE.buttonTitle)} className="users-action-button"
+                             color="warning">{i18n(STATUS_MAP.ACTIVE.buttonLabel)}</Button>);
     }
     if (user.isLocked()) {
         const btnId = `user-${Utils.hashCode(user.iri)}-unlock`;
@@ -85,12 +74,14 @@ interface UserRowProps extends HasI18n {
 
 export const UserRow: React.FC<UserRowProps> = (props: UserRowProps) => {
     const user = props.user;
-    return <tr className={classNames({"italics": !user.isEnabled()})}>
-        <td className="align-middle" title={props.i18n(resolveStatusName(user))}>{resolveStatusIcon(user)}</td>
+    return <tr className={classNames({"italics": !user.isActive()})}>
+        <td className="align-middle"
+            title={props.i18n(resolveStatus(user).statusLabel)}>{React.createElement(resolveStatus(user).icon)}
+        </td>
         <td className="align-middle">{user.fullName}</td>
         <td className="align-middle">{user.username}</td>
-        <td className="align-middle">{props.i18n(resolveStatusName(user))}</td>
-        <td className="align-middle">{props.currentUser ? null : renderActionButtons(user, props.actions, props.i18n)}</td>
+        <td className="align-middle">{props.i18n(resolveStatus(user).statusLabel)}</td>
+        <td className="align-middle users-row-actions">{props.currentUser ? null : renderActionButtons(user, props.actions, props.i18n)}</td>
     </tr>;
 };
 
