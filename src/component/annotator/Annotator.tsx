@@ -249,7 +249,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
 
     private static matchHtml(htmlContent: string): HtmlSplit {
 
-        const htmlSplit = htmlContent.split(/(<body>|<\/body>)/ig);
+        const htmlSplit = htmlContent.split(/(<body.*>|<\/body>)/ig);
 
         if (htmlSplit.length === 5) {
             return {
