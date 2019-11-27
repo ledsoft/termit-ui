@@ -106,8 +106,8 @@ export default {
         "asset.author": "Autor",
         "asset.created": "Vytvořeno",
         "asset.remove.tooltip": "Odstranit tento záznam",
-        "asset.remove.dialog.title": "Odstranit {type} {label}?",
-        "asset.remove.dialog.text": "Určitě chcete odstranit {type} {label}?",
+        "asset.remove.dialog.title": "Odstranit {type} \"{label}\"?",
+        "asset.remove.dialog.text": "Určitě chcete odstranit {type} \"{label}\"?",
 
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',
@@ -182,7 +182,7 @@ export default {
         'term.metadata.types': 'Typ pojmu',
         'term.metadata.source': 'Zdroj pojmu',
         'term.updated.message': 'Pojem úspěšně aktualizován.',
-        'term.metadata.labelExists.message': 'Pojem s názvem \'{label}\' již v tomto slovníku existuje',
+        'term.metadata.labelExists.message': "Pojem s názvem \"{label}\" již v tomto slovníku existuje",
         'term.metadata.source.add.placeholder': 'Nový zdroj pojmu',
         'term.metadata.source.add.placeholder.text': 'Přidat',
         'term.metadata.source.remove.title': 'Odebrat zdroj',
@@ -229,10 +229,10 @@ export default {
         'glossary.form.validation.validateLengthMin3': 'Pole musí mít alespoň 3 znaky',
         'glossary.form.validation.validateNotSameAsParent': 'Potomek nemůže být stejný jako předchůdce',
 
-        'file.text-analysis.finished.message': 'Textová analýza souboru \'{fileName}\' úspěšně dokončena.',
+        'file.text-analysis.finished.message': "Textová analýza souboru \"{fileName}\" úspěšně dokončena.",
         'file.metadata.startTextAnalysis': 'Spustit textovou analýzu',
         'file.metadata.startTextAnalysis.text': 'Analyzovat',
-        "file.content.upload.success": "Soubor \'{fileName}\' úspěšně nahrán na server.",
+        "file.content.upload.success": "Soubor \"{fileName}\" úspěšně nahrán na server.",
         "file.annotate.unknown-vocabulary": "Nelze určit slovník pro anotování tohoto souboru. Soubor nepatří slovníkovému dokumentu ani nebyl zpracován službou textové analýzy.",
 
         'statistics.vocabulary.count': 'Počet slovníků',
@@ -284,7 +284,7 @@ export default {
 
         'annotator.annotate-content': 'Anotovat obsah',
         'annotation.form.suggested-occurrence.message': 'Fráze není přiřazena žádnemu pojmu.',
-        'annotation.form.invalid-occurrence.message': 'Pojem "%" nebyl nalezen v slovníku. ',
+        'annotation.form.invalid-occurrence.message': 'Pojem "%" nebyl nalezen v slovníku.',
         'annotation.form.assigned-occurrence.termInfoLabel': 'Informace o pojmu:',
         'annotation.term.assigned-occurrence.termLabel': 'Přiřazený pojem:',
         'annotation.term.occurrence.scoreLabel': 'Skóre:',
