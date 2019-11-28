@@ -13,6 +13,8 @@ describe("Messages", () => {
         messages = [];
         for (let i = 0; i < Constants.MESSAGE_DISPLAY_COUNT + 3; i++) {
             messages.push(new MessageModel({message: "Test" + i}));
+            // @ts-ignore
+            messages[i].mTimestamp = Date.now() - 1000 * i;
         }
     });
 
