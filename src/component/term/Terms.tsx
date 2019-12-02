@@ -41,6 +41,17 @@ export function filterTermsOutsideVocabularyImportChain(terms: Term[], vocabular
     return result;
 }
 
+function flattenAncestors(terms: Term[]) {
+    let result: Term[] = [];
+    for (const t of terms) {
+        result.push(t);
+        if (t.parentTerms) {
+            result = result.concat(flattenAncestors(t.parentTerms));
+        }
+    }
+    return result;
+}
+
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
     counter: number;
@@ -96,9 +107,10 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
             limit,
             offset,
             includeImported: this.state.includeImported
-        }, vocabularyIri).then(options => {
+        }, vocabularyIri).then(terms => {
             const matchingVocabularies = Utils.sanitizeArray(this.props.vocabulary!.allImportedVocabularies).concat(this.props.vocabulary!.iri);
-            return filterTermsOutsideVocabularyImportChain(options, matchingVocabularies);
+            const filtered = filterTermsOutsideVocabularyImportChain(terms, matchingVocabularies);
+            return searchString ? flattenAncestors(filtered) : filtered;
         });
     };
 
@@ -141,12 +153,13 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
     };
 
     private renderIncludeImported() {
-        return (this.props.vocabulary && this.props.vocabulary.importedVocabularies)?
-             <div className="mb-1 mt-1 ml-1">
+        return (this.props.vocabulary && this.props.vocabulary.importedVocabularies) ?
+            <div className="mb-1 mt-1 ml-1">
                 <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
                                             includeImported={this.state.includeImported}/>
             </div> : null;
     }
+
     public render() {
         if (!this.props.vocabulary) {
             return null;

@@ -202,5 +202,25 @@ describe("Terms", () => {
                 expect(t.plainSubTerms).toEqual([subTerms[0].iri]);
             });
         });
+
+        it("flattens loaded terms when search string was provided", () => {
+            const child = Generator.generateTerm(vocabulary.iri);
+            const parent = Generator.generateTerm(vocabulary.iri);
+            const grandParent = Generator.generateTerm(vocabulary.iri);
+            child.parentTerms = [parent];
+            parent.subTerms = [{iri: child.iri, label: child.label, vocabulary}];
+            parent.parentTerms = [grandParent];
+            grandParent.subTerms = [{iri: parent.iri, label: parent.label, vocabulary}];
+            parent.syncPlainSubTerms();
+            grandParent.syncPlainSubTerms();
+            fetchTerms = jest.fn().mockImplementation(() => Promise.resolve([child]));
+            const wrapper = renderShallow();
+            return wrapper.instance().fetchOptions({searchString: "test"}).then(options => {
+                expect(options.length).toEqual(3);
+                expect(options.find(t => t.iri === child.iri)).toBeDefined();
+                expect(options.find(t => t.iri === parent.iri)).toBeDefined();
+                expect(options.find(t => t.iri === grandParent.iri)).toBeDefined();
+            });
+        });
     });
 });
