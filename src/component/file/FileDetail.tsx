@@ -11,7 +11,7 @@ import {Annotator} from "../annotator/Annotator";
 import Term from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
 import IdentifierResolver from "../../util/IdentifierResolver";
-import {filterTermsOutsideVocabularyImportChain} from "../term/Terms";
+import {processTermsForTreeSelect} from "../term/TermTreeSelectHelper";
 
 
 interface FileDetailProvidedProps {
@@ -88,7 +88,7 @@ export class FileDetail extends React.Component<FileDetailProps, FileDetailState
         if (!this.lastExecutedPromise) {
             this.lastExecutedPromise = this.props.fetchTerms({}, this.props.vocabularyIri)
                 .then((terms: Term[]) => {
-                    this.updateTerms(filterTermsOutsideVocabularyImportChain(terms, [IRIImpl.toString(this.props.vocabularyIri)]));
+                    this.updateTerms(processTermsForTreeSelect(terms, [IRIImpl.toString(this.props.vocabularyIri)], {}));
                 }, (d) => d);
         }
     };
