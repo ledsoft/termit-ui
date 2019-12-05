@@ -2,14 +2,15 @@ import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import Routes from "../../util/Routes";
-import VocabularyList from "./VocabularyList";
 import PanelWithActions from "../misc/PanelWithActions";
 import {GoPlus} from "react-icons/go";
 import {Link} from "react-router-dom";
+import VocabularyList from "./VocabularyList";
 
-const Vocabularies: React.SFC<HasI18n> = props => {
+const Vocabularies: React.FC<HasI18n> = props => {
     const i18n = props.i18n;
-    const actions = [<Link id="vocabularies-create" key="vocabulary.vocabularies.create" className="btn btn-primary btn-sm"
+    const actions = [<Link id="vocabularies-create" key="vocabulary.vocabularies.create"
+                           className="btn btn-primary btn-sm"
                            title={i18n("vocabulary.vocabularies.create.tooltip")}
                            to={Routes.createVocabulary.path}><GoPlus/>&nbsp;{i18n("asset.create.button.text")}</Link>];
 

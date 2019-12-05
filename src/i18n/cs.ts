@@ -111,6 +111,7 @@ export default {
 
         'vocabulary.management': 'Správa slovníků',
         'vocabulary.management.vocabularies': 'Slovníky',
+        'vocabulary.management.empty': 'Žádné slovníky nenalezeny. Vytvořte nějaký...',
         'vocabulary.vocabularies.create.tooltip': 'Vytvořit nový slovník',
         'vocabulary.vocabularies.create.text': 'Vytvořit',
         'vocabulary.create.title': 'Nový slovník',

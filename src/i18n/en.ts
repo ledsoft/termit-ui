@@ -113,6 +113,7 @@ export default {
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
+        'vocabulary.management.empty': 'No vocabularies found. Start by creating one.',
         'vocabulary.vocabularies.create.tooltip': 'Create new vocabulary',
         'vocabulary.create.title': 'Create Vocabulary',
         'vocabulary.create.submit': 'Create',
