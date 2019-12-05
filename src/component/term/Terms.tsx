@@ -25,21 +25,7 @@ import ActionType from "../../action/ActionType";
 import NotificationType from "../../model/NotificationType";
 import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
 import IncludeImportedTermsToggle from "./IncludeImportedTermsToggle";
-
-export function filterTermsOutsideVocabularyImportChain(terms: Term[], vocabularies: string[]) {
-    const result: Term[] = [];
-    for (const t of terms) {
-        if (vocabularies.indexOf(t.vocabulary!.iri!) === -1) {
-            continue;
-        }
-        result.push(t);
-        if (t.subTerms) {
-            t.subTerms = t.subTerms.filter(st => vocabularies.indexOf(st.vocabulary.iri!) !== -1);
-            t.syncPlainSubTerms();
-        }
-    }
-    return result;
-}
+import {commonTermTreeSelectProps, processTermsForTreeSelect} from "./TermTreeSelectHelper";
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
@@ -84,21 +70,18 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
         this.props.selectVocabularyTerm(null);
     }
 
-    public fetchOptions = ({searchString, optionID, limit, offset, option}: TreeSelectFetchOptionsParams<TermData>) => {
+    public fetchOptions = (fetchOptions: TreeSelectFetchOptionsParams<TermData>) => {
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
-        const vocabularyIri = option ? VocabularyUtils.create(option.vocabulary!.iri!) : {
+        const vocabularyIri = fetchOptions.option ? VocabularyUtils.create(fetchOptions.option.vocabulary!.iri!) : {
             fragment: this.props.match.params.name,
             namespace
         };
         return this.props.fetchTerms({
-            searchString,
-            optionID,
-            limit,
-            offset,
+            ...fetchOptions,
             includeImported: this.state.includeImported
-        }, vocabularyIri).then(options => {
+        }, vocabularyIri).then(terms => {
             const matchingVocabularies = Utils.sanitizeArray(this.props.vocabulary!.allImportedVocabularies).concat(this.props.vocabulary!.iri);
-            return filterTermsOutsideVocabularyImportChain(options, matchingVocabularies);
+            return processTermsForTreeSelect(terms, matchingVocabularies, fetchOptions);
         });
     };
 
@@ -141,12 +124,13 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
     };
 
     private renderIncludeImported() {
-        return (this.props.vocabulary && this.props.vocabulary.importedVocabularies)?
-             <div className="mb-1 mt-1 ml-1">
+        return (this.props.vocabulary && this.props.vocabulary.importedVocabularies) ?
+            <div className="mb-1 mt-1 ml-1">
                 <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
                                             includeImported={this.state.includeImported}/>
             </div> : null;
     }
+
     public render() {
         if (!this.props.vocabulary) {
             return null;
@@ -172,18 +156,12 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
                                            onChange={this.onTermSelect}
                                            value={this.props.selectedTerms ? this.props.selectedTerms.iri : null}
                                            fetchOptions={this.fetchOptions}
-                                           valueKey={"iri"}
-                                           labelKey={"label"}
-                                           childrenKey={"plainSubTerms"}
-                                           simpleTreeData={true}
                                            isMenuOpen={true}
                                            scrollMenuIntoView={false}
                                            multi={false}
-                                           showSettings={false}
                                            maxHeight={Utils.calculateAssetListHeight()}
-                                           placeholder={i18n("glossary.select.placeholder")}
                                            optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabulary.iri)}
-                                           valueRenderer={Utils.labelValueRenderer}
+                                           {...commonTermTreeSelectProps(i18n)}
                     />
                 </div>
             </CardBody>

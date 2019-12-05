@@ -436,12 +436,11 @@ export function loadTerms(fetchOptions: FetchOptionsFunction, vocabularyIri: IRI
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
-        let url: string;
+        let url = `${Constants.API_PREFIX}/vocabularies/${vocabularyIri.fragment}/terms/`;
         if (fetchOptions.optionID) {
-            url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/" + VocabularyUtils.getFragment(fetchOptions.optionID) + "/subterms"
-        } else {
-            // Fetching roots only
-            url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/roots";
+            url += `${VocabularyUtils.getFragment(fetchOptions.optionID)}/subterms`;
+        } else if (!fetchOptions.searchString) {
+            url += "roots";
         }
         return Ajax.get(url,
             params(Object.assign({
@@ -467,7 +466,7 @@ export function fetchVocabularyTerm(termNormalizedName: string, vocabularyIri: I
     };
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
-        return Ajax.get(Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms/" + termNormalizedName, param("namespace", vocabularyIri.namespace))
+        return Ajax.get(`${Constants.API_PREFIX}//vocabularies/${vocabularyIri.fragment}/terms/${termNormalizedName}`, param("namespace", vocabularyIri.namespace))
             .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, TERM_CONTEXT))
             .then((data: TermData) => {
                 dispatch(asyncActionSuccess(action));

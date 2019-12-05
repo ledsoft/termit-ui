@@ -16,7 +16,7 @@ import TermItState from "../../model/TermItState";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import VocabularySelect from "../vocabulary/VocabularySelect";
 import Utils from "../../util/Utils";
-import {filterTermsOutsideVocabularyImportChain} from "../term/Terms";
+import {commonTermTreeSelectProps, processTermsForTreeSelect} from "../term/TermTreeSelectHelper";
 
 interface PropsExternal {
     terms: Term[];
@@ -49,15 +49,10 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
         this.props.onChange(val.map(v => Object.assign({}, {iri: v.iri})));
     };
 
-    private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
-        return this.props.fetchTerms({
-            searchString,
-            optionID,
-            limit,
-            offset
-        }, this.state.vocabulary!).then(terms => {
+    private fetchOptions = (fetchOptions: FetchOptionsFunction) => {
+        return this.props.fetchTerms(fetchOptions, this.state.vocabulary!).then(terms => {
             const matchingVocabularies = Utils.sanitizeArray(this.state.vocabulary!.allImportedVocabularies).concat(this.state.vocabulary!.iri);
-            return filterTermsOutsideVocabularyImportChain(terms, matchingVocabularies);
+            return processTermsForTreeSelect(terms, matchingVocabularies, fetchOptions);
         });
     };
 
@@ -78,17 +73,11 @@ export class ResourceRelatedTermsEdit extends React.Component<Props, State> {
                                          onChange={this.onChange}
                                          value={selected}
                                          fetchOptions={this.fetchOptions}
-                                         valueKey="iri"
-                                         labelKey="label"
-                                         childrenKey="plainSubTerms"
-                                         simpleTreeData={true}
-                                         showSettings={false}
                                          fetchLimit={300}
                                          maxHeight={150}
                                          multi={true}
                                          displayInfoOnHover={true}
-                                         renderAsTree={true}
-                                         valueRenderer={Utils.labelValueRenderer}/>;
+                                         {...commonTermTreeSelectProps(this.props.i18n)}/>;
         return <FormGroup>
             <Label className="attribute-label">{this.props.i18n("resource.metadata-edit.terms")}</Label>{" "}
             <VocabularySelect id="edit-resource-terms-vocabulary" vocabulary={this.state.vocabulary}

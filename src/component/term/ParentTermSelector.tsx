@@ -13,10 +13,10 @@ import Utils from "../../util/Utils";
 import {IntelligentTreeSelect} from "intelligent-tree-select";
 import IncludeImportedTermsToggle from "./IncludeImportedTermsToggle";
 import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
-import {filterTermsOutsideVocabularyImportChain} from "./Terms";
 import Vocabulary from "../../model/Vocabulary";
 import TermItState from "../../model/TermItState";
 import CustomInput from "../misc/CustomInput";
+import {commonTermTreeSelectProps, processTermsForTreeSelect} from "./TermTreeSelectHelper";
 
 function filterOutCurrentTerm(terms: Term[], currentTermIri?: string) {
     if (currentTermIri) {
@@ -90,18 +90,15 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
         }
     };
 
-    public fetchOptions = ({searchString, optionID, limit, offset, option}: TreeSelectFetchOptionsParams<TermData>) => {
+    public fetchOptions = (fetchOptions: TreeSelectFetchOptionsParams<TermData>) => {
         // Use option vocabulary when present, it may differ from the current vocabulary (when option is from imported
         // vocabulary)
         return this.props.loadTerms({
-            searchString,
-            optionID,
-            limit,
-            offset,
+            ...fetchOptions,
             includeImported: this.state.includeImported
-        }, VocabularyUtils.create(option ? option.vocabulary!.iri! : this.props.vocabularyIri)).then(terms => {
+        }, VocabularyUtils.create(fetchOptions.option ? fetchOptions.option.vocabulary!.iri! : this.props.vocabularyIri)).then(terms => {
             const matchingVocabularies = Utils.sanitizeArray(this.state.importedVocabularies).concat(this.props.vocabularyIri);
-            return filterOutCurrentTerm(filterTermsOutsideVocabularyImportChain(terms, matchingVocabularies), this.props.termIri);
+            return filterOutCurrentTerm(processTermsForTreeSelect(terms, matchingVocabularies, fetchOptions), this.props.termIri);
         });
     };
 
@@ -139,17 +136,10 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
                                           value={this.resolveSelectedParent()}
                                           fetchOptions={this.fetchOptions}
                                           fetchLimit={300}
-                                          valueKey="iri"
-                                          labelKey="label"
-                                          childrenKey="plainSubTerms"
-                                          simpleTreeData={true}
-                                          showSettings={false}
                                           maxHeight={200}
                                           multi={false}
-                                          renderAsTree={true}
-                                          placeholder={this.props.i18n("glossary.select.placeholder")}
                                           optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabularyIri)}
-                                          valueRenderer={Utils.labelValueRenderer}/>;
+                                          {...commonTermTreeSelectProps(this.props.i18n)}/>;
         }
     }
 }
