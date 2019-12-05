@@ -40,6 +40,7 @@ interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
 interface TermsState {
     // Whether terms from imported vocabularies should be displayed as well
     includeImported: boolean;
+    disableIncludeImportedToggle: boolean;
 }
 
 export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
@@ -50,7 +51,8 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
         super(props);
         this.treeComponent = React.createRef();
         this.state = {
-            includeImported: false
+            includeImported: false,
+            disableIncludeImportedToggle: false
         };
     }
 
@@ -71,6 +73,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
     }
 
     public fetchOptions = (fetchOptions: TreeSelectFetchOptionsParams<TermData>) => {
+        this.setState({disableIncludeImportedToggle: true});
         const namespace = Utils.extractQueryParam(this.props.location.search, "namespace");
         const vocabularyIri = fetchOptions.option ? VocabularyUtils.create(fetchOptions.option.vocabulary!.iri!) : {
             fragment: this.props.match.params.name,
@@ -81,6 +84,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
             includeImported: this.state.includeImported
         }, vocabularyIri).then(terms => {
             const matchingVocabularies = Utils.sanitizeArray(this.props.vocabulary!.allImportedVocabularies).concat(this.props.vocabulary!.iri);
+            this.setState({disableIncludeImportedToggle: false});
             return processTermsForTreeSelect(terms, matchingVocabularies, fetchOptions);
         });
     };
@@ -127,7 +131,8 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
         return (this.props.vocabulary && this.props.vocabulary.importedVocabularies) ?
             <div className="mb-1 mt-1 ml-1">
                 <IncludeImportedTermsToggle id="glossary-include-imported" onToggle={this.onIncludeImportedToggle}
-                                            includeImported={this.state.includeImported}/>
+                                            includeImported={this.state.includeImported}
+                                            disabled={this.state.disableIncludeImportedToggle}/>
             </div> : null;
     }
 

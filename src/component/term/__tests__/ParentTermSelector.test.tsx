@@ -205,4 +205,25 @@ describe("ParentTermSelector", () => {
         wrapper.update();
         expect(wrapper.exists(IntelligentTreeSelect)).toBeTruthy();
     });
+
+    it("disables include imported terms toggle when fetching terms", () => {
+        const wrapper = shallow<ParentTermSelector>(<ParentTermSelector id="test" termIri={Generator.generateUri()}
+                                                                        vocabularyIri={vocabularyIri}
+                                                                        onChange={onChange} parentTerms={[]}
+                                                                        loadTerms={loadTerms}
+                                                                        loadImportedVocabularies={loadImports} {...intlFunctions()}/>);
+        expect(wrapper.state().disableIncludeImportedToggle).toBeFalsy();
+        loadTerms = jest.fn().mockImplementation(() => {
+            wrapper.update();
+            expect(wrapper.state().disableIncludeImportedToggle).toBeTruthy();
+            return Promise.resolve([]);
+        });
+        wrapper.setProps({loadTerms});
+        wrapper.update();
+        return wrapper.instance().fetchOptions({}).then(() => {
+            expect(loadTerms).toHaveBeenCalled();
+            wrapper.update();
+            expect(wrapper.state().disableIncludeImportedToggle).toBeFalsy();
+        });
+    });
 });

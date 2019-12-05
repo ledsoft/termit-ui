@@ -50,6 +50,7 @@ interface ParentTermSelectorProps extends HasI18n {
 interface ParentTermSelectorState {
     includeImported: boolean;
     importedVocabularies?: string[];
+    disableIncludeImportedToggle: boolean;
 }
 
 export class ParentTermSelector extends React.Component<ParentTermSelectorProps, ParentTermSelectorState> {
@@ -59,7 +60,10 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
     constructor(props: ParentTermSelectorProps) {
         super(props);
         this.treeComponent = React.createRef();
-        this.state = {includeImported: ParentTermSelector.hasParentInDifferentVocabulary(props.vocabularyIri, props.parentTerms)};
+        this.state = {
+            includeImported: ParentTermSelector.hasParentInDifferentVocabulary(props.vocabularyIri, props.parentTerms),
+            disableIncludeImportedToggle: false
+        };
     }
 
     private static hasParentInDifferentVocabulary(vocabularyIri: string, parentTerms?: TermData[]) {
@@ -91,12 +95,14 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
     };
 
     public fetchOptions = (fetchOptions: TreeSelectFetchOptionsParams<TermData>) => {
+        this.setState({disableIncludeImportedToggle: true});
         // Use option vocabulary when present, it may differ from the current vocabulary (when option is from imported
         // vocabulary)
         return this.props.loadTerms({
             ...fetchOptions,
             includeImported: this.state.includeImported
         }, VocabularyUtils.create(fetchOptions.option ? fetchOptions.option.vocabulary!.iri! : this.props.vocabularyIri)).then(terms => {
+            this.setState({disableIncludeImportedToggle: false});
             const matchingVocabularies = Utils.sanitizeArray(this.state.importedVocabularies).concat(this.props.vocabularyIri);
             return filterOutCurrentTerm(processTermsForTreeSelect(terms, matchingVocabularies, fetchOptions), this.props.termIri);
         });
@@ -121,7 +127,8 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
         return <FormGroup id={this.props.id}>
             <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
             <IncludeImportedTermsToggle id={this.props.id + "-include-imported"} onToggle={this.onIncludeImportedToggle}
-                                        includeImported={this.state.includeImported} style={{float: "right"}}/>
+                                        includeImported={this.state.includeImported} style={{float: "right"}}
+                                        disabled={this.state.disableIncludeImportedToggle}/>
             {this.renderSelector()}
         </FormGroup>;
     }

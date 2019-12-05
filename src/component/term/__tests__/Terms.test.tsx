@@ -139,6 +139,23 @@ describe("Terms", () => {
         expect((fetchTerms as jest.Mock).mock.calls[0][1]).toEqual(VocabularyUtils.create(option.vocabulary!.iri!));
     });
 
+    it("disables include imported terms toggle when fetching terms", () => {
+        const wrapper = renderShallow();
+        expect(wrapper.state().disableIncludeImportedToggle).toBeFalsy();
+        fetchTerms = jest.fn().mockImplementation(() => {
+            wrapper.update();
+            expect(wrapper.state().disableIncludeImportedToggle).toBeTruthy();
+            return Promise.resolve([]);
+        });
+        wrapper.setProps({fetchTerms});
+        wrapper.update();
+        return wrapper.instance().fetchOptions({}).then(() => {
+            expect(fetchTerms).toHaveBeenCalled();
+            wrapper.update();
+            expect(wrapper.state().disableIncludeImportedToggle).toBeFalsy();
+        });
+    });
+
     describe("fetchOptions", () => {
 
         it("filters out terms which are not in the vocabulary import chain", () => {
