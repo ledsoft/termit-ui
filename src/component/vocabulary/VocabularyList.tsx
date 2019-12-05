@@ -12,7 +12,6 @@ import "intelligent-tree-select/lib/styles.css";
 import Utils from "../../util/Utils";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
-import VocabularyUtils from "../../util/VocabularyUtils";
 
 interface VocabularyListProps extends HasI18n {
     loadVocabularies: () => void;
@@ -28,13 +27,9 @@ export const VocabularyList: React.FC<VocabularyListProps> = props => {
     const onSelect = (voc: Vocabulary) => {
         if (voc === null) {
             Routing.transitionTo(Routes.vocabularies);
-            return;
+        } else {
+            Routing.transitionToAsset(voc);
         }
-        const iri = VocabularyUtils.create(voc.iri);
-        Routing.transitionTo(Routes.vocabularySummary, {
-            params: new Map([["name", iri.fragment]]),
-            query: new Map([["namespace", iri.namespace!]])
-        });
     };
 
     const options = Object.keys(props.vocabularies).map((v) => {

@@ -12,6 +12,8 @@ class RoutingMock {
     public transitionToHome = jest.fn();
 
     public transitionToOriginalTarget = jest.fn();
+
+    public transitionToAsset = jest.fn();
 }
 
 const INSTANCE = new RoutingMock();

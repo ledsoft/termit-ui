@@ -113,13 +113,7 @@ export class Terms extends React.Component<GlossaryTermsProps, TermsState> {
             delete cloneData.depth;
             const clone = new Term(cloneData);
             this.props.selectVocabularyTerm(clone);
-            // It is an existing Term, so it is expected it has a vocabulary
-            const vocabularyIri = VocabularyUtils.create(clone.vocabulary!.iri!);
-            Routing.transitionTo(Routes.vocabularyTermDetail,
-                {
-                    params: new Map([["name", vocabularyIri.fragment], ["termName", VocabularyUtils.getFragment(clone.iri)]]),
-                    query: new Map([["namespace", vocabularyIri.namespace!]])
-                });
+            Routing.transitionToAsset(clone);
         }
     };
 

@@ -7,7 +7,6 @@ import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import {createMemoryHistory, Location} from "history";
 import {match as Match} from "react-router";
 import Routing from "../../../util/Routing";
-import Routes from "../../../util/Routes";
 import Utils from "../../../util/Utils";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import Generator from "../../../__tests__/environment/Generator";
@@ -26,7 +25,8 @@ describe("Terms", () => {
         label: "test term",
         vocabulary: {
             iri: namespace + vocabularyName
-        }
+        },
+        types: [VocabularyUtils.TERM]
     };
     let vocabulary: Vocabulary;
 
@@ -69,10 +69,10 @@ describe("Terms", () => {
     it("transitions to term detail on term select", () => {
         const wrapper = renderShallow();
         (wrapper.instance()).onTermSelect(term);
-        const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
-        expect(call[0]).toEqual(Routes.vocabularyTermDetail);
-        expect((call[1].params as Map<string, string>).get("name")).toEqual(vocabularyName);
-        expect((call[1].params as Map<string, string>).get("termName")).toEqual(termName);
+        const call = (Routing.transitionToAsset as jest.Mock).mock.calls[0];
+        expect(call[0].iri).toEqual(term.iri);
+        expect(call[0].vocabulary).toEqual(term.vocabulary);
+        expect(call[0].types).toEqual(term.types);
     });
 
     function renderShallow() {
@@ -83,28 +83,11 @@ describe("Terms", () => {
                                      location={location} match={match} history={history}/>);
     }
 
-    it("specifies vocabulary namespace as query parameter for transition to term detail", () => {
-        location.search = "?namespace=" + namespace;
-        const wrapper = renderShallow();
-        wrapper.instance().onTermSelect(term);
-        const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
-        expect((call[1].query as Map<string, string>).get("namespace")).toEqual(namespace);
-    });
-
     it("invokes term selected on term select", () => {
         const wrapper = renderShallow();
         wrapper.instance().onTermSelect(term);
         expect(selectVocabularyTerm).toHaveBeenCalled();
         expect((selectVocabularyTerm as jest.Mock).mock.calls[0][0].iri).toEqual(term.iri);
-    });
-
-    it("passes vocabulary namespace as query parameter for transition to create term view", () => {
-        location.search = "?namespace=" + namespace;
-        const wrapper = renderShallow();
-        wrapper.instance().onCreateClick();
-        const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
-        expect(call[0]).toEqual(Routes.createVocabularyTerm);
-        expect((call[1].query as Map<string, string>).get("namespace")).toEqual(namespace);
     });
 
     it("fetches terms including imported when configured to", () => {
@@ -113,17 +96,6 @@ describe("Terms", () => {
         wrapper.update();
         wrapper.instance().fetchOptions({});
         expect((fetchTerms as jest.Mock).mock.calls[0][0].includeImported).toBeTruthy();
-    });
-
-    it("uses vocabulary identifier from Term data when transitioning to TermDetail in order to support transitioning to terms from a different vocabulary", () => {
-        const differentVocabularyName = "different-vocabulary";
-        const wrapper = renderShallow();
-        term.vocabulary = {iri: namespace + differentVocabularyName};
-        (wrapper.instance()).onTermSelect(term);
-        const call = (Routing.transitionTo as jest.Mock).mock.calls[0];
-        expect(call[0]).toEqual(Routes.vocabularyTermDetail);
-        expect((call[1].params as Map<string, string>).get("name")).toEqual(differentVocabularyName);
-        expect((call[1].params as Map<string, string>).get("termName")).toEqual(termName);
     });
 
     it("uses term vocabulary when fetching its subterms", () => {
