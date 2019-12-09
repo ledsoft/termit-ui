@@ -1,4 +1,4 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
+import axios, {AxiosInstance, AxiosRequestConfig, ResponseType} from "axios";
 import Routing from "./Routing";
 import Constants from "./Constants";
 import Routes from "./Routes";
@@ -12,7 +12,7 @@ class RequestConfigBuilder {
     private mParams?: {};
     private mFormData?: {};
     private mAccept: string;
-    private mResponseType?: "arraybuffer" | "blob" | "document" | "json" | "text" | "stream";
+    private mResponseType?: ResponseType;
 
     constructor() {
         this.mContentType = Constants.JSON_LD_MIME_TYPE;
@@ -54,7 +54,7 @@ class RequestConfigBuilder {
         return this;
     }
 
-    public responseType(value: "arraybuffer" | "blob" | "document" | "json" | "text" | "stream"): RequestConfigBuilder {
+    public responseType(value: ResponseType): RequestConfigBuilder {
         this.mResponseType = value;
         return this;
     }
@@ -182,12 +182,13 @@ export class Ajax {
      * @param config request configuration
      */
     public getRaw(path: string, config: RequestConfigBuilder = new RequestConfigBuilder()) {
+        config.responseType("arraybuffer");
         const conf = {
             params: config.getParams(),
             headers: {
                 "Accept": config.getAccept(),
             },
-            responseType: "arraybuffer"
+            responseType: config.getResponseType()
         };
         return this.axiosInstance.get(path, conf);
     }
