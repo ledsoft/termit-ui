@@ -33,8 +33,15 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         };
     }
 
-    private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.currentTarget.value;
+    public componentDidUpdate(prevProps: Readonly<NavbarSearchProps>): void {
+        // Hide results when transitioning to a different route
+        if (prevProps.location.pathname !== this.props.location.pathname) {
+            this.closeResults();
+        }
+    }
+
+    public onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
         this.closeResults();
         this.props.updateSearchFilter(value).then(() => this.setState({showResults: true}));
     };
@@ -44,8 +51,6 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
             this.openSearchView();
         }
     };
-
-    // TODO Close results when transitioning to a different path
 
     private openSearchView = () => {
         const query = new Map();
@@ -61,9 +66,10 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         this.setState({showResults: false});
     };
 
-    private displayResults() {
+    private shouldDisplayResults() {
         const path = this.props.location.pathname;
-        return this.state.showResults && path !== Routes.search.path && path !== Routes.searchTerms.path && path !== Routes.searchVocabularies.path;
+        return this.state.showResults && path !== Routes.search.path && path !== Routes.searchTerms.path
+            && path !== Routes.searchVocabularies.path && path !== Routes.facetedSearch.path;
     }
 
     public render() {
@@ -87,7 +93,7 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         if (!this.props.searchResults) {
             return null;
         } else {
-            return <SearchResultsOverlay show={this.displayResults()} searchResults={this.props.searchResults}
+            return <SearchResultsOverlay show={this.shouldDisplayResults()} searchResults={this.props.searchResults}
                                          onClose={this.closeResults} targetId="main-search-input"
                                          onOpenSearch={this.openSearchView}/>;
         }

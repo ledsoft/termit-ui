@@ -94,7 +94,8 @@ export function searchEverything() {
         if (state.searchListenerCount > 0 && !state.searchQuery.isEmpty()) {
             return dispatch(search(state.searchQuery.searchQuery, true));
         } else {
-            return dispatch({type: ActionType.SEARCH_FINISH});
+            dispatch({type: ActionType.SEARCH_FINISH});
+            return Promise.resolve();
         }
     };
 }
