@@ -6,12 +6,12 @@ import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
 import {Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from "reactstrap";
 import CustomInput from "../misc/CustomInput";
-import {updateProfile} from "../../action/AsyncActions";
 import {AsyncAction} from "../../action/ActionType";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import User, {UserDataWithPassword} from "../../model/User";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
+import {changePassword} from "../../action/AsyncUserActions";
 
 interface ChangePasswordProps extends HasI18n {
     user: User;
@@ -51,7 +51,7 @@ export class ChangePassword extends React.Component<ChangePasswordProps, ChangeP
             return;
         }
 
-        const userDataWithPassword : UserDataWithPassword = {
+        const userDataWithPassword: UserDataWithPassword = {
             ...this.props.user,
             originalPassword: this.state.currentPassword,
             password: this.state.newPassword,
@@ -145,6 +145,6 @@ export default connect((state: TermItState) => {
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        changePassword: (name: User) => dispatch(updateProfile(name))
+        changePassword: (name: User) => dispatch(changePassword(name))
     };
 })(injectIntl(withI18n(ChangePassword)));

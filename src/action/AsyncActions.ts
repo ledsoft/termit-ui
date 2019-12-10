@@ -11,13 +11,12 @@ import Ajax, {content, contentType, param, params} from "../util/Ajax";
 import {GetStoreState, ThunkDispatch} from "../util/Types";
 import Routing from "../util/Routing";
 import Constants from "../util/Constants";
-import User, {CONTEXT as USER_CONTEXT, UserAccountData, UserData} from "../model/User";
 import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT, VocabularyData} from "../model/Vocabulary";
 import Routes from "../util/Routes";
 import {ErrorData} from "../model/ErrorInfo";
 import {AxiosResponse} from "axios";
 import * as jsonld from "jsonld";
-import Message, {createFormattedMessage} from "../model/Message";
+import Message from "../model/Message";
 import MessageType from "../model/MessageType";
 import Term, {CONTEXT as TERM_CONTEXT, TermData} from "../model/Term";
 import FetchOptionsFunction from "../model/Functions";
@@ -68,64 +67,6 @@ export function isActionRequestPending(state: TermItState, action: Action) {
 }
 
 const JOINED_RESOURCE_CONTEXT = Object.assign({}, DOCUMENT_CONTEXT);
-
-export function loadUser() {
-    const action = {
-        type: ActionType.FETCH_USER
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
-        return Ajax.get(Constants.API_PREFIX + "/users/current")
-            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, USER_CONTEXT))
-            .then((data: UserData) => dispatch(asyncActionSuccessWithPayload(action, new User(data))))
-            .catch((error: ErrorData) => {
-                if (error.status === Constants.STATUS_UNAUTHORIZED) {
-                    return dispatch(asyncActionFailure(action, {message: "Not logged in."}));
-                } else {
-                    dispatch(asyncActionFailure(action, error));
-                    return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-                }
-            });
-    };
-}
-
-export function login(username: string, password: string) {
-    const action = {
-        type: ActionType.LOGIN
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
-        return Ajax.post("/j_spring_security_check", params({
-            username,
-            password
-        }).contentType(Constants.X_WWW_FORM_URLENCODED))
-            .then((resp: AxiosResponse) => {
-                const data = resp.data;
-                if (!data.loggedIn) {
-                    return Promise.reject(data);
-                } else {
-                    Routing.transitionToHome();
-                    dispatch(asyncActionSuccess(action));
-                    return Promise.resolve();
-                }
-            })
-            .then(() => dispatch(SyncActions.publishMessage(createFormattedMessage("message.welcome"))))
-            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
-    };
-}
-
-export function register(user: UserAccountData) {
-    const action = {
-        type: ActionType.REGISTER
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
-        return Ajax.post(Constants.API_PREFIX + "/users", content(user).contentType("application/json"))
-            .then(() => dispatch(asyncActionSuccess(action)))
-            .then(() => dispatch(login(user.username, user.password)))
-            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
-    };
-}
 
 export function createVocabulary(vocabulary: Vocabulary) {
     const action = {
@@ -874,42 +815,3 @@ export function exportFileContent(fileIri: IRI) {
     }
 }
 
-export function updateProfile(user: User) {
-    const action = {
-        type: ActionType.UPDATE_PROFILE
-    };
-
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
-
-        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()))
-            .then(() => dispatch(loadUser()))
-            .then(() => {
-                dispatch(publishMessage(new Message({messageId: "profile.updated.message"}, MessageType.SUCCESS)));
-                return dispatch(asyncActionSuccess(action));
-            }).catch((error: ErrorData) => {
-                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-                return dispatch(asyncActionFailure(action, error));
-            });
-    };
-}
-
-export function changePassword(user: User) {
-    const action = {
-        type: ActionType.CHANGE_PASSWORD
-    };
-
-    return (dispatch: ThunkDispatch) => {
-        dispatch(asyncActionRequest(action));
-
-        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()))
-            .then(() => {
-                dispatch(SyncActions.publishMessage(new Message({messageId: "change-password.updated.message"}, MessageType.SUCCESS)));
-                return dispatch(asyncActionSuccess(action));
-            })
-            .catch((error: ErrorData) => {
-                dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-                return dispatch(asyncActionFailure(action, error));
-            });
-    };
-}

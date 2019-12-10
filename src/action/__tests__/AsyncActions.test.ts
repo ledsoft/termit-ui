@@ -1,6 +1,5 @@
 import configureMockStore, {MockStoreEnhanced} from "redux-mock-store";
 import {
-    changePassword,
     createFileInDocument,
     createProperty,
     createResource,
@@ -15,20 +14,17 @@ import {
     loadFileContent,
     loadImportedVocabularies,
     loadLastEditedAssets,
-    loadLatestTextAnalysisRecord, loadResource,
+    loadLatestTextAnalysisRecord,
+    loadResource,
     loadResources,
     loadResourceTermAssignmentsInfo,
     loadTerm,
     loadTermAssignmentsInfo,
     loadTerms,
     loadTypes,
-    loadUser,
     loadVocabularies,
     loadVocabulary,
-    login,
-    register,
     removeResource,
-    updateProfile,
     updateResourceTerms,
     updateTerm,
     updateVocabulary,
@@ -43,9 +39,8 @@ import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary"
 import Vocabulary2 from "../../util/VocabularyUtils";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Routes from "../../util/Routes";
-import ActionType, {AsyncAction, AsyncActionSuccess, AsyncFailureAction, MessageAction,} from "../ActionType";
+import ActionType, {AsyncAction, AsyncActionSuccess, MessageAction,} from "../ActionType";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
-import {ErrorData} from "../../model/ErrorInfo";
 import Generator from "../../__tests__/environment/Generator";
 import {ThunkDispatch} from "../../util/Types";
 import FetchOptionsFunction from "../../model/Functions";
@@ -58,7 +53,6 @@ import ExportType from "../../util/ExportType";
 import fileContent from "../../rest-mock/file";
 import Asset from "../../model/Asset";
 import TermItFile from "../../model/File";
-import User, {UserAccountData} from "../../model/User";
 import MessageType from "../../model/MessageType";
 import {CONTEXT as TA_RECORD_CONTEXT, TextAnalysisRecord} from "../../model/TextAnalysisRecord";
 import {
@@ -89,67 +83,6 @@ describe("Async actions", () => {
         store = mockStore(new TermItState());
     });
 
-    describe("fetch user", () => {
-        it("does not publish error message when status is 401", () => {
-            const error: ErrorData = {
-                message: "Unauthorized",
-                status: Constants.STATUS_UNAUTHORIZED
-            };
-            Ajax.get = jest.fn().mockImplementation(() => Promise.reject(error));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadUser())).then(() => {
-                const actions: Action[] = store.getActions();
-                const found = actions.find(a => a.type === ActionType.PUBLISH_MESSAGE);
-                return expect(found).not.toBeDefined();
-            });
-        });
-    });
-
-    describe("login", () => {
-        it("transitions to home on login success", () => {
-            const resp = {
-                data: {
-                    loggedIn: true
-                },
-                headers: {}
-            };
-            resp.headers[Constants.AUTHORIZATION_HEADER] = "Bearer jwt12345";
-            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve(resp));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(login("test", "test"))).then(() => {
-                expect(Routing.transitionToHome).toHaveBeenCalled();
-            });
-        });
-    });
-
-    describe("register", () => {
-
-        const userInfo: UserAccountData = {
-            firstName: "test",
-            lastName: "testowitch",
-            username: "admin",
-            password: "iamtheboss"
-        };
-
-        it("invokes login on registration success", () => {
-            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve());
-            return Promise.resolve((store.dispatch as ThunkDispatch)(register(userInfo))).then(() => {
-                expect(store.getActions().find(a => a.type === ActionType.LOGIN)).toBeDefined();
-            });
-        });
-
-        it("returns error info on error", () => {
-            const message = "User already exists";
-            Ajax.post = jest.fn().mockImplementation(() => Promise.reject({
-                status: 409,
-                message
-            }));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(register(userInfo))).then(result => {
-                expect(result.type).toEqual(ActionType.REGISTER);
-                expect((result as AsyncFailureAction).error).toBeDefined();
-                expect((result as AsyncFailureAction).error.message).toEqual(message);
-            });
-        });
-    });
-
     describe("create vocabulary", () => {
         it("adds context definition to vocabulary data and sends it over network", () => {
             const vocabulary = new Vocabulary({
@@ -173,6 +106,7 @@ describe("Async actions", () => {
                 label: "Test",
                 iri: "http://kbss.felk.cvut.cz/termit/rest/vocabularies/test"
             });
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({headers: {location: vocabulary.iri}}));
             return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabulary(vocabulary))).then(() => {
                 expect(Routing.transitionTo).toHaveBeenCalled();
@@ -1365,164 +1299,6 @@ describe("Async actions", () => {
             const iri = VocabularyUtils.create(Generator.generateUri());
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadImportedVocabularies(iri))).then((result) => {
                 expect(result).toEqual([]);
-            });
-        });
-    });
-
-    describe("update profile", () => {
-        it("sends put request to correct endpoint using user IRI", () => {
-            const namespace = "http://onto.fel.cvut.cz/ontologies/uzivatel/";
-            const normalizedUserName = "test-uzivatel";
-            const user = new User({
-                iri: namespace + normalizedUserName,
-                username: normalizedUserName,
-                firstName: "test",
-                lastName: "test"
-            });
-            const mock = jest.fn().mockImplementation(() => Promise.resolve());
-            Ajax.put = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(updateProfile(user))).then(() => {
-                expect(Ajax.put).toHaveBeenCalled();
-                const requestUri = mock.mock.calls[0][0];
-                expect(requestUri).toEqual(Constants.API_PREFIX + "/users/current");
-            });
-        });
-
-        it("sends JSON-LD of user argument to REST endpoint", () => {
-            const namespace = "http://onto.fel.cvut.cz/ontologies/uzivatel/";
-            const normalizedUserName = "test-uzivatel";
-            const user = new User({
-                iri: namespace + normalizedUserName,
-                username: normalizedUserName,
-                firstName: "test",
-                lastName: "test"
-            });
-            const mock = jest.fn().mockImplementation(() => Promise.resolve());
-            Ajax.put = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(updateProfile(user))).then(() => {
-                expect(Ajax.put).toHaveBeenCalled();
-                const data = mock.mock.calls[0][1].getContent();
-                expect(data).toEqual(user.toJsonLd());
-            });
-        });
-
-        it("updates user on successful request", () => {
-            const namespace = "http://onto.fel.cvut.cz/ontologies/uzivatel/";
-            const normalizedUserName = "test-uzivatel";
-            const user = new User({
-                iri: namespace + normalizedUserName,
-                username: normalizedUserName,
-                firstName: "test",
-                lastName: "test"
-            });
-            Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
-            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve());
-            return Promise.resolve((store.dispatch as ThunkDispatch)(updateProfile(user))).then(() => {
-                // 0 - async request, 1 - fetch user, 2 - fetch user success, 3 - publish message, 4 - request success
-                const action: AsyncAction = store.getActions()[4];
-                expect(action).toBeDefined();
-                expect(action.type).toEqual(ActionType.UPDATE_PROFILE);
-            });
-        });
-
-        it("dispatches success message on successful profile update", () => {
-            const namespace = "http://onto.fel.cvut.cz/ontologies/uzivatel/";
-            const normalizedUserName = "test-uzivatel";
-            const user = new User({
-                iri: namespace + normalizedUserName,
-                username: normalizedUserName,
-                firstName: "test",
-                lastName: "test"
-            });
-            Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
-            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve());
-            return Promise.resolve((store.dispatch as ThunkDispatch)(updateProfile(user))).then(() => {
-                // 0 - async request, 1 - fetch user, 2 - fetch user success, 3 - publish message, 4 - request success
-                const action: MessageAction = store.getActions()[3];
-                expect(action).toBeDefined();
-                expect(action.message.messageId).toEqual("profile.updated.message");
-            });
-        });
-    });
-
-    describe("change password", () => {
-        it("sends put request to correct endpoint using user IRI", () => {
-            const namespace = "http://onto.fel.cvut.cz/ontologies/uzivatel/";
-            const normalizedUserName = "test-uzivatel";
-            const userWithPassword = new User({
-                iri: namespace + normalizedUserName,
-                username: normalizedUserName,
-                firstName: "test",
-                lastName: "test",
-                password: "test",
-                originalPassword: "test-original"
-            });
-            const mock = jest.fn().mockImplementation(() => Promise.resolve());
-            Ajax.put = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(changePassword(userWithPassword))).then(() => {
-                expect(Ajax.put).toHaveBeenCalled();
-                const requestUri = mock.mock.calls[0][0];
-                expect(requestUri).toEqual(Constants.API_PREFIX + "/users/current");
-            });
-        });
-
-        it("sends JSON-LD of user argument to REST endpoint", () => {
-            const namespace = "http://onto.fel.cvut.cz/ontologies/uzivatel/";
-            const normalizedUserName = "test-uzivatel";
-            const userWithPassword = new User({
-                iri: namespace + normalizedUserName,
-                username: normalizedUserName,
-                firstName: "test",
-                lastName: "test",
-                password: "test",
-                originalPassword: "test-original"
-            });
-            const mock = jest.fn().mockImplementation(() => Promise.resolve());
-            Ajax.put = mock;
-            return Promise.resolve((store.dispatch as ThunkDispatch)(changePassword(userWithPassword))).then(() => {
-                expect(Ajax.put).toHaveBeenCalled();
-                const data = mock.mock.calls[0][1].getContent();
-                expect(data).toEqual(userWithPassword.toJsonLd());
-            });
-        });
-
-        it("updates password on successful request", () => {
-            const namespace = "http://onto.fel.cvut.cz/ontologies/uzivatel/";
-            const normalizedUserName = "test-uzivatel";
-            const userWithPassword = new User({
-                iri: namespace + normalizedUserName,
-                username: normalizedUserName,
-                firstName: "test",
-                lastName: "test",
-                password: "test",
-                originalPassword: "test-original"
-            });
-            Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
-            return Promise.resolve((store.dispatch as ThunkDispatch)(changePassword(userWithPassword))).then(() => {
-                // 0 - async request, 1 - publish message, 2 - request success
-                const action: AsyncAction = store.getActions()[2];
-                expect(action).toBeDefined();
-                expect(action.type).toEqual(ActionType.CHANGE_PASSWORD);
-            });
-        });
-
-        it("dispatches success message on successful password update", () => {
-            const namespace = "http://onto.fel.cvut.cz/ontologies/uzivatel/";
-            const normalizedUserName = "test-uzivatel";
-            const userWithPassword = new User({
-                iri: namespace + normalizedUserName,
-                username: normalizedUserName,
-                firstName: "test",
-                lastName: "test",
-                password: "test",
-                originalPassword: "test-original"
-            });
-            Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
-            return Promise.resolve((store.dispatch as ThunkDispatch)(changePassword(userWithPassword))).then(() => {
-                // 0 - async request, 1 - publish message, 2 - request success
-                const action: MessageAction = store.getActions()[1];
-                expect(action).toBeDefined();
-                expect(action.message.messageId).toEqual("change-password.updated.message");
             });
         });
     });

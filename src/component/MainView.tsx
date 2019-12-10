@@ -25,7 +25,6 @@ import User, {EMPTY_USER} from "../model/User";
 import "./MainView.scss";
 import Routes from "../util/Routes";
 import Footer from "./Footer";
-import {loadUser} from "../action/AsyncActions";
 import {logout} from "../action/ComplexActions";
 import {Route, RouteComponentProps, Switch, withRouter} from "react-router";
 import Messages from "./message/Messages";
@@ -46,6 +45,7 @@ import ProfileRoute from "./profile/ProfileRoute";
 import {IfGranted} from "react-authorization";
 import VocabularyUtils from "../util/VocabularyUtils";
 import AdministrationRoute from "./administration/AdministrationRoute";
+import {loadUser} from "../action/AsyncUserActions";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User;

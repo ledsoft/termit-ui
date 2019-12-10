@@ -5,7 +5,6 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import TermItState from "../../model/TermItState";
 import {ThunkDispatch} from "../../util/Types";
 import User, {UserData} from "../../model/User";
-import {updateProfile} from "../../action/AsyncActions";
 import {AsyncAction} from "../../action/ActionType";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import PanelWithActions from "../misc/PanelWithActions";
@@ -14,6 +13,7 @@ import Routes from "../../util/Routes";
 import ProfileView from "./ProfileView";
 import ProfileActionButtons from "./ProfileActionButtons";
 import ProfileEditForm from "./ProfileEditForm";
+import {updateProfile} from "../../action/AsyncUserActions";
 
 interface ProfileProps extends HasI18n {
     user: User;

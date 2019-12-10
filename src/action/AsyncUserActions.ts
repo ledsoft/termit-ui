@@ -7,19 +7,86 @@
 
 import ActionType from "./ActionType";
 import {ThunkDispatch} from "../util/Types";
-import Ajax, {content, param} from "../util/Ajax";
+import Ajax, {content, param, params} from "../util/Ajax";
 import Constants from "../util/Constants";
 import JsonLdUtils from "../util/JsonLdUtils";
-import User, {CONTEXT as USER_CONTEXT, UserData} from "../model/User";
-import {asyncActionFailure, asyncActionRequest, asyncActionSuccess, publishMessage} from "./SyncActions";
+import User, {CONTEXT as USER_CONTEXT, UserAccountData, UserData} from "../model/User";
+import {
+    asyncActionFailure,
+    asyncActionRequest,
+    asyncActionSuccess,
+    asyncActionSuccessWithPayload,
+    publishMessage
+} from "./SyncActions";
 import {ErrorData} from "../model/ErrorInfo";
-import Message from "../model/Message";
+import Message, {createFormattedMessage} from "../model/Message";
 import MessageType from "../model/MessageType";
 import {isActionRequestPending} from "./AsyncActions";
 import TermItState from "../model/TermItState";
 import VocabularyUtils from "../util/VocabularyUtils";
+import {Action} from "redux";
+import {AxiosResponse} from "axios";
+import Routing from "../util/Routing";
 
 const USERS_ENDPOINT = "/users";
+
+export function loadUser() {
+    const action = {
+        type: ActionType.FETCH_USER
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.get(`${Constants.API_PREFIX}${USERS_ENDPOINT}/current`)
+            .then((data: object) => JsonLdUtils.compactAndResolveReferences(data, USER_CONTEXT))
+            .then((data: UserData) => dispatch(asyncActionSuccessWithPayload(action, new User(data))))
+            .catch((error: ErrorData) => {
+                if (error.status === Constants.STATUS_UNAUTHORIZED) {
+                    return dispatch(asyncActionFailure(action, {message: "Not logged in."}));
+                } else {
+                    dispatch(asyncActionFailure(action, error));
+                    return dispatch(publishMessage(new Message(error, MessageType.ERROR)));
+                }
+            });
+    };
+}
+
+export function login(username: string, password: string) {
+    const action = {
+        type: ActionType.LOGIN
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.post("/j_spring_security_check", params({
+            username,
+            password
+        }).contentType(Constants.X_WWW_FORM_URLENCODED))
+            .then((resp: AxiosResponse) => {
+                const data = resp.data;
+                if (!data.loggedIn) {
+                    return Promise.reject(data);
+                } else {
+                    Routing.transitionToHome();
+                    dispatch(asyncActionSuccess(action));
+                    return Promise.resolve();
+                }
+            })
+            .then(() => dispatch(publishMessage(createFormattedMessage("message.welcome"))))
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+    };
+}
+
+export function register(user: UserAccountData) {
+    const action = {
+        type: ActionType.REGISTER
+    };
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+        return Ajax.post(Constants.API_PREFIX + "/users", content(user).contentType("application/json"))
+            .then(() => dispatch(asyncActionSuccess(action)))
+            .then(() => dispatch(login(user.username, user.password)))
+            .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
+    };
+}
 
 export function loadUsers() {
     const action = {
@@ -109,4 +176,34 @@ export function unlockUser(user: User, newPassword: string) {
                 return dispatch(publishMessage(new Message(error, MessageType.ERROR)));
             });
     }
+}
+
+export function updateProfile(user: User) {
+    const action = {
+        type: ActionType.UPDATE_PROFILE
+    };
+    return updateUser(user, action, "profile.updated.message");
+}
+
+function updateUser(user: User, action: Action, messageId: string) {
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action));
+
+        return Ajax.put(`${Constants.API_PREFIX}/users/current`, content(user.toJsonLd()))
+            .then(() => dispatch(loadUser()))
+            .then(() => {
+                dispatch(publishMessage(new Message({messageId}, MessageType.SUCCESS)));
+                return dispatch(asyncActionSuccess(action));
+            }).catch((error: ErrorData) => {
+                dispatch(publishMessage(new Message(error, MessageType.ERROR)));
+                return dispatch(asyncActionFailure(action, error));
+            });
+    };
+}
+
+export function changePassword(user: User) {
+    const action = {
+        type: ActionType.CHANGE_PASSWORD
+    };
+    return updateUser(user, action, "change-password.updated.message");
 }
