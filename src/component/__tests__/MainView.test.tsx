@@ -4,7 +4,6 @@ import User, {EMPTY_USER} from "../../model/User";
 import {intlFunctions} from "../../__tests__/environment/IntlUtil";
 import {shallow} from "enzyme";
 import {createMemoryHistory} from "history";
-import {mountWithIntl} from "../../__tests__/environment/Environment";
 
 describe("MainView", () => {
 
@@ -49,8 +48,8 @@ describe("MainView", () => {
     });
 
     it("renders placeholder UI when user is being loaded", () => {
-        const wrapper = mountWithIntl(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history}
-                                                location={location} match={match} {...intlFunctions()}/>);
-        expect(wrapper.find("header").exists()).toBeFalsy();
+        const wrapper = shallow(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history}
+                                          location={location} match={match} {...intlFunctions()}/>);
+        expect(wrapper.exists("#loading-placeholder")).toBeTruthy();
     });
 });

@@ -7,7 +7,8 @@ import {Badge} from "reactstrap";
 import {GoPlus} from "react-icons/go";
 import {shallow} from "enzyme";
 import RdfsResource from "../../../model/RdfsResource";
-// @ts-ignore
+
+jest.mock("../../misc/AssetLabel");
 
 describe("UnmappedPropertiesEdit", () => {
 

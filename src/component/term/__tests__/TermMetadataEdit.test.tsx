@@ -9,6 +9,10 @@ import UnmappedPropertiesEdit from "../../genericmetadata/UnmappedPropertiesEdit
 import VocabularyUtils from "../../../util/VocabularyUtils";
 import CustomInput from "../../misc/CustomInput";
 
+jest.mock("../TermAssignments");
+jest.mock("../ParentTermSelector");
+jest.mock("../../misc/AssetLabel");
+
 describe("Term edit", () => {
 
     let term: Term;
@@ -33,19 +37,23 @@ describe("Term edit", () => {
     });
 
     it("disables save button when label field is empty", () => {
+        Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(true));
         const wrapper = shallow<TermMetadataEdit>(<TermMetadataEdit save={onSave} term={term}
                                                                     cancel={onCancel} {...intlFunctions()}/>);
-        wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
-            currentTarget: {
-                name: "edit-term-label",
-                value: ""
-            }
+        return Promise.resolve().then(() => {
+            wrapper.find(CustomInput).findWhere(ci => ci.prop("name") === "edit-term-label").simulate("change", {
+                currentTarget: {
+                    name: "edit-term-label",
+                    value: ""
+                }
+            });
+            const saveButton = wrapper.find("#edit-term-submit");
+            expect(saveButton.prop("disabled")).toBeTruthy();
         });
-        const saveButton = wrapper.find("#edit-term-submit");
-        expect(saveButton.prop("disabled")).toBeTruthy();
     });
 
     it("invokes save with state data when save is clicked", () => {
+        Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(false));
         const wrapper = shallow(<TermMetadataEdit save={onSave} term={term}
                                                   cancel={onCancel} {...intlFunctions()}/>);
         const newLabel = "New label";
@@ -55,12 +63,14 @@ describe("Term edit", () => {
                 value: newLabel
             }
         });
-        wrapper.find("#edit-term-submit").simulate("click");
-        expect(onSave).toHaveBeenCalled();
-        const arg = (onSave as jest.Mock).mock.calls[0][0];
-        expect(arg.iri).toEqual(term.iri);
-        expect(arg.label).toEqual(newLabel);
-        expect(arg.comment).toEqual(term.comment);
+        return Promise.resolve().then(() => {
+            wrapper.find("#edit-term-submit").simulate("click");
+            expect(onSave).toHaveBeenCalled();
+            const arg = (onSave as jest.Mock).mock.calls[0][0];
+            expect(arg.iri).toEqual(term.iri);
+            expect(arg.label).toEqual(newLabel);
+            expect(arg.comment).toEqual(term.comment);
+        });
     });
 
     it("checks for label uniqueness in vocabulary on label change", () => {

@@ -9,6 +9,8 @@ import NotificationType from "../../../../model/NotificationType";
 import File from "../../../../model/File";
 import {FileSummary} from "../FileSummary";
 
+jest.mock("../../ResourceTermAssignments");
+
 describe("FileSummary", () => {
 
     const namespace = "http://onto.fel.cvut.cz/ontologies/termit/resources/";

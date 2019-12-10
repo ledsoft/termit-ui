@@ -180,7 +180,10 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
     }
 
     private renderPlaceholder() {
-        return <div className="wrapper center"><Jumbotron><h1>{this.props.i18n("message.welcome")}</h1></Jumbotron>
+        return <div id="loading-placeholder" className="wrapper center">
+            <Jumbotron>
+                <h1>{this.props.i18n("message.welcome")}</h1>
+            </Jumbotron>
         </div>;
     }
 

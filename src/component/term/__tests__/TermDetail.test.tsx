@@ -15,6 +15,7 @@ import {IRI} from "../../../util/VocabularyUtils";
 
 jest.mock("../TermAssignments");
 jest.mock("../ParentTermSelector");
+jest.mock("../../misc/AssetLabel");
 
 describe("TermDetail", () => {
 
@@ -76,12 +77,12 @@ describe("TermDetail", () => {
     });
 
     it("renders term metadata by default", () => {
-        const wrapper = mountWithIntl(<MemoryRouter><TermDetail term={term} loadTerm={onLoad}
-                                                                updateTerm={onUpdate}
-                                                                publishNotification={onPublishNotification}
-                                                                history={history} location={location} match={match}
-                                                                {...intlFunctions()}/></MemoryRouter>);
-        expect(wrapper.find(TermMetadata).exists()).toBeTruthy();
+        const wrapper = shallow(<TermDetail term={term} loadTerm={onLoad}
+                                            updateTerm={onUpdate}
+                                            publishNotification={onPublishNotification}
+                                            history={history} location={location} match={match}
+                                            {...intlFunctions()}/>);
+        expect(wrapper.exists(TermMetadata)).toBeTruthy();
     });
 
     it("renders term editor after clicking edit button", () => {
@@ -158,7 +159,7 @@ describe("TermDetail", () => {
         const editButton = wrapper.find("button#term-detail-edit");
         expect(editButton.exists()).toBeTruthy();
         editButton.simulate("click");
-        expect(wrapper.exists("button#term-detail-edit")).toBeFalsy();
+        expect(wrapper.exists("button#term-detail-edit")).toBeFalsy()
     });
 
     it("publishes term update notification when parent term changes", () => {

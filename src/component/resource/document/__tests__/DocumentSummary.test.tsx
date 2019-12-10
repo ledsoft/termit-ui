@@ -7,9 +7,12 @@ import File from "../../../../model/File";
 import VocabularyUtils, {IRI} from "../../../../util/VocabularyUtils";
 import Resource from "../../../../model/Resource";
 import {DocumentSummary} from "../DocumentSummary";
-import AssetIriLink from "../../../misc/AssteIriLink";
+import AssetIriLink from "../../../misc/AssetIriLink";
 import {MemoryRouter} from "react-router";
 import {shallow} from "enzyme";
+
+jest.mock("../../ResourceTermAssignments");
+jest.mock("../../../misc/AssetIriLink");
 
 describe("DocumentSummary", () => {
 
