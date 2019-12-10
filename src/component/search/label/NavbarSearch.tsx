@@ -6,7 +6,7 @@ import {GoSearch} from "react-icons/go";
 import "./NavbarSearch.scss";
 import SearchResult from "../../../model/SearchResult";
 import {connect} from "react-redux";
-import {autocompleteSearch, updateSearchFilter} from "../../../action/SearchActions";
+import {updateSearchFilter} from "../../../action/SearchActions";
 import SearchResultsOverlay from "./SearchResultsOverlay";
 import Routes from "../../../util/Routes";
 import {ThunkDispatch} from "../../../util/Types";
@@ -15,14 +15,12 @@ import Routing from "../../../util/Routing";
 import {RouteComponentProps, withRouter} from "react-router";
 
 interface NavbarSearchProps extends HasI18n, RouteComponentProps<any> {
-    autocompleteSearch: (searchString: string) => any;
     updateSearchFilter: (searchString: string) => any;
     searchString: string;
+    searchResults: SearchResult[] | null;
 }
 
 interface NavbarSearchState {
-    searchString: string;
-    results: SearchResult[] | null;
     showResults: boolean;
 }
 
@@ -31,26 +29,15 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     constructor(props: NavbarSearchProps) {
         super(props);
         this.state = {
-            searchString: "",
-            showResults: false,
-            results: null
+            showResults: false
         };
     }
 
     private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
-        this.props.updateSearchFilter(value);
-        if (this.shouldRun()) {
-            this.autocompleteSearch(value);
-        } else {
-            this.setState({showResults: false, results: null});
-        }
+        this.closeResults();
+        this.props.updateSearchFilter(value).then(() => this.setState({showResults: true}));
     };
-
-    private shouldRun() {
-        const path = this.props.location.pathname;
-        return path !== Routes.search.path && path !== Routes.searchTerms.path && path !== Routes.searchVocabularies.path;
-    }
 
     private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
@@ -58,30 +45,26 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
         }
     };
 
+    // TODO Close results when transitioning to a different path
+
     private openSearchView = () => {
         const query = new Map();
         const searchString = this.props.searchString.trim();
         if (searchString.length > 0) {
             query.set("searchString", encodeURI(searchString));
         }
-        this.setState({results: null, showResults: false});
+        this.closeResults();
         Routing.transitionTo(Routes.search, {query});
-    };
-
-    public autocompleteSearch = (str?: string) => {
-        const searchVal = str ? str : this.state.searchString;
-        if (searchVal.trim().length > 0) {
-            this.setState({results: [], showResults: false});
-            this.props.autocompleteSearch(searchVal).then((data: SearchResult[]) => this.setState({
-                results: data,
-                showResults: true
-            }));
-        }
     };
 
     private closeResults = () => {
         this.setState({showResults: false});
     };
+
+    private displayResults() {
+        const path = this.props.location.pathname;
+        return this.state.showResults && path !== Routes.search.path && path !== Routes.searchTerms.path && path !== Routes.searchVocabularies.path;
+    }
 
     public render() {
         const i18n = this.props.i18n;
@@ -101,10 +84,10 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
     }
 
     private renderResultsOverlay() {
-        if (!this.state.results) {
+        if (!this.props.searchResults) {
             return null;
         } else {
-            return <SearchResultsOverlay show={this.state.showResults} searchResults={this.state.results}
+            return <SearchResultsOverlay show={this.displayResults()} searchResults={this.props.searchResults}
                                          onClose={this.closeResults} targetId="main-search-input"
                                          onOpenSearch={this.openSearchView}/>;
         }
@@ -115,11 +98,11 @@ export class NavbarSearch extends React.Component<NavbarSearchProps, NavbarSearc
 export default withRouter(connect((state: TermItState) => {
     return {
         searchString: state.searchQuery.searchQuery,
+        searchResults: state.searchResults,
         intl: state.intl        // Pass intl in props to force UI re-render on language switch
     };
 }, (dispatch: ThunkDispatch) => {
     return {
-        autocompleteSearch: (searchString: string) => dispatch(autocompleteSearch(searchString, true)),
-        updateSearchFilter: (searchString: string) => dispatch(updateSearchFilter(searchString)),
+        updateSearchFilter: (searchString: string) => dispatch(updateSearchFilter(searchString))
     };
 })(injectIntl(withI18n(NavbarSearch))));

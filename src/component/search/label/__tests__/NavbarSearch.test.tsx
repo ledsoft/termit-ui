@@ -7,6 +7,7 @@ import {Location} from "history";
 import {createMemoryHistory} from "history";
 import {match as Match} from "react-router";
 import Routes from "../../../../util/Routes";
+import {shallow} from "enzyme";
 
 jest.mock("../../../../util/Routing");
 
@@ -44,7 +45,8 @@ describe("NavbarSearch", () => {
     });
 
     it("does not render results component for initial state", () => {
-        const wrapper = mountWithIntl(<NavbarSearch searchString="" {...navbarConnections()} {...intlFunctions()}/>);
+        const wrapper = shallow(<NavbarSearch searchString=""
+                                                    searchResults={null} {...navbarConnections()} {...intlFunctions()}/>);
         const resultsOverlay = wrapper.find(SearchResultsOverlay);
         expect(resultsOverlay.exists()).toBeFalsy();
     });
@@ -52,7 +54,8 @@ describe("NavbarSearch", () => {
     it("invokes search on change", () => {
         const div = document.createElement("div");
         document.body.appendChild(div);
-        const wrapper = mountWithIntl(<NavbarSearch searchString="" {...navbarConnections()} {...intlFunctions()}/>, {attachTo: div});
+        const wrapper = mountWithIntl(<NavbarSearch searchString=""
+                                                    searchResults={null} {...navbarConnections()} {...intlFunctions()}/>, {attachTo: div});
         const searchStr = "test";
         const input = wrapper.find("input");
         (input.getDOMNode() as HTMLInputElement).value = searchStr;
@@ -67,7 +70,8 @@ describe("NavbarSearch", () => {
         document.body.appendChild(div);
         location.pathname = Routes.search.path;
         match.path = Routes.search.path;
-        const wrapper = mountWithIntl(<NavbarSearch searchString="" {...navbarConnections()} {...intlFunctions()}/>, {attachTo: div});
+        const wrapper = mountWithIntl(<NavbarSearch searchString=""
+                                                    searchResults={null} {...navbarConnections()} {...intlFunctions()}/>, {attachTo: div});
         const searchStr = "test";
         const input = wrapper.find("input");
         (input.getDOMNode() as HTMLInputElement).value = searchStr;
@@ -82,7 +86,8 @@ describe("NavbarSearch", () => {
         document.body.appendChild(div);
         location.pathname = Routes.searchTerms.path;
         match.path = Routes.searchTerms.path;
-        const wrapper = mountWithIntl(<NavbarSearch searchString="" {...navbarConnections()} {...intlFunctions()}/>, {attachTo: div});
+        const wrapper = mountWithIntl(<NavbarSearch searchString=""
+                                                    searchResults={null} {...navbarConnections()} {...intlFunctions()}/>, {attachTo: div});
         const searchStr = "test";
         const input = wrapper.find("input");
         (input.getDOMNode() as HTMLInputElement).value = searchStr;

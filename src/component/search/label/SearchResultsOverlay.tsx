@@ -17,7 +17,7 @@ interface SearchResultsOverlayProps extends HasI18n {
 
 export const MAX_RENDERED_RESULTS = 10;
 
-export const SearchResultsOverlay: React.SFC<SearchResultsOverlayProps> = (props: SearchResultsOverlayProps) => {
+export const SearchResultsOverlay: React.FC<SearchResultsOverlayProps> = (props: SearchResultsOverlayProps) => {
     const items = [];
     if (props.searchResults.length === 0) {
         items.push(<li id="search-results-link" key="full-info" className="btn-link search-result-no-results"

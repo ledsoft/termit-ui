@@ -61,7 +61,6 @@ export function updateSearchFilter(searchString: string) {
         });
 
         // Clear search results
-        dispatch({type: ActionType.SEARCH_START});
         dispatch({type: ActionType.SEARCH_RESULT, searchResults: null});
 
         // Stop waiting after previous update
@@ -72,15 +71,16 @@ export function updateSearchFilter(searchString: string) {
         const state = getState();
         if (state.searchQuery.isEmpty()) {
             // Don"t delay empty query as it will just reset searches without bothering the server
-            dispatch(searchEverything());
+            return dispatch(searchEverything());
         } else {
             // Delay the search while user types the query
             updateSearchTimer = setTimeout(() => {
                 updateSearchTimer = null;
                 dispatch(searchEverything());
             }, updateSearchDelay);
+            return Promise.resolve();
         }
-    }
+    };
 }
 
 /**
@@ -89,13 +89,12 @@ export function updateSearchFilter(searchString: string) {
  */
 export function searchEverything() {
     return (dispatch: ThunkDispatch, getState: () => TermItState) => {
+        dispatch({type: ActionType.SEARCH_START});
         const state: TermItState = getState();
         if (state.searchListenerCount > 0 && !state.searchQuery.isEmpty()) {
-            window.console.info("%c 🔍 Searching ... ", "color: black; font-weight: bold; background: yellow;");
             return dispatch(search(state.searchQuery.searchQuery, true));
         } else {
-            dispatch({type: ActionType.SEARCH_FINISH});
-            return Promise.resolve();
+            return dispatch({type: ActionType.SEARCH_FINISH});
         }
     };
 }
@@ -110,25 +109,7 @@ export function search(searchString: string, disableLoading: boolean = true) {
             .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, SEARCH_RESULT_CONTEXT) : [])
             .then((data: SearchResultData[]) => {
                 dispatch(searchResult(data.map(d => new SearchResult(d))));
-                dispatch(SyncActions.asyncActionSuccess(action));
-            }).catch((error: ErrorData) => {
-                dispatch(SyncActions.asyncActionFailure(action, error));
-                return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
-            });
-    };
-}
-
-export function autocompleteSearch(searchString: string, disableLoading: boolean = true) {
-    const action = {
-        type: ActionType.SEARCH
-    };
-    return (dispatch: ThunkDispatch) => {
-        dispatch(SyncActions.asyncActionRequest(action, disableLoading));
-        return Ajax.get(Constants.API_PREFIX + "/search/fts", params({searchString}))
-            .then((data: object[]) => data.length > 0 ? JsonLdUtils.compactAndResolveReferencesAsArray(data, SEARCH_RESULT_CONTEXT) : [])
-            .then((data: SearchResultData[]) => {
-                dispatch(SyncActions.asyncActionSuccess(action));
-                return data.map(d => new SearchResult(d));
+                return dispatch(SyncActions.asyncActionSuccess(action));
             }).catch((error: ErrorData) => {
                 dispatch(SyncActions.asyncActionFailure(action, error));
                 return dispatch(SyncActions.publishMessage(new Message(error, MessageType.ERROR)));
