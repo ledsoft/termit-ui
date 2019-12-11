@@ -60,6 +60,7 @@ import {
     ResourceTermAssignments
 } from "../../model/ResourceTermAssignments";
 import {CONTEXT as TERM_ASSIGNMENTS_CONTEXT, TermAssignments} from "../../model/TermAssignments";
+import {verifyExpectedAssets} from "../../__tests__/environment/TestUtil";
 
 jest.mock("../../util/Routing");
 jest.mock("../../util/Ajax", () => ({
@@ -184,12 +185,7 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadVocabularies())).then(() => {
                 const loadSuccessAction: AsyncActionSuccess<Vocabulary[]> = store.getActions()[1];
                 const result = loadSuccessAction.payload;
-                expect(result.length).toEqual(vocabularies.length);
-                result.sort((a, b) => a.iri.localeCompare(b.iri));
-                vocabularies.sort((a: object, b: object) => a["@id"].localeCompare(b["@id"]));
-                for (let i = 0; i < vocabularies.length; i++) {
-                    expect(result[i].iri).toEqual(vocabularies[i]["@id"]);
-                }
+                verifyExpectedAssets(vocabularies, result);
             });
         });
 
@@ -465,24 +461,32 @@ describe("Async actions", () => {
             });
         });
     });
+
     describe("load types", () => {
         it("loads types from the incoming JSON-LD", () => {
             const types = require("../../rest-mock/types");
-            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(types));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(
-                loadTypes("en")))
-                .then(() => {
-                    const loadSuccessAction: AsyncActionSuccess<Vocabulary[]> = store.getActions()[1];
-                    const data = loadSuccessAction.payload;
-                    expect(data.length).toEqual(types.length);
-                    data.sort((a, b) => a.iri.localeCompare(b.iri));
-                    types.sort((a: object, b: object) => a["@id"].localeCompare(b["@id"]));
-                    for (let i = 0; i < types.length; i++) {
-                        expect(data[i].iri).toEqual(types[i]["@id"]);
-                    }
-                });
+            Ajax.get = jest.fn().mockResolvedValue(types);
+            store.getState().types = {};
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTypes("en"))).then(() => {
+                const loadSuccessAction: AsyncActionSuccess<Vocabulary[]> = store.getActions().find(a => a.type === ActionType.LOAD_TYPES && a.status === AsyncActionStatus.SUCCESS);
+                expect(loadSuccessAction).toBeDefined();
+                const data = loadSuccessAction.payload;
+                verifyExpectedAssets(types, data);
+            });
+        });
+
+        it("does not send request if data with correct language are already loaded", () => {
+            const state = {};
+            const types = [Generator.generateTerm()];
+            state[types[0].iri] = types[0];
+            store.getState().types = state;
+            Ajax.get = jest.fn().mockResolvedValue([]);
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTypes("en"))).then(() => {
+                expect(Ajax.get).not.toHaveBeenCalled();
+            });
         });
     });
+
     describe("update term", () => {
         it("sends put request to correct endpoint using vocabulary and term IRI", () => {
             const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";

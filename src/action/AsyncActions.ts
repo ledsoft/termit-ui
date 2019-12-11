@@ -455,7 +455,11 @@ export function loadTypes(language: string) {
     const action = {
         type: ActionType.LOAD_TYPES
     };
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: GetStoreState): Promise<any> => {
+        if (Object.getOwnPropertyNames(getState().types).length > 0) {
+            // No need to load types if they are already loaded
+            return Promise.resolve([]);
+        }
         dispatch(asyncActionRequest(action));
         return Ajax
             .get(Constants.API_PREFIX + "/language/types", params({language}))
@@ -468,7 +472,7 @@ export function loadTypes(language: string) {
                         term.subTerms = Utils.sanitizeArray(term.subTerms).map(subTerm => subTerm.iri);
                     }
                 });
-                return data
+                return data;
             })
             .then((result: Term[]) => dispatch(asyncActionSuccessWithPayload(action, result)))
             .catch((error: ErrorData) => {
