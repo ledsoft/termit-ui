@@ -14,7 +14,7 @@ import {
     publishMessage,
     publishNotification,
     selectVocabularyTerm,
-    switchLanguage,
+    switchLanguage, updateLastModified,
     userLogout
 } from "../../action/SyncActions";
 import ErrorInfo, {ErrorData} from "../../model/ErrorInfo";
@@ -56,7 +56,8 @@ function stateToPlainObject(state: TermItState): TermItState {
         properties: state.properties,
         notifications: state.notifications,
         pendingActions: state.pendingActions,
-        errors: state.errors
+        errors: state.errors,
+        lastModified: state.lastModified
     };
 }
 
@@ -454,6 +455,14 @@ describe("Reducers", () => {
             const result = reducers(stateToPlainObject(initialState),
                 asyncActionSuccessWithPayload({type: ActionType.LOAD_RESOURCE_TERMS}, [Generator.generateTerm()])).resource;
             expect(result instanceof File).toBeTruthy();
+        });
+    });
+
+    describe("lastModified", () => {
+        it("sets last modified value on UpdateLastModified action", () => {
+            const value = new Date().toISOString();
+            const result = reducers(stateToPlainObject(initialState), updateLastModified(VocabularyUtils.VOCABULARY, value));
+            expect(result.lastModified[VocabularyUtils.VOCABULARY]).toEqual(value);
         });
     });
 });

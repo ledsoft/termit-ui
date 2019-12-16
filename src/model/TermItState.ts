@@ -41,6 +41,7 @@ export default class TermItState {
     // Pending asynchronous actions. Can be used to prevent repeated requests when some are already pending
     public pendingActions: { [key: string]: AsyncActionStatus };
     public errors: ErrorLogItem[];
+    public lastModified: {[key: string]: string };
 
     constructor() {
         this.loading = false;
@@ -65,5 +66,6 @@ export default class TermItState {
         this.notifications = [];
         this.pendingActions = {};
         this.errors = [];
+        this.lastModified = {};
     }
 }

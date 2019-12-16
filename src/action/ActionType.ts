@@ -59,6 +59,11 @@ export interface NotificationAction extends Action {
     notification: AppNotification;
 }
 
+export interface UpdateLastModifiedAction extends Action {
+    key: string;
+    value: string;
+}
+
 
 export default {
     FETCH_USER: "FETCH_USER",
@@ -75,6 +80,7 @@ export default {
 
     PUBLISH_NOTIFICATION: "PUBLISH_NOTIFICATION",
     CONSUME_NOTIFICATION: "CONSUME_NOTIFICATION",
+    UPDATE_LAST_MODIFIED: "UPDATE_LAST_MODIFIED",
 
     CREATE_VOCABULARY: "CREATE_VOCABULARY",
     LOAD_VOCABULARY: "LOAD_VOCABULARY",

@@ -6,7 +6,7 @@ import ActionType, {
     MessageAction,
     NotificationAction,
     SelectingTermsAction,
-    SwitchLanguageAction,
+    SwitchLanguageAction, UpdateLastModifiedAction,
 } from "./ActionType";
 import ErrorInfo, {ErrorData} from "../model/ErrorInfo";
 import Message from "../model/Message";
@@ -118,5 +118,13 @@ export function clearResource() {
 export function clearErrors() {
     return {
         type: ActionType.CLEAR_ERRORS
+    };
+}
+
+export function updateLastModified(key: string, value: string): UpdateLastModifiedAction {
+    return {
+        type: ActionType.UPDATE_LAST_MODIFIED,
+        key,
+        value
     };
 }
