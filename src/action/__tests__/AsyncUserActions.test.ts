@@ -72,7 +72,7 @@ describe("AsyncUserActions", () => {
                 },
                 headers: {}
             };
-            resp.headers[Constants.AUTHORIZATION_HEADER] = "Bearer jwt12345";
+            resp.headers[Constants.Headers.AUTHORIZATION] = "Bearer jwt12345";
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve(resp));
             return Promise.resolve((store.dispatch as ThunkDispatch)(login("test", "test"))).then(() => {
                 expect(Routing.transitionToHome).toHaveBeenCalled();

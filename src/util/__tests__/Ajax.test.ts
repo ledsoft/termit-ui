@@ -30,20 +30,20 @@ describe("Ajax", () => {
         mock.reset();
         localStorage.clear();
         headers = {};
-        headers[Constants.AUTHORIZATION_HEADER] = jwt;
+        headers[Constants.Headers.AUTHORIZATION] = jwt;
     });
 
     it("loads JWT and sets it on request", () => {
         Authentication.loadToken = jest.fn().mockReturnValue(jwt);
         mock.onGet("/users/current").reply((config: AxiosRequestConfig) => {
-            expect(config.headers[Constants.AUTHORIZATION_HEADER]).toContain(jwt);
+            expect(config.headers[Constants.Headers.AUTHORIZATION]).toContain(jwt);
             return [200, require("../../rest-mock/current"), headers];
         });
         return sut.get("/users/current");
     });
 
     it("extracts current JWT from response and saves it using Authentication", () => {
-        headers[Constants.AUTHORIZATION_HEADER] = jwt;
+        headers[Constants.Headers.AUTHORIZATION] = jwt;
         Authentication.saveToken = jest.fn();
         mock.onGet("/users/current").reply(200, require("../../rest-mock/current"), headers);
         return sut.get("/users/current").then(() => {
@@ -138,7 +138,7 @@ describe("Ajax", () => {
             spy.mockClear();
             return sut.get("/terms/count").then(() => {
                 const reqConfig = spy.mock.calls[0][1];
-                return expect(reqConfig!.headers.Accept).toEqual(Constants.JSON_LD_MIME_TYPE);
+                return expect(reqConfig!.headers[Constants.Headers.ACCEPT]).toEqual(Constants.JSON_LD_MIME_TYPE);
             });
         });
 
@@ -149,7 +149,7 @@ describe("Ajax", () => {
             spy.mockClear();
             return sut.get("/terms/count", accept(acceptType)).then(() => {
                 const reqConfig = spy.mock.calls[0][1];
-                return expect(reqConfig!.headers.Accept).toEqual(acceptType);
+                return expect(reqConfig!.headers[Constants.Headers.ACCEPT]).toEqual(acceptType);
             });
         });
 
@@ -163,7 +163,7 @@ describe("Ajax", () => {
                 const reqData = spy.mock.calls[0][1];
                 const reqConfig = spy.mock.calls[0][2];
                 expect(reqData).toEqual(data);
-                return expect(reqConfig!.headers["Content-Type"]).toEqual(mimeType);
+                return expect(reqConfig!.headers[Constants.Headers.CONTENT_TYPE]).toEqual(mimeType);
             });
         });
 
@@ -177,7 +177,7 @@ describe("Ajax", () => {
             spy.mockClear();
             return sut.post("/users", params(formData).contentType(Constants.X_WWW_FORM_URLENCODED)).then(() => {
                 const reqConfig = spy.mock.calls[0][2];
-                expect(reqConfig!.headers["Content-Type"]).toEqual("application/x-www-form-urlencoded");
+                expect(reqConfig!.headers[Constants.Headers.CONTENT_TYPE]).toEqual("application/x-www-form-urlencoded");
                 const expParams = new URLSearchParams();
                 expParams.append("username", formData.username);
                 expParams.append("password", formData.password);
@@ -195,7 +195,7 @@ describe("Ajax", () => {
                 const reqData = spy.mock.calls[0][1];
                 const reqConfig = spy.mock.calls[0][2];
                 expect(reqData).toEqual(data);
-                return expect(reqConfig!.headers["Content-Type"]).toEqual(mimeType);
+                return expect(reqConfig!.headers[Constants.Headers.CONTENT_TYPE]).toEqual(mimeType);
             });
         });
 
@@ -206,7 +206,7 @@ describe("Ajax", () => {
             spy.mockClear();
             return sut.put("/users/status", accept(mimeType)).then(() => {
                 const reqConfig = spy.mock.calls[0][2];
-                return expect(reqConfig!.headers.Accept).toEqual(mimeType);
+                return expect(reqConfig!.headers[Constants.Headers.ACCEPT]).toEqual(mimeType);
             });
         });
 
@@ -222,7 +222,7 @@ describe("Ajax", () => {
                 const reqData = spy.mock.calls[0][1];
                 const reqConfig = spy.mock.calls[0][2];
                 expect(reqData).toEqual(data);
-                expect(reqConfig!.headers["Content-Type"]).toEqual(Constants.JSON_LD_MIME_TYPE);
+                expect(reqConfig!.headers[Constants.Headers.CONTENT_TYPE]).toEqual(Constants.JSON_LD_MIME_TYPE);
                 return expect(reqConfig!.params).toEqual(qParams);
             });
         });
@@ -271,11 +271,11 @@ describe("Ajax", () => {
 
     describe("getRaw", () => {
         it("returns response object", () => {
-            mock.onAny().reply(200, {}, Object.assign({}, headers, {"Content-Disposition": "attachment; filename=test.txt"}));
+            mock.onAny().reply(200, {}, Object.assign({}, headers, {"content-disposition": "attachment; filename=test.txt"}));
             return sut.getRaw("/vocabularies?test/terms", accept(Constants.CSV_MIME_TYPE)).then((resp: any) => {
                 expect(resp.status).toEqual(200);
                 expect(resp.headers).toBeDefined();
-                expect(resp.headers["Content-Disposition"]).toContain("attachment");
+                expect(resp.headers[Constants.Headers.CONTENT_DISPOSITION]).toContain("attachment");
             });
         });
     });

@@ -78,7 +78,7 @@ export function createVocabulary(vocabulary: Vocabulary) {
             .then((resp: AxiosResponse) => {
                 dispatch(asyncActionSuccess(action));
                 dispatch(loadVocabularies());
-                const location = resp.headers[Constants.LOCATION_HEADER];
+                const location = resp.headers[Constants.Headers.LOCATION];
                 Routing.transitionTo(Routes.vocabularySummary, IdentifierResolver.routingOptionsFromLocation(location));
                 return dispatch(SyncActions.publishMessage(new Message({messageId: "vocabulary.created.message"}, MessageType.SUCCESS)));
             })
@@ -106,7 +106,7 @@ export function createTerm(term: Term, vocabularyIri: IRI) {
                 dispatch(asyncSuccessAction);
                 dispatch(SyncActions.publishMessage(new Message({messageId: "vocabulary.term.created.message"}, MessageType.SUCCESS)));
                 dispatch(publishNotification({source: asyncSuccessAction}));
-                return resp.headers[Constants.LOCATION_HEADER];
+                return resp.headers[Constants.Headers.LOCATION];
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
@@ -270,7 +270,7 @@ export function createResource(resource: Resource) {
                 dispatch(asyncActionSuccess(action));
                 dispatch(loadResources());
                 dispatch(SyncActions.publishMessage(new Message({messageId: "resource.created.message"}, MessageType.SUCCESS)));
-                return resp.headers[Constants.LOCATION_HEADER];
+                return resp.headers[Constants.Headers.LOCATION];
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
@@ -291,7 +291,7 @@ export function createFileInDocument(file: TermitFile, documentIri: IRI) {
                 dispatch(asyncActionSuccess(action));
                 dispatch(loadResources());
                 dispatch(SyncActions.publishMessage(new Message({messageId: "resource.created.message"}, MessageType.SUCCESS)));
-                return resp.headers[Constants.LOCATION_HEADER];
+                return resp.headers[Constants.Headers.LOCATION];
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
@@ -741,7 +741,7 @@ export function exportGlossary(vocabularyIri: IRI, type: ExportType) {
         const url = Constants.API_PREFIX + "/vocabularies/" + vocabularyIri.fragment + "/terms";
         return Ajax.getRaw(url, param("namespace", vocabularyIri.namespace).accept(type.mimeType).responseType("arraybuffer"))
             .then((resp: AxiosResponse) => {
-                const disposition = resp.headers[Constants.CONTENT_DISPOSITION_HEADER];
+                const disposition = resp.headers[Constants.Headers.CONTENT_DISPOSITION];
                 const filenameMatch = disposition ? disposition.match(/filename="(.+\..+)"/) : null;
                 if (filenameMatch) {
                     const fileName = filenameMatch[1];
