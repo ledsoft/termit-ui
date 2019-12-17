@@ -885,7 +885,7 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary(iri, ExportType.CSV))).then(() => {
                 expect(Ajax.getRaw).toHaveBeenCalled();
                 const config = (Ajax.getRaw as jest.Mock).mock.calls[0][1];
-                expect(config.getAccept()).toEqual(Constants.CSV_MIME_TYPE);
+                expect(config.getHeaders()[Constants.Headers.ACCEPT]).toEqual(Constants.CSV_MIME_TYPE);
             });
         });
 
@@ -898,7 +898,7 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary(iri, ExportType.Excel))).then(() => {
                 expect(Ajax.getRaw).toHaveBeenCalled();
                 const config = (Ajax.getRaw as jest.Mock).mock.calls[0][1];
-                expect(config.getAccept()).toEqual(Constants.EXCEL_MIME_TYPE);
+                expect(config.getHeaders()[Constants.Headers.ACCEPT]).toEqual(Constants.EXCEL_MIME_TYPE);
             });
         });
 

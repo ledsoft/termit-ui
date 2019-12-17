@@ -1,10 +1,10 @@
 import MockAdapter from "axios-mock-adapter";
-import {accept, Ajax, content, param, params} from "../Ajax";
+import {accept, Ajax, content, ifModifiedSince, param, params} from "../Ajax";
 import Routing from "../Routing";
 import {EMPTY_USER} from "../../model/User";
 import Constants from "../Constants";
 import Routes from "../Routes";
-import {AxiosInstance, AxiosRequestConfig} from "axios";
+import {AxiosInstance, AxiosRequestConfig, AxiosResponse} from "axios";
 import {ErrorData} from "../../model/ErrorInfo";
 import Authentication from "../Authentication";
 import VocabularyUtils from "../VocabularyUtils";
@@ -267,6 +267,18 @@ describe("Ajax", () => {
                 return expect(reqConfig!.data).toEqual(data);
             });
         });
+
+        it("supports adding If-Modified-Since HTTP header", () => {
+            mock.onAny().reply(200, {}, headers);
+            const spy = jest.spyOn(sut.axios, "get");
+            spy.mockClear();
+            const ifModSince = new Date().toString();
+            return sut.getResponse("/vocabularies", ifModifiedSince(ifModSince)).then(() => {
+                const reqConfig = spy.mock.calls[0][1];
+                expect(reqConfig).toBeDefined();
+                return expect(reqConfig!.headers[Constants.Headers.IF_MODIFIED_SINCE]).toEqual(ifModSince);
+            });
+        });
     });
 
     describe("getRaw", () => {
@@ -276,6 +288,18 @@ describe("Ajax", () => {
                 expect(resp.status).toEqual(200);
                 expect(resp.headers).toBeDefined();
                 expect(resp.headers[Constants.Headers.CONTENT_DISPOSITION]).toContain("attachment");
+            });
+        });
+    });
+
+    describe("getResponse", () => {
+        it("returns response object", () => {
+            mock.onAny().reply(200, {}, headers);
+            const spy = jest.spyOn(sut.axios, "get");
+            spy.mockClear();
+            return sut.getResponse("/vocabularies").then((resp: AxiosResponse) => {
+                expect(resp.status).toEqual(200);
+                expect(resp.headers).toEqual(headers);
             });
         });
     });

@@ -85,10 +85,6 @@ class RequestConfigBuilder {
         return this.mParams;
     }
 
-    public getAccept() {
-        return this.mHeaders[Constants.Headers.ACCEPT];
-    }
-
     public getFormData() {
         return this.mFormData;
     }
@@ -133,6 +129,10 @@ export function header(headerName: string, value?: string) {
 
 export function headers(value: {}) {
     return new RequestConfigBuilder().headers(value);
+}
+
+export function ifModifiedSince(value?: string) {
+    return new RequestConfigBuilder().header(Constants.Headers.IF_MODIFIED_SINCE, value);
 }
 
 export class Ajax {
