@@ -18,11 +18,6 @@ export const SKOS: Namespace = {
     namespace: "http://www.w3.org/2004/02/skos/core#"
 };
 
-export const DC: Namespace = {
-    prefix: "dc",
-    namespace: "http://purl.org/dc/elements/1.1/"
-};
-
 export const DC_TERMS: Namespace = {
     prefix: "dcterms",
     namespace: "http://purl.org/dc/terms/"
@@ -30,7 +25,7 @@ export const DC_TERMS: Namespace = {
 
 export default class Namespaces {
 
-    private static SUPPORTED = [RDF, RDFS, SKOS, DC, DC_TERMS];
+    private static SUPPORTED = [RDF, RDFS, SKOS, DC_TERMS];
 
     /**
      * Resolves a prefix-based IRI from the specified full IRI.

@@ -63,8 +63,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
             (n: Node2) => n.name === "html" && n.attribs && n.attribs.prefix,
             dom);
         if (htmlNode) {
-            const prefixMap = HtmlParserUtils.getPrefixMap(htmlNode)
-            return prefixMap;
+            return HtmlParserUtils.getPrefixMap(htmlNode);
         }
         return new Map();
     }
@@ -250,7 +249,7 @@ export class Annotator extends React.Component<AnnotatorProps, AnnotatorState> {
 
     private static matchHtml(htmlContent: string): HtmlSplit {
 
-        const htmlSplit = htmlContent.split(/(<body>|<\/body>)/ig);
+        const htmlSplit = htmlContent.split(/(<body.*>|<\/body>)/ig);
 
         if (htmlSplit.length === 5) {
             return {

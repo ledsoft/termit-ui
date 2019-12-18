@@ -1,9 +1,9 @@
 import OntologicalVocabulary from "../util/VocabularyUtils";
-import File, {CONTEXT as FILE_CONTEXT} from "./File";
+import VocabularyUtils from "../util/VocabularyUtils";
+import File, {OWN_CONTEXT as FILE_CONTEXT, FileData} from "./File";
 import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "./Resource";
 import Utils from "../util/Utils";
 import {AssetData} from "./Asset";
-import VocabularyUtils from "../util/VocabularyUtils";
 
 const ctx = {
     "files": {
@@ -12,8 +12,6 @@ const ctx = {
     },
     "vocabulary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-dokumentový-slovník"
 };
-
-export const OWN_CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx);
 
 export const CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx, FILE_CONTEXT);
 
@@ -36,6 +34,16 @@ export default class Document extends Resource implements DocumentData {
     }
 
     public toJsonLd(): {} {
-        return Object.assign({}, this, {"@context": CONTEXT, "@type": [OntologicalVocabulary.DOCUMENT]});
+        const result: any = Object.assign({}, this, {
+            "@context": CONTEXT,
+            types: [OntologicalVocabulary.RESOURCE, OntologicalVocabulary.DOCUMENT]
+        });
+        // Break reference cycles by replacing them with ID-references only
+        result.files = Document.replaceCircularReferencesToOwnerWithOwnerId(result.files);
+        return result;
+    }
+
+    public static replaceCircularReferencesToOwnerWithOwnerId(files: File[]): FileData[] {
+        return files.map(f => Object.assign({}, f, {owner: f.owner ? {iri: f.owner.iri} : undefined}));
     }
 }

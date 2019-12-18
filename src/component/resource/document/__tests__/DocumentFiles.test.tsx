@@ -1,7 +1,6 @@
 import * as React from "react";
 import {shallow} from "enzyme";
 import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow} from "../../../../__tests__/environment/Environment";
 import File from "../../../../model/File";
 import VocabularyUtils from "../../../../util/VocabularyUtils";
 import Document from "../../../../model/Document";
@@ -31,7 +30,7 @@ describe("DocumentFiles", () => {
 
     it("adds file type to data submitted to create action", () => {
         const wrapper = shallow<DocumentFiles>(<DocumentFiles document={document} onFileAdded={onFileAdded}
-                                                              createFile={createFile} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                              createFile={createFile} {...intlFunctions()}/>);
         const file = new File({
             iri: fileIri,
             label: fileName
@@ -45,7 +44,7 @@ describe("DocumentFiles", () => {
 
     it("closes file creation dialog on successful creation", () => {
         const wrapper = shallow<DocumentFiles>(<DocumentFiles document={document} onFileAdded={onFileAdded}
-                                                              createFile={createFile} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                              createFile={createFile} {...intlFunctions()}/>);
         wrapper.instance().setState({createFileDialogOpen: true});
         const file = new File({
             iri: fileIri,
@@ -59,7 +58,7 @@ describe("DocumentFiles", () => {
 
     it("invokes onFileAdded handler on successful file creation", () => {
         const wrapper = shallow<DocumentFiles>(<DocumentFiles document={document} onFileAdded={onFileAdded}
-                                                              createFile={createFile} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                              createFile={createFile} {...intlFunctions()}/>);
         const file = new File({
             iri: fileIri,
             label: fileName

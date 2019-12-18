@@ -12,6 +12,8 @@ import TimeAgo from "javascript-time-ago";
 
 const mockStore = configureMockStore([thunk]);
 
+const scheduler = typeof setImmediate === "function" ? setImmediate : setTimeout;
+
 /**
  * Uses enzyme"s mount function, but wraps the specified component in Provider and IntlProvider, so that Redux and
  * React Intl context are set up.
@@ -26,7 +28,11 @@ export function mountWithIntl(node: ReactElement<any>, options?: MountRendererPr
     </Provider>, options);
 }
 
-export function intlDataForShallow(): {} {
-    const intlProvider = new IntlProvider(intlData);
-    return intlProvider.getChildContext();
+/**
+ * Utility function to flush all pending promises in an async test.
+ */
+export function flushPromises() {
+    return new Promise((resolve) => {
+        scheduler(resolve, 0);
+    });
 }

@@ -3,14 +3,7 @@ import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {
-    createTerm,
-    fetchVocabularyTerm,
-    loadDefaultTerms,
-    loadFileContent,
-    loadTerms,
-    saveFileContent
-} from "../../action/AsyncActions";
+import {createTerm, fetchVocabularyTerm, loadFileContent, loadTerms, saveFileContent} from "../../action/AsyncActions";
 import VocabularyUtils, {IRI, IRIImpl} from "../../util/VocabularyUtils";
 import IntlData from "../../model/IntlData";
 import {ThunkDispatch} from "../../util/Types";
@@ -18,30 +11,28 @@ import {Annotator} from "../annotator/Annotator";
 import Term from "../../model/Term";
 import FetchOptionsFunction from "../../model/Functions";
 import IdentifierResolver from "../../util/IdentifierResolver";
-import {filterTermsOutsideVocabularyImportChain} from "../term/Terms";
+import {processTermsForTreeSelect} from "../term/TermTreeSelectHelper";
 
 
 interface FileDetailProvidedProps {
-    iri: IRI
-    vocabularyIri: IRI
+    iri: IRI;
+    vocabularyIri: IRI;
 }
 
 interface FileDetailOwnProps extends HasI18n {
-    fileContent: string | null
-    loadFileContent: (fileIri: IRI) => void
-    saveFileContent: (fileIri: IRI, fileContent: string) => void
-    loadDefaultTerms: (vocabularyIri: IRI) => void
-    intl: IntlData
-    createVocabularyTerm: (term: Term, vocabularyIri: IRI) => Promise<string>
-    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>
-    fetchTerm: (termNormalizedName: string, vocabularyIri: IRI) => Promise<Term>
-    defaultTerms: Term[]
+    fileContent: string | null;
+    loadFileContent: (fileIri: IRI) => void;
+    saveFileContent: (fileIri: IRI, fileContent: string) => void;
+    intl: IntlData;
+    createVocabularyTerm: (term: Term, vocabularyIri: IRI) => Promise<string>;
+    fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>;
+    fetchTerm: (termNormalizedName: string, vocabularyIri: IRI) => Promise<Term>;
 }
 
 type FileDetailProps = FileDetailOwnProps & FileDetailProvidedProps;
 
 interface FileDetailState {
-    fileContentId: number
+    fileContentId: number;
 }
 
 // TODO "file detail" --> "file content detail"
@@ -65,11 +56,6 @@ export class FileDetail extends React.Component<FileDetailProps, FileDetailState
     // TODO should not be responsibility of file detail
     private initializeTermFetching = (): void => {
         this.ensureInitialFetchTermPromise(); // TODO ?! should be enough to call it on componentDidMount
-        if (this.props.defaultTerms.length === 0) {
-            this.props.loadDefaultTerms(this.props.vocabularyIri);
-        } else {
-            this.updateTerms(this.props.defaultTerms)
-        }
     };
 
     public componentDidMount(): void {
@@ -102,7 +88,7 @@ export class FileDetail extends React.Component<FileDetailProps, FileDetailState
         if (!this.lastExecutedPromise) {
             this.lastExecutedPromise = this.props.fetchTerms({}, this.props.vocabularyIri)
                 .then((terms: Term[]) => {
-                    this.updateTerms(filterTermsOutsideVocabularyImportChain(terms, [IRIImpl.toString(this.props.vocabularyIri)]));
+                    this.updateTerms(processTermsForTreeSelect(terms, [IRIImpl.toString(this.props.vocabularyIri)], {}));
                 }, (d) => d);
         }
     };
@@ -185,14 +171,12 @@ function isDifferent(iri1?: IRI, iri2?: IRI): boolean {
 export default connect((state: TermItState) => {
     return {
         fileContent: state.fileContent,
-        intl: state.intl,
-        defaultTerms: state.defaultTerms
+        intl: state.intl
     };
 }, (dispatch: ThunkDispatch) => {
     return {
         loadFileContent: (fileIri: IRI) => dispatch(loadFileContent(fileIri)),
         saveFileContent: (fileIri: IRI, fileContent: string) => dispatch(saveFileContent(fileIri, fileContent)),
-        loadDefaultTerms: (vocabularyIri: IRI) => dispatch(loadDefaultTerms(vocabularyIri)),
         createVocabularyTerm: (term: Term, vocabularyIri: IRI) => dispatch(createTerm(term, vocabularyIri)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
         fetchTerm: (termNormalizedName: string, vocabularyIri: IRI) => dispatch(fetchVocabularyTerm(termNormalizedName, vocabularyIri))

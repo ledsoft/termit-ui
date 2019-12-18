@@ -34,12 +34,16 @@ const env = getClientEnvironment(publicUrl);
 // This allows to pass the backend server URL also as a console parameter for the build. If it is not specified, we
 // fall back to the configured one.
 const serverUrl = process.env.serverUrl ? process.env.serverUrl : server['url'];
-console.log("Building with server URL: " + serverUrl);
+if (!process.env.ANALYZE_BUNDLE_MODE) {
+    console.log("Building with server URL: " + serverUrl);
+}
 
 // This allows to parameterize deployment name, so that multiple deployments of TermIt accessed from one client do not
 // mess their data, e.g. auth token, language setting
 const deploymentName = process.env.deployment ? process.env.deployment : '';
-console.log("Building with deployment name: " + deploymentName);
+if (!process.env.ANALYZE_BUNDLE_MODE) {
+    console.log("Building with deployment name: " + deploymentName);
+}
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
@@ -164,7 +168,12 @@ module.exports = {
                     },
                     {
                         test: /\.(js|jsx|mjs)$/,
-                        include: paths.appSrc,
+                        include: [
+                            paths.appSrc,
+                            path.join(__dirname, "node_modules/react-intl"),
+                            path.join(__dirname, "node_modules/intl-messageformat"),
+                            path.join(__dirname, "node_modules/intl-messageformat-parser")
+                        ],
                         loader: require.resolve('babel-loader'),
                         options: {
 

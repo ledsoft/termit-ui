@@ -20,7 +20,7 @@ import {GoPlus} from "react-icons/go";
 import Routes from "../../util/Routes";
 import Routing from "../../util/Routing";
 import Utils from "../../util/Utils";
-import {filterTermsOutsideVocabularyImportChain} from "../term/Terms";
+import {commonTermTreeSelectProps, processTermsForTreeSelect} from "../term/TermTreeSelectHelper";
 
 interface GlossaryTermsProps extends HasI18n, RouteComponentProps<any> {
     vocabulary?: Vocabulary;
@@ -50,15 +50,10 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
         this.props.selectVocabularyTerm(null)
     }
 
-    private fetchOptions = ({searchString, optionID, limit, offset}: FetchOptionsFunction) => {
-        return this.props.fetchTerms({
-            searchString,
-            optionID,
-            limit,
-            offset
-        }, Vocabulary2.create(this.props.vocabulary!.iri)).then(terms => {
+    private fetchOptions = (fetchOptions: FetchOptionsFunction) => {
+        return this.props.fetchTerms(fetchOptions, Vocabulary2.create(this.props.vocabulary!.iri)).then(terms => {
             const matchingVocabularies = Utils.sanitizeArray(this.props.vocabulary!.allImportedVocabularies).concat(this.props.vocabulary!.iri);
-            return filterTermsOutsideVocabularyImportChain(terms, matchingVocabularies);
+            return processTermsForTreeSelect(terms, matchingVocabularies, fetchOptions);
         });
     };
 
@@ -102,14 +97,9 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
             onChange={this.handleChange}
             value={this.props.selectedTerm}
             fetchOptions={this.fetchOptions}
-            valueKey={"iri"}
-            labelKey={"label"}
-            childrenKey={"plainSubTerms"}
-            simpleTreeData={true}
             isMenuOpen={false}
             multi={false}
-            showSettings={false}
-            valueRenderer={Utils.labelValueRenderer}
+            {...commonTermTreeSelectProps(i18n)}
         />;
 
         return <FormGroup>
@@ -124,7 +114,7 @@ export class AnnotationTerms extends React.Component<AnnotationTermsProps> {
     }
 }
 
-export default withRouter(connect((state: TermItState) => {
+export default connect((state: TermItState) => {
     return {
         vocabulary: state.vocabulary,
         // selectedTerm: state.selectedTerm,
@@ -135,4 +125,4 @@ export default withRouter(connect((state: TermItState) => {
         selectVocabularyTerm: (selectedTerm: Term | null) => dispatch(selectVocabularyTerm(selectedTerm)),
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => dispatch(loadTerms(fetchOptions, vocabularyIri)),
     };
-})(injectIntl(withI18n(AnnotationTerms))));
+})(injectIntl(withI18n(withRouter(AnnotationTerms))));

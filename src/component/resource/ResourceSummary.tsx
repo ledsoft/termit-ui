@@ -3,7 +3,7 @@ import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {loadResource, removeResource, updateResourceTerms} from "../../action/AsyncActions";
+import {loadResource, removeResource, updateResource} from "../../action/AsyncActions";
 import {Button, ButtonToolbar} from "reactstrap";
 import PanelWithActions from "../misc/PanelWithActions";
 import {default as VocabularyUtils, IRI} from "../../util/VocabularyUtils";
@@ -110,7 +110,7 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         loadResource: (iri: IRI) => dispatch(loadResource(iri)),
-        saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
+        saveResource: (resource: Resource) => dispatch(updateResource(resource)),
         removeResource: (resource: Resource) => dispatch(removeResource(resource))
     };
 })(injectIntl(withI18n(ResourceSummary)));

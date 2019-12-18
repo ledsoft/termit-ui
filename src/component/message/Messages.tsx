@@ -14,7 +14,7 @@ export const Messages: React.FC<MessagesProps> = (props) => {
     const count = props.messages.length < Constants.MESSAGE_DISPLAY_COUNT ? props.messages.length : Constants.MESSAGE_DISPLAY_COUNT;
     const toRender = props.messages.slice(0, count);
     return <div className={"message-container messages-" + count}>
-        {toRender.map((m, i) => <Message key={i} message={m}/>)}
+        {toRender.map(m => <Message key={m.timestamp} message={m}/>)}
     </div>
 };
 

@@ -38,11 +38,11 @@ const wrapper = mountWithIntl(<CreateVocabulary onCreate={onCreate} {...intlFunc
 Note that this means that `wrapper` is not the actual tested component but an instance of `IntlProvider` wrapping the component. `mountWithIntl` also provides a default Redux store
 mock which is required by some components.
 
-If shallow rendering is used, use the regular Enzyme `shallow` method to mount the component, but set up the intl context using the `intlDataForShallow` function.
+If shallow rendering is used, use the regular Enzyme `shallow` method to mount the component and set up the intl context using the `intlFunctions` function.
 
 For example:
 ```jsx harmony
-const wrapper = shallow<CreateVocabulary>(<CreateVocabulary onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+const wrapper = shallow<CreateVocabulary>(<CreateVocabulary onCreate={onCreate} {...intlFunctions()}/>);
 ```
 
 Do not forget to import the core component into tests, not the wrapped component!
@@ -72,6 +72,7 @@ separately and then specified in generic arguments to `connect`. An example of t
 Also, this means that intl props need to be explicitly passed to the component in `connect`. Otherwise, internationalization would not work properly 
 (language switching would have no effect). See `TermAssignments` again for a showcase how to do this.
 * Marker CSS classes should be used to denote important elements. These classes help in testing. Marker classes should be prefixed with `m-` and no styling should be applied based on them.
+* Although there are some problems with testing, it is possible to use [React Hooks](https://reactjs.org/docs/hooks-intro.html) in the code. See `Users` and its tests for an example.
 
 
 ## Debugging

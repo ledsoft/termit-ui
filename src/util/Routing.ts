@@ -1,6 +1,10 @@
 import {createHashHistory, History} from "history";
 import Constants from "./Constants";
-import {Route} from "./Routes";
+import Routes, {Route} from "./Routes";
+import Asset from "../model/Asset";
+import Utils from "./Utils";
+import VocabularyUtils from "./VocabularyUtils";
+import Term from "../model/Term";
 
 export class Routing {
     get history(): History {
@@ -72,7 +76,40 @@ export class Routing {
         } else {
             this.transitionTo(Constants.HOME_ROUTE);
         }
-    }
+    };
+
+    /**
+     * Transitions to the summary view of the specified asset.
+     * @param asset Asset to transition to
+     */
+    public transitionToAsset = (asset: Asset) => {
+        const primaryType = Utils.getPrimaryAssetType(asset);
+        const iri = VocabularyUtils.create(asset.iri);
+        switch (primaryType) {
+            case VocabularyUtils.VOCABULARY:
+                this.transitionTo(Routes.vocabularySummary, {
+                    params: new Map([["name", iri.fragment]]),
+                    query: new Map([["namespace", iri.namespace!]])
+                });
+                break;
+            case VocabularyUtils.RESOURCE:
+            case VocabularyUtils.DOCUMENT:
+            case VocabularyUtils.FILE:
+            case VocabularyUtils.DATASET:
+                this.transitionTo(Routes.resourceSummary, {
+                    params: new Map([["name", iri.fragment]]),
+                    query: new Map([["namespace", iri.namespace!]])
+                });
+                break;
+            case VocabularyUtils.TERM:
+                const vocIri = VocabularyUtils.create((asset as Term).vocabulary!.iri!);
+                this.transitionTo(Routes.vocabularyTermDetail, {
+                    params: new Map([["name", vocIri.fragment], ["termName", iri.fragment]]),
+                    query: new Map([["namespace", vocIri.namespace!]])
+                });
+                break;
+        }
+    };
 }
 
 const INSTANCE = new Routing();

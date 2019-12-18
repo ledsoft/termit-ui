@@ -6,7 +6,6 @@ import VocabularyUtils from "../../../util/VocabularyUtils";
 import {VocabularyMetadata} from "../VocabularyMetadata";
 import {shallow} from "enzyme";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import ResourceLink from "../../resource/ResourceLink";
 
 describe("VocabularyMetadata", () => {
@@ -30,7 +29,7 @@ describe("VocabularyMetadata", () => {
             })
         });
         const wrapper = shallow(<VocabularyMetadata vocabulary={vocabulary}
-                                                    onFileAdded={onFileAdded} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                    onFileAdded={onFileAdded} {...intlFunctions()}/>);
         expect(wrapper.exists(ResourceLink)).toBeTruthy();
     });
 });

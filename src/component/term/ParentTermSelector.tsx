@@ -13,10 +13,10 @@ import Utils from "../../util/Utils";
 import {IntelligentTreeSelect} from "intelligent-tree-select";
 import IncludeImportedTermsToggle from "./IncludeImportedTermsToggle";
 import {createTermsWithImportsOptionRenderer} from "../misc/treeselect/Renderers";
-import {filterTermsOutsideVocabularyImportChain} from "./Terms";
 import Vocabulary from "../../model/Vocabulary";
 import TermItState from "../../model/TermItState";
 import CustomInput from "../misc/CustomInput";
+import {commonTermTreeSelectProps, processTermsForTreeSelect} from "./TermTreeSelectHelper";
 
 function filterOutCurrentTerm(terms: Term[], currentTermIri?: string) {
     if (currentTermIri) {
@@ -50,6 +50,7 @@ interface ParentTermSelectorProps extends HasI18n {
 interface ParentTermSelectorState {
     includeImported: boolean;
     importedVocabularies?: string[];
+    disableIncludeImportedToggle: boolean;
 }
 
 export class ParentTermSelector extends React.Component<ParentTermSelectorProps, ParentTermSelectorState> {
@@ -59,7 +60,10 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
     constructor(props: ParentTermSelectorProps) {
         super(props);
         this.treeComponent = React.createRef();
-        this.state = {includeImported: ParentTermSelector.hasParentInDifferentVocabulary(props.vocabularyIri, props.parentTerms)};
+        this.state = {
+            includeImported: ParentTermSelector.hasParentInDifferentVocabulary(props.vocabularyIri, props.parentTerms),
+            disableIncludeImportedToggle: false
+        };
     }
 
     private static hasParentInDifferentVocabulary(vocabularyIri: string, parentTerms?: TermData[]) {
@@ -90,18 +94,17 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
         }
     };
 
-    public fetchOptions = ({searchString, optionID, limit, offset, option}: TreeSelectFetchOptionsParams<TermData>) => {
+    public fetchOptions = (fetchOptions: TreeSelectFetchOptionsParams<TermData>) => {
+        this.setState({disableIncludeImportedToggle: true});
         // Use option vocabulary when present, it may differ from the current vocabulary (when option is from imported
         // vocabulary)
         return this.props.loadTerms({
-            searchString,
-            optionID,
-            limit,
-            offset,
+            ...fetchOptions,
             includeImported: this.state.includeImported
-        }, VocabularyUtils.create(option ? option.vocabulary!.iri! : this.props.vocabularyIri)).then(terms => {
+        }, VocabularyUtils.create(fetchOptions.option ? fetchOptions.option.vocabulary!.iri! : this.props.vocabularyIri)).then(terms => {
+            this.setState({disableIncludeImportedToggle: false});
             const matchingVocabularies = Utils.sanitizeArray(this.state.importedVocabularies).concat(this.props.vocabularyIri);
-            return filterOutCurrentTerm(filterTermsOutsideVocabularyImportChain(terms, matchingVocabularies), this.props.termIri);
+            return filterOutCurrentTerm(processTermsForTreeSelect(terms, matchingVocabularies, fetchOptions), this.props.termIri);
         });
     };
 
@@ -124,7 +127,8 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
         return <FormGroup id={this.props.id}>
             <Label className="attribute-label">{this.props.i18n("term.metadata.parent")}</Label>
             <IncludeImportedTermsToggle id={this.props.id + "-include-imported"} onToggle={this.onIncludeImportedToggle}
-                                        includeImported={this.state.includeImported} style={{float: "right"}}/>
+                                        includeImported={this.state.includeImported} style={{float: "right"}}
+                                        disabled={this.state.disableIncludeImportedToggle}/>
             {this.renderSelector()}
         </FormGroup>;
     }
@@ -138,18 +142,11 @@ export class ParentTermSelector extends React.Component<ParentTermSelectorProps,
                                           ref={this.treeComponent}
                                           value={this.resolveSelectedParent()}
                                           fetchOptions={this.fetchOptions}
-                                          fetchLimit={100000}
-                                          valueKey="iri"
-                                          labelKey="label"
-                                          childrenKey="plainSubTerms"
-                                          simpleTreeData={true}
-                                          showSettings={false}
+                                          fetchLimit={300}
                                           maxHeight={200}
                                           multi={false}
-                                          renderAsTree={true}
-                                          placeholder={this.props.i18n("glossary.select.placeholder")}
                                           optionRenderer={createTermsWithImportsOptionRenderer(this.props.vocabularyIri)}
-                                          valueRenderer={Utils.labelValueRenderer}/>;
+                                          {...commonTermTreeSelectProps(this.props.i18n)}/>;
         }
     }
 }

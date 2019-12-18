@@ -1,55 +1,45 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
-import {Button, ButtonToolbar, Card, CardBody, CardHeader, Col, Form, Row} from "reactstrap";
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Col, Label, Row} from "reactstrap";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {connect} from "react-redux";
-import CustomInput from "../misc/CustomInput";
 import Routes from "../../util/Routes";
 import Routing from "../../util/Routing";
-import Constants from "../../util/Constants";
 import withLoading from "../hoc/withLoading";
 import {createVocabulary} from "../../action/AsyncActions";
 import Vocabulary from "../../model/Vocabulary";
 import {ThunkDispatch} from "../../util/Types";
-import TextArea from "../misc/TextArea";
-import {AbstractCreateAsset, AbstractCreateAssetState} from "../asset/AbstractCreateAsset";
+import VocabularyUtils from "../../util/VocabularyUtils";
+import CreateVocabularyMetadata from "./CreateVocabularyMetadata";
+import CreateDocumentVocabularyMetadata from "./CreateDocumentVocabularyMetadata";
 
 interface CreateVocabularyProps extends HasI18n {
     onCreate: (vocabulary: Vocabulary) => void
 }
 
-interface CreateVocabularyState extends AbstractCreateAssetState {
-    comment: string;
+interface CreateVocabularyState {
+    type: string;
 }
 
-export class CreateVocabulary extends AbstractCreateAsset<CreateVocabularyProps, CreateVocabularyState> {
+export class CreateVocabulary extends React.Component<CreateVocabularyProps, CreateVocabularyState> {
+
     constructor(props: CreateVocabularyProps) {
         super(props);
         this.state = {
-            label: "",
-            comment: "",
-            iri: "",
-            generateIri: true
+            type: VocabularyUtils.VOCABULARY
         };
     }
 
-    protected get identifierGenerationEndpoint(): string {
-        return Constants.API_PREFIX + "/vocabularies/identifier";
-    }
-
-    private onCommentChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({comment: e.currentTarget.value});
+    private onTypeSelect = (type: string) => {
+        this.setState({type});
     };
 
-    public onCreate = (): void => {
-        this.props.onCreate(new Vocabulary({
-            label: this.state.label,
-            iri: this.state.iri,
-            comment: this.state.comment
-        }));
+    public onCreate = (vocabulary : Vocabulary): void => {
+        vocabulary.addType(this.state.type);
+        return this.props.onCreate(vocabulary);
     };
 
-    private static onCancel(): void {
+    public static onCancel(): void {
         Routing.transitionTo(Routes.vocabularies);
     }
 
@@ -60,44 +50,42 @@ export class CreateVocabulary extends AbstractCreateAsset<CreateVocabularyProps,
                 <h5>{i18n("vocabulary.create.title")}</h5>
             </CardHeader>
             <CardBody>
-                <Form>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <CustomInput name="create-vocabulary-label" label={i18n("asset.label")}
-                                         value={this.state.label}
-                                         onChange={this.onLabelChange}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <CustomInput name="create-vocabulary-iri" label={i18n("asset.iri")}
-                                         value={this.state.iri}
-                                         onChange={this.onIriChange} help={i18n("asset.create.iri.help")}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <TextArea name="create-vocabulary-comment" label={i18n("vocabulary.comment")}
-                                      type="textarea" rows={3} value={this.state.comment} help={i18n("optional")}
-                                      onChange={this.onCommentChange}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xl={6} md={12}>
-                            <ButtonToolbar className="pull-right">
-                                <Button id="create-vocabulary-submit" onClick={this.onCreate} color="success"
-                                        size="sm"
-                                        disabled={this.state.label.trim().length === 0}>{i18n("vocabulary.create.submit")}</Button>
-                                <Button id="create-vocabulary-cancel" onClick={CreateVocabulary.onCancel}
-                                        color="secondary"
-                                        size="sm">{i18n("cancel")}</Button>
-                            </ButtonToolbar>
-                        </Col>
-                    </Row>
-                </Form>
+                <Row>
+                    <Col xl={6} md={12}>
+                        <Row>
+                            <Col>
+                                <Label className="attribute-label">{i18n("resource.create.type")}</Label>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <ButtonGroup className="d-flex form-group">
+                                    <Button id="create-resource-type-document" color="info" size="sm"
+                                            className="w-100 create-resource-type-select" outline={true}
+                                            onClick={this.onTypeSelect.bind(null, VocabularyUtils.VOCABULARY)}
+                                            active={this.state.type === VocabularyUtils.VOCABULARY}>{i18n("type.vocabulary")}</Button>
+                                    <Button id="create-resource-type-file" color="info" size="sm"
+                                            className="w-100 create-resource-type-select" outline={true}
+                                            onClick={this.onTypeSelect.bind(null, VocabularyUtils.DOCUMENT_VOCABULARY)}
+                                            active={this.state.type === VocabularyUtils.DOCUMENT_VOCABULARY}>{i18n("type.document.vocabulary")}</Button>
+                                </ButtonGroup>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+                {this.renderVocabularyMetadataForm()}
             </CardBody>
         </Card>;
     }
+
+    private renderVocabularyMetadataForm() {
+        if (this.state.type === VocabularyUtils.DOCUMENT_VOCABULARY) {
+            return <CreateDocumentVocabularyMetadata onCreate={this.onCreate} onCancel={CreateVocabulary.onCancel}/>;
+        } else {
+            return <CreateVocabularyMetadata onCreate={this.onCreate} onCancel={CreateVocabulary.onCancel}/>;
+        }
+    }
+
 }
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {

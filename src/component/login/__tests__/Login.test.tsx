@@ -4,7 +4,7 @@ import ErrorInfo from "../../../model/ErrorInfo";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import ActionType, {AsyncFailureAction, MessageAction} from "../../../action/ActionType";
 import {Alert} from "reactstrap";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {shallow} from "enzyme";
 
 jest.mock("../../../util/Routing");
@@ -75,7 +75,7 @@ describe("Login", () => {
     it("renders alert with error when error is set", () => {
         const error = new ErrorInfo(ActionType.LOGIN, {});
         const wrapper = shallow<Login>(<Login loading={false}
-                                              login={login} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                              login={login} {...intlFunctions()}/>);
         wrapper.setState({error});
         wrapper.update();
         const alert = wrapper.find(Alert);
@@ -96,14 +96,14 @@ describe("Login", () => {
 
     it("renders registration link by default", () => {
         const wrapper = shallow<Login>(<Login loading={false}
-                                              login={login} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                              login={login} {...intlFunctions()}/>);
         expect(wrapper.exists("#login-register")).toBeTruthy();
     });
 
     it("does not render registration link when admin registration only is turned on", () => {
         process.env.REACT_APP_ADMIN_REGISTRATION_ONLY = "true";
         const wrapper = shallow<Login>(<Login loading={false}
-                                              login={login} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                              login={login} {...intlFunctions()}/>);
         expect(wrapper.exists("#login-register")).toBeFalsy();
     });
 });

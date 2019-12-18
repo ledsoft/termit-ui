@@ -12,7 +12,6 @@ import {IntelligentTreeSelect} from "intelligent-tree-select";
 import "intelligent-tree-select/lib/styles.css";
 import Routing from "../../util/Routing";
 import Routes from "../../util/Routes";
-import VocabularyUtils from "../../util/VocabularyUtils";
 import Document from "../../model/Document";
 import Utils from "../../util/Utils";
 
@@ -64,13 +63,9 @@ class ResourceList extends React.Component<ResourceListProps> {
     private onChange = (res: Resource | null) => {
         if (res === null) {
             Routing.transitionTo(Routes.resources);
-            return;
+        } else {
+            Routing.transitionToAsset(res);
         }
-        const iri = VocabularyUtils.create(res.iri);
-        Routing.transitionTo(Routes.resourceSummary, {
-            params: new Map([["name", iri.fragment]]),
-            query: new Map([["namespace", iri.namespace!]])
-        });
     };
 
     private flattenAndSetParents(resources: Resource[]): ResourceListItem[] {
@@ -107,6 +102,7 @@ class ResourceList extends React.Component<ResourceListProps> {
                                    multi={false}
                                    showSettings={false}
                                    displayInfoOnHover={true}
+                                   scrollMenuIntoView={false}
                                    renderAsTree={true}
                                    maxHeight={height}
                                    valueRenderer={ResourceList.valueRenderer}

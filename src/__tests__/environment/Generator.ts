@@ -18,9 +18,9 @@ export default class Generator {
         return Generator.URI_BASE + "/instance-" + Generator.randomInt();
     }
 
-    public static generateUser() {
+    public static generateUser(iri?: string) {
         return new User({
-            iri: Generator.generateUri(),
+            iri: iri ? iri : Generator.generateUri(),
             firstName: "FirstName" + Generator.randomInt(0, 10000),
             lastName: "LastName" + Generator.randomInt(0, 10000),
             username: "username" + Generator.randomInt() + "@kbss.felk.cvut.cz",
@@ -51,10 +51,13 @@ export default class Generator {
     }
 
     public static generateTerm(vocabularyIri?: string) {
-        return new Term({
+        return new Term(Object.assign(this.generateAssetData("Term " + this.randomInt(0, 10000)), {vocabulary: vocabularyIri ? {iri: vocabularyIri} : undefined}));
+    }
+
+    public static generateAssetData(label?: string): { iri: string, label: string } {
+        return {
             iri: Generator.generateUri(),
-            label: "Term - " + Generator.randomInt(0, 10000),
-            vocabulary: vocabularyIri ? {iri: vocabularyIri} : undefined
-        });
+            label: label ? label : "Asset " + Generator.randomInt(0, 100)
+        };
     }
 }

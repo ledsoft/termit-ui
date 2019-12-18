@@ -1,5 +1,10 @@
 {
-  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier",
+    "tslint-react-hooks"
+  ],
   "linterOptions": {
     "exclude": [
       "config/**/*.js",
@@ -14,11 +19,16 @@
     "interface-name": false,
     "member-ordering": false,
     "object-literal-sort-keys": false,
-    "quotemark": {"options": [true, "double"], "severity" : "warning"},
+    "quotemark": {
+      "options": [
+        "double"
+      ],
+      "severity": "warning"
+    },
     "no-empty-interface": false,
-//    "no-console": false,
+    //    "no-console": false,
     "max-classes-per-file": false,
-    "no-bitwise": false
+    "no-bitwise": false,
+    "jsx-no-lambda": false
   }
-
 }

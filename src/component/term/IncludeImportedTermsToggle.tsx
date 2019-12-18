@@ -9,6 +9,7 @@ interface IncludeImportedTermsToggleProps extends HasI18n {
     onToggle: () => void;
     includeImported: boolean;
     id: string; // Toggle id, required by the tooltip component
+    disabled?: boolean;
     style?: object;
 }
 
@@ -19,6 +20,9 @@ const IncludeImportedTermsToggle: React.FC<IncludeImportedTermsToggleProps> = pr
     }
     return <>
         <Toggle id={props.id} onClick={props.onToggle}
+                on={props.i18n("glossary.includeImported")}
+                off={props.i18n("glossary.excludeImported")}
+                disabled={props.disabled}
                 onstyle="primary"
                 offstyle="secondary"
                 size="sm"

@@ -138,7 +138,7 @@ module.exports = {
                     // A missing `test` is equivalent to a match.
                     {
                         test: /\.rq$/,
-                        use:'raw-loader',
+                        use: 'raw-loader',
                         include: paths.appSrc
                     },
                     {
@@ -151,7 +151,12 @@ module.exports = {
                     },
                     {
                         test: /\.(js|jsx|mjs)$/,
-                        include: paths.appSrc,
+                        include: [
+                            paths.appSrc,
+                            path.join(__dirname, "node_modules/react-intl"),
+                            path.join(__dirname, "node_modules/intl-messageformat"),
+                            path.join(__dirname, "node_modules/intl-messageformat-parser")
+                        ],
                         loader: require.resolve('babel-loader'),
                         options: {
 

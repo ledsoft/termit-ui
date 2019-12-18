@@ -1,12 +1,11 @@
-import {IntlProvider} from 'react-intl';
-import intlData from '../../i18n/en';
-import InjectedIntl = ReactIntl.InjectedIntl;
+import {createIntl, IntlShape} from "react-intl";
+import intlData from "../../i18n/en";
 import {HasI18n} from "../../component/hoc/withI18n";
 
-const intlProvider = new IntlProvider(intlData, {});
+const intlInst = createIntl(intlData);
 
-export function intl(): InjectedIntl {
-    return intlProvider.getChildContext().intl;
+export function intl(): IntlShape {
+    return intlInst;
 }
 
 export function i18n(id: string): string {
@@ -14,7 +13,7 @@ export function i18n(id: string): string {
 }
 
 export function formatMessage(id: string, values: {}): string {
-    return intlProvider.getChildContext().intl.formatMessage({id}, values);
+    return intlInst.formatMessage({id}, values);
 }
 
 /**

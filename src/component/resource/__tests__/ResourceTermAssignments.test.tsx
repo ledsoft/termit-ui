@@ -4,7 +4,7 @@ import Generator from "../../../__tests__/environment/Generator";
 import {shallow} from "enzyme";
 import {ResourceTermAssignments} from "../ResourceTermAssignments";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import VocabularyUtils from "../../../util/VocabularyUtils";
 import TermLink from "../../term/TermLink";
 import {ResourceTermAssignments as TermAssignmentInfo} from "../../../model/ResourceTermAssignments";
@@ -30,7 +30,7 @@ describe("ResourceTermAssignments", () => {
     it("loads term assignments on mount", () => {
         shallow(<ResourceTermAssignments resource={file} notifications={[]}
                                          consumeNotification={consumeNotification}
-                                         loadTermAssignments={onLoadAssignments} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                         loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
         expect(onLoadAssignments).toHaveBeenCalledWith(file);
     });
 
@@ -41,7 +41,7 @@ describe("ResourceTermAssignments", () => {
         });
         const wrapper = shallow(<ResourceTermAssignments resource={file} notifications={[]}
                                                          consumeNotification={consumeNotification}
-                                                         loadTermAssignments={onLoadAssignments} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                         loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
         wrapper.setProps({resource: differentResource});
         wrapper.update();
         expect(onLoadAssignments).toHaveBeenCalledWith(differentResource);
@@ -51,7 +51,7 @@ describe("ResourceTermAssignments", () => {
     it("does nothing on update when resource is the same", () => {
         const wrapper = shallow(<ResourceTermAssignments resource={file} notifications={[]}
                                                          consumeNotification={consumeNotification}
-                                                         loadTermAssignments={onLoadAssignments} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                         loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
         wrapper.setProps({resource: file});
         wrapper.update();
         expect(onLoadAssignments).toHaveBeenCalledWith(file);
@@ -158,7 +158,7 @@ describe("ResourceTermAssignments", () => {
     it("reloads assignments when text analysis finished notification is received", () => {
         const wrapper = shallow<ResourceTermAssignments>(<ResourceTermAssignments resource={file} notifications={[]}
                                                                                   consumeNotification={consumeNotification}
-                                                                                  loadTermAssignments={onLoadAssignments} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                                  loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
         const notification: AppNotification = {source: {type: NotificationType.TEXT_ANALYSIS_FINISHED}};
         wrapper.setProps({notifications: [notification]});
         wrapper.update();
@@ -171,7 +171,7 @@ describe("ResourceTermAssignments", () => {
     it("consumes the published text analysis finished notification", () => {
         const wrapper = shallow<ResourceTermAssignments>(<ResourceTermAssignments resource={file} notifications={[]}
                                                                                   consumeNotification={consumeNotification}
-                                                                                  loadTermAssignments={onLoadAssignments} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                                  loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
         const notification: AppNotification = {source: {type: NotificationType.TEXT_ANALYSIS_FINISHED}};
         wrapper.setProps({notifications: [notification]});
         wrapper.update();
@@ -215,7 +215,7 @@ describe("ResourceTermAssignments", () => {
         });
         const wrapper = shallow<ResourceTermAssignments>(<ResourceTermAssignments resource={file} notifications={[]}
                                                                                   consumeNotification={consumeNotification}
-                                                                                  loadTermAssignments={onLoadAssignments} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                                  loadTermAssignments={onLoadAssignments} {...intlFunctions()}/>);
         const existingAssignments: TermAssignmentInfo[] = [{
             term: {
                 iri: Generator.generateUri()
