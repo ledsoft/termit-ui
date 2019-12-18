@@ -178,6 +178,14 @@ export class Ajax {
     }
 
     /**
+     * Custom status validator for Axios, which accepts 304 Not Modified as a non-error status.
+     * @param status HTTP response status
+     */
+    private static validateGetStatus(status: number): boolean {
+        return (status >= 200 && status < 300) || status === 304;
+    }
+
+    /**
      * Performs a HTTP HEAD request and returns the raw Axios response object.
      * @param path URL path
      * @param config Request configuration
@@ -203,7 +211,8 @@ export class Ajax {
         const conf = {
             params: config.getParams(),
             headers: config.getHeaders(),
-            responseType: config.getResponseType()
+            responseType: config.getResponseType(),
+            validateStatus: Ajax.validateGetStatus
         };
         return this.axiosInstance.get(path, conf);
     }

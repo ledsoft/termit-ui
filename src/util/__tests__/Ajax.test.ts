@@ -302,6 +302,18 @@ describe("Ajax", () => {
                 expect(resp.headers).toEqual(headers);
             });
         });
+
+        it("treats 304 status NOT as an error", () => {
+            mock.onAny().reply(304, undefined, headers);
+            const spy = jest.spyOn(sut.axios, "get");
+            spy.mockClear();
+            return sut.getResponse("/vocabularies").then((resp: AxiosResponse) => {
+                expect(resp.status).toEqual(304);
+                expect(resp.headers).toEqual(headers);
+            }).catch(() => {
+                fail("Should not have been called.");
+            });
+        });
     });
 
     describe("head", () => {
