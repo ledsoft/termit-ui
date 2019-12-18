@@ -1,3 +1,12 @@
+##### Version 1.2.1
+
+- Added support for updating Resource metadata.
+- Added support for user management and user profile editing.
+- Allow disabling free registration in the application.
+- Implemented support for creating document vocabularies.
+- Numerous bug fixes and code improvements.
+- Switched from DC elements to DC terms in the relevant parts of the ontological model.
+
 ##### Version 1.2.0
 
 - Added support for Vocabulary dependencies (Vocabulary importing other Vocabularies).
