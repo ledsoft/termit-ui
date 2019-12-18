@@ -10,7 +10,6 @@ import Mask from "../misc/Mask";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {AsyncFailureAction, MessageAction} from "../../action/ActionType";
-import {register} from "../../action/AsyncActions";
 import Ajax, {params} from "../../util/Ajax";
 import Constants from "../../util/Constants";
 import {ThunkDispatch} from "../../util/Types";
@@ -18,6 +17,7 @@ import Authentication from "../../util/Authentication";
 import PublicLayout from "../layout/PublicLayout";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
 import {UserAccountData} from "../../model/User";
+import {register} from "../../action/AsyncUserActions";
 
 interface RegisterProps extends HasI18n {
     loading: boolean,

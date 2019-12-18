@@ -4,7 +4,7 @@ import {Routing} from "../../util/Routing";
 import Routes from "../../util/Routes";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
-import AssetIriLink from "../misc/AssteIriLink";
+import AssetIriLink from "../misc/AssetIriLink";
 
 interface VocabularyIriLinkProps extends HasI18n {
     iri: string;

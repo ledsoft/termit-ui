@@ -1,13 +1,11 @@
 import * as React from "react";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 import {TextAnalysisRecord} from "../../../model/TextAnalysisRecord";
-import {Location} from "history";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory, Location} from "history";
 import {match as Match, RouteComponentProps} from "react-router";
 import {shallow} from "enzyme";
 import {ResourceFileDetail} from "../ResourceFileDetail";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import File from "../../../model/File";
 import Generator from "../../../__tests__/environment/Generator";
 import {EMPTY_RESOURCE} from "../../../model/Resource";
@@ -57,7 +55,7 @@ describe("ResourceFileDetail", () => {
 
     it("loads resource on mount", () => {
         shallow(<ResourceFileDetail resource={resource} loadResource={loadResource}
-                                    loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                    loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()}/>);
         expect(loadResource).toHaveBeenCalledWith(VocabularyUtils.create(resourceNamespace + resourceName));
     });
 
@@ -71,7 +69,7 @@ describe("ResourceFileDetail", () => {
         };
         const wrapper = shallow<ResourceFileDetail>(<ResourceFileDetail resource={EMPTY_RESOURCE}
                                                                         loadResource={loadResource}
-                                                                        loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()}/>);
         wrapper.setProps({resource});
         wrapper.update();
         const fileDetail = wrapper.find(FileDetail);
@@ -90,7 +88,7 @@ describe("ResourceFileDetail", () => {
         (loadLatestTextAnalysisRecord as jest.Mock).mockImplementation(() => Promise.resolve(record));
         const wrapper = shallow<ResourceFileDetail>(<ResourceFileDetail resource={EMPTY_RESOURCE}
                                                                         loadResource={loadResource}
-                                                                        loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()}/>);
         wrapper.setProps({resource});
         wrapper.update();
         return Promise.resolve().then(() => {
@@ -104,7 +102,7 @@ describe("ResourceFileDetail", () => {
     it("renders info when no text analysis record exists for a standalone file", () => {
         const wrapper = shallow<ResourceFileDetail>(<ResourceFileDetail resource={EMPTY_RESOURCE}
                                                                         loadResource={loadResource}
-                                                                        loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()}/>);
         wrapper.setProps({resource});
         wrapper.update();
         return Promise.resolve().then(() => {
@@ -124,7 +122,7 @@ describe("ResourceFileDetail", () => {
         };
         const wrapper = shallow<ResourceFileDetail>(<ResourceFileDetail resource={resource}
                                                                         loadResource={loadResource}
-                                                                        loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        loadLatestTextAnalysisRecord={loadLatestTextAnalysisRecord} {...routeProps} {...intlFunctions()}/>);
         const anotherFile = new File({
             iri: Generator.generateUri(),
             label: resourceName,

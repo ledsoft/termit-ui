@@ -2,12 +2,14 @@ import * as React from "react";
 import VocabularyUtils, {IRI} from "../../../../util/VocabularyUtils";
 import Resource from "../../../../model/Resource";
 import {shallow} from "enzyme";
-import {intlDataForShallow, mountWithIntl} from "../../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
 import AppNotification from "../../../../model/AppNotification";
 import NotificationType from "../../../../model/NotificationType";
 import File from "../../../../model/File";
 import {FileSummary} from "../FileSummary";
+
+jest.mock("../../ResourceTermAssignments");
 
 describe("FileSummary", () => {
 
@@ -60,8 +62,7 @@ describe("FileSummary", () => {
     it("does not render content button for File without content", () => {
         (hasContent as jest.Mock).mockImplementation(() => Promise.resolve(false));
         const wrapper = shallow(<FileSummary
-            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()}
-            {...intlDataForShallow()}/>);
+            resource={file} notifications={[]} {...resourceHandlers} {...intlFunctions()}/>);
         return Promise.resolve().then(() => {
             wrapper.update();
             expect(wrapper.exists("#resource-detail-content-view")).toBeFalsy();
@@ -71,7 +72,7 @@ describe("FileSummary", () => {
 
     it("re-checks File content existence when file content uploaded notification is published ", () => {
         const wrapper = shallow<FileSummary>(<FileSummary resource={file} notifications={[]} {...resourceHandlers}
-                                                          {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                          {...intlFunctions()}/>);
         const contentNotification: AppNotification = {
             source: {
                 type:
@@ -85,7 +86,7 @@ describe("FileSummary", () => {
 
     it("consumes File content uploaded notification when it is published", () => {
         const wrapper = shallow<FileSummary>(<FileSummary resource={file}
-                                                          notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                          notifications={[]} {...resourceHandlers} {...intlFunctions()}/>);
         const contentNotification: AppNotification = {source: {type: NotificationType.FILE_CONTENT_UPLOADED}};
         wrapper.setProps({notifications: [contentNotification]});
         wrapper.update();
@@ -95,7 +96,7 @@ describe("FileSummary", () => {
 
     it("triggers File content download on content download button click", () => {
         const wrapper = shallow<FileSummary>(<FileSummary resource={file}
-                                                          notifications={[]} {...resourceHandlers} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                          notifications={[]} {...resourceHandlers} {...intlFunctions()}/>);
         wrapper.instance().onDownloadContent();
         expect(downloadContent).toHaveBeenCalledWith(VocabularyUtils.create(file.iri));
     });

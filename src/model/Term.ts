@@ -9,7 +9,7 @@ const ctx = {
     definition: VocabularyUtils.DEFINITION,
     parentTerms: VocabularyUtils.BROADER,
     subTerms: VocabularyUtils.NARROWER,
-    sources: "http://purl.org/dc/elements/1.1/source",
+    sources: "http://purl.org/dc/terms/source",
     vocabulary: VocabularyUtils.IS_TERM_FROM_VOCABULARY,
     types: "@type"
 };

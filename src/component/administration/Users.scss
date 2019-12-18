@@ -1,0 +1,31 @@
+.users-action-button {
+  min-width: 5.75rem;
+}
+
+.users-row-actions {
+  @media screen and (min-width: 935px) {
+    width: 13.5rem;
+    & > button {
+      margin-left: 0.5rem;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  @media screen and (max-width: 935px) {
+    width: 7.25rem;
+    & > button {
+      margin-top: 0.25rem;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+.m-user-status .info-icon {
+  margin-left: 0.25rem;
+}

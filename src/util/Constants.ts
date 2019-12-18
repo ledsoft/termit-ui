@@ -24,6 +24,7 @@ const constants = {
     // Error origin caused by the inability to connect to the backend server
     CONNECTION_ERROR: "CONNECTION_ERROR",
     JSON_LD_MIME_TYPE: "application/ld+json",
+    TEXT_MIME_TYPE: "text/plain",
     HTML_MIME_TYPE: "text/html",
     CSV_MIME_TYPE: "text/csv",
     TTL_MIME_TYPE: "text/turtle",
@@ -33,9 +34,15 @@ const constants = {
     // HTTP response status 401 Unauthorized
     STATUS_UNAUTHORIZED: 401,
     // Axios uses lower case for header names
-    AUTHORIZATION_HEADER: "authorization",
-    LOCATION_HEADER: "location",
-    CONTENT_DISPOSITION_HEADER: "content-disposition",
+    Headers: {
+        ACCEPT: "accept",
+        AUTHORIZATION: "authorization",
+        CONTENT_DISPOSITION: "content-disposition",
+        CONTENT_TYPE: "content-type",
+        IF_MODIFIED_SINCE: "if-modified-since",
+        LAST_MODIFIED: "last-modified",
+        LOCATION: "location"
+    },
     STORAGE_JWT_KEY: "",
     STORAGE_LANG_KEY: "",
     // How many messages should be displayed at one moment
@@ -66,7 +73,7 @@ const constants = {
 };
 
 const deployment = constants.DEPLOYMENT_NAME.length > 0 ? constants.DEPLOYMENT_NAME + "-" : "";
-constants.STORAGE_JWT_KEY = constants.APP_NAME + "-" + deployment + constants.AUTHORIZATION_HEADER;
+constants.STORAGE_JWT_KEY = constants.APP_NAME + "-" + deployment + constants.Headers.AUTHORIZATION;
 constants.STORAGE_LANG_KEY = constants.APP_NAME + "-" + deployment + "LANG";
 
 export default constants;

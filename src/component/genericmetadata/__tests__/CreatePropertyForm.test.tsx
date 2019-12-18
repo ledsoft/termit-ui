@@ -3,7 +3,6 @@ import {RdfsResourceData} from "../../../model/RdfsResource";
 import {shallow} from "enzyme";
 import {CreatePropertyForm} from "../CreatePropertyForm";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import Generator from "../../../__tests__/environment/Generator";
 import VocabularyUtils from "../../../util/VocabularyUtils";
 
@@ -19,7 +18,7 @@ describe("CreatePropertyForm", () => {
 
     it("adds rdf:Property to types on create", () => {
         const wrapper = shallow(<CreatePropertyForm onOptionCreate={onCreate}
-                                                    toggleModal={toggleModal} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                    toggleModal={toggleModal} {...intlFunctions()}/>);
         wrapper.instance().setState({iri: Generator.generateUri(), label: "test"});
         (wrapper.instance() as CreatePropertyForm).onCreate();
         expect(onCreate).toHaveBeenCalled();

@@ -4,11 +4,14 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
 import {loadVocabularies} from "../../action/AsyncActions";
-import VocabularyLink from "./VocabularyLink";
 import Vocabulary from "../../model/Vocabulary";
-import {Table} from "reactstrap";
 import {ThunkDispatch} from "../../util/Types";
-import classNames from "classnames";
+// @ts-ignore
+import {IntelligentTreeSelect} from "intelligent-tree-select";
+import "intelligent-tree-select/lib/styles.css";
+import Utils from "../../util/Utils";
+import Routing from "../../util/Routing";
+import Routes from "../../util/Routes";
 
 interface VocabularyListProps extends HasI18n {
     loadVocabularies: () => void;
@@ -16,32 +19,52 @@ interface VocabularyListProps extends HasI18n {
     selectedVocabulary: Vocabulary;
 }
 
-class VocabularyList extends React.Component<VocabularyListProps> {
+export const VocabularyList: React.FC<VocabularyListProps> = props => {
+    React.useEffect(() => {
+        props.loadVocabularies();
+    }, []);
 
-    public componentDidMount() {
-        this.props.loadVocabularies();
-    }
+    const onSelect = (voc: Vocabulary) => {
+        if (voc === null) {
+            Routing.transitionTo(Routes.vocabularies);
+        } else {
+            Routing.transitionToAsset(voc);
+        }
+    };
 
-    public render() {
-        // Note that the highlighting does not work properly, as there is no way of judging whether no vocabulary is
-        // currently selected in the view This will be resolved with the UI redesign.
-        const vocabularies = Object.keys(this.props.vocabularies).map((v) => this.props.vocabularies[v]);
-        const rows = vocabularies.map(v =>
-            <tr key={v.iri}>
-                <td className={classNames("m-vocabulary-list-item", {"bold": v.iri === this.props.selectedVocabulary.iri})}>
-                    <VocabularyLink id={"vocabularies-link-to-" + v.iri} vocabulary={v}/>
-                </td>
-            </tr>
-        );
-        return <>
-            <Table borderless={true}>
-                <tbody>
-                {rows}
-                </tbody>
-            </Table>
-        </>
+    const options = Object.keys(props.vocabularies).map((v) => {
+        const voc = props.vocabularies[v];
+        return {
+            iri: voc.iri,
+            label: voc.label,
+            comment: voc.comment ? voc.comment : voc.label,
+            types: Utils.sanitizeArray(voc.types).slice(),
+            children: []
+        }
+    });
+    if (options.length === 0) {
+        return <div className="italics">{props.i18n("vocabulary.management.empty")}</div>;
     }
-}
+    const height = Utils.calculateAssetListHeight();
+    return <div id="vocabulary-list">
+        <IntelligentTreeSelect className="p-0"
+                               onChange={onSelect}
+                               value={props.selectedVocabulary ? props.selectedVocabulary.iri : null}
+                               options={options}
+                               valueKey="iri"
+                               labelKey="label"
+                               isMenuOpen={true}
+                               multi={false}
+                               showSettings={false}
+                               displayInfoOnHover={true}
+                               scrollMenuIntoView={false}
+                               renderAsTree={false}
+                               maxHeight={height}
+                               valueRenderer={Utils.labelValueRenderer}
+                               tooltipKey="comment"
+        />
+    </div>;
+};
 
 export default connect((state: TermItState) => {
     return {

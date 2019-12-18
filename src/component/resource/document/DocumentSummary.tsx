@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import TermItState from "../../../model/TermItState";
 import {ThunkDispatch} from "../../../util/Types";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
-import {loadResource, removeResource, updateResourceTerms} from "../../../action/AsyncActions";
+import {loadResource, removeResource, updateResource} from "../../../action/AsyncActions";
 import Resource from "../../../model/Resource";
 import {injectIntl} from "react-intl";
 import withI18n from "../../hoc/withI18n";
@@ -76,7 +76,7 @@ export class DocumentSummary extends ResourceSummary<DocumentSummaryProps> {
 export default connect((state: TermItState) => ({intl: state.intl}), (dispatch: ThunkDispatch) => {
     return {
         loadResource: (iri: IRI) => dispatch(loadResource(iri)),
-        saveResource: (resource: Resource) => dispatch(updateResourceTerms(resource)),
+        saveResource: (resource: Resource) => dispatch(updateResource(resource)),
         removeResource: (resource: Resource) => dispatch(removeResource(resource))
     };
 })(injectIntl(withI18n(DocumentSummary)));

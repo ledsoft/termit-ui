@@ -1,7 +1,6 @@
 import * as React from "react";
 import Term, {TermInfo} from "../../../model/Term";
 import Generator from "../../../__tests__/environment/Generator";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {TermMetadata} from "../TermMetadata";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Vocabulary from "../../../model/Vocabulary";
@@ -37,14 +36,14 @@ describe("TermMetadata", () => {
             vocabulary: {iri: vocabulary.iri}
         }];
         term.subTerms = subTerms;
-        const wrapper = shallow(<TermMetadata term={term} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const wrapper = shallow(<TermMetadata term={term} {...intlFunctions()}/>);
         const subTermLinks = wrapper.find(TermLink);
         expect(subTermLinks.length).toEqual(subTerms.length);
     });
 
     it("skips implicit term type when rendering types", () => {
         term.types = [VocabularyUtils.TERM, Generator.generateUri()];
-        const wrapper = shallow(<TermMetadata term={term} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const wrapper = shallow(<TermMetadata term={term} {...intlFunctions()}/>);
         const renderedTypes = wrapper.find(OutgoingLink);
         expect(renderedTypes.length).toEqual(1);
         expect(renderedTypes.get(0).props.iri).toEqual(term.types[1]);
@@ -56,7 +55,7 @@ describe("TermMetadata", () => {
             label: "Parent",
             vocabulary: {iri: Generator.generateUri()}
         })];
-        const wrapper = shallow(<TermMetadata term={term} {...intlFunctions()} {...intlDataForShallow()}/>);
+        const wrapper = shallow(<TermMetadata term={term} {...intlFunctions()}/>);
         const parentLinks = wrapper.find(TermLink);
         expect(parentLinks.length).toEqual(term.parentTerms.length);
     });

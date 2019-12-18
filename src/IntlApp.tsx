@@ -15,7 +15,7 @@ interface IntlWrapperProps {
     intl: IntlData
 }
 
-const IntlWrapper: React.SFC<IntlWrapperProps> = (props) => {
+const IntlWrapper: React.FC<IntlWrapperProps> = (props) => {
     return <IntlProvider {...props.intl}>
         <Router history={Routing.history}>
             <Switch>

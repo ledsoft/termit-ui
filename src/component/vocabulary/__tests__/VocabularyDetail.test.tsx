@@ -1,10 +1,9 @@
 import * as React from "react";
 import {VocabularyDetail} from "../VocabularyDetail";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow} from "../../../__tests__/environment/Environment";
 import {shallow} from "enzyme";
 import Vocabulary, {EMPTY_VOCABULARY} from "../../../model/Vocabulary";
-import createMemoryHistory from "history/createMemoryHistory";
+import {createMemoryHistory} from "history";
 import VocabularyUtils, {IRI} from "../../../util/VocabularyUtils";
 
 
@@ -40,7 +39,7 @@ describe("VocabularyDetail", () => {
     it("loads vocabulary on mount", () => {
         shallow(<VocabularyDetail vocabulary={EMPTY_VOCABULARY} loadVocabulary={loadVocabulary}
                                   loadTypes={loadTypes} lang="en" history={history} location={location}
-                                  match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                  match={match} {...intlFunctions()}/>);
         expect(loadVocabulary).toHaveBeenCalled();
         expect((loadVocabulary as jest.Mock).mock.calls[0][0].fragment).toEqual(normalizedName);
     });
@@ -52,14 +51,14 @@ describe("VocabularyDetail", () => {
         });
         shallow(<VocabularyDetail vocabulary={vocabulary} loadVocabulary={loadVocabulary}
                                   loadTypes={loadTypes} lang="en" history={history} location={location}
-                                  match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                  match={match} {...intlFunctions()}/>);
         expect(loadVocabulary).not.toHaveBeenCalled();
     });
 
     it("uses namespace from location when loading vocabulary", () => {
         shallow(<VocabularyDetail vocabulary={EMPTY_VOCABULARY} loadVocabulary={loadVocabulary}
                                   loadTypes={loadTypes} lang="en" history={history} location={location}
-                                  match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                  match={match} {...intlFunctions()}/>);
         expect((loadVocabulary as jest.Mock).mock.calls[0][0].namespace).toEqual(namespace);
     });
 });

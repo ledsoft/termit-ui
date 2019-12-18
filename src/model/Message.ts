@@ -20,12 +20,14 @@ export default class Message {
     private readonly mMessageId?: string;
     private readonly mValues?: {};    // Values for message formatting, relevant only for messageId
     private readonly mType: MessageType;
+    private readonly mTimestamp: number;
 
     constructor(data: MessageData, type?: MessageType) {
         this.mMessage = data.message;
         this.mMessageId = data.messageId;
         this.mValues = data.values;
         this.mType = type ? type : MType.INFO;
+        this.mTimestamp = Date.now();
     }
 
     get message(): string | undefined {
@@ -42,6 +44,10 @@ export default class Message {
 
     get type(): MessageType {
         return this.mType;
+    }
+
+    get timestamp(): number {
+        return this.mTimestamp;
     }
 }
 

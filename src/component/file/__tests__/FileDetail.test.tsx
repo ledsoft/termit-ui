@@ -27,7 +27,6 @@ describe("FileDetail", () => {
     let mockedFunctionLikeProps: {
         loadFileContent: (fileIri: IRI) => void
         saveFileContent: (fileIri: IRI, fileContent: string) => void
-        loadDefaultTerms: (vocabularyIri: IRI) => void
         fetchTerms: (fetchOptions: FetchOptionsFunction, vocabularyIri: IRI) => Promise<Term[]>
         fetchTerm: (termNormalizedName: string, vocabularyIri: IRI) => Promise<Term>
         createVocabularyTerm: (term: Term, vocabularyIri: IRI) => Promise<string>
@@ -42,7 +41,6 @@ describe("FileDetail", () => {
         mockedFunctionLikeProps = {
             loadFileContent: jest.fn(),
             saveFileContent: jest.fn(),
-            loadDefaultTerms: jest.fn(),
             fetchTerms: (fetchOptions, vocabIri) => Promise.resolve([]),
             fetchTerm: (termNormalizedName, vocabIri) => Promise.resolve(generateTerm(0)),
             createVocabularyTerm: (term, vocabIri) => Promise.resolve("")

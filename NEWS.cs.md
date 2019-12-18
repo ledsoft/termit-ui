@@ -1,3 +1,12 @@
+##### Verze 1.2.1
+
+- Přidána podpora pro úpravy metadat  zdrojů.
+- Implementována základní správa uživatelů a možnost editace vlastního profilu.
+- Implementována možnost zakázat registraci nepřihlášeným uživatelů.
+- Implementována podpora pro vytváření dokumentových slovníků.
+- Řada opravených chyb a vylepšení kódu.
+- Ontologický model nyní používá prvky z DC terms místo starších DC elements.
+
 ##### Verze 1.2.0
 
 - Přidána podpora pro závislosti mezi slovníky (slovník může importovat jiné slovníky).

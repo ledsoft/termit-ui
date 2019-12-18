@@ -47,7 +47,7 @@ export class ResourceEdit extends React.Component<ResourceEditProps, ResourceEdi
     };
 
     public onSave = () => {
-        const newResource = new Resource(this.props.resource);
+        const newResource = this.props.resource.clone();
         newResource.label = this.state.label;
         newResource.description = this.state.description;
         newResource.terms = this.state.terms;

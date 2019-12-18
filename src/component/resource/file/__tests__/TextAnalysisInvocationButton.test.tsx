@@ -5,7 +5,6 @@ import Generator from "../../../../__tests__/environment/Generator";
 import {shallow} from "enzyme";
 import {TextAnalysisInvocationButton} from "../TextAnalysisInvocationButton";
 import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
-import {intlDataForShallow} from "../../../../__tests__/environment/Environment";
 import {InjectsLoading} from "../../../hoc/withInjectableLoading";
 import ResourceSelectVocabulary from "../../ResourceSelectVocabulary";
 import Vocabulary from "../../../../model/Vocabulary";
@@ -51,7 +50,7 @@ describe("TextAnalysisInvocationButton", () => {
         const wrapper = shallow<TextAnalysisInvocationButton>(<TextAnalysisInvocationButton file={file}
                                                                                             executeTextAnalysis={executeTextAnalysis}
                                                                                             notifyAnalysisFinish={notifyAnalysisFinish}
-                                                                                            {...loadingProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                                            {...loadingProps} {...intlFunctions()}/>);
         wrapper.instance().onClick();
         expect(executeTextAnalysis).toHaveBeenCalledWith(file, undefined);
     });
@@ -68,7 +67,7 @@ describe("TextAnalysisInvocationButton", () => {
         const wrapper = shallow<TextAnalysisInvocationButton>(<TextAnalysisInvocationButton file={file}
                                                                                             executeTextAnalysis={executeTextAnalysis}
                                                                                             notifyAnalysisFinish={notifyAnalysisFinish}
-                                                                                            {...loadingProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                                            {...loadingProps} {...intlFunctions()}/>);
         wrapper.instance().onClick();
         expect(loadingOn).toHaveBeenCalled();
     });
@@ -85,7 +84,7 @@ describe("TextAnalysisInvocationButton", () => {
         const wrapper = shallow<TextAnalysisInvocationButton>(<TextAnalysisInvocationButton file={file}
                                                                                             executeTextAnalysis={executeTextAnalysis}
                                                                                             notifyAnalysisFinish={notifyAnalysisFinish}
-                                                                                            {...loadingProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                                            {...loadingProps} {...intlFunctions()}/>);
         wrapper.instance().onClick();
         return Promise.resolve().then(() => {
             expect(loadingOff).toHaveBeenCalled();
@@ -104,7 +103,7 @@ describe("TextAnalysisInvocationButton", () => {
         const wrapper = shallow<TextAnalysisInvocationButton>(<TextAnalysisInvocationButton file={file}
                                                                                             executeTextAnalysis={executeTextAnalysis}
                                                                                             notifyAnalysisFinish={notifyAnalysisFinish}
-                                                                                            {...loadingProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                                            {...loadingProps} {...intlFunctions()}/>);
         wrapper.instance().onClick();
         return Promise.resolve().then(() => {
             expect(notifyAnalysisFinish).toHaveBeenCalled();
@@ -115,7 +114,7 @@ describe("TextAnalysisInvocationButton", () => {
         const wrapper = shallow<TextAnalysisInvocationButton>(<TextAnalysisInvocationButton file={file}
                                                                                             executeTextAnalysis={executeTextAnalysis}
                                                                                             notifyAnalysisFinish={notifyAnalysisFinish}
-                                                                                            {...loadingProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                                            {...loadingProps} {...intlFunctions()}/>);
         wrapper.instance().onClick();
         wrapper.update();
         expect(wrapper.instance().state.showVocabularySelector).toBeTruthy();
@@ -131,7 +130,7 @@ describe("TextAnalysisInvocationButton", () => {
         const wrapper = shallow<TextAnalysisInvocationButton>(<TextAnalysisInvocationButton file={file}
                                                                                             executeTextAnalysis={executeTextAnalysis}
                                                                                             notifyAnalysisFinish={notifyAnalysisFinish}
-                                                                                            {...loadingProps} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                                            {...loadingProps} {...intlFunctions()}/>);
         wrapper.instance().onClick();
         wrapper.update();
         expect(wrapper.instance().state.showVocabularySelector).toBeTruthy();

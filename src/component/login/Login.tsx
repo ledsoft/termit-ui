@@ -8,12 +8,12 @@ import Routes from "../../util/Routes";
 import Mask from "../misc/Mask";
 import {connect} from "react-redux";
 import TermItState from "../../model/TermItState";
-import {login} from "../../action/AsyncActions";
 import ErrorInfo from "../../model/ErrorInfo";
 import {ThunkDispatch} from "../../util/Types";
 import PublicLayout from "../layout/PublicLayout";
 import {AsyncFailureAction, MessageAction} from "../../action/ActionType";
 import AsyncActionStatus from "../../action/AsyncActionStatus";
+import {login} from "../../action/AsyncUserActions";
 
 interface LoginProps extends HasI18n {
     loading: boolean;

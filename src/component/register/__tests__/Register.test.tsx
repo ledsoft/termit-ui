@@ -1,5 +1,5 @@
 import * as React from "react";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {Register} from "../Register";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import ErrorInfo from "../../../model/ErrorInfo";
@@ -116,9 +116,9 @@ describe("Registration", () => {
         const error = new ErrorInfo(ActionType.REGISTER, {
             message: "Error"
         });
-        const wrapper = shallow(<Register loading={false}
-                                          register={register} {...intlFunctions()} {...intlDataForShallow()}/>);
-        (wrapper.instance() as Register).setState({error});
+        const wrapper = shallow<Register>(<Register loading={false}
+                                                    register={register} {...intlFunctions()}/>);
+        (wrapper.instance()).setState({error});
         wrapper.update();
         // @ts-ignore
         (wrapper.instance() as Register).onChange({currentTarget: {name: "firstName", value: userInfo.firstName}});

@@ -35,7 +35,7 @@ const processingInstructions: Instruction[] = [{
 /**
  * Renders the matching field and text snippet with the match(es) visualizing the match(es) in the text.
  */
-export const FTSMatch: React.SFC<FTSMatchProps> = (props: FTSMatchProps) => {
+export const FTSMatch: React.FC<FTSMatchProps> = (props: FTSMatchProps) => {
     const parser = new HtmlToReactParser();
     const items = [];
     for (let i = 0, len = props.matches.length; i < len; i++) {

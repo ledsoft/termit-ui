@@ -22,7 +22,6 @@ export default class TermItState {
     public vocabulary: Vocabulary;
     public resources: { [key: string]: Resource };
     public resource: Resource;
-    public defaultTerms: Term[];
     public vocabularies: { [key: string]: Vocabulary };
     public fileContent: string | null;
     public messages: Message[];
@@ -42,6 +41,7 @@ export default class TermItState {
     // Pending asynchronous actions. Can be used to prevent repeated requests when some are already pending
     public pendingActions: { [key: string]: AsyncActionStatus };
     public errors: ErrorLogItem[];
+    public lastModified: {[key: string]: string };
 
     constructor() {
         this.loading = false;
@@ -49,7 +49,6 @@ export default class TermItState {
         this.vocabulary = EMPTY_VOCABULARY;
         this.resource = EMPTY_RESOURCE;
         this.resources = {};
-        this.defaultTerms = [];
         this.vocabularies = {};
         this.fileContent = null;
         this.messages = [];
@@ -67,5 +66,6 @@ export default class TermItState {
         this.notifications = [];
         this.pendingActions = {};
         this.errors = [];
+        this.lastModified = {};
     }
 }

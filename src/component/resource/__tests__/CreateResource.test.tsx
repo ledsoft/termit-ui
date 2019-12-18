@@ -1,6 +1,6 @@
 import * as React from "react";
 import Ajax from "../../../util/Ajax";
-import {intlDataForShallow, mountWithIntl} from "../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {intlFunctions} from "../../../__tests__/environment/IntlUtil";
 import Routing from "../../../util/Routing";
 import Routes from "../../../util/Routes";
@@ -31,7 +31,7 @@ describe("CreateResource", () => {
     });
 
     it("returns to Resource Management on cancel", () => {
-        shallow<CreateResource>(<CreateResource onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+        shallow<CreateResource>(<CreateResource onCreate={onCreate} {...intlFunctions()}/>);
         CreateResource.onCancel();
         expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.resources);
     });
@@ -71,7 +71,7 @@ describe("CreateResource", () => {
 
     it("transitions to Resource detail on successful creation", () => {
         const wrapper = shallow<CreateResource>(<CreateResource
-            onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+            onCreate={onCreate} {...intlFunctions()}/>);
         wrapper.instance().onCreate(new Resource({iri, label: "Test"}));
         return Promise.resolve().then(() => {
             expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.resourceSummary, {
@@ -83,7 +83,7 @@ describe("CreateResource", () => {
 
     it("returns resolved identifier on successful creation", () => {
         const wrapper = shallow<CreateResource>(<CreateResource
-            onCreate={onCreate} {...intlFunctions()} {...intlDataForShallow()}/>);
+            onCreate={onCreate} {...intlFunctions()}/>);
         return wrapper.instance().onCreate(new Resource({iri, label: "Test"})).then(result => {
             expect(result).toBeDefined();
             expect(result).toEqual(iri);

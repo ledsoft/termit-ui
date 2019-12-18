@@ -6,6 +6,8 @@ import Generator from "../../../__tests__/environment/Generator";
 import {ResourceEdit} from "../ResourceEdit";
 import {shallow} from "enzyme";
 import Term from "../../../model/Term";
+import File from "../../../model/File";
+import VocabularyUtils from "../../../util/VocabularyUtils";
 
 describe("ResourceEdit", () => {
     let resource: Resource;
@@ -76,5 +78,17 @@ describe("ResourceEdit", () => {
         expect(update.label).toEqual(newLabel);
         expect(update.description).toEqual(newDescription);
         expect(update.terms).toEqual(resource.terms);
+    });
+
+    describe("onSave", () => {
+
+        it("invokes save handler with updated instance of the correct type", () => {
+            const file = new File(Object.assign(Generator.generateAssetData(), {types: [VocabularyUtils.RESOURCE, VocabularyUtils.FILE]}));
+            const wrapper = shallow<ResourceEdit>(<ResourceEdit resource={file} save={save}
+                                                                cancel={cancel} {...intlFunctions()}/>);
+            wrapper.instance().onSave();
+            const update = (save as jest.Mock).mock.calls[0][0];
+            expect(update instanceof File);
+        });
     });
 });

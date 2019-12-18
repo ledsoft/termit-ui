@@ -25,7 +25,6 @@ import User, {EMPTY_USER} from "../model/User";
 import "./MainView.scss";
 import Routes from "../util/Routes";
 import Footer from "./Footer";
-import {loadUser} from "../action/AsyncActions";
 import {logout} from "../action/ComplexActions";
 import {Route, RouteComponentProps, Switch, withRouter} from "react-router";
 import Messages from "./message/Messages";
@@ -42,6 +41,11 @@ import BreadcrumbRoute from "./breadcrumb/BreadcrumbRoute";
 import VocabularyManagementRoute from "./vocabulary/VocabularyManagementRoute";
 import Dashboard from "./dashboard/Dashboard";
 import SearchVocabularies from "./search/SearchVocabularies";
+import ProfileRoute from "./profile/ProfileRoute";
+import {IfGranted} from "react-authorization";
+import VocabularyUtils from "../util/VocabularyUtils";
+import AdministrationRoute from "./administration/AdministrationRoute";
+import {loadUser} from "../action/AsyncUserActions";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User;
@@ -74,10 +78,6 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
         this.setState({
             isMainMenuOpen: !this.state.isMainMenuOpen
         });
-    };
-
-    private onUserProfileClick = () => {
-        alert("Not implemented, yet!");
     };
 
     private isDashboardRoute() {
@@ -127,6 +127,12 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                 <NavLink id="main-nav-search"
                                          href={MainView.hashPath(Routes.search.path)}>{i18n("main.nav.search")}</NavLink>
                             </NavItem>
+                            <IfGranted expected={VocabularyUtils.USER_ADMIN} actual={user.types}>
+                                <NavItem active={path.startsWith(Routes.administration.path)}>
+                                    <NavLink id="main-nav-administration"
+                                             href={MainView.hashPath(Routes.administration.path)}>{i18n("main.nav.admin")}</NavLink>
+                                </NavItem>
+                            </IfGranted>
                         </Nav>
                         <Nav navbar={true} className="nav-menu-user">
                             <UncontrolledDropdown id="main-menu-user" nav={true} inNavbar={true}>
@@ -134,9 +140,8 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                                     {user.abbreviatedName}
                                 </DropdownToggle>
                                 <DropdownMenu right={true}>
-                                    <DropdownItem disabled={true}
-                                                  title={i18n("not-implemented")}
-                                                  onClick={this.onUserProfileClick}>{i18n("main.user-profile")}</DropdownItem>
+                                    <DropdownItem
+                                        href={MainView.hashPath(Routes.profile.path)}>{i18n("main.user-profile")}</DropdownItem>
                                     <DropdownItem divider={true}/>
                                     <DropdownItem onClick={this.props.logout}>{i18n("main.logout")}</DropdownItem>
                                 </DropdownMenu>
@@ -150,6 +155,8 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
             <Messages/>
             <Container id="content-container" fluid={true} className="mt-5 mb-5 flex-grow-1">
                 <Switch>
+                    <BreadcrumbRoute title={i18n("main.nav.admin")} path={Routes.administration.path}
+                                     component={AdministrationRoute}/>
                     <BreadcrumbRoute title={i18n("main.nav.resources")} path={Routes.resources.path}
                                      component={ResourceManagement}/>
                     <BreadcrumbRoute title={i18n("main.nav.vocabularies")} path={Routes.vocabularies.path}
@@ -163,6 +170,8 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
                     <BreadcrumbRoute title={i18n("main.nav.search")} path={Routes.search.path} component={Search}/>
                     <BreadcrumbRoute title={i18n("main.nav.facetedSearch")} path={Routes.facetedSearch.path}
                                      component={FacetedSearch}/>
+                    <BreadcrumbRoute title={i18n("main.user-profile")} path={Routes.profile.path}
+                                     component={ProfileRoute}/>
                     <Route component={Dashboard}/>
                 </Switch>
             </Container>
@@ -171,7 +180,10 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
     }
 
     private renderPlaceholder() {
-        return <div className="wrapper center"><Jumbotron><h1>{this.props.i18n("message.welcome")}</h1></Jumbotron>
+        return <div id="loading-placeholder" className="wrapper center">
+            <Jumbotron>
+                <h1>{this.props.i18n("message.welcome")}</h1>
+            </Jumbotron>
         </div>;
     }
 

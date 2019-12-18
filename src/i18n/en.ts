@@ -14,7 +14,7 @@ export default {
         'optional': 'Optional',
         'actions': 'Actions',
         'description': 'Description',
-        'submit' : 'Submit',
+        'submit': 'Submit',
 
         'connection.error': 'Unable to connect to the server.',
         'ajax.unparseable-error': 'Action failed. Server responded with unexpected error. If necessary, see browser log for more details.',
@@ -76,6 +76,30 @@ export default {
         "dashboard.widget.typeFrequency.title": "Term count in vocabularies",
         "dashboard.widget.news": "News",
 
+        "administration.users": "Users",
+        "administration.accessDenied": "You have insufficient rights to access this view.",
+        "administration.users.name": "Name",
+        "administration.users.username": "Username",
+        "administration.users.status": "Status",
+        "administration.users.status.locked": "Locked",
+        "administration.users.status.locked.help": "User account is locked due to exceeding the maximum amount of unsuccessful login attempts. User cannot log in under this account unless an administrator sets a new password for it.",
+        "administration.users.status.disabled": "Disabled",
+        "administration.users.status.disabled.help": "User account has been disabled by an administrator and cannot be used to log in.",
+        "administration.users.status.active": "Active",
+        "administration.users.status.active.help": "User account is active and can be used to log in as usual.",
+        "administration.users.status.action.enable": "Enable",
+        "administration.users.status.action.enable.tooltip": "Enable this user",
+        "administration.users.status.action.enable.success": "User {name} successfully enabled.",
+        "administration.users.status.action.disable": "Disable",
+        "administration.users.status.action.disable.tooltip": "Disable this user",
+        "administration.users.status.action.disable.success": "User {name} successfully disabled.",
+        "administration.users.status.action.unlock": "Unlock",
+        "administration.users.status.action.unlock.tooltip": "Unlock this user",
+        "administration.users.status.action.unlock.success": "User {name} successfully unlocked.",
+        "administration.users.unlock.title": "Unlock user {name}",
+        "administration.users.unlock.password": "New password",
+        "administration.users.unlock.passwordConfirm": "Confirm new password",
+
         "asset.link.tooltip": "View detail of this asset",
         "asset.iri": "Identifier",
         "asset.label": "Label",
@@ -84,11 +108,12 @@ export default {
         "asset.author": "Author",
         "asset.created": "Created",
         "asset.remove.tooltip": "Remove this asset",
-        "asset.remove.dialog.title": "Remove {type} \'{label}\'?",
-        "asset.remove.dialog.text": "Are you sure you want to remove {type} \'{label}\'?",
+        "asset.remove.dialog.title": "Remove {type} \"{label}\"?",
+        "asset.remove.dialog.text": "Are you sure you want to remove {type} \"{label}\"?",
 
         'vocabulary.management': 'Vocabulary Management',
         'vocabulary.management.vocabularies': 'Vocabularies',
+        'vocabulary.management.empty': 'No vocabularies found. Start by creating one.',
         'vocabulary.vocabularies.create.tooltip': 'Create new vocabulary',
         'vocabulary.create.title': 'Create Vocabulary',
         'vocabulary.create.submit': 'Create',
@@ -149,6 +174,7 @@ export default {
         "resource.metadata.document.files.create.tooltip": "Add new file to this document",
         "resource.metadata.document.files.create.dialog.title": "New file",
         "resource.metadata.document.files.empty": "No files found. Start by adding some.",
+        "resource.document.vocabulary.create": "Create document",
 
         "term.metadata.definition": "Definition",
         'term.metadata.comment': 'Comment',
@@ -157,7 +183,7 @@ export default {
         'term.metadata.types': 'Type',
         'term.metadata.source': 'Source',
         'term.updated.message': 'Term successfully updated.',
-        'term.metadata.labelExists.message': 'Term with label \'{label}\' already exists in this vocabulary',
+        'term.metadata.labelExists.message': "Term with label \"{label}\" already exists in this vocabulary",
         'term.metadata.source.add.placeholder': 'Add source',
         'term.metadata.source.add.placeholder.text': 'Add',
         'term.metadata.source.remove.title': 'Remove source',
@@ -179,10 +205,10 @@ export default {
 
         "glossary.title": "Terms",
         "glossary.select.placeholder": "Select term",
-        "glossary.excludeImported": "Without imported",
-        "glossary.excludeImported.help": "Show only terms from this vocabulary",
-        "glossary.includeImported": "Include imported vocabularies",
-        "glossary.includeImported.help": "Show including terms from imported vocabularies",
+        "glossary.excludeImported": "Include imported",
+        "glossary.excludeImported.help": "Terms from imported vocabularies are hidden in this view, click to show them",
+        "glossary.includeImported": "Include imported",
+        "glossary.includeImported.help": "Terms from imported vocabularies are shown in this view, click to hide them",
         "glossary.importedTerm.tooltip": "Term belongs to an imported vocabulary",
         'glossary.createTerm': 'Create new term',
         'glossary.createTerm.tooltip': "Create new vocabulary's term",
@@ -203,10 +229,10 @@ export default {
         'glossary.form.validation.validateLengthMin3': 'Field must be at least 3 characters',
         'glossary.form.validation.validateNotSameAsParent': 'Child option cannot be same as parent option',
 
-        'file.text-analysis.finished.message': 'Text analysis for file \'{fileName}\' successfully finished.',
+        'file.text-analysis.finished.message': "Text analysis of file \"{fileName}\" successfully finished.",
         'file.metadata.startTextAnalysis': 'Start text analysis',
         'file.metadata.startTextAnalysis.text': 'Analyze',
-        "file.content.upload.success": "Content of file \'{fileName}\' successfully uploaded.",
+        "file.content.upload.success": "Content of file \"{fileName}\" successfully uploaded.",
         "file.annotate.unknown-vocabulary": "Unable to determine vocabulary for annotating this file. It neither belongs to a vocabulary document nor has been processed by text analysis.",
 
         'statistics.vocabulary.count': 'Vocabulary Count',
@@ -225,7 +251,7 @@ export default {
         "search.tab.vocabularies": "Vocabularies",
         "search.tab.facets": "Faceted search",
         "search.reset": "Reset search",
-        "search.results.title": "Results for “{searchString}”",
+        "search.results.title": "Results for \"{searchString}\"",
         "search.results.countInfo": "Found {matches} matches in {assets} assets.",
         "search.results.table.label": "Label",
         "search.results.table.label.tooltip": "Open asset detail",
@@ -243,6 +269,18 @@ export default {
         'search.ma-vztahy-typu': 'has relation types',
         'search.pojem': 'Term',
         'search.typ': 'Type',
+
+        'profile.first.name': 'First name',
+        'profile.last.name': 'Last name',
+        'profile.legend.invalid.name': 'Field must be at least 1 character',
+        'profile.updated.message': 'Profile successfully updated',
+        'profile.change-password': 'Change Password',
+
+        'change-password.current.password': 'Current password',
+        'change-password.new.password': 'New password',
+        'change-password.confirm.password': 'Confirm password',
+        'change-password.updated.message': 'Password successfully updated',
+        'change-password.passwords.differ.tooltip': 'Old password and new password should not be same.',
 
         'annotator.annotate-content': 'Annotate Content',
         'annotation.form.suggested-occurrence.message': 'Phrase is not assigned to a vocabulary term.',
@@ -297,6 +335,7 @@ export default {
         "type.document": "Document",
         "type.file": "File",
         "type.dataset": "Dataset",
+        "type.document.vocabulary": "Document vocabulary",
 
         "log-viewer.title": "Error log",
         "log-viewer.timestamp": "Timestamp",
@@ -305,4 +344,4 @@ export default {
 
         "error.vocabulary.update.imports.danglingTermReferences": "Cannot remove vocabulary import(s), there are still references between terms from this vocabulary and the imported one (or one of its imports)."
     }
-}
+};

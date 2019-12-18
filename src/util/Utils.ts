@@ -153,8 +153,7 @@ export default {
      * Calculates the height of the asset tree selector.
      */
     calculateAssetListHeight() {
-        const container = document.getElementById("content-container");
-        return container ? container.clientHeight * 0.75 : window.innerHeight / 2;
+        return window.innerHeight >= 950 ? window.innerHeight * 0.66 : window.innerHeight / 2;
     },
 
     /**
@@ -164,7 +163,7 @@ export default {
      * @param a Reference asset
      * @param b Asset to compare it to
      */
-    labelComparator<T extends {label: string}>(a: T, b: T) {
+    labelComparator<T extends { label: string }>(a: T, b: T) {
         return a.label.localeCompare(b.label);
     },
 

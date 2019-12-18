@@ -5,25 +5,25 @@ import {
     createResource,
     createTerm,
     createVocabulary,
-    executeFileTextAnalysis, exportFileContent,
+    executeFileTextAnalysis,
+    exportFileContent,
     exportGlossary,
     getLabel,
     getProperties,
     hasFileContent,
-    loadFileContent, loadImportedVocabularies,
+    loadFileContent,
+    loadImportedVocabularies,
     loadLastEditedAssets,
     loadLatestTextAnalysisRecord,
+    loadResource,
     loadResources,
     loadResourceTermAssignmentsInfo,
     loadTerm,
     loadTermAssignmentsInfo,
     loadTerms,
     loadTypes,
-    loadUser,
     loadVocabularies,
     loadVocabulary,
-    login,
-    register,
     removeResource,
     updateResourceTerms,
     updateTerm,
@@ -39,9 +39,8 @@ import Vocabulary, {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary"
 import Vocabulary2 from "../../util/VocabularyUtils";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Routes from "../../util/Routes";
-import ActionType, {AsyncAction, AsyncActionSuccess, AsyncFailureAction, MessageAction,} from "../ActionType";
+import ActionType, {AsyncAction, AsyncActionSuccess, MessageAction,} from "../ActionType";
 import Term, {CONTEXT as TERM_CONTEXT} from "../../model/Term";
-import {ErrorData} from "../../model/ErrorInfo";
 import Generator from "../../__tests__/environment/Generator";
 import {ThunkDispatch} from "../../util/Types";
 import FetchOptionsFunction from "../../model/Functions";
@@ -54,7 +53,6 @@ import ExportType from "../../util/ExportType";
 import fileContent from "../../rest-mock/file";
 import Asset from "../../model/Asset";
 import TermItFile from "../../model/File";
-import {UserAccountData} from "../../model/User";
 import MessageType from "../../model/MessageType";
 import {CONTEXT as TA_RECORD_CONTEXT, TextAnalysisRecord} from "../../model/TextAnalysisRecord";
 import {
@@ -62,6 +60,7 @@ import {
     ResourceTermAssignments
 } from "../../model/ResourceTermAssignments";
 import {CONTEXT as TERM_ASSIGNMENTS_CONTEXT, TermAssignments} from "../../model/TermAssignments";
+import {verifyExpectedAssets} from "../../__tests__/environment/TestUtil";
 
 jest.mock("../../util/Routing");
 jest.mock("../../util/Ajax", () => ({
@@ -83,67 +82,6 @@ describe("Async actions", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         store = mockStore(new TermItState());
-    });
-
-    describe("fetch user", () => {
-        it("does not publish error message when status is 401", () => {
-            const error: ErrorData = {
-                message: "Unauthorized",
-                status: Constants.STATUS_UNAUTHORIZED
-            };
-            Ajax.get = jest.fn().mockImplementation(() => Promise.reject(error));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadUser())).then(() => {
-                const actions: Action[] = store.getActions();
-                const found = actions.find(a => a.type === ActionType.PUBLISH_MESSAGE);
-                return expect(found).not.toBeDefined();
-            });
-        });
-    });
-
-    describe("login", () => {
-        it("transitions to home on login success", () => {
-            const resp = {
-                data: {
-                    loggedIn: true
-                },
-                headers: {}
-            };
-            resp.headers[Constants.AUTHORIZATION_HEADER] = "Bearer jwt12345";
-            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve(resp));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(login("test", "test"))).then(() => {
-                expect(Routing.transitionToHome).toHaveBeenCalled();
-            });
-        });
-    });
-
-    describe("register", () => {
-
-        const userInfo: UserAccountData = {
-            firstName: "test",
-            lastName: "testowitch",
-            username: "admin",
-            password: "iamtheboss"
-        };
-
-        it("invokes login on registration success", () => {
-            Ajax.post = jest.fn().mockImplementation(() => Promise.resolve());
-            return Promise.resolve((store.dispatch as ThunkDispatch)(register(userInfo))).then(() => {
-                expect(store.getActions().find(a => a.type === ActionType.LOGIN)).toBeDefined();
-            });
-        });
-
-        it("returns error info on error", () => {
-            const message = "User already exists";
-            Ajax.post = jest.fn().mockImplementation(() => Promise.reject({
-                status: 409,
-                message
-            }));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(register(userInfo))).then(result => {
-                expect(result.type).toEqual(ActionType.REGISTER);
-                expect((result as AsyncFailureAction).error).toBeDefined();
-                expect((result as AsyncFailureAction).error.message).toEqual(message);
-            });
-        });
     });
 
     describe("create vocabulary", () => {
@@ -169,6 +107,7 @@ describe("Async actions", () => {
                 label: "Test",
                 iri: "http://kbss.felk.cvut.cz/termit/rest/vocabularies/test"
             });
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve([]));
             Ajax.post = jest.fn().mockImplementation(() => Promise.resolve({headers: {location: vocabulary.iri}}));
             return Promise.resolve((store.dispatch as ThunkDispatch)(createVocabulary(vocabulary))).then(() => {
                 expect(Routing.transitionTo).toHaveBeenCalled();
@@ -246,12 +185,7 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadVocabularies())).then(() => {
                 const loadSuccessAction: AsyncActionSuccess<Vocabulary[]> = store.getActions()[1];
                 const result = loadSuccessAction.payload;
-                expect(result.length).toEqual(vocabularies.length);
-                result.sort((a, b) => a.iri.localeCompare(b.iri));
-                vocabularies.sort((a: object, b: object) => a["@id"].localeCompare(b["@id"]));
-                for (let i = 0; i < vocabularies.length; i++) {
-                    expect(result[i].iri).toEqual(vocabularies[i]["@id"]);
-                }
+                verifyExpectedAssets(vocabularies, result);
             });
         });
 
@@ -527,24 +461,32 @@ describe("Async actions", () => {
             });
         });
     });
+
     describe("load types", () => {
         it("loads types from the incoming JSON-LD", () => {
             const types = require("../../rest-mock/types");
-            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(types));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(
-                loadTypes("en")))
-                .then(() => {
-                    const loadSuccessAction: AsyncActionSuccess<Vocabulary[]> = store.getActions()[1];
-                    const data = loadSuccessAction.payload;
-                    expect(data.length).toEqual(types.length);
-                    data.sort((a, b) => a.iri.localeCompare(b.iri));
-                    types.sort((a: object, b: object) => a["@id"].localeCompare(b["@id"]));
-                    for (let i = 0; i < types.length; i++) {
-                        expect(data[i].iri).toEqual(types[i]["@id"]);
-                    }
-                });
+            Ajax.get = jest.fn().mockResolvedValue(types);
+            store.getState().types = {};
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTypes("en"))).then(() => {
+                const loadSuccessAction: AsyncActionSuccess<Vocabulary[]> = store.getActions().find(a => a.type === ActionType.LOAD_TYPES && a.status === AsyncActionStatus.SUCCESS);
+                expect(loadSuccessAction).toBeDefined();
+                const data = loadSuccessAction.payload;
+                verifyExpectedAssets(types, data);
+            });
+        });
+
+        it("does not send request if data with correct language are already loaded", () => {
+            const state = {};
+            const types = [Generator.generateTerm()];
+            state[types[0].iri] = types[0];
+            store.getState().types = state;
+            Ajax.get = jest.fn().mockResolvedValue([]);
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadTypes("en"))).then(() => {
+                expect(Ajax.get).not.toHaveBeenCalled();
+            });
         });
     });
+
     describe("update term", () => {
         it("sends put request to correct endpoint using vocabulary and term IRI", () => {
             const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
@@ -818,6 +760,24 @@ describe("Async actions", () => {
         });
     });
 
+    describe("loadResource", () => {
+
+        it("returns resource as correct type based on type specified in JSON-LD data", () => {
+            const iri = Generator.generateUri();
+            const data = {
+                "@id": iri,
+                "@type": [VocabularyUtils.RESOURCE, VocabularyUtils.FILE]
+            };
+            data[VocabularyUtils.RDFS_LABEL] = "Test label";
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadResource(VocabularyUtils.create(iri)))).then(() => {
+                const loadSuccessAction: AsyncActionSuccess<Resource> = store.getActions()[1];
+                const result = loadSuccessAction.payload;
+                expect(result instanceof TermItFile).toBeTruthy();
+            });
+        });
+    });
+
     describe("update resource terms", () => {
         it("sends put request to correct endpoint using resource IRI and term IRIs", () => {
             const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";
@@ -925,7 +885,7 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary(iri, ExportType.CSV))).then(() => {
                 expect(Ajax.getRaw).toHaveBeenCalled();
                 const config = (Ajax.getRaw as jest.Mock).mock.calls[0][1];
-                expect(config.getAccept()).toEqual(Constants.CSV_MIME_TYPE);
+                expect(config.getHeaders()[Constants.Headers.ACCEPT]).toEqual(Constants.CSV_MIME_TYPE);
             });
         });
 
@@ -938,7 +898,7 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(exportGlossary(iri, ExportType.Excel))).then(() => {
                 expect(Ajax.getRaw).toHaveBeenCalled();
                 const config = (Ajax.getRaw as jest.Mock).mock.calls[0][1];
-                expect(config.getAccept()).toEqual(Constants.EXCEL_MIME_TYPE);
+                expect(config.getHeaders()[Constants.Headers.ACCEPT]).toEqual(Constants.EXCEL_MIME_TYPE);
             });
         });
 
@@ -1195,7 +1155,7 @@ describe("Async actions", () => {
             Ajax.put = jest.fn().mockImplementation(() => Promise.resolve());
             const blob = new Blob([""], {type: "text/html"});
             // @ts-ignore
-            blob["name"] = fileName;
+            blob.name = fileName;
             return Promise.resolve((store.dispatch as ThunkDispatch)(uploadFileContent(VocabularyUtils.create(fileIri), blob as File))).then(() => {
                 const actions = store.getActions();
                 expect(actions[0].type).toEqual(ActionType.SAVE_FILE_CONTENT);

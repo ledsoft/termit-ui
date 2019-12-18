@@ -3,8 +3,7 @@ import {MainView} from "../MainView";
 import User, {EMPTY_USER} from "../../model/User";
 import {intlFunctions} from "../../__tests__/environment/IntlUtil";
 import {shallow} from "enzyme";
-import createMemoryHistory from "history/createMemoryHistory";
-import {intlDataForShallow, mountWithIntl} from "../../__tests__/environment/Environment";
+import {createMemoryHistory} from "history";
 
 describe("MainView", () => {
 
@@ -31,7 +30,8 @@ describe("MainView", () => {
     });
 
     it("loads user on mount", () => {
-        shallow(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history} location={location} match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+        shallow(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history} location={location}
+                          match={match} {...intlFunctions()}/>);
         expect(loadUser).toHaveBeenCalled();
     });
 
@@ -42,12 +42,14 @@ describe("MainView", () => {
             username: "halsey@unsc.org",
             iri: "http://onto.fel.cvut.cz/ontologies/termit/catherine-halsey"
         });
-        shallow(<MainView user={user} loadUser={loadUser} logout={logout} history={history} location={location} match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
+        shallow(<MainView user={user} loadUser={loadUser} logout={logout} history={history} location={location}
+                          match={match} {...intlFunctions()}/>);
         expect(loadUser).not.toHaveBeenCalled();
     });
 
     it("renders placeholder UI when user is being loaded", () => {
-        const wrapper = mountWithIntl(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history} location={location} match={match} {...intlFunctions()} {...intlDataForShallow()}/>);
-        expect(wrapper.find("header").exists()).toBeFalsy();
+        const wrapper = shallow(<MainView user={EMPTY_USER} loadUser={loadUser} logout={logout} history={history}
+                                          location={location} match={match} {...intlFunctions()}/>);
+        expect(wrapper.exists("#loading-placeholder")).toBeTruthy();
     });
 });

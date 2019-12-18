@@ -1,7 +1,7 @@
 import * as React from "react";
 import Resource from "../../../../model/Resource";
 import Ajax from "../../../../util/Ajax";
-import {intlDataForShallow, mountWithIntl} from "../../../../__tests__/environment/Environment";
+import {mountWithIntl} from "../../../../__tests__/environment/Environment";
 import {CreateFileMetadata} from "../CreateFileMetadata";
 import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
 import {shallow} from "enzyme";
@@ -63,7 +63,7 @@ describe("CreateFileMetadata", () => {
     it("uploads file content on resource creation success", () => {
         const wrapper = shallow<CreateFileMetadata>(<CreateFileMetadata onCreate={onCreate} onCancel={onCancel}
                                                                         uploadFileContent={uploadFile}
-                                                                        publishNotification={publishNotification} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        publishNotification={publishNotification} {...intlFunctions()}/>);
         wrapper.instance().onFileSelected([file as File]);
         wrapper.instance().onCreate();
         return Promise.resolve().then(() => {
@@ -74,7 +74,7 @@ describe("CreateFileMetadata", () => {
     it("does not attempt file upload when no file has been attached", () => {
         const wrapper = shallow<CreateFileMetadata>(<CreateFileMetadata onCreate={onCreate} onCancel={onCancel}
                                                                         uploadFileContent={uploadFile}
-                                                                        publishNotification={publishNotification} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        publishNotification={publishNotification} {...intlFunctions()}/>);
         wrapper.instance().onCreate();
         return Promise.resolve().then(() => {
             expect(uploadFile).not.toHaveBeenCalled();
@@ -84,7 +84,7 @@ describe("CreateFileMetadata", () => {
     it("publishes notification when file content has been uploaded", () => {
         const wrapper = shallow<CreateFileMetadata>(<CreateFileMetadata onCreate={onCreate} onCancel={onCancel}
                                                                         uploadFileContent={uploadFile}
-                                                                        publishNotification={publishNotification} {...intlFunctions()} {...intlDataForShallow()}/>);
+                                                                        publishNotification={publishNotification} {...intlFunctions()}/>);
         wrapper.instance().onFileSelected([file as File]);
         wrapper.instance().onCreate();
         return Promise.resolve().then(() => {
