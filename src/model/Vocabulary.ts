@@ -8,6 +8,7 @@ import Utils from "../util/Utils";
 
 // @id and @type are merged from ASSET_CONTEXT
 const ctx = {
+    "label": VocabularyUtils.RDFS_LABEL,
     "document": VocabularyUtils.PREFIX + "popisuje-dokument",
     "glossary": VocabularyUtils.PREFIX + "má-glosář",
     "model": VocabularyUtils.PREFIX + "má-model",

@@ -5,6 +5,7 @@ import Utils from "../util/Utils";
 import VocabularyUtils from "../util/VocabularyUtils";
 
 const ctx = {
+    label: VocabularyUtils.RDFS_LABEL,
     description: VocabularyUtils.DC_DESCRIPTION
 };
 

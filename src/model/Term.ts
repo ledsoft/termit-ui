@@ -6,6 +6,7 @@ import VocabularyUtils from "../util/VocabularyUtils";
 import * as _ from "lodash";
 
 const ctx = {
+    label: VocabularyUtils.SKOS_PREF_LABEL,
     definition: VocabularyUtils.DEFINITION,
     parentTerms: VocabularyUtils.BROADER,
     subTerms: VocabularyUtils.NARROWER,
