@@ -970,7 +970,7 @@ describe("Async actions", () => {
                 "@type": [VocabularyUtils.VOCABULARY]
             }, {
                 "@id": Generator.generateUri(),
-                "http://www.w3.org/2000/01/rdf-schema#label": "Test term",
+                "http://www.w3.org/2004/02/skos/core#prefLabel": "Test term",
                 "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {"@id": Generator.generateUri()},
                 "@type": [VocabularyUtils.TERM]
             }];
@@ -981,6 +981,28 @@ describe("Async actions", () => {
                 expect(result[0]).toBeInstanceOf(TermItFile);
                 expect(result[1]).toBeInstanceOf(Vocabulary);
                 expect(result[2]).toBeInstanceOf(Term);
+            });
+        });
+
+        it("correctly handles labels of vocabularies and resources and pref label of terms", () => {
+            const vocLabel = "Test vocabulary";
+            const termLabel = "Test term";
+            const data = [{
+                "@id": Generator.generateUri(),
+                "http://www.w3.org/2000/01/rdf-schema#label": vocLabel,
+                "@type": [VocabularyUtils.VOCABULARY]
+            }, {
+                "@id": Generator.generateUri(),
+                "http://www.w3.org/2004/02/skos/core#prefLabel": termLabel,
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {"@id": Generator.generateUri()},
+                "@type": [VocabularyUtils.TERM]
+            }];
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadLastEditedAssets())).then((result: Asset[]) => {
+                expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + "/assets/last-edited");
+                expect(result.length).toEqual(data.length);
+                expect(result[0].label).toEqual(vocLabel);
+                expect(result[1].label).toEqual(termLabel);
             });
         });
     });

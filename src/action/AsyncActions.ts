@@ -774,7 +774,13 @@ export function loadLastEditedAssets() {
             .then((data: object) => JsonLdUtils.compactAndResolveReferencesAsArray(data, context))
             .then((data: AssetData[]) => {
                 dispatch(asyncActionSuccess(action));
-                return data.map(item => AssetFactory.createAsset(item));
+                return data.map(item => {
+                    const asset = AssetFactory.createAsset(item);
+                    if (asset instanceof Term) {
+                        asset.label = asset[VocabularyUtils.SKOS_PREF_LABEL];
+                    }
+                    return asset;
+                });
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));
