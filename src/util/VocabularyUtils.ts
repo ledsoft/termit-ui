@@ -34,6 +34,7 @@ export class IRIImpl implements IRI {
 }
 
 const _NS_POPIS_DAT = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/";
+const _NS_CHANGE_TRACKING = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/sledovani-zmen/pojem/";
 const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
 const _NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const _NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
@@ -78,6 +79,10 @@ export default {
     RDFS_SUB_PROPERTY_OF: _NS_RDFS + "subPropertyOf",
     RDF_PROPERTY: _NS_RDF + "Property",
     DC_DESCRIPTION: "http://purl.org/dc/terms/description",
+
+    NS_CHANGE_TRACKING: _NS_CHANGE_TRACKING,
+    PERSIST_EVENT: `${_NS_CHANGE_TRACKING}vytvo\u0159en\u00ed-entity`,
+    UPDATE_EVENT: `${_NS_CHANGE_TRACKING}\u00faprava-entity`,
 
     getFragment(iri: string): string {
         return this.create(iri).fragment;
