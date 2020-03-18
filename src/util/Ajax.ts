@@ -278,6 +278,9 @@ function mockRestApi(axiosInst: AxiosInstance): void {
     const mock = new MockAdapter(axiosInst, {delayResponse: 500});
     const respHeaders = {};
     respHeaders[Constants.Headers.AUTHORIZATION] = "12345";
+
+    // Mock term history
+    mock.onGet(/\/rest\/terms\/.+\/history/).reply(200, require("../rest-mock/termHistory"), respHeaders);
     // Mock current user data
     mock.onGet(Constants.API_PREFIX + "/users/current").reply(200, require("../rest-mock/current"), respHeaders);
     // Mock login return value
