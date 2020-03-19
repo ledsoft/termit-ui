@@ -6,9 +6,8 @@ import {Table} from "reactstrap";
 import {connect} from "react-redux";
 import {injectIntl} from "react-intl";
 import {ThunkDispatch} from "../../util/Types";
-import {loadTermHistory} from "../../action/AsyncTermActions";
-import VocabularyUtils from "../../util/VocabularyUtils";
 import HistoryRow from "./HistoryRow";
+import {loadHistory} from "../../action/AsyncActions";
 
 interface AssetHistoryProps extends HasI18n {
     asset: Asset;
@@ -42,6 +41,6 @@ export const AssetHistory: React.FC<AssetHistoryProps> = props => {
 
 export default connect(undefined, (dispatch: ThunkDispatch) => {
     return {
-        loadHistory: (asset: Asset) => dispatch(loadTermHistory(VocabularyUtils.create(asset.iri)))
+        loadHistory: (asset: Asset) => dispatch(loadHistory(asset))
     };
 })(injectIntl(withI18n(AssetHistory)));

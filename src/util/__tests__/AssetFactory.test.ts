@@ -117,6 +117,7 @@ describe("AssetFactory", () => {
 
         it("creates a persist record for persist event data", () => {
             const persistRecord: ChangeRecordData = {
+                iri: Generator.generateUri(),
                 timestamp: Date.now(),
                 author: Generator.generateUser(),
                 changedEntity: {iri: Generator.generateUri()},
@@ -129,6 +130,7 @@ describe("AssetFactory", () => {
 
         it("creates an update record for update event data", () => {
             const updateRecord: UpdateRecordData = {
+                iri: Generator.generateUri(),
                 timestamp: Date.now(),
                 author: Generator.generateUser(),
                 changedEntity: {iri: Generator.generateUri()},
@@ -143,6 +145,7 @@ describe("AssetFactory", () => {
 
         it("throws a type error if an invalid record type is provided in data", () => {
             const record: ChangeRecordData = {
+                iri: Generator.generateUri(),
                 timestamp: Date.now(),
                 author: Generator.generateUser(),
                 changedEntity: {iri: Generator.generateUri()},
