@@ -3,6 +3,8 @@ import withI18n, {HasI18n} from "../hoc/withI18n";
 import {FormattedDate, FormattedTime, injectIntl} from "react-intl";
 import {UpdateRecord, UpdateValueType} from "../../model/changetracking/UpdateRecord";
 import AssetLabel from "../misc/AssetLabel";
+import OutgoingLink from "../misc/OutgoingLink";
+import {Badge, Label} from "reactstrap";
 
 interface UpdateRowProps extends HasI18n {
     record: UpdateRecord;
@@ -11,7 +13,6 @@ interface UpdateRowProps extends HasI18n {
 export const UpdateRow: React.FC<UpdateRowProps> = props => {
     const record = props.record;
     const created = new Date(record.timestamp);
-    // TODO
     return <tr>
         <td>
             <div>
@@ -23,7 +24,7 @@ export const UpdateRow: React.FC<UpdateRowProps> = props => {
             </div>
         </td>
         <td>
-            {props.i18n(record.typeLabel)}
+            <Badge color="secondary">{props.i18n(record.typeLabel)}</Badge>
         </td>
         <td>
             <AssetLabel iri={record.changedAttribute.iri}/>
@@ -43,10 +44,15 @@ function renderValue(value?: UpdateValueType) {
     }
     if (Array.isArray(value)) {
         return <ul>
-            {(value as Array<{ iri?: string }>).map((v, i) => <li key={i}>{v.iri ? v.iri : v}</li>)}
+            {(value as Array<{ iri?: string }>).map((v, i) => <li key={i}>{v.iri ?
+                <OutgoingLink label={<AssetLabel iri={v.iri}/>} iri={v.iri}/> : <Label>{v}</Label>}</li>)}
         </ul>;
     } else {
-        return (value as { iri?: string }).iri ? (value as { iri: string }).iri : value;
+        if ((value as { iri?: string }).iri) {
+            const iri = (value as { iri: string }).iri;
+            return <OutgoingLink label={<AssetLabel iri={iri}/>} iri={iri}/>;
+        }
+        return <Label>{value}</Label>;
     }
 }
 

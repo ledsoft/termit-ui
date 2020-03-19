@@ -1,11 +1,10 @@
 import ChangeRecord, {ChangeRecordData} from "./ChangeRecord";
-import {Literal} from "../../util/Types";
 
 interface ID {
     iri: string
 }
 
-export type UpdateValueType = ID | ID[] | Literal | Literal[];
+export type UpdateValueType = any | any[];
 
 export interface UpdateRecordData extends ChangeRecordData {
     changedAttribute: ID;
@@ -19,8 +18,8 @@ export interface UpdateRecordData extends ChangeRecordData {
 export class UpdateRecord extends ChangeRecord implements UpdateRecordData {
 
     public readonly changedAttribute: { iri: string };
-    public readonly originalValue?: undefined | ID | ID[] | Literal | Literal[];
-    public readonly newValue?: undefined | ID | ID[] | Literal | Literal[];
+    public readonly originalValue?: undefined | UpdateValueType;
+    public readonly newValue?: undefined | UpdateValueType;
 
     constructor(data: UpdateRecordData) {
         super(data);

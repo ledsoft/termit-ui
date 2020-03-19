@@ -11,6 +11,7 @@ import {UpdateRecord} from "../../model/changetracking/UpdateRecord";
 import UpdateRow from "./UpdateRow";
 import PersistRow from "./PersistRow";
 import PersistRecord from "../../model/changetracking/PersistRecord";
+import ContainerMask from "../misc/ContainerMask";
 
 interface AssetHistoryProps extends HasI18n {
     asset: Asset;
@@ -19,11 +20,19 @@ interface AssetHistoryProps extends HasI18n {
 }
 
 export const AssetHistory: React.FC<AssetHistoryProps> = props => {
-    const [records, setRecords] = React.useState<ChangeRecord[]>([]);
+    const [records, setRecords] = React.useState<null | ChangeRecord[]>(null);
     React.useEffect(() => {
         props.loadHistory(props.asset).then(recs => setRecords(recs));
     }, [props.asset]);
     const i18n = props.i18n;
+    if (!records) {
+        return <ContainerMask text={i18n("history.loading")}/>;
+    }
+    if (records.length === 0) {
+        return <div id="history-empty-notice" className="additional-metadata-container italics">
+            {i18n("history.empty")}
+        </div>;
+    }
     return <div className="additional-metadata-container">
         <Table striped={true}>
             <thead>
