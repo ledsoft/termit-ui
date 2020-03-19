@@ -1,5 +1,5 @@
 import VocabularyUtils from "../../util/VocabularyUtils";
-import {CONTEXT as USER_CONTEXT, UserData} from "../User";
+import User, {CONTEXT as USER_CONTEXT, UserData} from "../User";
 
 const ctx = {
     timestamp: `${VocabularyUtils.PREFIX}m\u00e1-datum-a-\u010das-modifikace`,
@@ -13,6 +13,7 @@ const ctx = {
 export const CONTEXT = Object.assign({}, ctx, USER_CONTEXT);
 
 export interface ChangeRecordData {
+    iri: string;
     timestamp: number;
     author: UserData;
     changedEntity: { iri: string };
@@ -24,12 +25,19 @@ export interface ChangeRecordData {
  */
 export default abstract class ChangeRecord implements ChangeRecordData {
 
+    public readonly iri: string;
     public readonly timestamp: number;
-    public readonly author: UserData;
+    public readonly author: User;
     public readonly changedEntity: { iri: string };
     public readonly types: string[];
 
     protected constructor(data: ChangeRecordData) {
         Object.assign(this, data);
+        this.author = new User(data.author);
     }
+
+    /**
+     * I18n identifier of the type of the change.
+     */
+    public abstract get typeLabel(): string;
 }

@@ -27,4 +27,8 @@ export class UpdateRecord extends ChangeRecord implements UpdateRecordData {
         this.originalValue = data.originalValue;
         this.newValue = data.newValue;
     }
+
+    get typeLabel(): string {
+        return "history.type.update";
+    }
 }

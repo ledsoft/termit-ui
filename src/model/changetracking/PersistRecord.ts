@@ -8,4 +8,8 @@ export default class PersistRecord extends ChangeRecord {
     constructor(data: ChangeRecordData) {
         super(data);
     }
+
+    get typeLabel(): string {
+        return "history.type.persist";
+    }
 }
