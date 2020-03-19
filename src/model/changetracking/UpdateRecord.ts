@@ -1,15 +1,16 @@
 import ChangeRecord, {ChangeRecordData} from "./ChangeRecord";
+import {Literal} from "../../util/Types";
 
 interface ID {
     iri: string
 }
 
-declare type Literal = number | string | boolean;
+export type UpdateValueType = ID | ID[] | Literal | Literal[];
 
 export interface UpdateRecordData extends ChangeRecordData {
     changedAttribute: ID;
-    originalValue?: undefined | ID | ID[] | Literal | Literal[];
-    newValue?: undefined | ID | ID[] | Literal | Literal[];
+    originalValue?: undefined | UpdateValueType;
+    newValue?: undefined | UpdateValueType;
 }
 
 /**

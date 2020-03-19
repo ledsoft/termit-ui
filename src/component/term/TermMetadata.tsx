@@ -13,6 +13,7 @@ import TermAssignments from "./TermAssignments";
 import Tabs from "../misc/Tabs";
 import TermLink from "./TermLink";
 import VocabularyIriLink from "../vocabulary/VocabularyIriLink";
+import AssetHistory from "../changetracking/AssetHistory";
 
 interface TermMetadataProps extends HasI18n {
     term: Term;
@@ -94,7 +95,8 @@ export class TermMetadata extends React.Component<TermMetadataProps, TermMetadat
                         "properties.edit.title": <UnmappedProperties properties={term.unmappedProperties}
                                                                      showInfoOnEmpty={true}/>,
                         "term.metadata.assignments.title": <TermAssignments term={term}
-                                                                            onAssignmentsLoad={this.setAssignmentsCount}/>
+                                                                            onAssignmentsLoad={this.setAssignmentsCount}/>,
+                        "history.label": <AssetHistory asset={term}/>
                     }} tabBadges={{
                         "properties.edit.title": term.unmappedProperties.size.toFixed(),
                         "term.metadata.assignments.title": this.state.assignmentsCount !== null ? this.state.assignmentsCount.toFixed() : null

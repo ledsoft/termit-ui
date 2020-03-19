@@ -6,8 +6,11 @@ import {Table} from "reactstrap";
 import {connect} from "react-redux";
 import {injectIntl} from "react-intl";
 import {ThunkDispatch} from "../../util/Types";
-import HistoryRow from "./HistoryRow";
 import {loadHistory} from "../../action/AsyncActions";
+import {UpdateRecord} from "../../model/changetracking/UpdateRecord";
+import UpdateRow from "./UpdateRow";
+import PersistRow from "./PersistRow";
+import PersistRecord from "../../model/changetracking/PersistRecord";
 
 interface AssetHistoryProps extends HasI18n {
     asset: Asset;
@@ -19,7 +22,7 @@ export const AssetHistory: React.FC<AssetHistoryProps> = props => {
     const [records, setRecords] = React.useState<ChangeRecord[]>([]);
     React.useEffect(() => {
         props.loadHistory(props.asset).then(recs => setRecords(recs));
-    });
+    }, [props.asset]);
     const i18n = props.i18n;
     return <div className="additional-metadata-container">
         <Table striped={true}>
@@ -33,7 +36,9 @@ export const AssetHistory: React.FC<AssetHistoryProps> = props => {
             </tr>
             </thead>
             <tbody>
-            {records.map(r => <HistoryRow key={r.iri} record={r}/>)}
+            {records.map(r => r instanceof UpdateRecord ?
+                <UpdateRow key={r.iri} record={r as UpdateRecord}/> :
+                <PersistRow key={r.iri} record={r as PersistRecord}/>)}
             </tbody>
         </Table>
     </div>;

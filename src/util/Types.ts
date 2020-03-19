@@ -33,3 +33,8 @@ export interface TreeSelectFetchOptionsParams<T> {
     offset?: number;
     option?: T;
 }
+
+/**
+ * Type representing literal values.
+ */
+export type Literal = number | string | boolean;
