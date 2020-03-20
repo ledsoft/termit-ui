@@ -670,10 +670,15 @@ export function getLabel(iri: string) {
     const action = {
         type: ActionType.GET_LABEL
     };
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: () => TermItState) => {
+        if (getState().labelCache[iri]) {
+            return Promise.resolve(getState().labelCache[iri]);
+        }
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/data/label", param("iri", iri)).then(data => {
-            dispatch(asyncActionSuccess(action));
+            const payload = {};
+            payload[iri] = data;
+            dispatch(asyncActionSuccessWithPayload(action, payload));
             return data;
         }).catch((error: ErrorData) => {
             dispatch(asyncActionFailure(action, error));

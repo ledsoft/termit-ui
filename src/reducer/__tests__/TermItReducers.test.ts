@@ -14,7 +14,8 @@ import {
     publishMessage,
     publishNotification,
     selectVocabularyTerm,
-    switchLanguage, updateLastModified,
+    switchLanguage,
+    updateLastModified,
     userLogout
 } from "../../action/SyncActions";
 import ErrorInfo, {ErrorData} from "../../model/ErrorInfo";
@@ -57,7 +58,8 @@ function stateToPlainObject(state: TermItState): TermItState {
         notifications: state.notifications,
         pendingActions: state.pendingActions,
         errors: state.errors,
-        lastModified: state.lastModified
+        lastModified: state.lastModified,
+        labelCache: state.labelCache
     };
 }
 
@@ -463,6 +465,18 @@ describe("Reducers", () => {
             const value = new Date().toISOString();
             const result = reducers(stateToPlainObject(initialState), updateLastModified(VocabularyUtils.VOCABULARY, value));
             expect(result.lastModified[VocabularyUtils.VOCABULARY]).toEqual(value);
+        });
+    });
+
+    describe("labelCache", () => {
+        it("stores loaded label under the identifier for which the label was loaded", () => {
+            const iri = Generator.generateUri();
+            const label = "Test label";
+            const payload = {};
+            payload[iri] = label;
+            const result = reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.GET_LABEL}, payload));
+            expect(result.labelCache[iri]).toBeDefined();
+            expect(result.labelCache[iri]).toEqual(label);
         });
     });
 });

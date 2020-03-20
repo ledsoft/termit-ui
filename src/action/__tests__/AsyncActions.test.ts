@@ -663,6 +663,29 @@ describe("Async actions", () => {
                 expect(action.ignoreLoading).toBeTruthy();
             });
         });
+
+        it("passes loaded label as payload to store for saving", () => {
+            const iri = Generator.generateUri();
+            const label = "test";
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(label));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then(() => {
+                const resultAction: AsyncActionSuccess<{}> = store.getActions().find(a => a.type === ActionType.GET_LABEL && a.status === AsyncActionStatus.SUCCESS);
+                expect(resultAction).toBeDefined();
+                expect(resultAction.payload).toBeDefined();
+                expect(resultAction.payload[iri]).toEqual(label);
+            });
+        });
+
+        it("returns label immediately if it is stored in label cache", () => {
+            const iri = Generator.generateUri();
+            const label = "test";
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(label));
+            store.getState().labelCache[iri] = label;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then(() => {
+                expect(store.getActions().find(a => a.type === ActionType.GET_LABEL)).not.toBeDefined();
+                expect(Ajax.get).not.toHaveBeenCalled();
+            });
+        });
     });
 
     describe("getProperties", () => {

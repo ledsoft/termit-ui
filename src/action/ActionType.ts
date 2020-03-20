@@ -64,7 +64,6 @@ export interface UpdateLastModifiedAction extends Action {
     value: string;
 }
 
-
 export default {
     FETCH_USER: "FETCH_USER",
     LOGIN: "LOGIN",
