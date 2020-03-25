@@ -7,16 +7,35 @@ import UnmappedProperties from "../genericmetadata/UnmappedProperties";
 import DocumentFiles from "../resource/document/DocumentFiles";
 import ImportedVocabulariesList from "./ImportedVocabulariesList";
 import ResourceLink from "../resource/ResourceLink";
+import Tabs from "../misc/Tabs";
+import AssetHistory from "../changetracking/AssetHistory";
 
 interface VocabularyMetadataProps extends HasI18n {
     vocabulary: Vocabulary;
     onFileAdded: () => void;
 }
 
-export class VocabularyMetadata extends React.Component<VocabularyMetadataProps> {
+interface VocabularyMetadataState {
+    activeTab: string;
+}
+
+export class VocabularyMetadata extends React.Component<VocabularyMetadataProps, VocabularyMetadataState> {
     constructor(props: VocabularyMetadataProps) {
         super(props);
+        this.state = {
+            activeTab: props.vocabulary.document ? "vocabulary.detail.files" : "properties.edit.title"
+        };
     }
+
+    public componentDidUpdate(prevProps: Readonly<VocabularyMetadataProps>): void {
+        if (prevProps.vocabulary !== this.props.vocabulary) {
+            this.setState({activeTab: this.props.vocabulary.document ? "vocabulary.detail.files" : "properties.edit.title"});
+        }
+    }
+
+    private onTabSelect = (tabId: string) => {
+        this.setState({activeTab: tabId});
+    };
 
     public render() {
         const i18n = this.props.i18n;
@@ -52,13 +71,11 @@ export class VocabularyMetadata extends React.Component<VocabularyMetadataProps>
             </Row>
             <ImportedVocabulariesList vocabularies={vocabulary.importedVocabularies}/>
             {this.renderVocabularyDocument()}
-            <Row className="mt-3">
+            <Row>
                 <Col xs={12}>
-                    <UnmappedProperties properties={vocabulary.unmappedProperties}/>
+                    {this.renderTabs()}
                 </Col>
             </Row>
-            {vocabulary.document &&
-            <DocumentFiles document={vocabulary.document} onFileAdded={this.props.onFileAdded}/>}
         </div>;
     }
 
@@ -76,6 +93,23 @@ export class VocabularyMetadata extends React.Component<VocabularyMetadataProps>
                 </Col>
             </Row>
         }
+    }
+
+    private renderTabs() {
+        const vocabulary = this.props.vocabulary;
+        const tabs = {};
+        // Ensure order of tabs (Files) | Unmapped properties | History
+        if (vocabulary.document) {
+            tabs["vocabulary.detail.files"] =
+                <DocumentFiles document={vocabulary.document} onFileAdded={this.props.onFileAdded}/>;
+        }
+        tabs["properties.edit.title"] = <UnmappedProperties properties={vocabulary.unmappedProperties}
+                                                            showInfoOnEmpty={true}/>;
+        tabs["history.label"] = <AssetHistory asset={vocabulary}/>;
+
+        return <Tabs activeTabLabelKey={this.state.activeTab} changeTab={this.onTabSelect} tabs={tabs} tabBadges={{
+            "properties.edit.title": vocabulary.unmappedProperties.size.toFixed(),
+        }}/>;
     }
 }
 

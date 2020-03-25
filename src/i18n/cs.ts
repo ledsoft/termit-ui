@@ -343,6 +343,17 @@ export default {
         "log-viewer.error": "Chyba",
         "log-viewer.clear": "Vyčistit",
 
-        "error.vocabulary.update.imports.danglingTermReferences": "Nelze odstranit import slovníku, neboť stále existují vazby mezi pojmy z tohoto a importovaného slovníku (či ze slovníků, které importuje)."
+        "error.vocabulary.update.imports.danglingTermReferences": "Nelze odstranit import slovníku, neboť stále existují vazby mezi pojmy z tohoto a importovaného slovníku (či ze slovníků, které importuje).",
+
+        "history.label": "Historie",
+        "history.loading": "Načítám historii...",
+        "history.empty": "Zaznamenaná historie je prázdná.",
+        "history.whenwho": "Původ",
+        "history.type": "Typ",
+        "history.type.persist": "Vytvoření",
+        "history.type.update": "Změna",
+        "history.changedAttribute": "Atribut",
+        "history.originalValue": "Původní hodnota",
+        "history.newValue": "Nová hodnota"
     }
 }

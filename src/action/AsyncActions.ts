@@ -30,7 +30,7 @@ import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
 import {CONTEXT as DOCUMENT_CONTEXT} from "../model/Document";
 import TermitFile from "../model/File";
-import {AssetData} from "../model/Asset";
+import Asset, {AssetData} from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
 import JsonLdUtils from "../util/JsonLdUtils";
@@ -41,6 +41,7 @@ import {
     TextAnalysisRecordData
 } from "../model/TextAnalysisRecord";
 import {CONTEXT as RESOURCE_TERM_ASSIGNMENTS_CONTEXT, ResourceTermAssignments} from "../model/ResourceTermAssignments";
+import {ChangeRecordData, CONTEXT as CHANGE_RECORD_CONTEXT} from "../model/changetracking/ChangeRecord";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -669,10 +670,15 @@ export function getLabel(iri: string) {
     const action = {
         type: ActionType.GET_LABEL
     };
-    return (dispatch: ThunkDispatch) => {
+    return (dispatch: ThunkDispatch, getState: () => TermItState) => {
+        if (getState().labelCache[iri]) {
+            return Promise.resolve(getState().labelCache[iri]);
+        }
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/data/label", param("iri", iri)).then(data => {
-            dispatch(asyncActionSuccess(action));
+            const payload = {};
+            payload[iri] = data;
+            dispatch(asyncActionSuccessWithPayload(action, payload));
             return data;
         }).catch((error: ErrorData) => {
             dispatch(asyncActionFailure(action, error));
@@ -823,5 +829,40 @@ export function exportFileContent(fileIri: IRI) {
             })
             .catch((error: ErrorData) => dispatch(asyncActionFailure(action, error)));
     }
+}
+
+export function loadHistory(asset: Asset) {
+    const assetIri = VocabularyUtils.create(asset.iri);
+    const historyConf = resolveHistoryLoadingParams(asset, assetIri);
+    const action = {type: historyConf.actionType};
+    return (dispatch: ThunkDispatch) => {
+        dispatch(asyncActionRequest(action, true));
+        return Ajax.get(historyConf.url, param("namespace", assetIri.namespace))
+            .then(data => JsonLdUtils.compactAndResolveReferencesAsArray(data, CHANGE_RECORD_CONTEXT))
+            .then((data: ChangeRecordData[]) => {
+                dispatch(asyncActionSuccess(action));
+                return data.map(d => AssetFactory.createChangeRecord(d));
+            })
+            .catch((error: ErrorData) => {
+                dispatch(asyncActionFailure(action, error));
+                return [];
+            });
+    }
+}
+
+function resolveHistoryLoadingParams(asset: Asset, assetIri: IRI) {
+    const types = Utils.sanitizeArray(asset.types);
+    if (types.indexOf(VocabularyUtils.TERM) !== -1) {
+        return {
+            actionType: ActionType.LOAD_TERM_HISTORY,
+            url: `${Constants.API_PREFIX}/terms/${assetIri.fragment}/history`
+        };
+    } else if (types.indexOf(VocabularyUtils.VOCABULARY) !== -1) {
+        return {
+            actionType: ActionType.LOAD_VOCABULARY_HISTORY,
+            url: `${Constants.API_PREFIX}/vocabularies/${assetIri.fragment}/history`
+        };
+    }
+    throw new TypeError("Asset " + asset + "does not support history.");
 }
 

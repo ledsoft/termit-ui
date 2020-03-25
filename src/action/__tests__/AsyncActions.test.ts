@@ -12,6 +12,7 @@ import {
     getProperties,
     hasFileContent,
     loadFileContent,
+    loadHistory,
     loadImportedVocabularies,
     loadLastEditedAssets,
     loadLatestTextAnalysisRecord,
@@ -61,6 +62,7 @@ import {
 } from "../../model/ResourceTermAssignments";
 import {CONTEXT as TERM_ASSIGNMENTS_CONTEXT, TermAssignments} from "../../model/TermAssignments";
 import {verifyExpectedAssets} from "../../__tests__/environment/TestUtil";
+import ChangeRecord from "../../model/changetracking/ChangeRecord";
 
 jest.mock("../../util/Routing");
 jest.mock("../../util/Ajax", () => ({
@@ -659,6 +661,29 @@ describe("Async actions", () => {
             return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then(() => {
                 const action: AsyncAction = store.getActions()[0];
                 expect(action.ignoreLoading).toBeTruthy();
+            });
+        });
+
+        it("passes loaded label as payload to store for saving", () => {
+            const iri = Generator.generateUri();
+            const label = "test";
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(label));
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then(() => {
+                const resultAction: AsyncActionSuccess<{}> = store.getActions().find(a => a.type === ActionType.GET_LABEL && a.status === AsyncActionStatus.SUCCESS);
+                expect(resultAction).toBeDefined();
+                expect(resultAction.payload).toBeDefined();
+                expect(resultAction.payload[iri]).toEqual(label);
+            });
+        });
+
+        it("returns label immediately if it is stored in label cache", () => {
+            const iri = Generator.generateUri();
+            const label = "test";
+            Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(label));
+            store.getState().labelCache[iri] = label;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(getLabel(iri))).then(() => {
+                expect(store.getActions().find(a => a.type === ActionType.GET_LABEL)).not.toBeDefined();
+                expect(Ajax.get).not.toHaveBeenCalled();
             });
         });
     });
@@ -1325,6 +1350,68 @@ describe("Async actions", () => {
             const iri = VocabularyUtils.create(Generator.generateUri());
             return Promise.resolve((store.dispatch as ThunkDispatch)(loadImportedVocabularies(iri))).then((result) => {
                 expect(result).toEqual([]);
+            });
+        });
+    });
+
+    describe("loadHistory", () => {
+
+        const namespace = VocabularyUtils.NS_TERMIT;
+        const assetName = "test-asset";
+
+        it("loads term history when asset is term", () => {
+            const asset = Generator.generateTerm();
+            Ajax.get = jest.fn().mockResolvedValue([]);
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadHistory(asset))).then(() => {
+                expect(store.getActions().find(a => a.type === ActionType.LOAD_TERM_HISTORY)).toBeDefined();
+                expect((Ajax.get as jest.Mock).mock.calls[0][0]).toMatch(/\/terms\/.+\/history/);
+            });
+        });
+
+        it("loads vocabulary history when asset is vocabulary", () => {
+            const asset = new Vocabulary({
+                iri: Generator.generateUri(),
+                label: "Test vocabulary",
+                types: [VocabularyUtils.VOCABULARY]
+            });
+            Ajax.get = jest.fn().mockResolvedValue([]);
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadHistory(asset))).then(() => {
+                expect(store.getActions().find(a => a.type === ActionType.LOAD_VOCABULARY_HISTORY)).toBeDefined();
+                expect((Ajax.get as jest.Mock).mock.calls[0][0]).toMatch(/\/vocabularies\/.+\/history/);
+            });
+        });
+
+        it("requests history from REST endpoint for specified term", () => {
+            Ajax.get = jest.fn().mockResolvedValue({});
+            const asset = Generator.generateTerm();
+            asset.iri = namespace + assetName;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadHistory(asset))).then(() => {
+                expect(Ajax.get).toHaveBeenCalled();
+                const args = (Ajax.get as jest.Mock).mock.calls[0];
+                expect(args[0]).toEqual(`${Constants.API_PREFIX}/terms/${assetName}/history`);
+                expect(args[1].getParams().namespace).toEqual(namespace);
+            });
+        });
+
+        it("maps returned data to change record instances", () => {
+            Ajax.get = jest.fn().mockResolvedValue(require("../../rest-mock/termHistory.json"));
+            const asset = Generator.generateTerm();
+            asset.iri = namespace + assetName;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadHistory(asset))).then((records: ChangeRecord[]) => {
+                expect(records.length).toBeGreaterThan(0);
+                records.forEach(r => {
+                    expect(r).toBeInstanceOf(ChangeRecord);
+                });
+            });
+        });
+
+        it("returns empty array on AJAX error", () => {
+            Ajax.get = jest.fn().mockResolvedValue({status: 500});
+            const asset = Generator.generateTerm();
+            asset.iri = namespace + assetName;
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadHistory(asset))).then((records: ChangeRecord[]) => {
+                expect(records).toBeDefined();
+                expect(records.length).toEqual(0);
             });
         });
     });

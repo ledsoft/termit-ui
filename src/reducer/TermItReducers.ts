@@ -10,7 +10,8 @@ import ActionType, {
     SearchAction,
     SearchResultAction,
     SelectingTermsAction,
-    SwitchLanguageAction, UpdateLastModifiedAction
+    SwitchLanguageAction,
+    UpdateLastModifiedAction
 } from "../action/ActionType";
 import TermItState from "../model/TermItState";
 import User, {EMPTY_USER} from "../model/User";
@@ -363,11 +364,18 @@ function errors(state: ErrorLogItem[] = [], action: FailureAction) {
 /**
  * Stores last modified values for asset lists, as returned by the server in the Last-Modified HTTP header.
  */
-function lastModified(state: {[key: string]: string} = {}, action: UpdateLastModifiedAction) {
+function lastModified(state: { [key: string]: string } = {}, action: UpdateLastModifiedAction) {
     if (action.type === ActionType.UPDATE_LAST_MODIFIED) {
         const change = {};
         change[action.key] = action.value;
         return Object.assign({}, state, change);
+    }
+    return state;
+}
+
+function labelCache(state: { [key: string]: string } = {}, action: AsyncActionSuccess<{ [key: string]: string }>) {
+    if (action.type === ActionType.GET_LABEL && action.status === AsyncActionStatus.SUCCESS) {
+        return Object.assign({}, state, action.payload);
     }
     return state;
 }
@@ -395,7 +403,8 @@ const rootReducer = combineReducers<TermItState>({
     notifications,
     pendingActions,
     errors,
-    lastModified
+    lastModified,
+    labelCache
 });
 
 export default rootReducer;

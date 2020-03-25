@@ -9,6 +9,9 @@ import File from "../../model/File";
 import Resource, {ResourceData} from "../../model/Resource";
 import TermAssignment from "../../model/TermAssignment";
 import TermOccurrence from "../../model/TermOccurrence";
+import {ChangeRecordData} from "../../model/changetracking/ChangeRecord";
+import PersistRecord from "../../model/changetracking/PersistRecord";
+import {UpdateRecord, UpdateRecordData} from "../../model/changetracking/UpdateRecord";
 
 describe("AssetFactory", () => {
     describe("createAsset", () => {
@@ -105,6 +108,50 @@ describe("AssetFactory", () => {
         it("throws unsupported type exception when data of unknown type are passed in", () => {
             data.types = [];
             expect(() => AssetFactory.createTermAssignment(data)).toThrow(new TypeError("Unsupported type of assignment data " + JSON.stringify(data)));
+        });
+    });
+
+    describe("createChangeRecord", () => {
+
+        const changeClass = `${VocabularyUtils.NS_CHANGE_TRACKING}zm\u011bna`;
+
+        it("creates a persist record for persist event data", () => {
+            const persistRecord: ChangeRecordData = {
+                iri: Generator.generateUri(),
+                timestamp: Date.now(),
+                author: Generator.generateUser(),
+                changedEntity: {iri: Generator.generateUri()},
+                types: [changeClass, VocabularyUtils.PERSIST_EVENT]
+            };
+            const result = AssetFactory.createChangeRecord(persistRecord);
+            expect(result).toBeDefined();
+            expect(result).toBeInstanceOf(PersistRecord);
+        });
+
+        it("creates an update record for update event data", () => {
+            const updateRecord: UpdateRecordData = {
+                iri: Generator.generateUri(),
+                timestamp: Date.now(),
+                author: Generator.generateUser(),
+                changedEntity: {iri: Generator.generateUri()},
+                changedAttribute: {iri: VocabularyUtils.SKOS_PREF_LABEL},
+                newValue: "Test term",
+                types: [changeClass, VocabularyUtils.UPDATE_EVENT]
+            };
+            const result = AssetFactory.createChangeRecord(updateRecord);
+            expect(result).toBeDefined();
+            expect(result).toBeInstanceOf(UpdateRecord);
+        });
+
+        it("throws a type error if an invalid record type is provided in data", () => {
+            const record: ChangeRecordData = {
+                iri: Generator.generateUri(),
+                timestamp: Date.now(),
+                author: Generator.generateUser(),
+                changedEntity: {iri: Generator.generateUri()},
+                types: [changeClass]
+            };
+            expect(() => AssetFactory.createChangeRecord(record)).toThrow(new TypeError("Unsupported type of change record data " + JSON.stringify(record)));
         });
     });
 });

@@ -8,6 +8,9 @@ import Utils from "./Utils";
 import VocabularyUtils from "./VocabularyUtils";
 import TermAssignment, {TermAssignmentData} from "../model/TermAssignment";
 import TermOccurrence from "../model/TermOccurrence";
+import ChangeRecord, {ChangeRecordData} from "../model/changetracking/ChangeRecord";
+import PersistRecord from "../model/changetracking/PersistRecord";
+import {UpdateRecord, UpdateRecordData} from "../model/changetracking/UpdateRecord";
 
 
 export default {
@@ -65,5 +68,18 @@ export default {
             return new TermAssignment(data);
         }
         throw new TypeError("Unsupported type of assignment data " + JSON.stringify(data));
+    },
+
+    /**
+     * Creates an instance of a suitable ChangeRecord subclass based on the specified data.
+     * @param data Instance data
+     */
+    createChangeRecord(data: ChangeRecordData): ChangeRecord {
+        if (data.types.indexOf(VocabularyUtils.PERSIST_EVENT) !== -1) {
+            return new PersistRecord(data);
+        } else if (data.types.indexOf(VocabularyUtils.UPDATE_EVENT) !== -1) {
+            return new UpdateRecord(data as UpdateRecordData);
+        }
+        throw new TypeError("Unsupported type of change record data " + JSON.stringify(data));
     }
 };

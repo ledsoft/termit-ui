@@ -342,6 +342,17 @@ export default {
         "log-viewer.error": "Error",
         "log-viewer.clear": "Clear log",
 
-        "error.vocabulary.update.imports.danglingTermReferences": "Cannot remove vocabulary import(s), there are still references between terms from this vocabulary and the imported one (or one of its imports)."
+        "error.vocabulary.update.imports.danglingTermReferences": "Cannot remove vocabulary import(s), there are still references between terms from this vocabulary and the imported one (or one of its imports).",
+
+        "history.label": "History",
+        "history.loading": "Loading history...",
+        "history.empty": "The recorded history of this asset is empty.",
+        "history.whenwho": "Origin",
+        "history.type": "Type",
+        "history.type.persist": "Creation",
+        "history.type.update": "Update",
+        "history.changedAttribute": "Attribute",
+        "history.originalValue": "Original value",
+        "history.newValue": "New value"
     }
 };
