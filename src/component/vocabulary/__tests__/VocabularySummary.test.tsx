@@ -10,6 +10,8 @@ import {mountWithIntl} from "../../../__tests__/environment/Environment";
 import {VocabularyEdit} from "../VocabularyEdit";
 import {Button, DropdownToggle} from "reactstrap";
 
+jest.mock("../../changetracking/AssetHistory");
+
 describe("VocabularySummary", () => {
 
     const namespace = "http://onto.fel.cvut.cz/ontologies/termit/vocabularies/";

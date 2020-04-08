@@ -1,15 +1,15 @@
 [
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/sledovani-zmen/pojem/úprava-entity/instance2050168894",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/úprava-entity/instance2050168894",
     "@type": [
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/sledovani-zmen/pojem/úprava-entity",
-      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/sledovani-zmen/pojem/změna"
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/úprava-entity",
+      "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/změna"
     ],
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-datum-a-čas-modifikace": "2020-03-18T15:43:22.667Z",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/sledovani-zmen/pojem/má-změněnou-entitu": {
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-změněnou-entitu": {
       "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/ml-test/pojem/term-one"
     },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/sledovani-zmen/pojem/má-změněný-atribut": {
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-změněný-atribut": {
       "@id": "http://www.w3.org/2004/02/skos/core#definition"
     },
     "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": {
@@ -22,7 +22,7 @@
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-příjmení": "Halsey",
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-uživatelské-jméno": "halsey@unsc.org"
     },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/sledovani-zmen/pojem/má-novou-hodnotu": [
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-novou-hodnotu": [
       "Definice pojmu jedna začíná takto jednoduše."
     ]
   }

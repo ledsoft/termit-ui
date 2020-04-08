@@ -4,10 +4,10 @@ import User, {CONTEXT as USER_CONTEXT, UserData} from "../User";
 const ctx = {
     timestamp: `${VocabularyUtils.PREFIX}m\u00e1-datum-a-\u010das-modifikace`,
     author: `${VocabularyUtils.PREFIX}m\u00e1-editora`,
-    changedEntity: `${VocabularyUtils.NS_CHANGE_TRACKING}m\u00e1-zm\u011bn\u011bnou-entitu`,
-    changedAttribute: `${VocabularyUtils.NS_CHANGE_TRACKING}m\u00e1-zm\u011bn\u011bn\u00fd-atribut`,
-    originalValue: `${VocabularyUtils.NS_CHANGE_TRACKING}m\u00e1-p\u016fvodn\u00ed-hodnotu`,
-    newValue: `${VocabularyUtils.NS_CHANGE_TRACKING}m\u00e1-novou-hodnotu`
+    changedEntity: `${VocabularyUtils.PREFIX}m\u00e1-zm\u011bn\u011bnou-entitu`,
+    changedAttribute: `${VocabularyUtils.PREFIX}m\u00e1-zm\u011bn\u011bn\u00fd-atribut`,
+    originalValue: `${VocabularyUtils.PREFIX}m\u00e1-p\u016fvodn\u00ed-hodnotu`,
+    newValue: `${VocabularyUtils.PREFIX}m\u00e1-novou-hodnotu`
 };
 
 export const CONTEXT = Object.assign({}, ctx, USER_CONTEXT);

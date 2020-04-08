@@ -16,6 +16,7 @@ import {IRI} from "../../../util/VocabularyUtils";
 jest.mock("../TermAssignments");
 jest.mock("../ParentTermSelector");
 jest.mock("../../misc/AssetLabel");
+jest.mock("../../changetracking/AssetHistory");
 
 describe("TermDetail", () => {
 
