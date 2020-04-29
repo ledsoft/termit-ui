@@ -1,26 +1,26 @@
-import {ASSET_CONTEXT, AssetData, default as Asset, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
+import {ASSET_CONTEXT, AssetData, default as Asset} from "./Asset";
 import Utils from "../util/Utils";
 import WithUnmappedProperties from "./WithUnmappedProperties";
-import {CONTEXT as USER_CONTEXT} from "./User";
 import VocabularyUtils from "../util/VocabularyUtils";
 import * as _ from "lodash";
 
 const ctx = {
     label: VocabularyUtils.SKOS_PREF_LABEL,
     definition: VocabularyUtils.DEFINITION,
+    comment: VocabularyUtils.DC_DESCRIPTION,
     parentTerms: VocabularyUtils.BROADER,
     subTerms: VocabularyUtils.NARROWER,
-    sources: "http://purl.org/dc/terms/source",
+    sources: VocabularyUtils.DC_SOURCE,
     vocabulary: VocabularyUtils.IS_TERM_FROM_VOCABULARY,
     types: "@type"
 };
 
-export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT);
+export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT);
 
-const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "definition", "created", "author", "lastEditor", "lastModified",
+const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "definition",
     "subTerms", "sources", "types", "parentTerms", "parent", "plainSubTerms", "vocabulary"];
 
-export interface TermData extends AssetData, HasProvenanceData {
+export interface TermData extends AssetData {
     label: string;
     definition?: string;
     subTerms?: TermInfo[];
@@ -50,7 +50,6 @@ export default class Term extends Asset implements TermData {
     constructor(termData: TermData) {
         super();
         Object.assign(this, termData);
-        this.initUserData(termData);
         this.types = Utils.sanitizeArray(termData.types);
         if (this.types.indexOf(VocabularyUtils.TERM) === -1) {
             this.types.push(VocabularyUtils.TERM);

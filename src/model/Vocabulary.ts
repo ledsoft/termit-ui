@@ -1,25 +1,25 @@
-import {CONTEXT as USER_CONTEXT} from "./User";
 import OntologicalVocabulary from "../util/VocabularyUtils";
 import VocabularyUtils from "../util/VocabularyUtils";
-import Asset, {ASSET_CONTEXT, AssetData, HasProvenanceData, PROVENANCE_CONTEXT} from "./Asset";
+import Asset, {ASSET_CONTEXT, AssetData} from "./Asset";
 import Document, {CONTEXT as DOCUMENT_CONTEXT} from "./Document";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import Utils from "../util/Utils";
 
 // @id and @type are merged from ASSET_CONTEXT
 const ctx = {
-    "label": VocabularyUtils.RDFS_LABEL,
+    "label": VocabularyUtils.DC_TITLE,
+    "comment": VocabularyUtils.DC_DESCRIPTION,
     "document": VocabularyUtils.PREFIX + "popisuje-dokument",
     "glossary": VocabularyUtils.PREFIX + "má-glosář",
     "model": VocabularyUtils.PREFIX + "má-model",
     "importedVocabularies": VocabularyUtils.IMPORTS_VOCABULARY
 };
 
-export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, PROVENANCE_CONTEXT, USER_CONTEXT, DOCUMENT_CONTEXT);
+export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, DOCUMENT_CONTEXT);
 
-const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "created", "author", "lastEditor", "lastModified", "document", "types", "glossary", "model", "importedVocabularies", "allImportedVocabularies"];
+const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "document", "types", "glossary", "model", "importedVocabularies", "allImportedVocabularies"];
 
-export interface VocabularyData extends AssetData, HasProvenanceData {
+export interface VocabularyData extends AssetData {
     label: string;
     document?: Document;
     glossary?: AssetData;
@@ -38,7 +38,6 @@ export default class Vocabulary extends Asset implements VocabularyData {
     constructor(data: VocabularyData) {
         super();
         Object.assign(this, data);
-        this.initUserData(data);
         this.types = Utils.sanitizeArray(data.types);
         if (this.types.indexOf(OntologicalVocabulary.VOCABULARY) === -1) {
             this.types.push(OntologicalVocabulary.VOCABULARY);
@@ -62,6 +61,5 @@ export default class Vocabulary extends Asset implements VocabularyData {
 
 export const EMPTY_VOCABULARY = new Vocabulary({
     iri: "http://empty",
-    label: "",
-    created: Date.now()
+    label: ""
 });

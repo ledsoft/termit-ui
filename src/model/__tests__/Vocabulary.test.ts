@@ -1,7 +1,6 @@
 import Vocabulary, {VocabularyData} from "../Vocabulary";
 import VocabularyUtils from "../../util/VocabularyUtils";
 import Generator from "../../__tests__/environment/Generator";
-import User from "../User";
 
 describe("Vocabulary", () => {
 
@@ -10,8 +9,7 @@ describe("Vocabulary", () => {
     beforeEach(() => {
         data = {
             "iri": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/vocabularies/metropolitan-plan",
-            "label": "Metropolitan plan",
-            created: Date.now()
+            "label": "Metropolitan plan"
         };
     });
 
@@ -28,24 +26,6 @@ describe("Vocabulary", () => {
             expect(testVocabulary.types).toBeDefined();
             expect(testVocabulary.types!.indexOf(VocabularyUtils.VOCABULARY)).not.toEqual(-1);
             expect(testVocabulary.types!.lastIndexOf(VocabularyUtils.VOCABULARY)).toEqual(testVocabulary.types!.indexOf(VocabularyUtils.VOCABULARY));
-        });
-
-        it("initializes author and last editor information when available", () => {
-            data.author = {
-                iri: Generator.generateUri(),
-                firstName: "test",
-                lastName: "test-lastname",
-                username: "username"
-            };
-            data.lastEditor = {
-                iri: Generator.generateUri(),
-                firstName: "test2",
-                lastName: "test2-lastname",
-                username: "username2"
-            };
-            const instance = new Vocabulary(data);
-            expect(instance.author instanceof User).toBeTruthy();
-            expect(instance.lastEditor instanceof User).toBeTruthy();
         });
     });
 
@@ -108,20 +88,6 @@ describe("Vocabulary", () => {
     });
 
     describe("toJsonLd", () => {
-
-        it("correctly interprets author", () => {
-            data.author = {
-                iri: Generator.generateUri(),
-                firstName: "Test",
-                lastName: "Test Surname",
-                username: "test@test",
-                types: [VocabularyUtils.USER]
-            };
-            data.types = [VocabularyUtils.VOCABULARY];
-            const testVocabulary = new Vocabulary(data);
-            const jsonLd = testVocabulary.toJsonLd();
-            expect(jsonLd.author).toEqual(data.author);
-        });
 
         it("removes allImportedVocabularies attribute", () => {
             const sut = new Vocabulary(data);

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {FormattedDate, FormattedTime, injectIntl} from "react-intl";
+import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../hoc/withI18n";
 import {Col, Row} from "reactstrap";
 import {Route, RouteComponentProps, Switch} from "react-router";
@@ -40,8 +40,8 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
 
     public render() {
         const label = this.props.vocabulary.label;
-        const author = this.props.vocabulary.author && this.props.vocabulary.author.fullName;
-        const dateCreated = new Date(this.props.vocabulary.created as number);
+        // const author = this.props.vocabulary.author && this.props.vocabulary.author.fullName;
+        // const dateCreated = new Date(this.props.vocabulary.created as number);
 
         return <div>
             <h2 className="page-header">
@@ -50,12 +50,13 @@ export class VocabularyDetail extends React.Component<VocabularyDetailProps> {
                     iri={this.props.vocabulary.iri}
                 />
             </h2>
-            <h6>
-                {this.props.formatMessage("vocabulary.detail.subtitle", {author})}
-                <FormattedDate value={dateCreated}/>
-                {", "}
-                <FormattedTime value={dateCreated}/>
-            </h6>
+            {/* TODO */}
+            {/*<h6>*/}
+            {/*    {this.props.formatMessage("vocabulary.detail.subtitle", {author})}*/}
+            {/*    <FormattedDate value={dateCreated}/>*/}
+            {/*    {", "}*/}
+            {/*    <FormattedTime value={dateCreated}/>*/}
+            {/*</h6>*/}
             <Row className="detail-row">
                 <Col md={4}>
                     <Terms vocabulary={this.props.vocabulary}/>

@@ -38,6 +38,7 @@ const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/
 const _NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const _NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
 const _NS_SKOS = "http://www.w3.org/2004/02/skos/core#";
+const _NS_DC = "http://purl.org/dc/terms/";
 
 export default {
     PREFIX: _NS_POPIS_DAT,
@@ -77,7 +78,10 @@ export default {
     RDFS_SUB_CLASS_OF: _NS_RDFS + "subClassOf",
     RDFS_SUB_PROPERTY_OF: _NS_RDFS + "subPropertyOf",
     RDF_PROPERTY: _NS_RDF + "Property",
-    DC_DESCRIPTION: "http://purl.org/dc/terms/description",
+    PREFIX_DC: _NS_DC,
+    DC_DESCRIPTION: _NS_DC + "description",
+    DC_TITLE: _NS_DC + "title",
+    DC_SOURCE: _NS_DC + "source",
 
     PERSIST_EVENT: `${_NS_POPIS_DAT}vytvo\u0159en\u00ed-entity`,
     UPDATE_EVENT: `${_NS_POPIS_DAT}\u00faprava-entity`,
