@@ -44,7 +44,7 @@ export default {
     PREFIX: _NS_POPIS_DAT,
     VOCABULARY: _NS_POPIS_DAT + "slovník",
     DOCUMENT_VOCABULARY: _NS_POPIS_DAT + "dokumentový-slovník",
-    TERM: _NS_POPIS_DAT + "term",
+    TERM: _NS_SKOS + "Concept",
     FILE: _NS_POPIS_DAT + "soubor",
     DOCUMENT: _NS_POPIS_DAT + "dokument",
     DEFINITION: _NS_SKOS + "definition",
@@ -82,6 +82,7 @@ export default {
     DC_DESCRIPTION: _NS_DC + "description",
     DC_TITLE: _NS_DC + "title",
     DC_SOURCE: _NS_DC + "source",
+    DC_MODIFIED: _NS_DC + "modified",
 
     PERSIST_EVENT: `${_NS_POPIS_DAT}vytvo\u0159en\u00ed-entity`,
     UPDATE_EVENT: `${_NS_POPIS_DAT}\u00faprava-entity`,

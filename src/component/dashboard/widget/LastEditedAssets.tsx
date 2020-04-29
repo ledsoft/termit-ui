@@ -1,29 +1,29 @@
 import * as React from "react";
 import {injectIntl} from "react-intl";
 import withI18n, {HasI18n} from "../../hoc/withI18n";
-import Asset from "../../../model/Asset";
 import {Card, CardBody, CardHeader, Col, Label, Row, Table} from "reactstrap";
-import Term from "../../../model/Term";
 import TermBadge from "../../badge/TermBadge";
-import Vocabulary from "../../../model/Vocabulary";
 import VocabularyBadge from "../../badge/VocabularyBadge";
 import ResourceBadge from "../../badge/ResourceBadge";
-import Resource from "../../../model/Resource";
 import {connect} from "react-redux";
 import {ThunkDispatch} from "../../../util/Types";
 import {loadLastEditedAssets} from "../../../action/AsyncActions";
 import withInjectableLoading, {InjectsLoading} from "../../hoc/withInjectableLoading";
-import AssetLinkFactory from "../../factory/AssetLinkFactory";
 import TermItState from "../../../model/TermItState";
 import TimeAgo from "javascript-time-ago";
+import RecentlyModifiedAsset from "../../../model/RecentlyModifiedAsset";
+import Utils from "../../../util/Utils";
+import VocabularyUtils from "../../../util/VocabularyUtils";
+import AssetLinkFactory from "../../factory/AssetLinkFactory";
+import AssetFactory from "../../../util/AssetFactory";
 
 interface LastEditedAssetsProps extends HasI18n, InjectsLoading {
-    loadAssets: () => Promise<Asset[]>;
+    loadAssets: () => Promise<RecentlyModifiedAsset[]>;
     locale: string;
 }
 
 interface LastEditedAssetsState {
-    assets: Asset[];
+    assets: RecentlyModifiedAsset[];
 }
 
 export class LastEditedAssets extends React.Component<LastEditedAssetsProps, LastEditedAssetsState> {
@@ -34,7 +34,7 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
 
     public componentDidMount(): void {
         this.props.loadingOn();
-        this.props.loadAssets().then((result: Asset[]) => {
+        this.props.loadAssets().then((result: RecentlyModifiedAsset[]) => {
             this.setState({assets: result});
             this.props.loadingOff();
         });
@@ -66,6 +66,7 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
     }
 
     private renderAssets() {
+        // TODO Determine operation type
         const formatter = new TimeAgo(this.props.locale);
         return this.state.assets.map(asset => <tr key={asset.iri}>
             <td className="col-xs-12">
@@ -74,17 +75,17 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
                         {LastEditedAssets.renderAssetBadge(asset)}
                     </Col>
                     <Col md={9} lg={10}>
-                        {AssetLinkFactory.createAssetLink(asset)}
+                        {AssetLinkFactory.createAssetLink(AssetFactory.createAsset(asset))}
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12}>
                         <Label className="italics last-edited-message"
-                               title={new Date(asset.lastEdited!).toLocaleString(this.props.locale)}>
+                               title={new Date(asset.modified).toLocaleString(this.props.locale)}>
                             {this.props.formatMessage("dashboard.widget.lastEdited.lastEditMessage", {
-                                user: asset.lastEditedBy!.fullName,
-                                when: formatter.format(asset.lastEdited!),
-                                operation: asset.lastEditor ? "edit" : "create"
+                                user: asset.editor.fullName,
+                                when: formatter.format(asset.modified),
+                                operation: asset.types.indexOf(VocabularyUtils.PERSIST_EVENT) !== -1 ? "create" : "edit"
                             })}
                         </Label>
                     </Col>
@@ -93,13 +94,14 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
         </tr>);
     }
 
-    private static renderAssetBadge(asset: Asset) {
-        if (asset instanceof Term) {
+    private static renderAssetBadge(asset: RecentlyModifiedAsset) {
+        const type = Utils.getPrimaryAssetType(asset);
+        if (type === VocabularyUtils.TERM) {
             return <TermBadge/>;
-        } else if (asset instanceof Vocabulary) {
+        } else if (type === VocabularyUtils.VOCABULARY) {
             return <VocabularyBadge/>;
         } else {
-            return <ResourceBadge resource={asset as Resource}/>;
+            return <ResourceBadge resource={asset}/>;
         }
     }
 }

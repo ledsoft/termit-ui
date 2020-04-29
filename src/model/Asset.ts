@@ -1,8 +1,11 @@
-export interface AssetData {
+export interface HasTypes {
+    types?: string[] | string;
+}
+
+export interface AssetData extends HasTypes {
     iri?: string;
     label?: string;
     comment?: string;
-    types?: string[] | string;
 }
 
 /**

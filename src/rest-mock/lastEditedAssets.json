@@ -3,8 +3,7 @@
     "@id": "http://onto.fel.cvut.cz/ontologies/application/termit/randomInstance-1529066498",
     "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/zdroj",
     "http://www.w3.org/2000/01/rdf-schema#label": "Resource test 1529066498",
-    "http://www.w3.org/2000/01/rdf-schema#comment": "Resource test description 1529066498",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-autora": {
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": {
       "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-křestní-jméno": "Catherine",
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-příjmení": "Halsey",
@@ -14,26 +13,15 @@
         "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/administrátor-termitu"
       ]
     },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-datum-a-čas-vytvoření": 1534429897893
+    "http://purl.org/dc/terms/modified": 1534429897893
   },
   {
     "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-4",
     "@type": [
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
     ],
-    "http://www.w3.org/2004/02/skos/core#narrower": [
-      {
-        "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-6"
-      },
-      {
-        "@id": "http://data.iprpraha.cz/zdroj/slovnik/test-vocabulary/term/pojem-7"
-      }
-    ],
     "http://www.w3.org/2000/01/rdf-schema#label": "pojem 4",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovníku": {
-      "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan"
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-autora": {
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": {
       "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-křestní-jméno": "Catherine",
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-příjmení": "Halsey",
@@ -43,21 +31,13 @@
         "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/administrátor-termitu"
       ]
     },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-datum-a-čas-vytvoření": 1534429896893
+    "http://purl.org/dc/terms/modified": 1534429896893
   },
   {
     "@id": "http://data.iprpraha.cz/zdroj/slovnik/metropolitan-plan",
     "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/slovník",
     "http://www.w3.org/2000/01/rdf-schema#label": "Metropolitan plan",
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-glosář": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/termit/glossary/instance12345",
-      "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/glosář"
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-model": {
-      "@id": "http://onto.fel.cvut.cz/ontologies/termit/model/instance54321",
-      "@type": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/model"
-    },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-autora": {
+    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": {
       "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey",
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-křestní-jméno": "Catherine",
       "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-příjmení": "Halsey",
@@ -67,6 +47,6 @@
         "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/administrátor-termitu"
       ]
     },
-    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-datum-a-čas-vytvoření": 1534429895893
+    "http://purl.org/dc/terms/modified": 1534429895893
   }
 ]

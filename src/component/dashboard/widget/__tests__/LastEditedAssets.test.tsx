@@ -1,19 +1,17 @@
 import * as React from "react";
-import Asset from "../../../../model/Asset";
 import {shallow} from "enzyme";
 import {LastEditedAssets} from "../LastEditedAssets";
 import {intlFunctions} from "../../../../__tests__/environment/IntlUtil";
 import {mountWithIntl} from "../../../../__tests__/environment/Environment";
 import en from "../../../../i18n/en";
-import Term from "../../../../model/Term";
 import Generator from "../../../../__tests__/environment/Generator";
-import Vocabulary from "../../../../model/Vocabulary";
 import {Link, MemoryRouter} from "react-router-dom";
 import {InjectsLoading} from "../../../hoc/withInjectableLoading";
 import VocabularyUtils from "../../../../util/VocabularyUtils";
+import RecentlyModifiedAsset from "../../../../model/RecentlyModifiedAsset";
 
 describe("LastEditedAssets", () => {
-    let onLoad: () => Promise<Asset[]>;
+    let onLoad: () => Promise<RecentlyModifiedAsset[]>;
 
     const loadingInjectMock: InjectsLoading = {
         loadingOn(): void {
@@ -48,19 +46,19 @@ describe("LastEditedAssets", () => {
     });
 
     it("renders downloaded assets", () => {
-        const assets = [new Term({
+        const assets = [new RecentlyModifiedAsset({
             iri: Generator.generateUri(),
             label: "Term",
             types: [VocabularyUtils.TERM],
             vocabulary: {iri: Generator.generateUri()},
-            author: Generator.generateUser(),
-            created: Date.now()
-        }), new Vocabulary({
+            editor: Generator.generateUser(),
+            modified: Date.now()
+        }), new RecentlyModifiedAsset({
             iri: Generator.generateUri(),
             label: "Vocabulary",
             types: [VocabularyUtils.VOCABULARY],
-            author: Generator.generateUser(),
-            created: Date.now()
+            editor: Generator.generateUser(),
+            modified: Date.now()
         })];
         onLoad = jest.fn().mockImplementation(() => Promise.resolve(assets));
         const wrapper = mountWithIntl(<MemoryRouter>
