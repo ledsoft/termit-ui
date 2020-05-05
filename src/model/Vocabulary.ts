@@ -15,7 +15,7 @@ const ctx = {
     "importedVocabularies": VocabularyUtils.IMPORTS_VOCABULARY
 };
 
-export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, DOCUMENT_CONTEXT);
+export const CONTEXT = Object.assign({}, ASSET_CONTEXT, DOCUMENT_CONTEXT, ctx);
 
 const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "document", "types", "glossary", "model", "importedVocabularies", "allImportedVocabularies"];
 

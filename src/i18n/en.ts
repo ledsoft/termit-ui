@@ -117,7 +117,7 @@ export default {
         'vocabulary.vocabularies.create.tooltip': 'Create new vocabulary',
         'vocabulary.create.title': 'Create Vocabulary',
         'vocabulary.create.submit': 'Create',
-        'vocabulary.comment': 'Comment',
+        'vocabulary.comment': 'Description',
         'vocabulary.summary.title': '{name} - Summary',
         'vocabulary.summary.gotodetail.label': 'View terms in this vocabulary',
         'vocabulary.summary.gotodetail.text': 'View',

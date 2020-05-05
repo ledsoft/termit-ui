@@ -66,7 +66,6 @@ export class LastEditedAssets extends React.Component<LastEditedAssetsProps, Las
     }
 
     private renderAssets() {
-        // TODO Determine operation type
         const formatter = new TimeAgo(this.props.locale);
         return this.state.assets.map(asset => <tr key={asset.iri}>
             <td className="col-xs-12">

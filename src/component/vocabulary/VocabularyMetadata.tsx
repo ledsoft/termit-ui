@@ -41,27 +41,6 @@ export class VocabularyMetadata extends React.Component<VocabularyMetadataProps,
         const i18n = this.props.i18n;
         const vocabulary = this.props.vocabulary;
         return <div className="metadata-panel">
-            {/*TODO */}
-            {/*<Row>*/}
-            {/*    <Col xl={2} md={4}>*/}
-            {/*        <Label className="attribute-label">{i18n("asset.author")}</Label>*/}
-            {/*    </Col>*/}
-            {/*    <Col xl={10} md={8}>*/}
-            {/*        <Label id="vocabulary-metadata-author">{vocabulary.author && vocabulary.author.fullName}</Label>*/}
-            {/*    </Col>*/}
-            {/*</Row>*/}
-            {/*<Row>*/}
-            {/*    <Col xl={2} md={4}>*/}
-            {/*        <Label className="attribute-label">{i18n("asset.created")}</Label>*/}
-            {/*    </Col>*/}
-            {/*    <Col xl={10} md={8}>*/}
-            {/*        <Label*/}
-            {/*            id="vocabulary-metadata-created">*/}
-            {/*            <FormattedDate value={new Date(vocabulary.created as number)}/>*/}
-            {/*            {", "}*/}
-            {/*            <FormattedTime value={new Date(vocabulary.created as number)}/></Label>*/}
-            {/*    </Col>*/}
-            {/*</Row>*/}
             <Row>
                 <Col xl={2} md={4}>
                     <Label className="attribute-label">{i18n("vocabulary.comment")}</Label>

@@ -7,7 +7,7 @@ import * as _ from "lodash";
 const ctx = {
     label: VocabularyUtils.SKOS_PREF_LABEL,
     definition: VocabularyUtils.DEFINITION,
-    comment: VocabularyUtils.DC_DESCRIPTION,
+    comment: VocabularyUtils.SKOS_SCOPE_NOTE,
     parentTerms: VocabularyUtils.BROADER,
     subTerms: VocabularyUtils.NARROWER,
     sources: VocabularyUtils.DC_SOURCE,
