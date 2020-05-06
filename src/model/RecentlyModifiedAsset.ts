@@ -1,6 +1,6 @@
 import VocabularyUtils from "../util/VocabularyUtils";
 import {ASSET_CONTEXT, AssetData, HasTypes} from "./Asset";
-import User, {UserData} from "./User";
+import User, {CONTEXT as USER_CONTEXT, UserData} from "./User";
 import Utils from "../util/Utils";
 
 const ctx = {
@@ -10,7 +10,7 @@ const ctx = {
     vocabulary: VocabularyUtils.IS_TERM_FROM_VOCABULARY
 };
 
-export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT);
+export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT, USER_CONTEXT);
 
 export interface RecentlyModifiedAssetData extends HasTypes {
     iri: string;
