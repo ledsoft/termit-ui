@@ -52,7 +52,6 @@ import Utils from "../../util/Utils";
 import AsyncActionStatus from "../AsyncActionStatus";
 import ExportType from "../../util/ExportType";
 import fileContent from "../../rest-mock/file";
-import Asset from "../../model/Asset";
 import TermItFile from "../../model/File";
 import MessageType from "../../model/MessageType";
 import {CONTEXT as TA_RECORD_CONTEXT, TextAnalysisRecord} from "../../model/TextAnalysisRecord";
@@ -63,16 +62,17 @@ import {
 import {CONTEXT as TERM_ASSIGNMENTS_CONTEXT, TermAssignments} from "../../model/TermAssignments";
 import {verifyExpectedAssets} from "../../__tests__/environment/TestUtil";
 import ChangeRecord from "../../model/changetracking/ChangeRecord";
+import RecentlyModifiedAsset from "../../model/RecentlyModifiedAsset";
 
 jest.mock("../../util/Routing");
 jest.mock("../../util/Ajax", () => ({
     default: jest.fn(),
-    content: require.requireActual("../../util/Ajax").content,
-    params: require.requireActual("../../util/Ajax").params,
-    param: require.requireActual("../../util/Ajax").param,
-    accept: require.requireActual("../../util/Ajax").accept,
-    contentType: require.requireActual("../../util/Ajax").contentType,
-    formData: require.requireActual("../../util/Ajax").formData
+    content: jest.requireActual("../../util/Ajax").content,
+    params: jest.requireActual("../../util/Ajax").params,
+    param: jest.requireActual("../../util/Ajax").param,
+    accept: jest.requireActual("../../util/Ajax").accept,
+    contentType: jest.requireActual("../../util/Ajax").contentType,
+    formData: jest.requireActual("../../util/Ajax").formData
 }));
 
 const mockStore = configureMockStore<TermItState>([thunk]);
@@ -988,24 +988,28 @@ describe("Async actions", () => {
             const data = [{
                 "@id": Generator.generateUri(),
                 "http://www.w3.org/2000/01/rdf-schema#label": "Test file",
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://purl.org/dc/terms/modified": Date.now(),
                 "@type": [VocabularyUtils.FILE, VocabularyUtils.RESOURCE]
             }, {
                 "@id": Generator.generateUri(),
                 "http://www.w3.org/2000/01/rdf-schema#label": "Test vocabulary",
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://purl.org/dc/terms/modified": Date.now(),
                 "@type": [VocabularyUtils.VOCABULARY]
             }, {
                 "@id": Generator.generateUri(),
-                "http://www.w3.org/2004/02/skos/core#prefLabel": "Test term",
+                "http://www.w3.org/2000/01/rdf-schema#label": "Test term",
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://purl.org/dc/terms/modified": Date.now(),
                 "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {"@id": Generator.generateUri()},
                 "@type": [VocabularyUtils.TERM]
             }];
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadLastEditedAssets())).then((result: Asset[]) => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadLastEditedAssets())).then((result: RecentlyModifiedAsset[]) => {
                 expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + "/assets/last-edited");
                 expect(result.length).toEqual(data.length);
-                expect(result[0]).toBeInstanceOf(TermItFile);
-                expect(result[1]).toBeInstanceOf(Vocabulary);
-                expect(result[2]).toBeInstanceOf(Term);
+                result.forEach(r => expect(r).toBeInstanceOf(RecentlyModifiedAsset));
             });
         });
 
@@ -1015,15 +1019,19 @@ describe("Async actions", () => {
             const data = [{
                 "@id": Generator.generateUri(),
                 "http://www.w3.org/2000/01/rdf-schema#label": vocLabel,
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://purl.org/dc/terms/modified": Date.now(),
                 "@type": [VocabularyUtils.VOCABULARY]
             }, {
                 "@id": Generator.generateUri(),
-                "http://www.w3.org/2004/02/skos/core#prefLabel": termLabel,
+                "http://www.w3.org/2000/01/rdf-schema#label": termLabel,
+                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://purl.org/dc/terms/modified": Date.now(),
                 "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {"@id": Generator.generateUri()},
                 "@type": [VocabularyUtils.TERM]
             }];
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
-            return Promise.resolve((store.dispatch as ThunkDispatch)(loadLastEditedAssets())).then((result: Asset[]) => {
+            return Promise.resolve((store.dispatch as ThunkDispatch)(loadLastEditedAssets())).then((result: RecentlyModifiedAsset[]) => {
                 expect(Ajax.get).toHaveBeenCalledWith(Constants.API_PREFIX + "/assets/last-edited");
                 expect(result.length).toEqual(data.length);
                 expect(result[0].label).toEqual(vocLabel);

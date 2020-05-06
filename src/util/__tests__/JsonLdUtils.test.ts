@@ -1,7 +1,6 @@
 import VocabularyUtils from "../VocabularyUtils";
 import JsonLdUtils from "../JsonLdUtils";
 import {CONTEXT as VOCABULARY_CONTEXT} from "../../model/Vocabulary";
-import {CONTEXT as TERM_CONTEXT} from "../../model/Term";
 
 describe("JsonLdUtils", () => {
 
@@ -53,48 +52,39 @@ describe("JsonLdUtils", () => {
     describe("compactAndResolveReferences", () => {
         it("compacts input JSON-LD using the context and resolves references", () => {
             const input = require("../../rest-mock/vocabulary");
-            input[VocabularyUtils.HAS_LAST_EDITOR] = {
-                "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey"
+            input[VocabularyUtils.PREFIX + "popisuje-dokument"][VocabularyUtils.PREFIX + "má-dokumentový-slovník"] = {
+                "@id": input["@id"]
             };
             return JsonLdUtils.compactAndResolveReferences(input, VOCABULARY_CONTEXT).then((result:any) => {
-                expect(result.author).toBeDefined();
-                expect(result.lastEditor).toBeDefined();
-                expect(result.lastEditor).toEqual(result.author);
+                expect(result.document.vocabulary).toBeDefined();
+                expect(result.document.vocabulary).toEqual(result);
             });
         });
     });
 
     describe("compactAndResolveReferencesAsArray", () => {
         it("returns array with items compacted from the specified JSON-LD", () => {
-            const input = require("../../rest-mock/terms");
-            input[0][VocabularyUtils.HAS_AUTHOR] = {
-                "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/test-author",
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-křestní-jméno": "Author",
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-příjmení": "Surname",
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-uživatelské-jméno": "username"
+            const input = [require("../../rest-mock/vocabulary"), require("../../rest-mock/vocabulary")];
+            input[0][VocabularyUtils.PREFIX + "popisuje-dokument"][VocabularyUtils.PREFIX + "má-dokumentový-slovník"] = {
+                "@id": input[0]["@id"]
             };
-            input[0][VocabularyUtils.HAS_LAST_EDITOR] = {
-                "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/test-author"
-            };
-            return JsonLdUtils.compactAndResolveReferencesAsArray(input, TERM_CONTEXT).then((result:any[]) => {
+            return JsonLdUtils.compactAndResolveReferencesAsArray(input, VOCABULARY_CONTEXT).then((result:any[]) => {
                 expect(Array.isArray(result)).toBeTruthy();
-                expect(result[0].author).toBeDefined();
-                expect(result[0].lastEditor).toBeDefined();
-                expect(result[0].lastEditor).toEqual(result[0].author);
+                expect(result[0].document.vocabulary).toBeDefined();
+                expect(result[0].document.vocabulary).toEqual(result[0]);
             });
         });
 
         it("returns array with single item compacted from specified JSON-LD", () => {
-            const input = [require("../../rest-mock/vocabulary")];
-            input[0][VocabularyUtils.HAS_LAST_EDITOR] = {
-                "@id": "http://onto.fel.cvut.cz/ontologies/termit/user/catherine-halsey"
+            const input = require("../../rest-mock/vocabulary");
+            input[VocabularyUtils.PREFIX + "popisuje-dokument"][VocabularyUtils.PREFIX + "má-dokumentový-slovník"] = {
+                "@id": input["@id"]
             };
             return JsonLdUtils.compactAndResolveReferencesAsArray(input, VOCABULARY_CONTEXT).then((result:any[]) => {
                 expect(Array.isArray(result)).toBeTruthy();
                 expect(result.length).toEqual(1);
-                expect(result[0].author).toBeDefined();
-                expect(result[0].lastEditor).toBeDefined();
-                expect(result[0].lastEditor).toEqual(result[0].author);
+                expect(result[0].document.vocabulary).toBeDefined();
+                expect(result[0].document.vocabulary).toEqual(result[0]);
             });
         });
 

@@ -116,7 +116,7 @@ export default {
         'vocabulary.vocabularies.create.text': 'Vytvořit',
         'vocabulary.create.title': 'Nový slovník',
         'vocabulary.create.submit': 'Vytvořit',
-        'vocabulary.comment': 'Komentář',
+        'vocabulary.comment': 'Popis',
         'vocabulary.summary.title': '{name} - přehled',
         'vocabulary.summary.gotodetail.label': 'Zobrazit pojmy v tomto slovníku',
         'vocabulary.summary.gotodetail.text': 'Zobrazit',

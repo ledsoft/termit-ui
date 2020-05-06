@@ -22,7 +22,7 @@ import Term, {CONTEXT as TERM_CONTEXT, TermData} from "../model/Term";
 import FetchOptionsFunction from "../model/Functions";
 import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import ActionType from "./ActionType";
-import Resource, {CONTEXT as RESOURCE_CONTEXT, ResourceData} from "../model/Resource";
+import Resource, {ResourceData} from "../model/Resource";
 import RdfsResource, {CONTEXT as RDFS_RESOURCE_CONTEXT, RdfsResourceData} from "../model/RdfsResource";
 import {CONTEXT as TERM_ASSIGNMENTS_CONTEXT, TermAssignments} from "../model/TermAssignments";
 import TermItState from "../model/TermItState";
@@ -30,7 +30,7 @@ import Utils from "../util/Utils";
 import ExportType from "../util/ExportType";
 import {CONTEXT as DOCUMENT_CONTEXT} from "../model/Document";
 import TermitFile from "../model/File";
-import Asset, {AssetData} from "../model/Asset";
+import Asset from "../model/Asset";
 import AssetFactory from "../util/AssetFactory";
 import IdentifierResolver from "../util/IdentifierResolver";
 import JsonLdUtils from "../util/JsonLdUtils";
@@ -42,6 +42,10 @@ import {
 } from "../model/TextAnalysisRecord";
 import {CONTEXT as RESOURCE_TERM_ASSIGNMENTS_CONTEXT, ResourceTermAssignments} from "../model/ResourceTermAssignments";
 import {ChangeRecordData, CONTEXT as CHANGE_RECORD_CONTEXT} from "../model/changetracking/ChangeRecord";
+import RecentlyModifiedAsset, {
+    CONTEXT as RECENTLY_MODIFIED_ASSET_CONTEXT,
+    RecentlyModifiedAssetData
+} from "../model/RecentlyModifiedAsset";
 
 /*
  * Asynchronous actions involve requests to the backend server REST API. As per recommendations in the Redux docs, this consists
@@ -770,23 +774,13 @@ export function loadLastEditedAssets() {
     const action = {
         type: ActionType.LOAD_LAST_EDITED
     };
-    const context = Object.assign({}, RESOURCE_CONTEXT, TERM_CONTEXT, VOCABULARY_CONTEXT);
-    // Workaround for context conflict. This is because jsonld-java, used by JB4JSON-LD does not support JSON-LD
-    // version 1.1 specification in context
-    context.vocabulary = TERM_CONTEXT.vocabulary;
     return (dispatch: ThunkDispatch) => {
         dispatch(asyncActionRequest(action, true));
         return Ajax.get(Constants.API_PREFIX + "/assets/last-edited")
-            .then((data: object) => JsonLdUtils.compactAndResolveReferencesAsArray(data, context))
-            .then((data: AssetData[]) => {
+            .then((data: object) => JsonLdUtils.compactAndResolveReferencesAsArray(data, RECENTLY_MODIFIED_ASSET_CONTEXT))
+            .then((data: RecentlyModifiedAssetData[]) => {
                 dispatch(asyncActionSuccess(action));
-                return data.map(item => {
-                    const asset = AssetFactory.createAsset(item);
-                    if (asset instanceof Term) {
-                        asset.label = asset[VocabularyUtils.SKOS_PREF_LABEL];
-                    }
-                    return asset;
-                });
+                return data.map(item => new RecentlyModifiedAsset(item));
             })
             .catch((error: ErrorData) => {
                 dispatch(asyncActionFailure(action, error));

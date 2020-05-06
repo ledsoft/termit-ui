@@ -38,18 +38,20 @@ const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/
 const _NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const _NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
 const _NS_SKOS = "http://www.w3.org/2004/02/skos/core#";
+const _NS_DC = "http://purl.org/dc/terms/";
 
 export default {
     PREFIX: _NS_POPIS_DAT,
     VOCABULARY: _NS_POPIS_DAT + "slovník",
     DOCUMENT_VOCABULARY: _NS_POPIS_DAT + "dokumentový-slovník",
-    TERM: _NS_POPIS_DAT + "term",
+    TERM: _NS_SKOS + "Concept",
     FILE: _NS_POPIS_DAT + "soubor",
     DOCUMENT: _NS_POPIS_DAT + "dokument",
     DEFINITION: _NS_SKOS + "definition",
     BROADER: _NS_SKOS + "broader",
     NARROWER: _NS_SKOS + "narrower",
     SKOS_PREF_LABEL: _NS_SKOS + "prefLabel",
+    SKOS_SCOPE_NOTE: _NS_SKOS + "scopeNote",
     DATASET: "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
     IS_TERM_FROM_VOCABULARY: _NS_POPIS_DAT + "je-pojmem-ze-slovníku",
     IS_OCCURRENCE_OF_TERM: _NS_TERMIT + "je-výskytem-termu",
@@ -77,7 +79,11 @@ export default {
     RDFS_SUB_CLASS_OF: _NS_RDFS + "subClassOf",
     RDFS_SUB_PROPERTY_OF: _NS_RDFS + "subPropertyOf",
     RDF_PROPERTY: _NS_RDF + "Property",
-    DC_DESCRIPTION: "http://purl.org/dc/terms/description",
+    PREFIX_DC: _NS_DC,
+    DC_DESCRIPTION: _NS_DC + "description",
+    DC_TITLE: _NS_DC + "title",
+    DC_SOURCE: _NS_DC + "source",
+    DC_MODIFIED: _NS_DC + "modified",
 
     PERSIST_EVENT: `${_NS_POPIS_DAT}vytvo\u0159en\u00ed-entity`,
     UPDATE_EVENT: `${_NS_POPIS_DAT}\u00faprava-entity`,

@@ -53,8 +53,7 @@ describe("VocabularySummary", () => {
         };
         vocabulary = new Vocabulary({
             iri: namespace + normalizedName,
-            label: "Test vocabulary",
-            created: Date.now()
+            label: "Test vocabulary"
         });
     });
 

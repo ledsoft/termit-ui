@@ -1,7 +1,7 @@
 /**
  * General utility functions.
  */
-import Asset, {AssetData} from "../model/Asset";
+import {AssetData, HasTypes} from "../model/Asset";
 import VocabularyUtils from "./VocabularyUtils";
 import {match} from "react-router";
 import {Location} from "history";
@@ -105,7 +105,7 @@ export default {
      * @param asset Asset whose type should be determined
      * @return asset primary  type, undefined if the type is not known or it the asset does not contain type info
      */
-    getPrimaryAssetType(asset: AssetData): string | undefined {
+    getPrimaryAssetType(asset: HasTypes): string | undefined {
         const types = this.sanitizeArray(asset.types);
         if (types.indexOf(VocabularyUtils.TERM) !== -1) {
             return VocabularyUtils.TERM;
@@ -130,7 +130,7 @@ export default {
      * The type resolution is based on value of the @type attribute of the specified asset.
      * @param asset Asset whose type label id should be determined
      */
-    getAssetTypeLabelId(asset: Asset): string | undefined {
+    getAssetTypeLabelId(asset: HasTypes): string | undefined {
         switch (this.getPrimaryAssetType(asset)) {
             case VocabularyUtils.TERM:
                 return "type.term";
