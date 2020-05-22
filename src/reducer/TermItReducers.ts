@@ -28,6 +28,7 @@ import AppNotification from "../model/AppNotification";
 import SearchResult from "../model/SearchResult";
 import SearchQuery from "../model/SearchQuery";
 import {ErrorLogItem} from "../model/ErrorInfo";
+import Workspace from "../model/Workspace";
 
 /**
  * Handles changes to the currently logged in user.
@@ -380,6 +381,13 @@ function labelCache(state: { [key: string]: string } = {}, action: AsyncActionSu
     return state;
 }
 
+function workspace(state: Workspace | null = null, action: AsyncActionSuccess<Workspace>) {
+    if (action.type === ActionType.SELECT_WORKSPACE && action.status === AsyncActionStatus.SUCCESS) {
+        return action.payload;
+    }
+    return state;
+}
+
 const rootReducer = combineReducers<TermItState>({
     user,
     loading,
@@ -404,7 +412,8 @@ const rootReducer = combineReducers<TermItState>({
     pendingActions,
     errors,
     lastModified,
-    labelCache
+    labelCache,
+    workspace
 });
 
 export default rootReducer;

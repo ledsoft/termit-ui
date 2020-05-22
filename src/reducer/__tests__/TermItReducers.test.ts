@@ -33,6 +33,7 @@ import SearchQuery from "../../model/SearchQuery";
 import QueryResult from "../../model/QueryResult";
 import File from "../../model/File";
 import VocabularyUtils from "../../util/VocabularyUtils";
+import Workspace from "../../model/Workspace";
 
 function stateToPlainObject(state: TermItState): TermItState {
     return {
@@ -59,7 +60,8 @@ function stateToPlainObject(state: TermItState): TermItState {
         pendingActions: state.pendingActions,
         errors: state.errors,
         lastModified: state.lastModified,
-        labelCache: state.labelCache
+        labelCache: state.labelCache,
+        workspace: state.workspace
     };
 }
 
@@ -477,6 +479,15 @@ describe("Reducers", () => {
             const result = reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.GET_LABEL}, payload));
             expect(result.labelCache[iri]).toBeDefined();
             expect(result.labelCache[iri]).toEqual(label);
+        });
+    });
+
+    describe("workspace", () => {
+        it("sets loaded workspace as current one in store", () => {
+            const ws = new Workspace({iri: Generator.generateUri(), label: "Test workspace"});
+            expect(stateToPlainObject(initialState).workspace).toBeNull();
+            const result = reducers(stateToPlainObject(initialState), asyncActionSuccessWithPayload({type: ActionType.SELECT_WORKSPACE}, ws));
+            expect(result.workspace).toEqual(ws);
         });
     });
 });

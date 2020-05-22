@@ -12,6 +12,7 @@ import SearchResult from "./SearchResult";
 import SearchQuery from "./SearchQuery";
 import AsyncActionStatus from "../action/AsyncActionStatus";
 import {ErrorLogItem} from "./ErrorInfo";
+import Workspace from "./Workspace";
 
 /**
  * This is the basic shape of the application"s state managed by Redux.
@@ -44,6 +45,7 @@ export default class TermItState {
     public lastModified: { [key: string]: string };
     // Caches labels retrieved from the backend, so that they can be reused and thus server traffic reduced
     public labelCache: { [key: string]: string };
+    public workspace: Workspace | null;
 
     constructor() {
         this.loading = false;
@@ -70,5 +72,6 @@ export default class TermItState {
         this.errors = [];
         this.lastModified = {};
         this.labelCache = {};
+        this.workspace = null;
     }
 }
