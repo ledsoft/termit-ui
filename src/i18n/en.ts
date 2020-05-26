@@ -353,6 +353,8 @@ export default {
         "history.type.update": "Update",
         "history.changedAttribute": "Attribute",
         "history.originalValue": "Original value",
-        "history.newValue": "New value"
+        "history.newValue": "New value",
+
+        "workspace.select.success": "Workspace {name} successfully loaded."
     }
 };

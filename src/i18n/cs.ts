@@ -354,6 +354,8 @@ export default {
         "history.type.update": "Změna",
         "history.changedAttribute": "Atribut",
         "history.originalValue": "Původní hodnota",
-        "history.newValue": "Nová hodnota"
+        "history.newValue": "Nová hodnota",
+
+        "workspace.select.success": "Pracovní prostor {name} úspěšně načten."
     }
 }

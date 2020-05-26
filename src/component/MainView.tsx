@@ -43,14 +43,17 @@ import Dashboard from "./dashboard/Dashboard";
 import SearchVocabularies from "./search/SearchVocabularies";
 import ProfileRoute from "./profile/ProfileRoute";
 import {IfGranted} from "react-authorization";
-import VocabularyUtils from "../util/VocabularyUtils";
+import VocabularyUtils, {IRI} from "../util/VocabularyUtils";
 import AdministrationRoute from "./administration/AdministrationRoute";
 import {loadUser} from "../action/AsyncUserActions";
+import {selectWorkspace} from "../action/WorkspaceAsyncActions";
+import Utils from "../util/Utils";
 
 interface MainViewProps extends HasI18n, RouteComponentProps<any> {
     user: User;
-    loadUser: () => void;
+    loadUser: () => Promise<any>;
     logout: () => void;
+    selectWorkspace: (iri: IRI) => void;
 }
 
 interface MainViewState {
@@ -70,8 +73,19 @@ export class MainView extends React.Component<MainViewProps, MainViewState> {
 
     public componentDidMount() {
         if (this.props.user === EMPTY_USER) {
-            this.props.loadUser();
+            this.props.loadUser().then(() => this.selectWorkspaceIfProvided());
+        } else {
+            this.selectWorkspaceIfProvided();
         }
+    }
+
+    private selectWorkspaceIfProvided() {
+        let ws = Utils.extractQueryParam(this.props.location.search, "workspace");
+        if (!ws || this.props.user === EMPTY_USER) {
+            return;
+        }
+        ws = decodeURIComponent(ws);
+        this.props.selectWorkspace(VocabularyUtils.create(ws));
     }
 
     public toggle = () => {
@@ -204,6 +218,7 @@ export default connect((state: TermItState) => {
 }, (dispatch: ThunkDispatch) => {
     return {
         loadUser: () => dispatch(loadUser()),
-        logout: () => dispatch(logout())
+        logout: () => dispatch(logout()),
+        selectWorkspace: (iri: IRI) => dispatch(selectWorkspace(iri))
     };
 })(injectIntl(withI18n(withLoading(withRouter(MainView), {containerClass: "app-container"}))));
