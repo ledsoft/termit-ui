@@ -355,6 +355,6 @@ export default {
         "history.originalValue": "Original value",
         "history.newValue": "New value",
 
-        "workspace.select.success": "Workspace {name} successfully loaded."
+        "workspace.select.success": "Workspace \"{name}\" successfully loaded."
     }
 };

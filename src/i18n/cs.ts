@@ -356,6 +356,6 @@ export default {
         "history.originalValue": "Původní hodnota",
         "history.newValue": "Nová hodnota",
 
-        "workspace.select.success": "Pracovní prostor {name} úspěšně načten."
+        "workspace.select.success": "Pracovní prostor \"{name}\" úspěšně načten."
     }
 }
