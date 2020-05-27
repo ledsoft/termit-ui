@@ -55,19 +55,19 @@ describe("AssetFactory", () => {
 
     describe("createTermAssignment", () => {
         const data = {
-            iri: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/prirazeni-termu/instance1741423723",
+            iri: "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/prirazeni-termu/instance1741423723",
             types: [
                 "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/přiřazení-termu"
             ],
             term: {
                 iri: "http://onto.fel.cvut.cz/ontologies/slovnik/sb-z-2006-183/pojem/nezastavene-uzemi",
                 types: [
-                    "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/term"
+                    "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/term"
                 ],
                 label: "Nezastavene uzemi"
             },
             target: {
-                iri: "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/cil/instance-873441519",
+                iri: "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/cil/instance-873441519",
                 types: [
                     "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/cíl"
                 ],
@@ -75,7 +75,7 @@ describe("AssetFactory", () => {
                     iri: "http://onto.fel.cvut.cz/ontologies/zdroj/ml-test",
                     types: [
                         "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
-                        "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/zdroj"
+                        "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/zdroj"
                     ],
                     label: "ML test",
                     author: {

@@ -3,8 +3,8 @@ import Resource, {ResourceData} from "./Resource"
 import Document, {DocumentData} from "./Document";
 
 const ctx = {
-    "content": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/soubor/content",
-    "owner": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-částí-dokumentu"
+    "content": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/soubor/content",
+    "owner": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/je-částí-dokumentu"
 };
 
 /**

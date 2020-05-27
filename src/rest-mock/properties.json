@@ -30,13 +30,13 @@
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/obsahuje-pojem",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/obsahuje-pojem",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/je-pojmem-ze-slovniku",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ]
@@ -48,20 +48,20 @@
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-glosar",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-glosar",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-vyskytem-termu",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/je-vyskytem-termu",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "je výskytem termu"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-vyskyt-termu",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-vyskyt-termu",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
@@ -74,26 +74,26 @@
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-dokumentovy-slovnik",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-dokumentovy-slovnik",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má dokumentový slovník"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-soubor",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-soubor",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/popisuje-dokument",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/popisuje-dokument",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-casti-dokumentu",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/je-casti-dokumentu",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ]
@@ -111,91 +111,91 @@
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-heslo",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-heslo",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má heslo"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-krestni-jmeno",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-krestni-jmeno",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má křestní jméno"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prijmeni",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-prijmeni",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má příjmení"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-uzivatelske-jmeno",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-uzivatelske-jmeno",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má uživatelské jméno"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-autora",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-autora",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má autora"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-cil",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-cil",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má cíl"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-selektor",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-selektor",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má selektor"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-zdrojovy-dokument",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-zdrojovy-dokument",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má zdrojový dokument"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-koncovou-pozici",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-koncovou-pozici",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má koncovou pozici"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-startovni-pozici",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-startovni-pozici",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má startovní pozici"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-prefix-text-quote",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-prefix-text-quote",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má prefix text quote"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-presny-text-quote",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-presny-text-quote",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
     "http://www.w3.org/2000/01/rdf-schema#label": "má přesný text quote"
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-suffix-text-quote",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-suffix-text-quote",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ],
@@ -268,7 +268,7 @@
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-model",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-model",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ]
@@ -286,13 +286,13 @@
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/ma-zdroj",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/ma-zdroj",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ]
   },
   {
-    "@id": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-prirazenim-termu",
+    "@id": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/je-prirazenim-termu",
     "@type": [
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
     ]
