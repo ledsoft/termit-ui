@@ -1,5 +1,5 @@
 [ {
-  "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik",
+  "@id" : "http://data.iprpraha.cz/zdroj/slovník/agendový/testovaci-slovnik",
   "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/has-count":[ {
     "@value" : "5"
   } ],
@@ -7,7 +7,7 @@
     "@value" : "Testovací slovník"
   } ]
 }, {
-  "@id" : "http://data.iprpraha.cz/zdroj/slovnik/agendovy/testovaci-slovnik-2",
+  "@id" : "http://data.iprpraha.cz/zdroj/slovník/agendový/testovaci-slovnik-2",
   "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/has-count":[ {
     "@value" : "10"
   } ],

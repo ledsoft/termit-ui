@@ -988,21 +988,21 @@ describe("Async actions", () => {
             const data = [{
                 "@id": Generator.generateUri(),
                 "http://www.w3.org/2000/01/rdf-schema#label": "Test file",
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
                 "http://purl.org/dc/terms/modified": Date.now(),
                 "@type": [VocabularyUtils.FILE, VocabularyUtils.RESOURCE]
             }, {
                 "@id": Generator.generateUri(),
                 "http://www.w3.org/2000/01/rdf-schema#label": "Test vocabulary",
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
                 "http://purl.org/dc/terms/modified": Date.now(),
                 "@type": [VocabularyUtils.VOCABULARY]
             }, {
                 "@id": Generator.generateUri(),
                 "http://www.w3.org/2000/01/rdf-schema#label": "Test term",
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
                 "http://purl.org/dc/terms/modified": Date.now(),
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {"@id": Generator.generateUri()},
+                "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/je-pojmem-ze-slovniku": {"@id": Generator.generateUri()},
                 "@type": [VocabularyUtils.TERM]
             }];
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));
@@ -1019,15 +1019,15 @@ describe("Async actions", () => {
             const data = [{
                 "@id": Generator.generateUri(),
                 "http://www.w3.org/2000/01/rdf-schema#label": vocLabel,
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
                 "http://purl.org/dc/terms/modified": Date.now(),
                 "@type": [VocabularyUtils.VOCABULARY]
             }, {
                 "@id": Generator.generateUri(),
                 "http://www.w3.org/2000/01/rdf-schema#label": termLabel,
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
+                "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/má-editora": require("../../rest-mock/current"),
                 "http://purl.org/dc/terms/modified": Date.now(),
-                "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/je-pojmem-ze-slovniku": {"@id": Generator.generateUri()},
+                "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/je-pojmem-ze-slovniku": {"@id": Generator.generateUri()},
                 "@type": [VocabularyUtils.TERM]
             }];
             Ajax.get = jest.fn().mockImplementation(() => Promise.resolve(data));

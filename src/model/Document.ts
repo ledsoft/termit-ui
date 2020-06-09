@@ -10,7 +10,7 @@ const ctx = {
         "@id": VocabularyUtils.HAS_FILE,
         "@container": "@set"
     },
-    "vocabulary": "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-dokumentový-slovník"
+    "vocabulary": "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/má-dokumentový-slovník"
 };
 
 export const CONTEXT = Object.assign({}, RESOURCE_CONTEXT, ctx, FILE_CONTEXT);

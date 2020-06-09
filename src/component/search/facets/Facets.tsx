@@ -110,7 +110,7 @@ export class Facets extends React.Component<Props, State> {
                 " PREFIX skos: <http://www.w3.org/2004/02/skos/core#>" +
                 " PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>" +
                 " PREFIX zs: <https://onto.fel.cvut.cz/ontologies/ufo/>" +
-                " PREFIX a-popis-dat: <http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/>",
+                " PREFIX a-popis-dat: <http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/>",
             queryTemplate: this.getSparqlQuery(this.props.lang), // required
             resultsPerPage: 500, // optional (default is 10)
         };
@@ -129,7 +129,7 @@ export class Facets extends React.Component<Props, State> {
             slovnik: {
                 enabled: true,
                 facetId: "glosar",
-                predicate: "(^skos:narrower)*/<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/má-glosář>",
+                predicate: "(^skos:narrower)*/<http://www.w3.org/2004/02/skos/core#inScheme>/^<http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/má-glosář>",
                 name: this.props.i18n("search.slovnik"),
             },
 

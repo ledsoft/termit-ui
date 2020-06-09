@@ -33,7 +33,7 @@ export class IRIImpl implements IRI {
     }
 }
 
-const _NS_POPIS_DAT = "http://onto.fel.cvut.cz/ontologies/slovnik/agendovy/popis-dat/pojem/";
+const _NS_POPIS_DAT = "http://onto.fel.cvut.cz/ontologies/slovník/agendový/popis-dat/pojem/";
 const _NS_TERMIT = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
 const _NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const _NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
