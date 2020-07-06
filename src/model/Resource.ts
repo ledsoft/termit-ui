@@ -2,6 +2,7 @@ import Asset, {ASSET_CONTEXT, AssetData} from "./Asset";
 import Term from "./Term";
 import Utils from "../util/Utils";
 import VocabularyUtils from "../util/VocabularyUtils";
+import Constants from "../util/Constants";
 
 const ctx = {
     label: VocabularyUtils.RDFS_LABEL,
@@ -41,7 +42,7 @@ export default class Resource extends Asset implements ResourceData {
 }
 
 export const EMPTY_RESOURCE = new Resource({
-    iri: "http://empty",
+    iri: Constants.EMPTY_ASSET_IRI,
     label: "",
     terms: []
 });

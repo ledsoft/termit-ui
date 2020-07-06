@@ -4,6 +4,7 @@ import Asset, {ASSET_CONTEXT, AssetData} from "./Asset";
 import Document, {CONTEXT as DOCUMENT_CONTEXT} from "./Document";
 import WithUnmappedProperties from "./WithUnmappedProperties";
 import Utils from "../util/Utils";
+import Constants from "../util/Constants";
 
 // @id and @type are merged from ASSET_CONTEXT
 const ctx = {
@@ -60,6 +61,6 @@ export default class Vocabulary extends Asset implements VocabularyData {
 }
 
 export const EMPTY_VOCABULARY = new Vocabulary({
-    iri: "http://empty",
+    iri: Constants.EMPTY_ASSET_IRI,
     label: ""
 });

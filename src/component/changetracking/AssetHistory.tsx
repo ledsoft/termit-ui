@@ -12,6 +12,7 @@ import UpdateRow from "./UpdateRow";
 import PersistRow from "./PersistRow";
 import PersistRecord from "../../model/changetracking/PersistRecord";
 import ContainerMask from "../misc/ContainerMask";
+import Constants from "../../util/Constants";
 
 interface AssetHistoryProps extends HasI18n {
     asset: Asset;
@@ -20,10 +21,13 @@ interface AssetHistoryProps extends HasI18n {
 }
 
 export const AssetHistory: React.FC<AssetHistoryProps> = props => {
+    const {asset} = props;
     const [records, setRecords] = React.useState<null | ChangeRecord[]>(null);
     React.useEffect(() => {
-        props.loadHistory(props.asset).then(recs => setRecords(recs));
-    }, [props.asset]);
+        if (asset.iri !== Constants.EMPTY_ASSET_IRI) {
+            props.loadHistory(asset).then(recs => setRecords(recs));
+        }
+    }, [asset]);
     const i18n = props.i18n;
     if (!records) {
         return <ContainerMask text={i18n("history.loading")}/>;
