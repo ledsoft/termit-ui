@@ -12,13 +12,14 @@ const ctx = {
     subTerms: VocabularyUtils.NARROWER,
     sources: VocabularyUtils.DC_SOURCE,
     vocabulary: VocabularyUtils.IS_TERM_FROM_VOCABULARY,
+    glossary: VocabularyUtils.SKOS_IN_SCHEME,
     types: "@type"
 };
 
 export const CONTEXT = Object.assign(ctx, ASSET_CONTEXT);
 
 const MAPPED_PROPERTIES = ["@context", "iri", "label", "comment", "definition",
-    "subTerms", "sources", "types", "parentTerms", "parent", "plainSubTerms", "vocabulary"];
+    "subTerms", "sources", "types", "parentTerms", "parent", "plainSubTerms", "vocabulary", "glossary"];
 
 export interface TermData extends AssetData {
     label: string;

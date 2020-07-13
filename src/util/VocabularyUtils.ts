@@ -52,6 +52,7 @@ export default {
     NARROWER: _NS_SKOS + "narrower",
     SKOS_PREF_LABEL: _NS_SKOS + "prefLabel",
     SKOS_SCOPE_NOTE: _NS_SKOS + "scopeNote",
+    SKOS_IN_SCHEME: _NS_SKOS + "inScheme",
     DATASET: "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset",
     IS_TERM_FROM_VOCABULARY: _NS_POPIS_DAT + "je-pojmem-ze-slovníku",
     IS_OCCURRENCE_OF_TERM: _NS_TERMIT + "je-výskytem-termu",
